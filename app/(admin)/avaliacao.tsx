@@ -4,7 +4,7 @@ import {
   ActivityIndicator, ScrollView, Animated, Modal,
   TextInput, KeyboardAvoidingView, Platform, Alert,
 } from 'react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
@@ -315,6 +315,7 @@ function StudentDetailView({
 export default function AvaliacaoScreen() {
   const { profile } = useAuthStore();
   const { primaryColor } = useThemeStore();
+  const { studentId } = useLocalSearchParams<{ studentId?: string }>();
   const tenantId = profile?.tenant_id;
 
   const [students, setStudents] = useState<StudentSummary[]>([]);
@@ -364,13 +365,28 @@ export default function AvaliacaoScreen() {
     });
 
     setStudents(summary);
-  }, [tenantId]);
 
-  const loadDetail = useCallback(async (studentId: string) => {
+    // Auto-select if coming from student detail
+    if (studentId) {
+      const match = summary.find(s => s.id === studentId);
+      if (match) {
+        setSelected(match);
+        setLoadingDetail(true);
+        const { data } = await supabase.from('physical_assessments')
+          .select('id,student_id,assessed_at,weight,height,sex,bmi,body_fat,chest,arm,waist,hip,thigh,notes')
+          .eq('student_id', match.id)
+          .order('assessed_at', { ascending: false });
+        setAssessments(data ?? []);
+        setLoadingDetail(false);
+      }
+    }
+  }, [tenantId, studentId]);
+
+  const loadDetail = useCallback(async (sid: string) => {
     setLoadingDetail(true);
     const { data } = await supabase.from('physical_assessments')
       .select('id,student_id,assessed_at,weight,height,sex,bmi,body_fat,chest,arm,waist,hip,thigh,notes')
-      .eq('student_id', studentId)
+      .eq('student_id', sid)
       .order('assessed_at', { ascending: false });
     setAssessments(data ?? []);
     setLoadingDetail(false);
@@ -427,7 +443,10 @@ export default function AvaliacaoScreen() {
     <SafeAreaView style={st.safe} edges={['top']}>
       <View style={st.header}>
         <TouchableOpacity
-          onPress={() => selected ? setSelected(null) : router.back()}
+          onPress={() => {
+            if (studentId) { router.back(); return; }
+            selected ? setSelected(null) : router.back();
+          }}
           style={st.backBtn}>
           <Ionicons name="arrow-back" size={22} color={Colors.textPrimary} />
         </TouchableOpacity>

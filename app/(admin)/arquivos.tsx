@@ -11,6 +11,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as WebBrowser from 'expo-web-browser';
 import { supabase } from '@/lib/supabase';
+import { MediaViewerModal, MediaType } from '@/components/MediaViewerModal';
 import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
 import { Colors } from '@/theme/colors';
@@ -108,6 +109,29 @@ export default function ArquivosScreen() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [filterStudentId, setFilterStudentId] = useState<string | null | 'all'>('all');
+
+  // In-app media viewer
+  const [mediaUri, setMediaUri] = useState('');
+  const [mediaType, setMediaType] = useState<MediaType>('image');
+  const [mediaTitle, setMediaTitle] = useState('');
+  const [mediaVisible, setMediaVisible] = useState(false);
+
+  function openFile(file: SharedFile) {
+    if (file.file_type === 'image') {
+      setMediaUri(file.file_url);
+      setMediaType('image');
+      setMediaTitle(file.title);
+      setMediaVisible(true);
+    } else if (file.file_type === 'video') {
+      setMediaUri(file.file_url);
+      setMediaType('video');
+      setMediaTitle(file.title);
+      setMediaVisible(true);
+    } else {
+      // PDF, doc, spreadsheet, other — open external browser
+      WebBrowser.openBrowserAsync(file.file_url);
+    }
+  }
 
   // Upload modal state
   const [modalVisible, setModalVisible] = useState(false);
@@ -296,7 +320,7 @@ export default function ArquivosScreen() {
     return (
       <TouchableOpacity
         style={styles.fileCard}
-        onPress={() => WebBrowser.openBrowserAsync(item.file_url)}
+        onPress={() => openFile(item)}
         onLongPress={() => handleDelete(item)}
         activeOpacity={0.75}
         delayLongPress={500}
@@ -429,6 +453,15 @@ export default function ArquivosScreen() {
           }
         />
       )}
+
+      {/* In-app media viewer */}
+      <MediaViewerModal
+        visible={mediaVisible}
+        uri={mediaUri}
+        type={mediaType}
+        title={mediaTitle}
+        onClose={() => setMediaVisible(false)}
+      />
 
       {/* Upload Modal */}
       <Modal

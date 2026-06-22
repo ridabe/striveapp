@@ -3,7 +3,7 @@ import {
   View, Text, TouchableOpacity, StyleSheet,
   ActivityIndicator, ScrollView, Animated, FlatList,
 } from 'react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
@@ -257,6 +257,7 @@ function StudentDetailView({
 export default function FrequenciaScreen() {
   const { profile } = useAuthStore();
   const { primaryColor } = useThemeStore();
+  const { studentId } = useLocalSearchParams<{ studentId?: string }>();
   const tenantId = profile?.tenant_id;
 
   const [students, setStudents] = useState<StudentSummary[]>([]);
@@ -291,7 +292,22 @@ export default function FrequenciaScreen() {
     });
 
     setStudents(summary);
-  }, [tenantId]);
+
+    // Auto-select if coming from student detail
+    if (studentId) {
+      const match = summary.find(st => st.id === studentId);
+      if (match) {
+        setSelected(match);
+        setLoadingDetail(true);
+        const { data } = await supabase.from('attendance')
+          .select('id, student_id, attended_at, notes')
+          .eq('student_id', match.id)
+          .order('attended_at', { ascending: false });
+        setDetailRecords(data ?? []);
+        setLoadingDetail(false);
+      }
+    }
+  }, [tenantId, studentId]);
 
   useEffect(() => { load().finally(() => setLoading(false)); }, [load]);
 
@@ -310,7 +326,10 @@ export default function FrequenciaScreen() {
     <SafeAreaView style={s.safe} edges={['top']}>
       <View style={s.header}>
         <TouchableOpacity
-          onPress={() => selected ? setSelected(null) : router.back()}
+          onPress={() => {
+            if (studentId) { router.back(); return; }
+            selected ? setSelected(null) : router.back();
+          }}
           style={s.backBtn}>
           <Ionicons name="arrow-back" size={22} color={Colors.textPrimary} />
         </TouchableOpacity>

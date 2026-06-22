@@ -4,13 +4,13 @@ import {
   ActivityIndicator, ScrollView, Animated, Modal,
   TextInput, KeyboardAvoidingView, Platform, Alert,
 } from 'react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system/legacy';
-import * as WebBrowser from 'expo-web-browser';
 import { supabase } from '@/lib/supabase';
+import { MediaViewerModal } from '@/components/MediaViewerModal';
 import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
 import { Colors } from '@/theme/colors';
@@ -177,13 +177,14 @@ function StudentListView({
 
 // ─── Student detail view ──────────────────────────────────────────────────────
 function StudentDetailView({
-  student, entries, loading, primaryColor, onAddPress,
+  student, entries, loading, primaryColor, onAddPress, onPhotoPress,
 }: {
   student: StudentSummary;
   entries: ProgressEntry[];
   loading: boolean;
   primaryColor: string;
   onAddPress: () => void;
+  onPhotoPress: (uri: string) => void;
 }) {
   if (loading) return <ActivityIndicator color={primaryColor} style={{ marginTop: 60 }} />;
 
@@ -244,7 +245,7 @@ function StudentDetailView({
             <ScrollView horizontal showsHorizontalScrollIndicator={false}
               contentContainerStyle={{ gap: 8, marginTop: 8 }}>
               {item.photo_urls.map((url, idx) => (
-                <TouchableOpacity key={idx} onPress={() => WebBrowser.openBrowserAsync(url)}
+                <TouchableOpacity key={idx} onPress={() => onPhotoPress(url)}
                   style={det.photoThumb} activeOpacity={0.8}>
                   <Ionicons name="image-outline" size={22} color={primaryColor} />
                   <Text style={[det.photoLabel, { color: primaryColor }]}>Foto {idx + 1}</Text>
@@ -269,6 +270,7 @@ function StudentDetailView({
 export default function ProgressoScreen() {
   const { profile } = useAuthStore();
   const { primaryColor } = useThemeStore();
+  const { studentId } = useLocalSearchParams<{ studentId?: string }>();
   const tenantId = profile?.tenant_id;
 
   const [students, setStudents] = useState<StudentSummary[]>([]);
@@ -276,6 +278,12 @@ export default function ProgressoScreen() {
   const [selected, setSelected] = useState<StudentSummary | null>(null);
   const [detailEntries, setDetailEntries] = useState<ProgressEntry[]>([]);
   const [loadingDetail, setLoadingDetail] = useState(false);
+
+  // Media viewer
+  const [mediaUri, setMediaUri] = useState('');
+  const [mediaVisible, setMediaVisible] = useState(false);
+
+  function openPhoto(uri: string) { setMediaUri(uri); setMediaVisible(true); }
 
   // Modal
   const [modalVisible, setModalVisible] = useState(false);
@@ -313,13 +321,28 @@ export default function ProgressoScreen() {
     });
 
     setStudents(summary);
-  }, [tenantId]);
 
-  const loadDetail = useCallback(async (studentId: string) => {
+    // Auto-select if coming from student detail
+    if (studentId) {
+      const match = summary.find(st => st.id === studentId);
+      if (match) {
+        setSelected(match);
+        setLoadingDetail(true);
+        const { data } = await supabase.from('student_progress')
+          .select('id, student_id, recorded_at, weight, photo_urls, notes')
+          .eq('student_id', match.id)
+          .order('recorded_at', { ascending: false });
+        setDetailEntries((data ?? []).map((e: any) => ({ ...e, photo_urls: e.photo_urls ?? [] })));
+        setLoadingDetail(false);
+      }
+    }
+  }, [tenantId, studentId]);
+
+  const loadDetail = useCallback(async (sid: string) => {
     setLoadingDetail(true);
     const { data } = await supabase.from('student_progress')
       .select('id, student_id, recorded_at, weight, photo_urls, notes')
-      .eq('student_id', studentId)
+      .eq('student_id', sid)
       .order('recorded_at', { ascending: false });
     setDetailEntries((data ?? []).map((e: any) => ({ ...e, photo_urls: e.photo_urls ?? [] })));
     setLoadingDetail(false);
@@ -397,7 +420,10 @@ export default function ProgressoScreen() {
     <SafeAreaView style={st.safe} edges={['top']}>
       <View style={st.header}>
         <TouchableOpacity
-          onPress={() => selected ? setSelected(null) : router.back()}
+          onPress={() => {
+            if (studentId) { router.back(); return; }
+            selected ? setSelected(null) : router.back();
+          }}
           style={st.backBtn}>
           <Ionicons name="arrow-back" size={22} color={Colors.textPrimary} />
         </TouchableOpacity>
@@ -418,6 +444,7 @@ export default function ProgressoScreen() {
           student={selected} entries={detailEntries}
           loading={loadingDetail} primaryColor={primaryColor}
           onAddPress={() => openAdd(selected)}
+          onPhotoPress={openPhoto}
         />
       ) : (
         <StudentListView
@@ -427,6 +454,14 @@ export default function ProgressoScreen() {
           onAdd={openAdd}
         />
       )}
+
+      {/* In-app photo viewer */}
+      <MediaViewerModal
+        visible={mediaVisible}
+        uri={mediaUri}
+        type="image"
+        onClose={() => setMediaVisible(false)}
+      />
 
       {/* Add progress modal */}
       <Modal visible={modalVisible} animationType="slide" presentationStyle="pageSheet"

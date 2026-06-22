@@ -72,6 +72,7 @@ export default function AdminLayout() {
       <Tabs.Screen name="progresso" options={{ href: null }} />
       <Tabs.Screen name="avaliacao" options={{ href: null }} />
       <Tabs.Screen name="anamnese" options={{ href: null }} />
+      <Tabs.Screen name="alunos/[id]" options={{ href: null }} />
     </Tabs>
   );
 }
