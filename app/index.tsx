@@ -1,10 +1,11 @@
 import { Redirect } from 'expo-router';
-import { useAuth } from '@/hooks/useAuth';
+import type { Href } from 'expo-router';
+import { useAuthStore } from '@/stores/authStore';
 import { View, ActivityIndicator } from 'react-native';
 import { Colors } from '@/theme';
 
 export default function Index() {
-  const { session, isLoading } = useAuth();
+  const { session, profile, isLoading } = useAuthStore();
 
   if (isLoading) {
     return (
@@ -14,5 +15,12 @@ export default function Index() {
     );
   }
 
-  return session ? <Redirect href="/(student)/" /> : <Redirect href="/(auth)/login" />;
+  if (!session) return <Redirect href="/(auth)/welcome" />;
+
+  const role = profile?.role;
+  if (role === 'personal' || role === 'global_admin') {
+    return <Redirect href={'/(admin)' as Href} />;
+  }
+
+  return <Redirect href="/(student)" />;
 }

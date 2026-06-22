@@ -3,10 +3,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { useThemeStore } from '@/stores/themeStore';
 import { Colors } from '@/theme';
 import { useTenant } from '@/hooks/useTenant';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function StudentLayout() {
   useTenant();
   const { primaryColor } = useThemeStore();
+  const insets = useSafeAreaInsets();
 
   return (
     <Tabs
@@ -16,8 +18,8 @@ export default function StudentLayout() {
           backgroundColor: Colors.surface,
           borderTopColor: Colors.border,
           borderTopWidth: 1,
-          height: 64,
-          paddingBottom: 8,
+          height: 56 + insets.bottom,
+          paddingBottom: insets.bottom,
           paddingTop: 8,
         },
         tabBarActiveTintColor: primaryColor,

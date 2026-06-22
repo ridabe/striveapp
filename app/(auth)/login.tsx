@@ -1,24 +1,68 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Ionicons } from '@expo/vector-icons';
 import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
+  View, Text, TextInput, TouchableOpacity, ActivityIndicator,
+  KeyboardAvoidingView, Platform, ScrollView, Alert,
 } from 'react-native';
 import { router } from 'expo-router';
+import type { Href } from 'expo-router';
 import { signIn } from '@/services/auth';
+import { supabase } from '@/lib/supabase';
+import { useAuthStore } from '@/stores/authStore';
+import { useBiometric } from '@/hooks/useBiometric';
 import { Colors } from '@/theme';
 import { FontFamily, FontSize } from '@/theme/typography';
+import { StriveLogo } from '@/components/StriveLogo';
 
 export default function LoginScreen() {
+  const { setProfile } = useAuthStore();
+  const { available, hasSavedCreds, authType, authenticate, saveCreds } = useBiometric();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [bioLoading, setBioLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Auto-trigger biometric if available and creds are saved
+  useEffect(() => {
+    if (available && hasSavedCreds) {
+      handleBiometricLogin();
+    }
+  }, [available, hasSavedCreds]);
+
+  async function navigateAfterLogin(userId: string) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .single();
+    setProfile(profile ?? null);
+    const role = profile?.role;
+    const dest: Href = (role === 'personal' || role === 'global_admin')
+      ? '/(admin)' as Href
+      : '/(student)';
+    router.replace(dest);
+  }
+
+  async function handleBiometricLogin() {
+    setBioLoading(true);
+    setError(null);
+    try {
+      const creds = await authenticate();
+      if (!creds) {
+        setBioLoading(false);
+        return;
+      }
+      const { user } = await signIn(creds.email, creds.password);
+      await navigateAfterLogin(user.id);
+    } catch {
+      setError('Não foi possível autenticar. Tente com senha.');
+    } finally {
+      setBioLoading(false);
+    }
+  }
 
   async function handleLogin() {
     if (!email || !password) {
@@ -28,14 +72,31 @@ export default function LoginScreen() {
     setLoading(true);
     setError(null);
     try {
-      await signIn(email, password);
-      router.replace('/(student)/');
-    } catch (e: any) {
+      const { user } = await signIn(email, password);
+      await navigateAfterLogin(user.id);
+
+      // Offer to save biometric credentials after first successful password login
+      if (available && !hasSavedCreds) {
+        Alert.alert(
+          `Usar ${authType} para entrar?`,
+          `Ative o acesso rápido com ${authType} para não precisar digitar a senha toda vez.`,
+          [
+            { text: 'Agora não', style: 'cancel' },
+            {
+              text: 'Ativar',
+              onPress: () => saveCreds(email, password),
+            },
+          ],
+        );
+      }
+    } catch {
       setError('E-mail ou senha incorretos.');
     } finally {
       setLoading(false);
     }
   }
+
+  const showBioButton = available && hasSavedCreds;
 
   return (
     <KeyboardAvoidingView
@@ -46,16 +107,43 @@ export default function LoginScreen() {
         contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', padding: 24 }}
         keyboardShouldPersistTaps="handled"
       >
-        <Text style={{ fontFamily: FontFamily.display, fontSize: FontSize['3xl'], color: Colors.primary, marginBottom: 8 }}>
-          STRIVE
-        </Text>
-        <Text style={{ fontFamily: FontFamily.body, fontSize: FontSize.md, color: Colors.textSecondary, marginBottom: 40 }}>
-          Seu treino. Sua evolução.
-        </Text>
+        <View style={{ alignItems: 'center', marginBottom: 40 }}>
+          <StriveLogo iconSize={64} />
+        </View>
 
-        <Text style={{ fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm, color: Colors.textSecondary, marginBottom: 6 }}>
-          E-mail
-        </Text>
+        {/* Biometric quick login */}
+        {showBioButton && (
+          <TouchableOpacity
+            onPress={handleBiometricLogin}
+            disabled={bioLoading}
+            style={bioBtn}
+            activeOpacity={0.8}
+          >
+            {bioLoading ? (
+              <ActivityIndicator color={Colors.primary} />
+            ) : (
+              <>
+                <Ionicons
+                  name={authType === 'Face ID' ? 'scan-outline' : 'finger-print-outline'}
+                  size={22}
+                  color={Colors.primary}
+                />
+                <Text style={bioBtnText}>Entrar com {authType}</Text>
+              </>
+            )}
+          </TouchableOpacity>
+        )}
+
+        {/* Divider when biometric button is shown */}
+        {showBioButton && (
+          <View style={dividerRow}>
+            <View style={dividerLine} />
+            <Text style={dividerText}>ou entre com senha</Text>
+            <View style={dividerLine} />
+          </View>
+        )}
+
+        <Text style={label}>E-mail</Text>
         <TextInput
           value={email}
           onChangeText={setEmail}
@@ -63,40 +151,31 @@ export default function LoginScreen() {
           keyboardType="email-address"
           placeholder="seu@email.com"
           placeholderTextColor={Colors.textSecondary}
-          style={{
-            backgroundColor: Colors.surface,
-            color: Colors.textPrimary,
-            borderWidth: 1,
-            borderColor: Colors.border,
-            borderRadius: 12,
-            padding: 14,
-            fontFamily: FontFamily.body,
-            fontSize: FontSize.md,
-            marginBottom: 16,
-          }}
+          style={input}
         />
 
-        <Text style={{ fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm, color: Colors.textSecondary, marginBottom: 6 }}>
-          Senha
-        </Text>
-        <TextInput
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          placeholder="••••••••"
-          placeholderTextColor={Colors.textSecondary}
-          style={{
-            backgroundColor: Colors.surface,
-            color: Colors.textPrimary,
-            borderWidth: 1,
-            borderColor: Colors.border,
-            borderRadius: 12,
-            padding: 14,
-            fontFamily: FontFamily.body,
-            fontSize: FontSize.md,
-            marginBottom: 8,
-          }}
-        />
+        <Text style={[label, { marginTop: 16 }]}>Senha</Text>
+        <View style={{ position: 'relative', marginBottom: 8 }}>
+          <TextInput
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!showPassword}
+            placeholder="••••••••"
+            placeholderTextColor={Colors.textSecondary}
+            style={[input, { paddingRight: 48 }]}
+          />
+          <TouchableOpacity
+            onPress={() => setShowPassword(v => !v)}
+            style={{ position: 'absolute', right: 14, top: 0, bottom: 0, justifyContent: 'center' }}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          >
+            <Ionicons
+              name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+              size={20}
+              color={Colors.textSecondary}
+            />
+          </TouchableOpacity>
+        </View>
 
         <TouchableOpacity
           onPress={() => router.push('/(auth)/forgot-password')}
@@ -116,12 +195,8 @@ export default function LoginScreen() {
         <TouchableOpacity
           onPress={handleLogin}
           disabled={loading}
-          style={{
-            backgroundColor: Colors.primary,
-            borderRadius: 12,
-            padding: 16,
-            alignItems: 'center',
-          }}
+          style={submitBtn}
+          activeOpacity={0.85}
         >
           {loading ? (
             <ActivityIndicator color={Colors.bg} />
@@ -135,3 +210,67 @@ export default function LoginScreen() {
     </KeyboardAvoidingView>
   );
 }
+
+// ─── Inline styles (simple screen, no StyleSheet needed) ─────────────────────
+const label = {
+  fontFamily: FontFamily.bodyMedium,
+  fontSize: FontSize.sm,
+  color: Colors.textSecondary,
+  marginBottom: 6,
+} as const;
+
+const input = {
+  backgroundColor: Colors.surface,
+  color: Colors.textPrimary,
+  borderWidth: 1,
+  borderColor: Colors.border,
+  borderRadius: 12,
+  padding: 14,
+  fontFamily: FontFamily.body,
+  fontSize: FontSize.md,
+} as const;
+
+const submitBtn = {
+  backgroundColor: Colors.primary,
+  borderRadius: 12,
+  padding: 16,
+  alignItems: 'center' as const,
+};
+
+const bioBtn = {
+  flexDirection: 'row' as const,
+  alignItems: 'center' as const,
+  justifyContent: 'center' as const,
+  gap: 10,
+  borderWidth: 1.5,
+  borderColor: Colors.primary,
+  borderRadius: 12,
+  padding: 14,
+  marginBottom: 4,
+  backgroundColor: `${Colors.primary}12`,
+};
+
+const bioBtnText = {
+  fontFamily: FontFamily.bodyBold,
+  fontSize: FontSize.md,
+  color: Colors.primary,
+};
+
+const dividerRow = {
+  flexDirection: 'row' as const,
+  alignItems: 'center' as const,
+  gap: 12,
+  marginVertical: 20,
+};
+
+const dividerLine = {
+  flex: 1,
+  height: 1,
+  backgroundColor: Colors.border,
+};
+
+const dividerText = {
+  fontFamily: FontFamily.body,
+  fontSize: FontSize.xs,
+  color: Colors.textSecondary,
+};

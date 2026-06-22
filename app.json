@@ -46,7 +46,13 @@
           "microphonePermission": false
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "O app usa o Face ID para autenticar seu acesso de forma segura."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

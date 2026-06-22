@@ -10,10 +10,17 @@ import {
 } from '@expo-google-fonts/dm-sans';
 import * as SplashScreen from 'expo-splash-screen';
 import '../src/styles/global.css';
+import { useAuth } from '@/hooks/useAuth';
+import { useModules } from '@/hooks/useModules';
+import { useTenant } from '@/hooks/useTenant';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  useAuth();
+  useModules();
+  useTenant();
+
   const [fontsLoaded] = useFonts({
     Syncopate_700Bold,
     DMSans_400Regular,

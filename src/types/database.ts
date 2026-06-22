@@ -1,7 +1,4 @@
-// Auto-gerado via: supabase gen types typescript --project-id lodetzmtsymvnjffmvat
-// Atualizar apos migrations: use o MCP do Supabase (generate_typescript_types) ou
-// pnpm supabase gen types typescript --project-id lodetzmtsymvnjffmvat > src/types/database.ts
-
+// Auto-gerado via Supabase MCP - generate_typescript_types
 export type Json =
   | string
   | number
@@ -562,6 +559,8 @@ export type Database = {
         Row: {
           arm: number | null
           assessed_at: string
+          bmi: number | null
+          bmr: number | null
           body_fat: number | null
           chest: number | null
           created_at: string
@@ -569,6 +568,7 @@ export type Database = {
           hip: number | null
           id: string
           notes: string | null
+          sex: string | null
           student_id: string
           tenant_id: string
           thigh: number | null
@@ -578,6 +578,8 @@ export type Database = {
         Insert: {
           arm?: number | null
           assessed_at?: string
+          bmi?: number | null
+          bmr?: number | null
           body_fat?: number | null
           chest?: number | null
           created_at?: string
@@ -585,6 +587,7 @@ export type Database = {
           hip?: number | null
           id?: string
           notes?: string | null
+          sex?: string | null
           student_id: string
           tenant_id: string
           thigh?: number | null
@@ -594,6 +597,8 @@ export type Database = {
         Update: {
           arm?: number | null
           assessed_at?: string
+          bmi?: number | null
+          bmr?: number | null
           body_fat?: number | null
           chest?: number | null
           created_at?: string
@@ -601,6 +606,7 @@ export type Database = {
           hip?: number | null
           id?: string
           notes?: string | null
+          sex?: string | null
           student_id?: string
           tenant_id?: string
           thigh?: number | null
@@ -709,6 +715,109 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "profiles_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shared_files: {
+        Row: {
+          created_at: string
+          description: string | null
+          file_name: string
+          file_size: number | null
+          file_type: string
+          file_url: string
+          id: string
+          student_id: string | null
+          tenant_id: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          file_name: string
+          file_size?: number | null
+          file_type: string
+          file_url: string
+          id?: string
+          student_id?: string | null
+          tenant_id: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          file_name?: string
+          file_size?: number | null
+          file_type?: string
+          file_url?: string
+          id?: string
+          student_id?: string | null
+          tenant_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shared_files_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shared_files_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_plan_assignments: {
+        Row: {
+          assigned_at: string
+          id: string
+          plan_id: string
+          status: string
+          student_id: string
+          tenant_id: string
+        }
+        Insert: {
+          assigned_at?: string
+          id?: string
+          plan_id: string
+          status?: string
+          student_id: string
+          tenant_id: string
+        }
+        Update: {
+          assigned_at?: string
+          id?: string
+          plan_id?: string
+          status?: string
+          student_id?: string
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_plan_assignments_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "workout_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_plan_assignments_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_plan_assignments_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
@@ -1154,6 +1263,7 @@ export type Database = {
       }
       workout_items: {
         Row: {
+          cadence: string | null
           combo_group_id: string | null
           combo_type: string | null
           count_type: string
@@ -1171,6 +1281,7 @@ export type Database = {
           tenant_id: string
         }
         Insert: {
+          cadence?: string | null
           combo_group_id?: string | null
           combo_type?: string | null
           count_type?: string
@@ -1188,6 +1299,7 @@ export type Database = {
           tenant_id: string
         }
         Update: {
+          cadence?: string | null
           combo_group_id?: string | null
           combo_type?: string | null
           count_type?: string
@@ -1238,7 +1350,7 @@ export type Database = {
           name: string
           start_date: string | null
           status: Database["public"]["Enums"]["workout_plan_status"]
-          student_id: string
+          student_id: string | null
           tenant_id: string
           updated_at: string
         }
@@ -1251,7 +1363,7 @@ export type Database = {
           name: string
           start_date?: string | null
           status?: Database["public"]["Enums"]["workout_plan_status"]
-          student_id: string
+          student_id?: string | null
           tenant_id: string
           updated_at?: string
         }
@@ -1264,7 +1376,7 @@ export type Database = {
           name?: string
           start_date?: string | null
           status?: Database["public"]["Enums"]["workout_plan_status"]
-          student_id?: string
+          student_id?: string | null
           tenant_id?: string
           updated_at?: string
         }
@@ -1332,6 +1444,135 @@ export type Database = {
             columns: ["workout_plan_id"]
             isOneToOne: false
             referencedRelation: "workout_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workout_session_exercises: {
+        Row: {
+          created_at: string
+          exercise_id: string
+          feedback: string | null
+          id: string
+          load_used: string | null
+          reps_done: string | null
+          session_id: string
+          sets_done: number | null
+          workout_item_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          exercise_id: string
+          feedback?: string | null
+          id?: string
+          load_used?: string | null
+          reps_done?: string | null
+          session_id: string
+          sets_done?: number | null
+          workout_item_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          exercise_id?: string
+          feedback?: string | null
+          id?: string
+          load_used?: string | null
+          reps_done?: string | null
+          session_id?: string
+          sets_done?: number | null
+          workout_item_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workout_session_exercises_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workout_session_exercises_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "workout_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workout_session_exercises_workout_item_id_fkey"
+            columns: ["workout_item_id"]
+            isOneToOne: false
+            referencedRelation: "workout_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workout_sessions: {
+        Row: {
+          created_at: string
+          duration_seconds: number | null
+          finished_at: string | null
+          id: string
+          intensity: string | null
+          notes: string | null
+          started_at: string
+          student_id: string
+          tenant_id: string
+          workout_plan_id: string | null
+          workout_routine_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          duration_seconds?: number | null
+          finished_at?: string | null
+          id?: string
+          intensity?: string | null
+          notes?: string | null
+          started_at?: string
+          student_id: string
+          tenant_id: string
+          workout_plan_id?: string | null
+          workout_routine_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          duration_seconds?: number | null
+          finished_at?: string | null
+          id?: string
+          intensity?: string | null
+          notes?: string | null
+          started_at?: string
+          student_id?: string
+          tenant_id?: string
+          workout_plan_id?: string | null
+          workout_routine_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workout_sessions_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workout_sessions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workout_sessions_workout_plan_id_fkey"
+            columns: ["workout_plan_id"]
+            isOneToOne: false
+            referencedRelation: "workout_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workout_sessions_workout_routine_id_fkey"
+            columns: ["workout_routine_id"]
+            isOneToOne: false
+            referencedRelation: "workout_routines"
             referencedColumns: ["id"]
           },
         ]
@@ -1525,9 +1766,3 @@ export const Constants = {
     },
   },
 } as const
-
-// Re-exports para compatibilidade com imports existentes
-export type AppRole       = Database["public"]["Enums"]["app_role"]
-export type ProfileStatus = Database["public"]["Enums"]["profile_status"]
-export type audit_category = Database["public"]["Enums"]["audit_category"]
-export type ExtraWorkoutCategory = Database["public"]["Enums"]["extra_workout_category"]

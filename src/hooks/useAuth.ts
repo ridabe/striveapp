@@ -1,22 +1,38 @@
 import { useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/stores/authStore';
+import type { Session } from '@supabase/supabase-js';
+
+async function fetchAndSetProfile(session: Session | null, setProfile: (p: any) => void) {
+  if (!session?.user) {
+    setProfile(null);
+    return;
+  }
+  const { data } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', session.user.id)
+    .single();
+  setProfile(data ?? null);
+}
 
 export function useAuth() {
-  const { session, user, isLoading, setSession, setLoading } = useAuthStore();
+  const { session, user, profile, isLoading, setSession, setProfile, setLoading } = useAuthStore();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
+      await fetchAndSetProfile(session, setProfile);
       setLoading(false);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
+      await fetchAndSetProfile(session, setProfile);
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
-  return { session, user, isLoading };
+  return { session, user, profile, isLoading };
 }
