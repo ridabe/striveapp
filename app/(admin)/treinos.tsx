@@ -24,28 +24,28 @@ const TREINO_MODULES: ModuleCard[] = [
     label: 'Banco de Exercícios',
     description: 'Gerencie o catálogo de exercícios',
     icon: 'library-outline',
-    route: null,
+    route: '/(admin)/banco-exercicios',
   },
   {
     slug: MODULE.PLANOS_TREINO,
     label: 'Planos de Treino',
     description: 'Fichas e rotinas dos alunos',
     icon: 'document-text-outline',
-    route: null,
+    route: '/(admin)/planos',
   },
   {
     slug: MODULE.TREINOS_EXTRAS,
     label: 'Treinos Extras',
     description: 'HIIT, cardio, mobilidade e mais',
     icon: 'flash-outline',
-    route: null,
+    route: '/(admin)/treinos-extras',
   },
   {
     slug: MODULE.EXECUCAO_TREINO,
     label: 'Execução',
-    description: 'Acompanhe o treino em tempo real',
+    description: 'Histórico de sessões dos alunos',
     icon: 'play-circle-outline',
-    route: null,
+    route: '/(admin)/execucao',
   },
 ];
 

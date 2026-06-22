@@ -73,6 +73,14 @@ export default function AdminLayout() {
       <Tabs.Screen name="avaliacao" options={{ href: null }} />
       <Tabs.Screen name="anamnese" options={{ href: null }} />
       <Tabs.Screen name="alunos/[id]" options={{ href: null }} />
+      {/* Módulos de treino */}
+      <Tabs.Screen name="banco-exercicios" options={{ href: null }} />
+      <Tabs.Screen name="banco-exercicios/[id]" options={{ href: null }} />
+      <Tabs.Screen name="planos" options={{ href: null }} />
+      <Tabs.Screen name="planos/[id]" options={{ href: null }} />
+      <Tabs.Screen name="treinos-extras" options={{ href: null }} />
+      <Tabs.Screen name="treinos-extras/[id]" options={{ href: null }} />
+      <Tabs.Screen name="execucao" options={{ href: null }} />
     </Tabs>
   );
 }

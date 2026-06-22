@@ -1,39 +1,138 @@
 name: Build Android AAB
 
+# ─────────────────────────────────────────────────────────
+# Dispara quando app.json é alterado no main OU manualmente
+# ─────────────────────────────────────────────────────────
 on:
   push:
     branches:
       - main
     paths:
       - 'app.json'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Forçar build mesmo sem mudança de versão'
+        type: boolean
+        default: false
 
 jobs:
-  build-aab:
-    name: EAS Build (Android AAB)
+  # ── 1. Verifica se expo.version ou versionCode realmente mudou ──
+  check-version:
+    name: Verificar bump de versão
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.diff.outputs.changed }}
+      version: ${{ steps.diff.outputs.version }}
+      version_code: ${{ steps.diff.outputs.version_code }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Comparar versões
+        id: diff
+        run: |
+          CURRENT_VER=$(jq -r '.expo.version' app.json)
+          CURRENT_CODE=$(jq -r '.expo.android.versionCode' app.json)
+
+          PREV_VER=$(git show HEAD~1:app.json 2>/dev/null | jq -r '.expo.version' 2>/dev/null || echo "")
+          PREV_CODE=$(git show HEAD~1:app.json 2>/dev/null | jq -r '.expo.android.versionCode' 2>/dev/null || echo "")
+
+          echo "version=$CURRENT_VER"     >> "$GITHUB_OUTPUT"
+          echo "version_code=$CURRENT_CODE" >> "$GITHUB_OUTPUT"
+
+          FORCE="${{ github.event.inputs.force }}"
+
+          if [ "$CURRENT_VER" != "$PREV_VER" ] || [ "$CURRENT_CODE" != "$PREV_CODE" ] || [ "$FORCE" = "true" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "✅ Versão alterada: $PREV_VER ($PREV_CODE) → $CURRENT_VER ($CURRENT_CODE)"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "⏭️  Nenhuma mudança de versão detectada. Build ignorado."
+          fi
+
+  # ── 2. Build local via Gradle (sem EAS / sem conta Expo) ──
+  build:
+    name: Build AAB (Gradle local)
+    needs: check-version
+    if: needs.check-version.outputs.changed == 'true'
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
 
-      - name: Install dependencies
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
+      - name: Instalar dependências
         run: npm ci --legacy-peer-deps
 
-      - name: Setup Expo & EAS
-        uses: expo/expo-github-action@v8
-        with:
-          expo-version: latest
-          eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
-
-      - name: Build AAB via EAS
-        run: eas build --platform android --profile production --non-interactive
+      # expo prebuild gera a pasta android/ sem necessitar de conta Expo
+      - name: Prebuild Android
+        run: npx expo prebuild --platform android --clean
         env:
           EXPO_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+
+      # Decodifica o keystore (base64) armazenado como secret
+      - name: Decodificar keystore
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > android/app/release.keystore
+
+      # Adiciona as props de signing ao gradle.properties gerado
+      - name: Configurar signing no gradle.properties
+        run: |
+          echo "KEYSTORE_FILE=release.keystore"                            >> android/gradle.properties
+          echo "KEYSTORE_PASSWORD=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" >> android/gradle.properties
+          echo "KEY_ALIAS=${{ secrets.ANDROID_KEY_ALIAS }}"                >> android/gradle.properties
+          echo "KEY_PASSWORD=${{ secrets.ANDROID_KEY_PASSWORD }}"          >> android/gradle.properties
+
+      # Injeta o bloco signingConfigs.release no build.gradle gerado
+      - name: Injetar signing no build.gradle
+        run: node scripts/inject-android-signing.js
+
+      # Build do AAB (release)
+      - name: Gradle bundleRelease
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew bundleRelease --no-daemon --stacktrace
+        env:
+          GRADLE_OPTS: "-Xmx4g -XX:MaxMetaspaceSize=512m"
+
+      # Salva o AAB como artefato do workflow (60 dias)
+      - name: Upload artefato AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: strive-personal-v${{ needs.check-version.outputs.version }}-vc${{ needs.check-version.outputs.version_code }}
+          path: android/app/build/outputs/bundle/release/app-release.aab
+          retention-days: 60
+
+      # Cria uma GitHub Release com o AAB anexado
+      - name: Criar GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ needs.check-version.outputs.version }}
+          name: "v${{ needs.check-version.outputs.version }} (versionCode ${{ needs.check-version.outputs.version_code }})"
+          files: android/app/build/outputs/bundle/release/app-release.aab
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
