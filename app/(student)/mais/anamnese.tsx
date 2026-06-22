@@ -8,7 +8,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
 import { useStudent } from '@/hooks/useStudent';
-import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
@@ -32,7 +31,6 @@ function fmtDate(iso: string) {
 
 export default function AnamneseScreen() {
   const { student } = useStudent();
-  const { profile } = useAuthStore();
   const { primaryColor } = useThemeStore();
 
   const [templates, setTemplates] = useState<AnamneseTemplate[]>([]);
@@ -43,8 +41,8 @@ export default function AnamneseScreen() {
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    if (!student || !profile?.tenant_id) return;
-    const tenantId = profile.tenant_id;
+    if (!student) return;
+    const tenantId = student.tenant_id;
 
     const [templatesRes, responseRes] = await Promise.all([
       supabase
@@ -57,7 +55,6 @@ export default function AnamneseScreen() {
         .from('anamnese_responses')
         .select('responses, updated_at')
         .eq('student_id', student.id)
-        .eq('tenant_id', tenantId)
         .maybeSingle(),
     ]);
 
@@ -81,7 +78,7 @@ export default function AnamneseScreen() {
     }
 
     setLoading(false);
-  }, [student?.id, profile?.tenant_id]);
+  }, [student?.id]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -90,8 +87,8 @@ export default function AnamneseScreen() {
   }
 
   async function handleSave() {
-    if (!student || !profile?.tenant_id) return;
-    const tenantId = profile.tenant_id;
+    if (!student) return;
+    const tenantId = student.tenant_id;
 
     const missing = templates.filter(t => t.required && !answers[t.field_key]?.trim());
     if (missing.length > 0) {
