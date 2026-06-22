@@ -48,7 +48,7 @@ export default function AnamneseScreen() {
       supabase
         .from('anamnese_templates')
         .select('id, field_key, label, field_type, options, required, sort_order, category')
-        .eq('tenant_id', tenantId)
+        .or(`tenant_id.eq.${tenantId},tenant_id.is.null`)
         .eq('is_active', true)
         .order('sort_order'),
       supabase
