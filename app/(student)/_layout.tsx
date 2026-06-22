@@ -46,7 +46,7 @@ export default function StudentLayout() {
       <Tabs.Screen
         name="progresso"
         options={{
-          title: 'Progresso',
+          title: 'Evolução',
           tabBarIcon: ({ color, size }) => <Ionicons name="trending-up" size={size} color={color} />,
         }}
       />
