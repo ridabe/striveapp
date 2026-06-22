@@ -26,7 +26,12 @@ export function useAuth() {
       setLoading(false);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_OUT') {
+        // Remove todos os canais realtime antes de trocar de sessão,
+        // evitando o erro "cannot add postgres_changes callbacks" ao logar com outro usuário.
+        await supabase.removeAllChannels();
+      }
       setSession(session);
       await fetchAndSetProfile(session, setProfile);
     });

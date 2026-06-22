@@ -109,6 +109,10 @@ jobs:
       - name: Injetar signing no build.gradle
         run: node scripts/inject-android-signing.js
 
+      # Mostra o build.gradle final para facilitar debug em caso de erro
+      - name: Debug — imprimir build.gradle
+        run: cat android/app/build.gradle
+
       # Build do AAB (release)
       - name: Gradle bundleRelease
         run: |
