@@ -29,6 +29,15 @@ interface ExItem {
   defaultReps: string | null;
   currentLoad: string;
   done: boolean;
+  comboGroupId: string | null;
+  itemNotes: string | null;
+  exerciseInstructions: string | null;
+}
+
+interface ExGroup {
+  comboId: string | null;
+  isCombo: boolean;
+  items: ExItem[];
 }
 
 const INTENSITIES = [
@@ -43,6 +52,28 @@ function fmtTime(secs: number) {
   const m = Math.floor(secs / 60).toString().padStart(2, '0');
   const s = (secs % 60).toString().padStart(2, '0');
   return `${m}:${s}`;
+}
+
+function groupByCombo(items: ExItem[]): ExGroup[] {
+  const groups: ExGroup[] = [];
+  const seen = new Map<string, ExGroup>();
+
+  for (const item of items) {
+    if (!item.comboGroupId) {
+      groups.push({ comboId: null, isCombo: false, items: [item] });
+    } else {
+      const existing = seen.get(item.comboGroupId);
+      if (existing) {
+        existing.items.push(item);
+        existing.isCombo = true;
+      } else {
+        const g: ExGroup = { comboId: item.comboGroupId, isCombo: false, items: [item] };
+        seen.set(item.comboGroupId, g);
+        groups.push(g);
+      }
+    }
+  }
+  return groups;
 }
 
 export default function ExtraExecutionScreen() {
@@ -75,7 +106,7 @@ export default function ExtraExecutionScreen() {
       supabase.from('extra_workouts').select('name').eq('id', extraId).single(),
       supabase
         .from('extra_workout_items')
-        .select('id, exercise_id, display_order, sets, reps, load, duration_secs, exercises(name, muscle_group, video_url)')
+        .select('id, exercise_id, display_order, sets, reps, load, duration_secs, combo_group_id, notes, exercises(name, muscle_group, video_url, instructions)')
         .eq('extra_workout_id', extraId)
         .order('display_order'),
     ]);
@@ -99,6 +130,9 @@ export default function ExtraExecutionScreen() {
         defaultReps: i.reps ?? null,
         currentLoad: i.load ?? '',
         done: false,
+        comboGroupId: i.combo_group_id ?? null,
+        itemNotes: i.notes ?? null,
+        exerciseInstructions: ex?.instructions ?? null,
       };
     });
 
@@ -106,12 +140,12 @@ export default function ExtraExecutionScreen() {
     setLoading(false);
   }
 
-  function updateLoad(idx: number, value: string) {
-    setItems(prev => prev.map((it, i) => i !== idx ? it : { ...it, currentLoad: value }));
+  function updateLoad(itemId: string, value: string) {
+    setItems(prev => prev.map(it => it.itemId === itemId ? { ...it, currentLoad: value } : it));
   }
 
-  function toggleDone(idx: number) {
-    setItems(prev => prev.map((it, i) => i !== idx ? it : { ...it, done: !it.done }));
+  function toggleDone(itemId: string) {
+    setItems(prev => prev.map(it => it.itemId === itemId ? { ...it, done: !it.done } : it));
   }
 
   function startWorkout() {
@@ -182,6 +216,7 @@ export default function ExtraExecutionScreen() {
   const doneCount = items.filter(it => it.done).length;
   const totalCount = items.length;
   const allDone = totalCount > 0 && doneCount === totalCount;
+  const groups = groupByCombo(items);
 
   if (loading) {
     return (
@@ -250,94 +285,121 @@ export default function ExtraExecutionScreen() {
 
       {/* ── Exercise list ── */}
       <ScrollView contentContainerStyle={s.scroll} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
-        {items.map((item, ii) => {
-          const mc = muscleColor(item.muscleGroup);
-          const isDone = item.done;
-          const isInteractive = phase === 'active';
+        {groups.map((group, gi) => (
+          <View key={group.comboId ?? `solo-${gi}`} style={group.isCombo ? s.comboCard : undefined}>
+            {group.isCombo && (
+              <View style={s.comboHeader}>
+                <Ionicons name="git-merge-outline" size={13} color={primaryColor} />
+                <Text style={[s.comboLabel, { color: primaryColor }]}>Exercícios Combinados</Text>
+              </View>
+            )}
 
-          return (
-            <View key={item.itemId} style={[s.exCard, isDone && s.exCardDone]}>
-              <View style={s.exTop}>
-                <TouchableOpacity
-                  style={s.thumbWrap}
-                  onPress={() => { if (item.videoUrl) { setVideoTitle(item.name); setVideoUri(item.videoUrl); } }}
-                  disabled={!item.videoUrl}
-                  activeOpacity={0.8}
+            {group.items.map((item, ii) => {
+              const mc = muscleColor(item.muscleGroup);
+              const isDone = item.done;
+              const isInteractive = phase === 'active';
+              const instruction = item.itemNotes || item.exerciseInstructions;
+
+              return (
+                <View
+                  key={item.itemId}
+                  style={[
+                    s.exCard,
+                    isDone && s.exCardDone,
+                    group.isCombo && s.exCardInCombo,
+                    group.isCombo && ii < group.items.length - 1 && s.exCardComboGap,
+                  ]}
                 >
-                  {item.videoUrl ? (
-                    <>
-                      <Video
-                        source={{ uri: item.videoUrl }}
-                        style={s.thumb}
-                        shouldPlay={false}
-                        isMuted
-                        resizeMode={ResizeMode.COVER}
-                      />
-                      <View style={s.playOverlay}>
-                        <Ionicons name="play" size={16} color="#fff" />
+                  <View style={s.exTop}>
+                    <TouchableOpacity
+                      style={s.thumbWrap}
+                      onPress={() => { if (item.videoUrl) { setVideoTitle(item.name); setVideoUri(item.videoUrl); } }}
+                      disabled={!item.videoUrl}
+                      activeOpacity={0.8}
+                    >
+                      {item.videoUrl ? (
+                        <>
+                          <Video
+                            source={{ uri: item.videoUrl }}
+                            style={s.thumb}
+                            shouldPlay={false}
+                            isMuted
+                            resizeMode={ResizeMode.COVER}
+                          />
+                          <View style={s.playOverlay}>
+                            <Ionicons name="play" size={16} color="#fff" />
+                          </View>
+                        </>
+                      ) : (
+                        <View style={[s.thumbPlaceholder, { backgroundColor: `${mc}25` }]}>
+                          <Ionicons name="barbell-outline" size={22} color={mc} />
+                        </View>
+                      )}
+                    </TouchableOpacity>
+
+                    <View style={s.exInfo}>
+                      <Text style={[s.exName, isDone && s.exNameDone]} numberOfLines={2}>{item.name}</Text>
+                      <View style={s.exMeta}>
+                        <View style={[s.musclePill, { backgroundColor: `${mc}20` }]}>
+                          <View style={[s.muscleDot, { backgroundColor: mc }]} />
+                          <Text style={[s.musclePillText, { color: mc }]}>{item.muscleGroup || 'Geral'}</Text>
+                        </View>
+                        {item.prescription ? <Text style={s.prescText}>{item.prescription}</Text> : null}
                       </View>
-                    </>
-                  ) : (
-                    <View style={[s.thumbPlaceholder, { backgroundColor: `${mc}25` }]}>
-                      <Ionicons name="barbell-outline" size={22} color={mc} />
+                    </View>
+                  </View>
+
+                  {instruction && (
+                    <View style={s.instructionRow}>
+                      <Ionicons name="information-circle-outline" size={14} color={Colors.textSecondary} style={{ marginTop: 1 }} />
+                      <Text style={s.instructionText}>{instruction}</Text>
                     </View>
                   )}
-                </TouchableOpacity>
 
-                <View style={s.exInfo}>
-                  <Text style={[s.exName, isDone && s.exNameDone]} numberOfLines={2}>{item.name}</Text>
-                  <View style={s.exMeta}>
-                    <View style={[s.musclePill, { backgroundColor: `${mc}20` }]}>
-                      <View style={[s.muscleDot, { backgroundColor: mc }]} />
-                      <Text style={[s.musclePillText, { color: mc }]}>{item.muscleGroup || 'Geral'}</Text>
+                  <View style={s.exBottom}>
+                    <View style={s.loadWrap}>
+                      <Ionicons name="barbell-outline" size={14} color={Colors.textSecondary} />
+                      <TextInput
+                        style={s.loadInput}
+                        value={item.currentLoad}
+                        onChangeText={v => updateLoad(item.itemId, v)}
+                        placeholder="Carga"
+                        placeholderTextColor={Colors.textSecondary}
+                        editable={!isDone}
+                        keyboardType="default"
+                        returnKeyType="done"
+                      />
+                      <Text style={s.loadUnit}>kg</Text>
                     </View>
-                    {item.prescription ? <Text style={s.prescText}>{item.prescription}</Text> : null}
+
+                    {isDone ? (
+                      <TouchableOpacity
+                        style={[s.doneTag, { backgroundColor: `${primaryColor}18` }]}
+                        onPress={() => isInteractive && toggleDone(item.itemId)}
+                        activeOpacity={0.7}
+                      >
+                        <Ionicons name="checkmark-circle" size={18} color={primaryColor} />
+                        <Text style={[s.doneTagText, { color: primaryColor }]}>Feito</Text>
+                      </TouchableOpacity>
+                    ) : (
+                      <TouchableOpacity
+                        style={[s.markBtn, isInteractive ? { backgroundColor: primaryColor } : s.markBtnDisabled]}
+                        onPress={() => isInteractive && toggleDone(item.itemId)}
+                        disabled={!isInteractive}
+                        activeOpacity={0.8}
+                      >
+                        <Ionicons name="checkmark" size={15} color={isInteractive ? '#fff' : Colors.textSecondary} />
+                        <Text style={[s.markBtnText, !isInteractive && s.markBtnTextDisabled]}>
+                          {isInteractive ? 'Feito' : 'Inicie'}
+                        </Text>
+                      </TouchableOpacity>
+                    )}
                   </View>
                 </View>
-              </View>
-
-              <View style={s.exBottom}>
-                <View style={s.loadWrap}>
-                  <Ionicons name="barbell-outline" size={14} color={Colors.textSecondary} />
-                  <TextInput
-                    style={s.loadInput}
-                    value={item.currentLoad}
-                    onChangeText={v => updateLoad(ii, v)}
-                    placeholder="Carga"
-                    placeholderTextColor={Colors.textSecondary}
-                    editable={!isDone}
-                    keyboardType="default"
-                    returnKeyType="done"
-                  />
-                  <Text style={s.loadUnit}>kg</Text>
-                </View>
-
-                {isDone ? (
-                  <TouchableOpacity
-                    style={[s.doneTag, { backgroundColor: `${primaryColor}18` }]}
-                    onPress={() => isInteractive && toggleDone(ii)}
-                    activeOpacity={0.7}
-                  >
-                    <Ionicons name="checkmark-circle" size={18} color={primaryColor} />
-                    <Text style={[s.doneTagText, { color: primaryColor }]}>Feito</Text>
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    style={[s.markBtn, isInteractive ? { backgroundColor: primaryColor } : s.markBtnDisabled]}
-                    onPress={() => isInteractive && toggleDone(ii)}
-                    disabled={!isInteractive}
-                    activeOpacity={0.8}
-                  >
-                    <Ionicons name="checkmark" size={15} color={isInteractive ? '#fff' : Colors.textSecondary} />
-                    <Text style={[s.markBtnText, !isInteractive && s.markBtnTextDisabled]}>
-                      {isInteractive ? 'Feito' : 'Inicie'}
-                    </Text>
-                  </TouchableOpacity>
-                )}
-              </View>
-            </View>
-          );
-        })}
+              );
+            })}
+          </View>
+        ))}
 
         {phase === 'ready' && (
           <TouchableOpacity style={[s.bottomBtn, { backgroundColor: primaryColor }]} onPress={startWorkout} activeOpacity={0.87}>
@@ -444,8 +506,16 @@ const s = StyleSheet.create({
   ctaBtn: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 14, paddingVertical: 9, borderRadius: 20 },
   ctaBtnText: { fontFamily: FontFamily.bodyBold, fontSize: 13, color: '#fff' },
   scroll: { paddingHorizontal: 14, paddingTop: 12, paddingBottom: 48, gap: 10 },
+
+  comboCard: { borderWidth: 1.5, borderColor: Colors.border, borderRadius: 20, overflow: 'hidden' },
+  comboHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 14, paddingTop: 10, paddingBottom: 6, backgroundColor: Colors.surface },
+  comboLabel: { fontFamily: FontFamily.bodyBold, fontSize: 12, letterSpacing: 0.3 },
+
   exCard: { backgroundColor: Colors.surface, borderRadius: 18, borderWidth: 1, borderColor: Colors.border, overflow: 'hidden' },
   exCardDone: { opacity: 0.55 },
+  exCardInCombo: { borderRadius: 0, borderWidth: 0, borderTopWidth: 1, borderTopColor: Colors.border },
+  exCardComboGap: { borderBottomWidth: 0 },
+
   exTop: { flexDirection: 'row', alignItems: 'flex-start', gap: 12, padding: 14 },
   thumbWrap: { width: THUMB_SIZE, height: THUMB_SIZE, borderRadius: 14, overflow: 'hidden', backgroundColor: Colors.border, flexShrink: 0 },
   thumb: { width: THUMB_SIZE, height: THUMB_SIZE },
@@ -459,6 +529,10 @@ const s = StyleSheet.create({
   muscleDot: { width: 7, height: 7, borderRadius: 4 },
   musclePillText: { fontFamily: FontFamily.bodyMedium, fontSize: 11 },
   prescText: { fontFamily: FontFamily.body, fontSize: 11, color: Colors.textSecondary },
+
+  instructionRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 6, paddingHorizontal: 14, paddingBottom: 10 },
+  instructionText: { flex: 1, fontFamily: FontFamily.body, fontSize: 12, color: Colors.textSecondary, lineHeight: 17 },
+
   exBottom: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 14, paddingBottom: 12, paddingTop: 2 },
   loadWrap: { flex: 1, flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.bg, borderRadius: 12, borderWidth: 1, borderColor: Colors.border, paddingHorizontal: 10, paddingVertical: 9, gap: 6 },
   loadInput: { flex: 1, fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm, color: Colors.textPrimary, padding: 0 },
@@ -469,8 +543,10 @@ const s = StyleSheet.create({
   markBtnTextDisabled: { color: Colors.textSecondary },
   doneTag: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 14, paddingVertical: 10, borderRadius: 12 },
   doneTagText: { fontFamily: FontFamily.bodyBold, fontSize: 13 },
+
   bottomBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, paddingVertical: 17, borderRadius: 18, marginTop: 6 },
   bottomBtnText: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.md, color: '#fff' },
+
   finishOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'flex-end' },
   finishSheet: { backgroundColor: Colors.surface, borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 20, paddingBottom: 32, paddingTop: 12, gap: 12, maxHeight: '90%' },
   sheetHandle: { width: 40, height: 4, borderRadius: 2, backgroundColor: Colors.border, alignSelf: 'center', marginBottom: 8 },
