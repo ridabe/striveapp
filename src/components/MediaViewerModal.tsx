@@ -69,7 +69,7 @@ export function MediaViewerModal({ visible, uri, type, title, onClose }: Props) 
               resizeMode={ResizeMode.CONTAIN}
               useNativeControls
               shouldPlay
-              isLooping={false}
+              isLooping
             />
           )}
         </View>

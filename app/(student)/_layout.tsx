@@ -2,11 +2,9 @@ import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useThemeStore } from '@/stores/themeStore';
 import { Colors } from '@/theme';
-import { useTenant } from '@/hooks/useTenant';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function StudentLayout() {
-  useTenant();
   const { primaryColor } = useThemeStore();
   const insets = useSafeAreaInsets();
 
@@ -59,6 +57,8 @@ export default function StudentLayout() {
           tabBarIcon: ({ color, size }) => <Ionicons name="person" size={size} color={color} />,
         }}
       />
+      {/* Telas de detalhe — ocultas do tab bar */}
+      <Tabs.Screen name="mais" options={{ href: null }} />
     </Tabs>
   );
 }

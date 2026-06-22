@@ -29,9 +29,11 @@ export function useTenant() {
 
     loadTenant(tenantId);
 
-    // Realtime: reflete mudanças de logo/cor instantaneamente
+    // Nome único por execução do effect evita conflito se o hook for
+    // montado em paralelo em dois componentes com o mesmo tenantId.
+    const channelName = `tenant:${tenantId}:${Date.now()}`;
     const channel = supabase
-      .channel(`tenant:${tenantId}`)
+      .channel(channelName)
       .on(
         'postgres_changes',
         {

@@ -35,9 +35,9 @@ export function useModules() {
 
     fetchModules(tenantId);
 
-    // Realtime: refetch whenever tenant_modules changes for this tenant
+    // Nome único por execução do effect — evita conflito de canal duplicado.
     const channel = supabase
-      .channel(`modules:${tenantId}`)
+      .channel(`modules:${tenantId}:${Date.now()}`)
       .on(
         'postgres_changes',
         {
