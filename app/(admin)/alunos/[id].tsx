@@ -134,6 +134,17 @@ function InfoRow({ icon, label, value }: { icon: any; label: string; value: stri
   );
 }
 
+type RankingInfo = {
+  rank: number;
+  total: number;
+  points: number;
+  workouts: number;
+  activeMinutes: number;
+};
+
+const MEDAL = ['🥇', '🥈', '🥉'];
+const MONTH_NAMES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
 // ─── Main ─────────────────────────────────────────────────────────────────────
 export default function StudentDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -143,7 +154,13 @@ export default function StudentDetailScreen() {
   const [counts, setCounts] = useState<ModuleCounts>({
     anamnese: 'none', planos: 0, avaliacoes: 0, financeiro: 0, frequencia: 0, historico: 0,
   });
+  const [rankingInfo, setRankingInfo] = useState<RankingInfo | null>(null);
+  const [gamificationActive, setGamificationActive] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  const now   = new Date();
+  const month = now.getMonth() + 1;
+  const year  = now.getFullYear();
 
   const lightText = ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(primaryColor);
 
@@ -153,7 +170,7 @@ export default function StudentDetailScreen() {
   }, [id]);
 
   async function loadAll() {
-    const [studentRes, anamneseRes, avaliacoesRes, frequenciaRes] = await Promise.all([
+    const [studentRes, anamneseRes, avaliacoesRes, frequenciaRes, gamSettingsRes] = await Promise.all([
       supabase.from('students')
         .select('id, full_name, email, phone, status, goal, birth_date, notes, created_at')
         .eq('id', id)
@@ -168,6 +185,7 @@ export default function StudentDetailScreen() {
       supabase.from('attendance')
         .select('id', { count: 'exact', head: true })
         .eq('student_id', id),
+      supabase.from('gamification_settings').select('is_active').single(),
     ]);
 
     const [planosRes, financeiroRes, historicoRes] = await Promise.all([
@@ -197,6 +215,43 @@ export default function StudentDetailScreen() {
       frequencia: frequenciaRes.count ?? 0,
       historico: historicoRes.count ?? 0,
     });
+
+    const isActive = gamSettingsRes.data?.is_active ?? false;
+    setGamificationActive(isActive);
+
+    if (isActive) {
+      const [myPtsRes, aboveRes, totalRes] = await Promise.all([
+        supabase.from('monthly_points')
+          .select('total_points, workouts_completed, active_minutes')
+          .eq('student_id', id).eq('month', month).eq('year', year)
+          .maybeSingle(),
+        supabase.from('monthly_points')
+          .select('id', { count: 'exact', head: true })
+          .eq('month', month).eq('year', year)
+          .gt('total_points', 0),
+        supabase.from('monthly_points')
+          .select('id', { count: 'exact', head: true })
+          .eq('month', month).eq('year', year),
+      ]);
+
+      if (myPtsRes.data) {
+        const myPoints = myPtsRes.data.total_points;
+        const { count: aboveCount } = await supabase.from('monthly_points')
+          .select('id', { count: 'exact', head: true })
+          .eq('month', month).eq('year', year)
+          .gt('total_points', myPoints);
+
+        setRankingInfo({
+          rank: (aboveCount ?? 0) + 1,
+          total: totalRes.count ?? 1,
+          points: myPoints,
+          workouts: myPtsRes.data.workouts_completed,
+          activeMinutes: myPtsRes.data.active_minutes,
+        });
+      } else {
+        setRankingInfo({ rank: 0, total: totalRes.count ?? 0, points: 0, workouts: 0, activeMinutes: 0 });
+      }
+    }
 
     setLoading(false);
   }
@@ -271,6 +326,39 @@ export default function StudentDetailScreen() {
             </View>
           </View>
         </View>
+
+        {/* Ranking card */}
+        {gamificationActive && (
+          <TouchableOpacity
+            style={[s.rankCard, { borderColor: rankingInfo?.rank && rankingInfo.rank <= 3 ? `${primaryColor}60` : Colors.border }]}
+            onPress={() => router.push('/(admin)/ranking' as any)}
+            activeOpacity={0.8}
+          >
+            <View style={[s.rankIconWrap, { backgroundColor: `${primaryColor}18` }]}>
+              <Ionicons name="trophy-outline" size={20} color={primaryColor} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={s.rankLabel}>RANKING — {MONTH_NAMES[month - 1].toUpperCase()} {year}</Text>
+              {rankingInfo && rankingInfo.rank > 0 ? (
+                <>
+                  <Text style={[s.rankPosition, { color: primaryColor }]}>
+                    {rankingInfo.rank <= 3 ? MEDAL[rankingInfo.rank - 1] : `#${rankingInfo.rank}`}
+                    {' '}
+                    <Text style={s.rankOf}>de {rankingInfo.total}</Text>
+                  </Text>
+                  <Text style={s.rankStats}>
+                    {rankingInfo.points.toLocaleString('pt-BR')} pts · {rankingInfo.workouts} treinos · {rankingInfo.activeMinutes} min
+                  </Text>
+                </>
+              ) : (
+                <Text style={s.rankNoData}>
+                  {rankingInfo ? 'Sem pontos registrados este mês' : 'Carregando...'}
+                </Text>
+              )}
+            </View>
+            <Ionicons name="chevron-forward" size={16} color={Colors.textSecondary} />
+          </TouchableOpacity>
+        )}
 
         {/* Info card */}
         <View style={s.infoCard}>
@@ -362,6 +450,19 @@ const s = StyleSheet.create({
   statusBadge: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 20, alignSelf: 'flex-start' },
   statusDot: { width: 7, height: 7, borderRadius: 4 },
   statusText: { fontFamily: FontFamily.bodyMedium, fontSize: 12 },
+
+  // Ranking card
+  rankCard: {
+    flexDirection: 'row', alignItems: 'center', gap: 12,
+    backgroundColor: Colors.surface, borderRadius: 16, borderWidth: 1,
+    padding: 14, marginBottom: 16,
+  },
+  rankIconWrap: { width: 40, height: 40, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
+  rankLabel: { fontFamily: FontFamily.bodyMedium, fontSize: 10, color: Colors.textSecondary, letterSpacing: 0.8, marginBottom: 2 },
+  rankPosition: { fontFamily: FontFamily.display, fontSize: 22 },
+  rankOf: { fontFamily: FontFamily.body, fontSize: 14, color: Colors.textSecondary },
+  rankStats: { fontFamily: FontFamily.body, fontSize: 12, color: Colors.textSecondary, marginTop: 2 },
+  rankNoData: { fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textSecondary, marginTop: 2 },
 
   // Info card
   infoCard: {

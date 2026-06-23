@@ -123,9 +123,8 @@ export default function StudentHome() {
     );
   }
 
-  const firstName  = student?.full_name?.split(' ')[0]
-    ?? profile?.full_name?.split(' ')[0]
-    ?? 'Aluno';
+  const displayName = student?.full_name ?? profile?.full_name ?? 'Aluno';
+  const nameFontSize = displayName.length > 20 ? 18 : displayName.length > 15 ? 22 : displayName.length > 10 ? 26 : 30;
   const todayLabel = DAY_LABELS[new Date().getDay()];
 
   // ── Today card logic ──────────────────────────────────────────────────────
@@ -255,9 +254,9 @@ export default function StudentHome() {
         {/* Header */}
         <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
           <View style={s.header}>
-            <View>
+            <View style={{ flex: 1, marginRight: 12 }}>
               <Text style={s.greetSmall}>{greeting()},</Text>
-              <Text style={s.greetName}>{firstName} 👋</Text>
+              <Text style={[s.greetName, { fontSize: nameFontSize }]} numberOfLines={1} adjustsFontSizeToFit>{displayName} 👋</Text>
             </View>
             <TouchableOpacity onPress={() => router.push('/(student)/perfil' as any)} activeOpacity={0.8}>
               <TenantLogo size={44} />
@@ -305,8 +304,9 @@ export default function StudentHome() {
                 { icon: 'time-outline',        label: 'Histórico',  route: '/(student)/mais/historico',    slug: MODULE.EXECUCAO_TREINO },
                 { icon: 'folder-outline',      label: 'Arquivos',   route: '/(student)/mais/arquivos',     slug: MODULE.ARQUIVOS },
                 { icon: 'star-outline',        label: 'Feedback',   route: '/(student)/mais/feedback',     slug: MODULE.FEEDBACKS },
-                { icon: 'restaurant-outline',  label: 'Nutrição',   route: '/(student)/mais/nutricao',     slug: null },
-                { icon: 'calendar-outline',    label: 'Agenda',     route: '/(student)/mais/agenda',       slug: null },
+                { icon: 'restaurant-outline',  label: 'Planos Alimentares', route: '/(student)/mais/planos-alimentares', slug: MODULE.PLANOS_ALIMENTARES },
+                { icon: 'calendar-outline',    label: 'Agenda',     route: '/(student)/mais/agenda',       slug: MODULE.MINHA_AGENDA },
+                { icon: 'trophy-outline',      label: 'Ranking',    route: '/(student)/mais/ranking',      slug: null },
               ] as { icon: string; label: string; route: string; slug: string | null }[]
             )
               .filter(item => !modulesLoaded || item.slug === null || hasModule(item.slug as any))

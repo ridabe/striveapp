@@ -52,6 +52,20 @@ export default function MaisScreen() {
       title: 'ACOMPANHAMENTO',
       items: [
         {
+          slug: MODULE.GAMIFICACAO,
+          icon: 'trophy-outline',
+          label: 'Ranking',
+          description: 'Competição mensal de treinos',
+          route: '/(admin)/ranking',
+        },
+        {
+          slug: MODULE.PLANOS_ALIMENTARES,
+          icon: 'restaurant-outline',
+          label: 'Planos Alimentares',
+          description: 'Cardápios e macronutrientes',
+          route: '/(admin)/planos-alimentares/',
+        },
+        {
           slug: MODULE.FREQUENCIA,
           icon: 'calendar-outline',
           label: 'Frequência',
@@ -91,6 +105,13 @@ export default function MaisScreen() {
     {
       title: 'COMUNICAÇÃO',
       items: [
+        {
+          slug: MODULE.MINHA_AGENDA,
+          icon: 'calendar-outline',
+          label: 'Minha Agenda',
+          description: 'Atendimentos e compromissos',
+          route: '/(admin)/agenda',
+        },
         {
           slug: MODULE.ARQUIVOS,
           icon: 'folder-outline',

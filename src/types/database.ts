@@ -1,4 +1,3 @@
-// Auto-gerado via Supabase MCP - generate_typescript_types
 export type Json =
   | string
   | number
@@ -156,6 +155,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      app_versions: {
+        Row: {
+          current_version: string
+          current_version_code: number
+          force_update: boolean
+          min_version_code: number
+          platform: string
+          release_notes: string | null
+          store_url: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          current_version: string
+          current_version_code: number
+          force_update?: boolean
+          min_version_code: number
+          platform: string
+          release_notes?: string | null
+          store_url?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          current_version?: string
+          current_version_code?: number
+          force_update?: boolean
+          min_version_code?: number
+          platform?: string
+          release_notes?: string | null
+          store_url?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
       }
       attendance: {
         Row: {
@@ -1576,6 +1611,441 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      agenda_events: {
+        Row: {
+          id: string
+          tenant_id: string
+          type: string
+          title: string
+          event_date: string
+          start_time: string | null
+          end_time: string | null
+          student_id: string | null
+          student_name: string | null
+          location: string | null
+          meeting_url: string | null
+          amount: number | null
+          description: string | null
+          status: string
+          origin: string
+          rejection_reason: string | null
+          notes: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          tenant_id: string
+          type: string
+          title: string
+          event_date: string
+          start_time?: string | null
+          end_time?: string | null
+          student_id?: string | null
+          student_name?: string | null
+          location?: string | null
+          meeting_url?: string | null
+          amount?: number | null
+          description?: string | null
+          status?: string
+          origin?: string
+          rejection_reason?: string | null
+          notes?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          tenant_id?: string
+          type?: string
+          title?: string
+          event_date?: string
+          start_time?: string | null
+          end_time?: string | null
+          student_id?: string | null
+          student_name?: string | null
+          location?: string | null
+          meeting_url?: string | null
+          amount?: number | null
+          description?: string | null
+          status?: string
+          origin?: string
+          rejection_reason?: string | null
+          notes?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
+      food_items: {
+        Row: {
+          id: string
+          tenant_id: string | null
+          name: string
+          category: string | null
+          portion_grams: number
+          calories: number
+          protein_g: number
+          carbs_g: number
+          fat_g: number
+          fiber_g: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          tenant_id?: string | null
+          name: string
+          category?: string | null
+          portion_grams: number
+          calories: number
+          protein_g: number
+          carbs_g: number
+          fat_g: number
+          fiber_g?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          tenant_id?: string | null
+          name?: string
+          category?: string | null
+          portion_grams?: number
+          calories?: number
+          protein_g?: number
+          carbs_g?: number
+          fat_g?: number
+          fiber_g?: number
+          created_at?: string
+        }
+        Relationships: []
+      }
+      gamification_events: {
+        Row: {
+          id: string
+          tenant_id: string
+          student_id: string
+          event_type: string
+          points: number
+          reference_id: string | null
+          reference_type: string | null
+          month: number
+          year: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          tenant_id: string
+          student_id: string
+          event_type: string
+          points: number
+          reference_id?: string | null
+          reference_type?: string | null
+          month: number
+          year: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          tenant_id?: string
+          student_id?: string
+          event_type?: string
+          points?: number
+          reference_id?: string | null
+          reference_type?: string | null
+          month?: number
+          year?: number
+          created_at?: string
+        }
+        Relationships: []
+      }
+      gamification_settings: {
+        Row: {
+          id: string
+          is_active: boolean
+          workout_points: number
+          extra_workout_points: number
+          challenge_points: number
+          bonus_points: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          is_active?: boolean
+          workout_points?: number
+          extra_workout_points?: number
+          challenge_points?: number
+          bonus_points?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          is_active?: boolean
+          workout_points?: number
+          extra_workout_points?: number
+          challenge_points?: number
+          bonus_points?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      meal_plan_foods: {
+        Row: {
+          id: string
+          meal_id: string
+          tenant_id: string | null
+          food_item_id: string
+          quantity: number
+          calories: number | null
+          protein_g: number | null
+          carbs_g: number | null
+          fat_g: number | null
+          fiber_g: number | null
+          sort_order: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          meal_id: string
+          tenant_id?: string | null
+          food_item_id: string
+          quantity: number
+          calories?: number | null
+          protein_g?: number | null
+          carbs_g?: number | null
+          fat_g?: number | null
+          fiber_g?: number | null
+          sort_order?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          meal_id?: string
+          tenant_id?: string | null
+          food_item_id?: string
+          quantity?: number
+          calories?: number | null
+          protein_g?: number | null
+          carbs_g?: number | null
+          fat_g?: number | null
+          fiber_g?: number | null
+          sort_order?: number
+          created_at?: string
+        }
+        Relationships: []
+      }
+      meal_plan_meals: {
+        Row: {
+          id: string
+          meal_plan_id: string
+          tenant_id: string | null
+          name: string
+          meal_type: string
+          suggested_time: string | null
+          sort_order: number
+          notes: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          meal_plan_id: string
+          tenant_id?: string | null
+          name: string
+          meal_type: string
+          suggested_time?: string | null
+          sort_order?: number
+          notes?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          meal_plan_id?: string
+          tenant_id?: string | null
+          name?: string
+          meal_type?: string
+          suggested_time?: string | null
+          sort_order?: number
+          notes?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
+      meal_plans: {
+        Row: {
+          id: string
+          tenant_id: string
+          name: string
+          goal: string | null
+          status: string
+          daily_calories: number | null
+          description: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          tenant_id: string
+          name: string
+          goal?: string | null
+          status?: string
+          daily_calories?: number | null
+          description?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          tenant_id?: string
+          name?: string
+          goal?: string | null
+          status?: string
+          daily_calories?: number | null
+          description?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      monthly_points: {
+        Row: {
+          id: string
+          student_id: string
+          tenant_id: string
+          month: number
+          year: number
+          total_points: number
+          workouts_completed: number
+          exercises_completed: number
+          load_increases: number
+          active_minutes: number
+          weekly_bonuses: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          student_id: string
+          tenant_id: string
+          month: number
+          year: number
+          total_points?: number
+          workouts_completed?: number
+          exercises_completed?: number
+          load_increases?: number
+          active_minutes?: number
+          weekly_bonuses?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          student_id?: string
+          tenant_id?: string
+          month?: number
+          year?: number
+          total_points?: number
+          workouts_completed?: number
+          exercises_completed?: number
+          load_increases?: number
+          active_minutes?: number
+          weekly_bonuses?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      monthly_ranking_snapshots: {
+        Row: {
+          id: string
+          tenant_id: string
+          month: number
+          year: number
+          champion_id: string | null
+          rankings: Json
+          closed_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          tenant_id: string
+          month: number
+          year: number
+          champion_id?: string | null
+          rankings?: Json
+          closed_at?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          tenant_id?: string
+          month?: number
+          year?: number
+          champion_id?: string | null
+          rankings?: Json
+          closed_at?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
+      student_badges: {
+        Row: {
+          id: string
+          student_id: string
+          badge_type: string
+          month: number
+          year: number
+          earned_at: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          student_id: string
+          badge_type: string
+          month: number
+          year: number
+          earned_at?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          student_id?: string
+          badge_type?: string
+          month?: number
+          year?: number
+          earned_at?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
+      student_meal_plan_assignments: {
+        Row: {
+          id: string
+          student_id: string
+          meal_plan_id: string
+          tenant_id: string | null
+          status: string
+          assigned_at: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          student_id: string
+          meal_plan_id: string
+          tenant_id?: string | null
+          status?: string
+          assigned_at?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          student_id?: string
+          meal_plan_id?: string
+          tenant_id?: string | null
+          status?: string
+          assigned_at?: string
+          created_at?: string
+        }
+        Relationships: []
       }
     }
     Views: {

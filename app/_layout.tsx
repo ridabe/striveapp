@@ -13,6 +13,7 @@ import '../src/styles/global.css';
 import { useAuth } from '@/hooks/useAuth';
 import { useModules } from '@/hooks/useModules';
 import { useTenant } from '@/hooks/useTenant';
+import { AppUpdateAlert } from '@/components/AppUpdateAlert';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -45,6 +46,7 @@ export default function RootLayout() {
         <Stack.Screen name="(admin)" />
         <Stack.Screen name="+not-found" />
       </Stack>
+      <AppUpdateAlert />
     </>
   );
 }
