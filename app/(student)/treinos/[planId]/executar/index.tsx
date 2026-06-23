@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,
   TextInput, Alert, ActivityIndicator,
-  KeyboardAvoidingView, Platform, Modal,
+  KeyboardAvoidingView, Platform, Modal, Dimensions,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -32,6 +32,7 @@ interface ExItem {
   comboGroupId: string | null;
   itemNotes: string | null;
   exerciseInstructions: string | null;
+  restSeconds: number | null;
 }
 
 interface ExGroup {
@@ -54,6 +55,9 @@ const INTENSITIES = [
   { key: 'muito_intenso', label: 'Pesado',  emoji: '😤', color: '#EF4444' },
 ];
 
+const STAR_LABELS = ['', 'Péssimo', 'Ruim', 'Regular', 'Bom', 'Excelente'];
+const STAR_COLORS = ['', '#EF4444', '#F97316', '#F59E0B', '#4ADE80', '#22C55E'];
+
 function fmtTime(secs: number) {
   const m = Math.floor(secs / 60).toString().padStart(2, '0');
   const s = (secs % 60).toString().padStart(2, '0');
@@ -63,7 +67,6 @@ function fmtTime(secs: number) {
 function groupByCombo(items: ExItem[]): ExGroup[] {
   const groups: ExGroup[] = [];
   const seen = new Map<string, ExGroup>();
-
   for (const item of items) {
     if (!item.comboGroupId) {
       groups.push({ comboId: null, isCombo: false, items: [item] });
@@ -82,6 +85,178 @@ function groupByCombo(items: ExItem[]): ExGroup[] {
   return groups;
 }
 
+// ─── Analog rest timer modal ──────────────────────────────────────────────────
+
+const CLOCK_SIZE = 220;
+const CLOCK_R = CLOCK_SIZE / 2;
+const HAND_LEN = 82;
+const TICK_OUTER_R = CLOCK_R - 10;
+
+function RestTimerModal({
+  visible, totalSecs, exerciseName, onClose, primaryColor,
+}: {
+  visible: boolean;
+  totalSecs: number;
+  exerciseName: string;
+  onClose: () => void;
+  primaryColor: string;
+}) {
+  const [remaining, setRemaining] = useState(totalSecs);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    if (!visible) { setRemaining(totalSecs); return; }
+    setRemaining(totalSecs);
+    intervalRef.current = setInterval(() => {
+      setRemaining(r => {
+        if (r <= 1) {
+          clearInterval(intervalRef.current!);
+          setTimeout(onClose, 600);
+          return 0;
+        }
+        return r - 1;
+      });
+    }, 1000);
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  }, [visible, totalSecs]);
+
+  const elapsed = totalSecs - remaining;
+  const progress = totalSecs > 0 ? elapsed / totalSecs : 0;
+  const handDeg = progress * 360;
+
+  const ticks = Array.from({ length: 60 }, (_, i) => {
+    const angle = (i / 60) * Math.PI * 2 - Math.PI / 2;
+    const isMajor = i % 5 === 0;
+    const tickLen = isMajor ? 14 : 7;
+    const mid = TICK_OUTER_R - tickLen / 2;
+    return {
+      cx: CLOCK_R + Math.cos(angle) * mid,
+      cy: CLOCK_R + Math.sin(angle) * mid,
+      angleDeg: (i / 60) * 360,
+      isMajor,
+      tickLen,
+      consumed: i / 60 < progress,
+    };
+  });
+
+  return (
+    <Modal visible={visible} animationType="fade" transparent onRequestClose={onClose}>
+      <View style={rt.overlay}>
+        <View style={rt.sheet}>
+          <View style={rt.sheetHandle} />
+          <Text style={rt.heading}>Pausa</Text>
+          <Text style={rt.sub} numberOfLines={1}>{exerciseName}</Text>
+
+          {/* Clock face */}
+          <View style={{ width: CLOCK_SIZE, height: CLOCK_SIZE, alignSelf: 'center', marginVertical: 28 }}>
+            {/* Outer ring */}
+            <View style={[rt.ring, { borderColor: `${primaryColor}25` }]} />
+
+            {/* Tick marks */}
+            {ticks.map(({ cx, cy, angleDeg, isMajor, tickLen, consumed }, i) => (
+              <View
+                key={i}
+                style={{
+                  position: 'absolute',
+                  width: isMajor ? 2.5 : 1.5,
+                  height: tickLen,
+                  borderRadius: 2,
+                  backgroundColor: consumed
+                    ? Colors.border
+                    : isMajor ? Colors.textPrimary : Colors.textSecondary,
+                  left: cx - (isMajor ? 1.25 : 0.75),
+                  top: cy - tickLen / 2,
+                  transform: [{ rotate: `${angleDeg}deg` }],
+                }}
+              />
+            ))}
+
+            {/* Clock hand */}
+            <View
+              style={{
+                position: 'absolute',
+                width: 3,
+                height: HAND_LEN,
+                borderRadius: 3,
+                backgroundColor: primaryColor,
+                bottom: CLOCK_R,
+                left: CLOCK_R - 1.5,
+                transform: [
+                  { translateY: HAND_LEN / 2 },
+                  { rotate: `${handDeg}deg` },
+                  { translateY: -HAND_LEN / 2 },
+                ],
+              }}
+            />
+
+            {/* Center dot */}
+            <View
+              style={{
+                position: 'absolute',
+                width: 12, height: 12, borderRadius: 6,
+                backgroundColor: primaryColor,
+                left: CLOCK_R - 6,
+                top: CLOCK_R - 6,
+              }}
+            />
+
+            {/* Center countdown */}
+            <View style={rt.clockCenter}>
+              <Text style={[rt.clockNum, { color: primaryColor }]}>{fmtTime(remaining)}</Text>
+              <Text style={rt.clockLabel}>RESTANTE</Text>
+            </View>
+          </View>
+
+          <View style={rt.totalRow}>
+            <Ionicons name="timer-outline" size={14} color={Colors.textSecondary} />
+            <Text style={rt.totalText}>Pausa de {fmtTime(totalSecs)}</Text>
+          </View>
+
+          <TouchableOpacity
+            style={[rt.skipBtn, { borderColor: primaryColor }]}
+            onPress={onClose}
+            activeOpacity={0.75}
+          >
+            <Text style={[rt.skipText, { color: primaryColor }]}>Pular pausa</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+  );
+}
+
+// ─── Star row ─────────────────────────────────────────────────────────────────
+
+function StarRow({
+  rating,
+  size = 28,
+  onRate,
+}: {
+  rating: number;
+  size?: number;
+  onRate: (n: number) => void;
+}) {
+  return (
+    <View style={{ flexDirection: 'row', gap: 6 }}>
+      {[1, 2, 3, 4, 5].map(n => (
+        <TouchableOpacity
+          key={n}
+          onPress={() => onRate(n === rating ? 0 : n)}
+          activeOpacity={0.7}
+        >
+          <Ionicons
+            name={n <= rating ? 'star' : 'star-outline'}
+            size={size}
+            color={n <= rating ? '#FBBF24' : Colors.border}
+          />
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
+}
+
+// ─── Main screen ──────────────────────────────────────────────────────────────
+
 export default function PlanExecutionScreen() {
   const { planId } = useLocalSearchParams<{ planId: string }>();
   const { student } = useStudent();
@@ -95,9 +270,12 @@ export default function PlanExecutionScreen() {
   const [sessionSecs, setSessionSecs] = useState(0);
   const [intensity, setIntensity] = useState('moderado');
   const [finishNotes, setFinishNotes] = useState('');
+  const [finishRating, setFinishRating] = useState(0);
 
   const [videoUri, setVideoUri] = useState<string | null>(null);
   const [videoTitle, setVideoTitle] = useState('');
+
+  const [restTarget, setRestTarget] = useState<{ name: string; secs: number } | null>(null);
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const sessionStart = useRef<Date | null>(null);
@@ -119,7 +297,7 @@ export default function PlanExecutionScreen() {
     const itemsRes = rIds.length > 0
       ? await supabase
           .from('workout_items')
-          .select('id, routine_id, exercise_id, display_order, sets, reps, load, duration_secs, combo_group_id, notes, exercises(name, muscle_group, video_url, instructions)')
+          .select('id, routine_id, exercise_id, display_order, sets, reps, load, duration_secs, rest_seconds, combo_group_id, notes, exercises(name, muscle_group, video_url, instructions)')
           .in('routine_id', rIds)
           .order('display_order')
       : { data: [] };
@@ -150,6 +328,7 @@ export default function PlanExecutionScreen() {
             comboGroupId: i.combo_group_id ?? null,
             itemNotes: i.notes ?? null,
             exerciseInstructions: ex?.instructions ?? null,
+            restSeconds: i.rest_seconds ?? null,
           };
         }),
     }));
@@ -233,6 +412,16 @@ export default function PlanExecutionScreen() {
           })) as any
         );
       }
+    }
+
+    if (finishRating > 0) {
+      await supabase.from('workout_feedbacks').insert({
+        tenant_id: student.tenant_id,
+        student_id: student.id,
+        workout_plan_id: planId ?? null,
+        rating: finishRating,
+        comment: finishNotes.trim() || null,
+      } as any);
     }
 
     router.back();
@@ -320,7 +509,6 @@ export default function PlanExecutionScreen() {
 
               {groups.map((group, gi) => (
                 <View key={group.comboId ?? `solo-${si}-${gi}`} style={group.isCombo ? s.comboCard : undefined}>
-                  {/* Combo header */}
                   {group.isCombo && (
                     <View style={s.comboHeader}>
                       <Ionicons name="git-merge-outline" size={13} color={primaryColor} />
@@ -392,7 +580,7 @@ export default function PlanExecutionScreen() {
                           </View>
                         )}
 
-                        {/* Bottom: load + done button */}
+                        {/* Bottom: load + rest timer + done button */}
                         <View style={s.exBottom}>
                           <View style={s.loadWrap}>
                             <Ionicons name="barbell-outline" size={14} color={Colors.textSecondary} />
@@ -409,6 +597,19 @@ export default function PlanExecutionScreen() {
                             <Text style={s.loadUnit}>kg</Text>
                           </View>
 
+                          {/* Rest timer button */}
+                          {item.restSeconds && isInteractive && (
+                            <TouchableOpacity
+                              style={[s.restBtn, { borderColor: `${primaryColor}50` }]}
+                              onPress={() => setRestTarget({ name: item.name, secs: item.restSeconds! })}
+                              activeOpacity={0.75}
+                            >
+                              <Ionicons name="timer-outline" size={16} color={primaryColor} />
+                              <Text style={[s.restBtnText, { color: primaryColor }]}>{fmtTime(item.restSeconds)}</Text>
+                            </TouchableOpacity>
+                          )}
+
+                          {/* Done / Mark button */}
                           {isDone ? (
                             <TouchableOpacity
                               style={[s.doneTag, { backgroundColor: `${primaryColor}18` }]}
@@ -420,14 +621,18 @@ export default function PlanExecutionScreen() {
                             </TouchableOpacity>
                           ) : (
                             <TouchableOpacity
-                              style={[s.markBtn, isInteractive ? { backgroundColor: primaryColor } : s.markBtnDisabled]}
+                              style={[s.markBtn, !isInteractive && s.markBtnDisabled]}
                               onPress={() => isInteractive && toggleDone(item.itemId)}
                               disabled={!isInteractive}
                               activeOpacity={0.8}
                             >
-                              <Ionicons name="checkmark" size={15} color={isInteractive ? '#fff' : Colors.textSecondary} />
-                              <Text style={[s.markBtnText, !isInteractive && s.markBtnTextDisabled]}>
-                                {isInteractive ? 'Feito' : 'Inicie'}
+                              <Ionicons
+                                name="ellipse-outline"
+                                size={15}
+                                color={isInteractive ? Colors.textPrimary : Colors.textSecondary}
+                              />
+                              <Text style={[s.markBtnText, isInteractive ? s.markBtnTextActive : s.markBtnTextDisabled]}>
+                                {isInteractive ? 'Marcar' : 'Inicie'}
                               </Text>
                             </TouchableOpacity>
                           )}
@@ -459,7 +664,7 @@ export default function PlanExecutionScreen() {
       <Modal visible={phase === 'finishing'} animationType="slide" transparent onRequestClose={() => setPhase('active')}>
         <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
           <View style={s.finishOverlay}>
-            <View style={s.finishSheet}>
+            <ScrollView style={s.finishSheet} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
               <View style={s.sheetHandle} />
               <Text style={s.finishTitle}>Como foi o treino?</Text>
 
@@ -475,7 +680,18 @@ export default function PlanExecutionScreen() {
                 </View>
               </View>
 
-              <Text style={s.finishSectionLabel}>INTENSIDADE</Text>
+              {/* Star rating */}
+              <Text style={[s.finishSectionLabel, { marginTop: 16 }]}>AVALIAÇÃO</Text>
+              <View style={s.starsRow}>
+                <StarRow rating={finishRating} onRate={setFinishRating} />
+                {finishRating > 0 && (
+                  <Text style={[s.starLabel, { color: STAR_COLORS[finishRating] }]}>
+                    {STAR_LABELS[finishRating]}
+                  </Text>
+                )}
+              </View>
+
+              <Text style={[s.finishSectionLabel, { marginTop: 16 }]}>INTENSIDADE</Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, paddingVertical: 4 }}>
                 {INTENSITIES.map(item => (
                   <TouchableOpacity
@@ -490,7 +706,7 @@ export default function PlanExecutionScreen() {
                 ))}
               </ScrollView>
 
-              <Text style={[s.finishSectionLabel, { marginTop: 16 }]}>FEEDBACK (opcional)</Text>
+              <Text style={[s.finishSectionLabel, { marginTop: 16 }]}>OBSERVAÇÕES <Text style={s.optional}>(opcional)</Text></Text>
               <TextInput
                 value={finishNotes}
                 onChangeText={setFinishNotes}
@@ -501,12 +717,12 @@ export default function PlanExecutionScreen() {
                 textAlignVertical="top"
               />
 
-              <View style={s.finishBtns}>
+              <View style={[s.finishBtns, { paddingBottom: 32 }]}>
                 <TouchableOpacity
                   style={s.cancelBtn}
                   onPress={() => {
                     setPhase('active');
-                    timerRef.current = setInterval(() => setSessionSecs(s => s + 1), 1000);
+                    timerRef.current = setInterval(() => setSessionSecs(sv => sv + 1), 1000);
                   }}
                   activeOpacity={0.75}
                 >
@@ -517,10 +733,19 @@ export default function PlanExecutionScreen() {
                   <Text style={s.saveBtnText}>Salvar Treino</Text>
                 </TouchableOpacity>
               </View>
-            </View>
+            </ScrollView>
           </View>
         </KeyboardAvoidingView>
       </Modal>
+
+      {/* ── Rest timer modal ── */}
+      <RestTimerModal
+        visible={!!restTarget}
+        totalSecs={restTarget?.secs ?? 0}
+        exerciseName={restTarget?.name ?? ''}
+        onClose={() => setRestTarget(null)}
+        primaryColor={primaryColor}
+      />
 
       {videoUri && (
         <MediaViewerModal visible uri={videoUri} type="video" title={videoTitle} onClose={() => setVideoUri(null)} />
@@ -550,7 +775,6 @@ const s = StyleSheet.create({
   scroll: { paddingHorizontal: 14, paddingTop: 12, paddingBottom: 48, gap: 10 },
   sectionLabel: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.xs, color: Colors.textSecondary, letterSpacing: 0.8, marginTop: 4, marginBottom: 4, paddingHorizontal: 2 },
 
-  // Combo group wrapper
   comboCard: { borderWidth: 1.5, borderColor: Colors.border, borderRadius: 20, overflow: 'hidden', gap: 0 },
   comboHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 14, paddingTop: 10, paddingBottom: 6, backgroundColor: Colors.surface },
   comboLabel: { fontFamily: FontFamily.bodyBold, fontSize: 12, letterSpacing: 0.3 },
@@ -578,13 +802,18 @@ const s = StyleSheet.create({
   instructionRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 6, paddingHorizontal: 14, paddingBottom: 10 },
   instructionText: { flex: 1, fontFamily: FontFamily.body, fontSize: 12, color: Colors.textSecondary, lineHeight: 17 },
 
-  exBottom: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 14, paddingBottom: 12, paddingTop: 2 },
+  exBottom: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 14, paddingBottom: 12, paddingTop: 2 },
   loadWrap: { flex: 1, flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.bg, borderRadius: 12, borderWidth: 1, borderColor: Colors.border, paddingHorizontal: 10, paddingVertical: 9, gap: 6 },
   loadInput: { flex: 1, fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm, color: Colors.textPrimary, padding: 0 },
   loadUnit: { fontFamily: FontFamily.body, fontSize: 12, color: Colors.textSecondary },
-  markBtn: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 16, paddingVertical: 10, borderRadius: 12 },
-  markBtnDisabled: { backgroundColor: Colors.border },
-  markBtnText: { fontFamily: FontFamily.bodyBold, fontSize: 13, color: '#fff' },
+
+  restBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 10, paddingVertical: 9, borderRadius: 12, borderWidth: 1 },
+  restBtnText: { fontFamily: FontFamily.bodyMedium, fontSize: 12 },
+
+  markBtn: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 14, paddingVertical: 10, borderRadius: 12, borderWidth: 1.5, borderColor: Colors.border, backgroundColor: 'transparent' },
+  markBtnDisabled: { borderColor: Colors.border, opacity: 0.5 },
+  markBtnText: { fontFamily: FontFamily.bodyBold, fontSize: 13 },
+  markBtnTextActive: { color: Colors.textPrimary },
   markBtnTextDisabled: { color: Colors.textSecondary },
   doneTag: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 14, paddingVertical: 10, borderRadius: 12 },
   doneTagText: { fontFamily: FontFamily.bodyBold, fontSize: 13 },
@@ -593,22 +822,45 @@ const s = StyleSheet.create({
   bottomBtnText: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.md, color: '#fff' },
 
   finishOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'flex-end' },
-  finishSheet: { backgroundColor: Colors.surface, borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 20, paddingBottom: 32, paddingTop: 12, gap: 12, maxHeight: '90%' },
-  sheetHandle: { width: 40, height: 4, borderRadius: 2, backgroundColor: Colors.border, alignSelf: 'center', marginBottom: 8 },
-  finishTitle: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.lg, color: Colors.textPrimary },
+  finishSheet: { backgroundColor: Colors.surface, borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 20, paddingTop: 12, maxHeight: '92%' },
+  sheetHandle: { width: 40, height: 4, borderRadius: 2, backgroundColor: Colors.border, alignSelf: 'center', marginBottom: 12 },
+  finishTitle: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.lg, color: Colors.textPrimary, marginBottom: 12 },
   summaryRow: { flexDirection: 'row', backgroundColor: Colors.bg, borderRadius: 18, borderWidth: 1.5, padding: 20 },
   summaryItem: { flex: 1, alignItems: 'center', gap: 4 },
   summaryNum: { fontFamily: FontFamily.bodyBold, fontSize: 28 },
   summaryLabel: { fontFamily: FontFamily.body, fontSize: 11, color: Colors.textSecondary },
   summaryDiv: { width: 1, backgroundColor: Colors.border, marginHorizontal: 12 },
-  finishSectionLabel: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.xs, color: Colors.textSecondary, letterSpacing: 1 },
+
+  finishSectionLabel: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.xs, color: Colors.textSecondary, letterSpacing: 1, marginBottom: 10 },
+  optional: { fontFamily: FontFamily.body, fontWeight: '400', letterSpacing: 0 },
+  starsRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 4 },
+  starLabel: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.sm },
+
   intensityBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, paddingVertical: 10, borderRadius: 14, borderWidth: 1.5, borderColor: Colors.border, backgroundColor: Colors.bg },
   intensityEmoji: { fontSize: 18 },
   intensityLabel: { fontFamily: FontFamily.bodyMedium, fontSize: 12, color: Colors.textSecondary },
-  notesInput: { backgroundColor: Colors.bg, borderWidth: 1, borderColor: Colors.border, borderRadius: 14, padding: 14, fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textPrimary, minHeight: 80, textAlignVertical: 'top' },
-  finishBtns: { flexDirection: 'row', gap: 10, marginTop: 4 },
+  notesInput: { backgroundColor: Colors.bg, borderWidth: 1, borderColor: Colors.border, borderRadius: 14, padding: 14, fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textPrimary, minHeight: 80, textAlignVertical: 'top', marginBottom: 16 },
+  finishBtns: { flexDirection: 'row', gap: 10 },
   cancelBtn: { flex: 1, borderRadius: 14, borderWidth: 1, borderColor: Colors.border, paddingVertical: 14, alignItems: 'center' },
   cancelBtnText: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm, color: Colors.textSecondary },
   saveBtn: { flex: 2, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 14, paddingVertical: 14 },
   saveBtnText: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.sm, color: '#fff' },
+});
+
+// ─── Rest timer styles ────────────────────────────────────────────────────────
+
+const rt = StyleSheet.create({
+  overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.7)', alignItems: 'center', justifyContent: 'center', padding: 24 },
+  sheet: { backgroundColor: Colors.surface, borderRadius: 28, padding: 28, width: '100%', alignItems: 'center', gap: 4 },
+  sheetHandle: { width: 36, height: 4, borderRadius: 2, backgroundColor: Colors.border, marginBottom: 8 },
+  heading: { fontFamily: FontFamily.bodyBold, fontSize: 22, color: Colors.textPrimary },
+  sub: { fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textSecondary, maxWidth: 240, textAlign: 'center' },
+  ring: { position: 'absolute', inset: 0, borderRadius: CLOCK_R, borderWidth: 1.5 },
+  clockCenter: { position: 'absolute', inset: 0, alignItems: 'center', justifyContent: 'center' },
+  clockNum: { fontFamily: FontFamily.bodyBold, fontSize: 46, lineHeight: 52 },
+  clockLabel: { fontFamily: FontFamily.bodyMedium, fontSize: 10, color: Colors.textSecondary, letterSpacing: 2 },
+  totalRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 4 },
+  totalText: { fontFamily: FontFamily.body, fontSize: FontSize.xs, color: Colors.textSecondary },
+  skipBtn: { width: '100%', borderRadius: 14, borderWidth: 1.5, paddingVertical: 14, alignItems: 'center', marginTop: 8 },
+  skipText: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.sm },
 });
