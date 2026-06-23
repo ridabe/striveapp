@@ -1,12 +1,19 @@
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useThemeStore } from '@/stores/themeStore';
+import { useModulesStore } from '@/stores/modulesStore';
+import { MODULE } from '@/lib/modules';
 import { Colors } from '@/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function StudentLayout() {
   const { primaryColor } = useThemeStore();
   const insets = useSafeAreaInsets();
+  const { has, isLoaded } = useModulesStore();
+
+  // While loading, keep tabs visible to avoid flicker. Once loaded, apply gating.
+  const showTreinos   = !isLoaded || has(MODULE.PLANOS_TREINO) || has(MODULE.EXECUCAO_TREINO);
+  const showProgresso = !isLoaded || has(MODULE.MEU_PROGRESSO);
 
   return (
     <Tabs
@@ -40,6 +47,7 @@ export default function StudentLayout() {
         name="treinos"
         options={{
           title: 'Treinos',
+          href: showTreinos ? undefined : null,
           tabBarIcon: ({ color, size }) => <Ionicons name="barbell" size={size} color={color} />,
         }}
       />
@@ -47,6 +55,7 @@ export default function StudentLayout() {
         name="progresso"
         options={{
           title: 'Evolução',
+          href: showProgresso ? undefined : null,
           tabBarIcon: ({ color, size }) => <Ionicons name="trending-up" size={size} color={color} />,
         }}
       />

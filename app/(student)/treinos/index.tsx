@@ -9,6 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
 import { useStudent } from '@/hooks/useStudent';
 import { useThemeStore } from '@/stores/themeStore';
+import { TenantLogo } from '@/components/TenantLogo';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 import { GOAL_COLORS, extraCategoryLabel } from '@/lib/exerciseConfig';
@@ -212,6 +213,7 @@ export default function TreinosScreen() {
     <SafeAreaView style={s.safe} edges={['top']}>
       <View style={s.headerRow}>
         <Text style={s.title}>Treinos</Text>
+        <TenantLogo size={36} />
       </View>
 
       {/* Tabs */}
@@ -372,7 +374,7 @@ const wt = StyleSheet.create({
 
 const s = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.bg },
-  headerRow: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 4 },
+  headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingTop: 20, paddingBottom: 4 },
   title: { fontFamily: FontFamily.display, fontSize: 28, color: Colors.textPrimary },
   tabs: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: Colors.border, marginTop: 4 },
   tabBtn: { flex: 1, paddingVertical: 12, alignItems: 'center', borderBottomWidth: 2, borderBottomColor: 'transparent' },

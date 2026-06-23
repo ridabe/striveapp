@@ -9,6 +9,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
 import { useStudent } from '@/hooks/useStudent';
 import { useThemeStore } from '@/stores/themeStore';
+import { TenantLogo } from '@/components/TenantLogo';
+import { ModuleGuard } from '@/components/ModuleGuard';
+import { MODULE } from '@/lib/modules';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 
@@ -148,9 +151,10 @@ export default function FeedbackScreen() {
           <Ionicons name="arrow-back" size={22} color={Colors.textPrimary} />
         </TouchableOpacity>
         <Text style={s.title}>Feedback</Text>
-        <View style={{ width: 40 }} />
+        <TenantLogo size={32} radius={9} />
       </View>
 
+      <ModuleGuard slug={MODULE.FEEDBACKS}>
       {loading ? (
         <ActivityIndicator color={primaryColor} style={{ marginTop: 60 }} />
       ) : (
@@ -333,6 +337,7 @@ export default function FeedbackScreen() {
           </View>
         </View>
       </Modal>
+      </ModuleGuard>
     </SafeAreaView>
   );
 }

@@ -11,6 +11,9 @@ import { supabase } from '@/lib/supabase';
 import { MediaViewerModal, MediaType } from '@/components/MediaViewerModal';
 import { useStudent } from '@/hooks/useStudent';
 import { useThemeStore } from '@/stores/themeStore';
+import { TenantLogo } from '@/components/TenantLogo';
+import { ModuleGuard } from '@/components/ModuleGuard';
+import { MODULE } from '@/lib/modules';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 
@@ -125,9 +128,10 @@ export default function ArquivosStudentScreen() {
           <Ionicons name="arrow-back" size={22} color={Colors.textPrimary} />
         </TouchableOpacity>
         <Text style={s.title}>Arquivos</Text>
-        <View style={{ width: 40 }} />
+        <TenantLogo size={32} radius={9} />
       </View>
 
+      <ModuleGuard slug={MODULE.ARQUIVOS}>
       {/* Search */}
       <View style={s.searchWrap}>
         <Ionicons name="search-outline" size={16} color={Colors.textSecondary} />
@@ -240,6 +244,7 @@ export default function ArquivosStudentScreen() {
         title={mediaTitle}
         onClose={() => setMediaVisible(false)}
       />
+      </ModuleGuard>
     </SafeAreaView>
   );
 }

@@ -8,11 +8,25 @@ import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
 import { useStudent } from '@/hooks/useStudent';
+import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
+import { useModulesStore } from '@/stores/modulesStore';
+import { MODULE } from '@/lib/modules';
+import { TenantLogo } from '@/components/TenantLogo';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 
 const { width: W } = Dimensions.get('window');
+
+const DAY_LABELS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+
+const INTENSITY_LABEL: Record<string, { label: string; emoji: string }> = {
+  muito_leve:    { label: 'Muito leve', emoji: '😴' },
+  leve:          { label: 'Leve',       emoji: '🙂' },
+  moderado:      { label: 'Moderado',   emoji: '💪' },
+  intenso:       { label: 'Intenso',    emoji: '🔥' },
+  muito_intenso: { label: 'Pesado',     emoji: '😤' },
+};
 
 function greeting() {
   const h = new Date().getHours();
@@ -21,17 +35,26 @@ function greeting() {
   return 'Boa noite';
 }
 
+function fmtDuration(secs: number | null) {
+  if (!secs) return null;
+  const m = Math.floor(secs / 60);
+  return m > 0 ? `${m} min` : `${secs}s`;
+}
+
 export default function StudentHome() {
   const { student, loading: studentLoading } = useStudent();
+  const { profile } = useAuthStore();
   const { primaryColor, tenantName } = useThemeStore();
+  const { has: hasModule, isLoaded: modulesLoaded } = useModulesStore();
 
-  const [todayPlan, setTodayPlan] = useState<any>(null);
-  const [streak, setStreak] = useState(0);
+  const [todayPlan, setTodayPlan]       = useState<any>(null);
+  const [todaySession, setTodaySession] = useState<any>(null);
+  const [streak, setStreak]             = useState(0);
   const [weekSessions, setWeekSessions] = useState(0);
   const [totalSessions, setTotalSessions] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading]           = useState(true);
 
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const fadeAnim  = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(28)).current;
 
   useEffect(() => {
@@ -40,10 +63,9 @@ export default function StudentHome() {
   }, [student?.id, studentLoading]);
 
   async function loadData(studentId: string) {
-    const today = new Date().getDay();
-    const weekStart = new Date();
-    weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-    weekStart.setHours(0, 0, 0, 0);
+    const today     = new Date().getDay();
+    const todayStart = new Date(); todayStart.setHours(0, 0, 0, 0);
+    const weekStart  = new Date(); weekStart.setDate(weekStart.getDate() - weekStart.getDay()); weekStart.setHours(0, 0, 0, 0);
 
     const [assignRes, sessionsRes] = await Promise.all([
       supabase
@@ -53,15 +75,16 @@ export default function StudentHome() {
         .eq('status', 'active'),
       supabase
         .from('workout_sessions')
-        .select('id, started_at, finished_at')
+        .select('id, started_at, finished_at, duration_seconds, intensity, workout_plan_id, workout_plans(name)')
         .eq('student_id', studentId)
         .not('finished_at', 'is', null)
         .order('started_at', { ascending: false }),
     ]);
 
-    const sessions: any[] = sessionsRes.data ?? [];
+    const sessions: any[]    = sessionsRes.data ?? [];
     const assignments: any[] = assignRes.data ?? [];
 
+    // Today's plan (scheduled by day-of-week)
     let found: any = null;
     for (const a of assignments) {
       const plan = a.workout_plans;
@@ -70,6 +93,10 @@ export default function StudentHome() {
       if (routine) { found = { plan, routine }; break; }
     }
     setTodayPlan(found);
+
+    // Most recent session completed today
+    const latestToday = sessions.find(s => new Date(s.started_at) >= todayStart) ?? null;
+    setTodaySession(latestToday);
 
     const thisWeek = sessions.filter(s => new Date(s.started_at) >= weekStart);
     setWeekSessions(thisWeek.length);
@@ -83,7 +110,7 @@ export default function StudentHome() {
     setLoading(false);
 
     Animated.parallel([
-      Animated.timing(fadeAnim, { toValue: 1, duration: 480, useNativeDriver: true }),
+      Animated.timing(fadeAnim,  { toValue: 1, duration: 480, useNativeDriver: true }),
       Animated.spring(slideAnim, { toValue: 0, friction: 8, tension: 60, useNativeDriver: true }),
     ]).start();
   }
@@ -96,8 +123,130 @@ export default function StudentHome() {
     );
   }
 
-  const firstName = student?.full_name?.split(' ')[0] ?? 'Aluno';
-  const todayLabel = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'][new Date().getDay()];
+  const firstName  = student?.full_name?.split(' ')[0]
+    ?? profile?.full_name?.split(' ')[0]
+    ?? 'Aluno';
+  const todayLabel = DAY_LABELS[new Date().getDay()];
+
+  // ── Today card logic ──────────────────────────────────────────────────────
+  // Priority: if ANY session was completed today → show "done" card
+  // Only show "Iniciar" when today has a scheduled plan AND no session yet
+  const trainedToday = !!todaySession;
+
+  function renderTodayCard() {
+    // ─ CASE A: Trained today ─────────────────────────────────────────────
+    if (trainedToday) {
+      const sessionName  = todaySession.workout_plans?.name ?? 'Treino livre';
+      const duration     = fmtDuration(todaySession.duration_seconds);
+      const intensityCfg = todaySession.intensity ? INTENSITY_LABEL[todaySession.intensity] : null;
+      // Were they supposed to train today but hadn't yet done THE planned plan?
+      // We still show "done" — the session is what matters.
+      const planName = todayPlan && todaySession.workout_plan_id === todayPlan.plan.id
+        ? todayPlan.routine.name
+        : null;
+
+      return (
+        <View style={[s.doneCard, { borderColor: '#4ADE8040' }]}>
+          {/* Green stripe */}
+          <View style={[s.cardStripe, { backgroundColor: '#4ADE80' }]} />
+
+          <View style={s.doneBody}>
+            {/* Header row */}
+            <View style={s.doneHeaderRow}>
+              <View style={s.doneCheckWrap}>
+                <Ionicons name="checkmark-circle" size={24} color="#4ADE80" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={s.doneTitleText}>Treino concluído!</Text>
+                <Text style={s.doneSubText} numberOfLines={1}>
+                  {planName ?? sessionName}
+                </Text>
+              </View>
+            </View>
+
+            {/* Stats row */}
+            <View style={s.doneStatsRow}>
+              {duration && (
+                <View style={s.doneStat}>
+                  <Ionicons name="time-outline" size={13} color={Colors.textSecondary} />
+                  <Text style={s.doneStatText}>{duration}</Text>
+                </View>
+              )}
+              {intensityCfg && (
+                <View style={s.doneStat}>
+                  <Text style={{ fontSize: 13 }}>{intensityCfg.emoji}</Text>
+                  <Text style={s.doneStatText}>{intensityCfg.label}</Text>
+                </View>
+              )}
+            </View>
+
+            {/* Actions */}
+            <View style={s.doneActions}>
+              <TouchableOpacity
+                style={s.doneHistBtn}
+                onPress={() => router.push('/(student)/mais/historico' as any)}
+                activeOpacity={0.75}
+              >
+                <Ionicons name="time-outline" size={14} color={Colors.textSecondary} />
+                <Text style={s.doneHistBtnText}>Ver histórico</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[s.doneTreinosBtn, { borderColor: `${primaryColor}40` }]}
+                onPress={() => router.push('/(student)/treinos' as any)}
+                activeOpacity={0.8}
+              >
+                <Text style={[s.doneTreinosBtnText, { color: primaryColor }]}>Ver treinos</Text>
+                <Ionicons name="chevron-forward" size={14} color={primaryColor} />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      );
+    }
+
+    // ─ CASE B: Scheduled plan, not trained yet ────────────────────────────
+    if (todayPlan) {
+      return (
+        <View style={[s.todayCard, { borderColor: `${primaryColor}35` }]}>
+          <View style={[s.cardStripe, { backgroundColor: primaryColor }]} />
+          <View style={s.todayBody}>
+            <Text style={s.todayRoutine}>{todayPlan.routine.name}</Text>
+            <Text style={s.todayPlan}>{todayPlan.plan.name}</Text>
+            {todayPlan.plan.goal ? (
+              <View style={[s.goalPill, { backgroundColor: `${primaryColor}18` }]}>
+                <Text style={[s.goalPillText, { color: primaryColor }]}>{todayPlan.plan.goal}</Text>
+              </View>
+            ) : null}
+          </View>
+          <TouchableOpacity
+            style={[s.startBtn, { backgroundColor: primaryColor }]}
+            onPress={() => router.push(`/(student)/treinos/${todayPlan.plan.id}/executar` as any)}
+            activeOpacity={0.85}
+          >
+            <Ionicons name="play" size={16} color="#fff" />
+            <Text style={s.startBtnText}>Iniciar</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+
+    // ─ CASE C: Rest day ───────────────────────────────────────────────────
+    return (
+      <View style={s.restCard}>
+        <Ionicons name="moon-outline" size={34} color={Colors.textSecondary} />
+        <Text style={s.restTitle}>Dia de descanso</Text>
+        <Text style={s.restDesc}>Nenhum treino programado para hoje.</Text>
+        <TouchableOpacity
+          onPress={() => router.push('/(student)/treinos' as any)}
+          activeOpacity={0.75}
+          style={s.restLink}
+        >
+          <Text style={[s.restLinkText, { color: primaryColor }]}>Ver treinos disponíveis</Text>
+          <Ionicons name="chevron-forward" size={14} color={primaryColor} />
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView style={s.safe} edges={['top']}>
@@ -110,9 +259,9 @@ export default function StudentHome() {
               <Text style={s.greetSmall}>{greeting()},</Text>
               <Text style={s.greetName}>{firstName} 👋</Text>
             </View>
-            <View style={[s.avatar, { backgroundColor: `${primaryColor}22` }]}>
-              <Text style={[s.avatarText, { color: primaryColor }]}>{firstName[0]?.toUpperCase()}</Text>
-            </View>
+            <TouchableOpacity onPress={() => router.push('/(student)/perfil' as any)} activeOpacity={0.8}>
+              <TenantLogo size={44} />
+            </TouchableOpacity>
           </View>
           <View style={[s.tenantPill, { backgroundColor: `${primaryColor}15` }]}>
             <Ionicons name="shield-checkmark" size={11} color={primaryColor} />
@@ -123,37 +272,7 @@ export default function StudentHome() {
         {/* Treino de hoje */}
         <Animated.View style={[s.section, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
           <Text style={s.sectionLabel}>TREINO DE HOJE — {todayLabel.toUpperCase()}</Text>
-
-          {todayPlan ? (
-            <View style={[s.todayCard, { borderColor: `${primaryColor}35` }]}>
-              <View style={[s.todayStripe, { backgroundColor: primaryColor }]} />
-              <View style={{ flex: 1, paddingLeft: 14 }}>
-                <Text style={s.todayRoutine}>{todayPlan.routine.name}</Text>
-                <Text style={s.todayPlan}>{todayPlan.plan.name}</Text>
-                {todayPlan.plan.goal ? (
-                  <View style={[s.goalPill, { backgroundColor: `${primaryColor}18` }]}>
-                    <Text style={[s.goalPillText, { color: primaryColor }]}>{todayPlan.plan.goal}</Text>
-                  </View>
-                ) : null}
-              </View>
-              <TouchableOpacity
-                style={[s.startBtn, { backgroundColor: primaryColor }]}
-                onPress={() => router.push(
-                  `/(student)/treinos/${todayPlan.plan.id}/executar/${todayPlan.routine.id}` as any
-                )}
-                activeOpacity={0.85}
-              >
-                <Ionicons name="play" size={16} color="#fff" />
-                <Text style={s.startBtnText}>Iniciar</Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <View style={s.restCard}>
-              <Ionicons name="moon-outline" size={34} color={Colors.textSecondary} />
-              <Text style={s.restTitle}>Dia de descanso</Text>
-              <Text style={s.restDesc}>Nenhum treino programado para hoje.</Text>
-            </View>
-          )}
+          {renderTodayCard()}
         </Animated.View>
 
         {/* Stats */}
@@ -161,9 +280,9 @@ export default function StudentHome() {
           <Text style={s.sectionLabel}>SEUS NÚMEROS</Text>
           <View style={s.statsRow}>
             {[
-              { value: streak, icon: 'flame', label: 'Sequência' },
-              { value: weekSessions, icon: 'calendar', label: 'Esta semana' },
-              { value: totalSessions, icon: 'trophy', label: 'Total' },
+              { value: streak,        icon: 'flame',    label: 'Sequência' },
+              { value: weekSessions,  icon: 'calendar', label: 'Esta semana' },
+              { value: totalSessions, icon: 'trophy',   label: 'Total' },
             ].map(item => (
               <View key={item.label} style={[s.statCard, { borderColor: `${primaryColor}28` }]}>
                 <Text style={[s.statNum, { color: primaryColor }]}>{item.value}</Text>
@@ -174,30 +293,34 @@ export default function StudentHome() {
           </View>
         </Animated.View>
 
-        {/* Atalhos */}
+        {/* Atalhos — filtrados por módulos habilitados */}
         <Animated.View style={[s.section, { opacity: fadeAnim }]}>
           <Text style={s.sectionLabel}>ATALHOS</Text>
           <View style={s.shortcuts}>
-            {[
-              { icon: 'barbell-outline', label: 'Treinos', route: '/(student)/treinos' },
-              { icon: 'trending-up-outline', label: 'Progresso', route: '/(student)/progresso' },
-              { icon: 'calendar-outline', label: 'Frequência', route: '/(student)/mais/frequencia' },
-              { icon: 'time-outline', label: 'Histórico', route: '/(student)/mais/historico' },
-              { icon: 'folder-outline', label: 'Arquivos', route: '/(student)/mais/arquivos' },
-              { icon: 'star-outline', label: 'Feedback', route: '/(student)/mais/feedback' },
-              { icon: 'restaurant-outline', label: 'Nutrição', route: '/(student)/mais/nutricao' },
-              { icon: 'calendar-outline', label: 'Agenda', route: '/(student)/mais/agenda' },
-            ].map(item => (
-              <TouchableOpacity
-                key={item.label}
-                style={[s.shortcutCard, { backgroundColor: `${primaryColor}0E` }]}
-                onPress={() => router.push(item.route as any)}
-                activeOpacity={0.75}
-              >
-                <Ionicons name={item.icon as any} size={26} color={primaryColor} />
-                <Text style={[s.shortcutLabel, { color: primaryColor }]}>{item.label}</Text>
-              </TouchableOpacity>
-            ))}
+            {(
+              [
+                { icon: 'barbell-outline',     label: 'Treinos',    route: '/(student)/treinos',           slug: MODULE.PLANOS_TREINO },
+                { icon: 'trending-up-outline', label: 'Progresso',  route: '/(student)/progresso',         slug: MODULE.MEU_PROGRESSO },
+                { icon: 'calendar-outline',    label: 'Frequência', route: '/(student)/mais/frequencia',   slug: MODULE.FREQUENCIA },
+                { icon: 'time-outline',        label: 'Histórico',  route: '/(student)/mais/historico',    slug: MODULE.EXECUCAO_TREINO },
+                { icon: 'folder-outline',      label: 'Arquivos',   route: '/(student)/mais/arquivos',     slug: MODULE.ARQUIVOS },
+                { icon: 'star-outline',        label: 'Feedback',   route: '/(student)/mais/feedback',     slug: MODULE.FEEDBACKS },
+                { icon: 'restaurant-outline',  label: 'Nutrição',   route: '/(student)/mais/nutricao',     slug: null },
+                { icon: 'calendar-outline',    label: 'Agenda',     route: '/(student)/mais/agenda',       slug: null },
+              ] as { icon: string; label: string; route: string; slug: string | null }[]
+            )
+              .filter(item => !modulesLoaded || item.slug === null || hasModule(item.slug as any))
+              .map(item => (
+                <TouchableOpacity
+                  key={item.label}
+                  style={[s.shortcutCard, { backgroundColor: `${primaryColor}0E` }]}
+                  onPress={() => router.push(item.route as any)}
+                  activeOpacity={0.75}
+                >
+                  <Ionicons name={item.icon as any} size={26} color={primaryColor} />
+                  <Text style={[s.shortcutLabel, { color: primaryColor }]}>{item.label}</Text>
+                </TouchableOpacity>
+              ))}
           </View>
         </Animated.View>
 
@@ -207,33 +330,62 @@ export default function StudentHome() {
 }
 
 const s = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: Colors.bg },
-  scroll: { paddingHorizontal: 20, paddingBottom: 48, paddingTop: 18 },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
-  greetSmall: { fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textSecondary },
-  greetName: { fontFamily: FontFamily.display, fontSize: 30, color: Colors.textPrimary, marginTop: 2 },
-  avatar: { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center' },
-  avatarText: { fontFamily: FontFamily.bodyBold, fontSize: 20 },
-  tenantPill: { flexDirection: 'row', alignItems: 'center', gap: 5, alignSelf: 'flex-start', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 20, marginTop: 14 },
+  safe:         { flex: 1, backgroundColor: Colors.bg },
+  scroll:       { paddingHorizontal: 20, paddingBottom: 48, paddingTop: 18 },
+  header:       { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
+  greetSmall:   { fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textSecondary },
+  greetName:    { fontFamily: FontFamily.display, fontSize: 30, color: Colors.textPrimary, marginTop: 2 },
+  avatar:       { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center' },
+  avatarText:   { fontFamily: FontFamily.bodyBold, fontSize: 20 },
+  tenantPill:   { flexDirection: 'row', alignItems: 'center', gap: 5, alignSelf: 'flex-start', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 20, marginTop: 14 },
   tenantPillText: { fontFamily: FontFamily.bodyMedium, fontSize: 11 },
-  section: { marginTop: 28 },
+  section:      { marginTop: 28 },
   sectionLabel: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.xs, color: Colors.textSecondary, letterSpacing: 1, marginBottom: 12 },
-  todayCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.surface, borderRadius: 18, borderWidth: 1.5, padding: 18 },
-  todayStripe: { width: 4, borderRadius: 4, minHeight: 64 },
+
+  // ── Today card shared ──────────────────────────────────────────────────────
+  cardStripe: { width: 4, borderRadius: 4, alignSelf: 'stretch' },
+
+  // ── "Iniciar" card (has plan, not yet done) ──────────────────────────────
+  todayCard:    { flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.surface, borderRadius: 18, borderWidth: 1.5, overflow: 'hidden' },
+  todayBody:    { flex: 1, padding: 16 },
   todayRoutine: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.md, color: Colors.textPrimary },
-  todayPlan: { fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textSecondary, marginTop: 3 },
-  goalPill: { alignSelf: 'flex-start', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 20, marginTop: 8 },
+  todayPlan:    { fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textSecondary, marginTop: 3 },
+  goalPill:     { alignSelf: 'flex-start', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 20, marginTop: 8 },
   goalPillText: { fontFamily: FontFamily.bodyMedium, fontSize: 11 },
-  startBtn: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 14, paddingVertical: 11, borderRadius: 14 },
+  startBtn:     { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 14, paddingVertical: 11, borderRadius: 14, margin: 14 },
   startBtnText: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.sm, color: '#fff' },
-  restCard: { backgroundColor: Colors.surface, borderRadius: 18, borderWidth: 1, borderColor: Colors.border, padding: 28, alignItems: 'center', gap: 8 },
-  restTitle: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.md, color: Colors.textPrimary },
-  restDesc: { fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textSecondary },
-  statsRow: { flexDirection: 'row', gap: 10 },
-  statCard: { flex: 1, backgroundColor: Colors.surface, borderRadius: 16, borderWidth: 1.5, paddingVertical: 18, alignItems: 'center', gap: 4 },
-  statNum: { fontFamily: FontFamily.bodyBold, fontSize: 30 },
-  statLabel: { fontFamily: FontFamily.body, fontSize: 11, color: Colors.textSecondary },
-  shortcuts: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+
+  // ── "Concluído" card ──────────────────────────────────────────────────────
+  doneCard:       { flexDirection: 'row', backgroundColor: Colors.surface, borderRadius: 18, borderWidth: 1.5, overflow: 'hidden' },
+  doneBody:       { flex: 1, padding: 14, gap: 10 },
+  doneHeaderRow:  { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  doneCheckWrap:  { width: 36, height: 36, borderRadius: 18, backgroundColor: '#4ADE8018', alignItems: 'center', justifyContent: 'center' },
+  doneTitleText:  { fontFamily: FontFamily.bodyBold, fontSize: FontSize.sm, color: Colors.textPrimary },
+  doneSubText:    { fontFamily: FontFamily.body, fontSize: FontSize.xs, color: Colors.textSecondary, marginTop: 2 },
+  doneStatsRow:   { flexDirection: 'row', gap: 14 },
+  doneStat:       { flexDirection: 'row', alignItems: 'center', gap: 5 },
+  doneStatText:   { fontFamily: FontFamily.body, fontSize: 12, color: Colors.textSecondary },
+  doneActions:    { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  doneHistBtn:    { flexDirection: 'row', alignItems: 'center', gap: 5, paddingVertical: 7, paddingHorizontal: 10, borderRadius: 10, borderWidth: 1, borderColor: Colors.border },
+  doneHistBtnText:{ fontFamily: FontFamily.bodyMedium, fontSize: 12, color: Colors.textSecondary },
+  doneTreinosBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingVertical: 7, paddingHorizontal: 10, borderRadius: 10, borderWidth: 1 },
+  doneTreinosBtnText: { fontFamily: FontFamily.bodyBold, fontSize: 12 },
+
+  // ── Rest day card ─────────────────────────────────────────────────────────
+  restCard:     { backgroundColor: Colors.surface, borderRadius: 18, borderWidth: 1, borderColor: Colors.border, padding: 28, alignItems: 'center', gap: 8 },
+  restTitle:    { fontFamily: FontFamily.bodyBold, fontSize: FontSize.md, color: Colors.textPrimary },
+  restDesc:     { fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textSecondary },
+  restLink:     { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 4 },
+  restLinkText: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm },
+
+  // ── Stats ─────────────────────────────────────────────────────────────────
+  statsRow:   { flexDirection: 'row', gap: 10 },
+  statCard:   { flex: 1, backgroundColor: Colors.surface, borderRadius: 16, borderWidth: 1.5, paddingVertical: 18, alignItems: 'center', gap: 4 },
+  statNum:    { fontFamily: FontFamily.bodyBold, fontSize: 30 },
+  statLabel:  { fontFamily: FontFamily.body, fontSize: 11, color: Colors.textSecondary },
+
+  // ── Shortcuts ─────────────────────────────────────────────────────────────
+  shortcuts:    { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   shortcutCard: { width: (W - 50) / 2, borderRadius: 18, padding: 20, alignItems: 'center', gap: 10 },
-  shortcutLabel: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm },
+  shortcutLabel:{ fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm },
 });

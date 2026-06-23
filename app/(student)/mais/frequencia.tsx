@@ -8,6 +8,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
 import { useStudent } from '@/hooks/useStudent';
 import { useThemeStore } from '@/stores/themeStore';
+import { TenantLogo } from '@/components/TenantLogo';
+import { ModuleGuard } from '@/components/ModuleGuard';
+import { MODULE } from '@/lib/modules';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 
@@ -86,9 +89,10 @@ export default function FrequenciaScreen() {
           <Ionicons name="arrow-back" size={22} color={Colors.textPrimary} />
         </TouchableOpacity>
         <Text style={s.title}>Frequência</Text>
-        <View style={{ width: 40 }} />
+        <TenantLogo size={32} radius={9} />
       </View>
 
+      <ModuleGuard slug={MODULE.FREQUENCIA}>
       {loading ? <ActivityIndicator color={primaryColor} style={{ marginTop: 60 }} /> : (
         <ScrollView contentContainerStyle={s.scroll} showsVerticalScrollIndicator={false}>
           {/* Stats */}
@@ -172,6 +176,7 @@ export default function FrequenciaScreen() {
           </View>
         </ScrollView>
       )}
+      </ModuleGuard>
     </SafeAreaView>
   );
 }

@@ -2,6 +2,7 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-nati
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { TenantLogo } from '@/components/TenantLogo';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 
@@ -17,6 +18,12 @@ const FEATURES = [
 export default function AgendaScreen() {
   return (
     <SafeAreaView style={s.safe} edges={['top', 'bottom']}>
+      <View style={s.topNav}>
+        <TouchableOpacity onPress={() => router.back()} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+          <Ionicons name="arrow-back" size={22} color="#fff" />
+        </TouchableOpacity>
+        <TenantLogo size={32} radius={9} />
+      </View>
       {/* Header */}
       <View style={s.header}>
         <View style={[s.headerIcon, { backgroundColor: `${ACCENT}20` }]}>
@@ -71,7 +78,8 @@ export default function AgendaScreen() {
 
 const s = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.bg },
-  header: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 20, paddingTop: 20, paddingBottom: 16 },
+  topNav: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingTop: 14, paddingBottom: 4 },
+  header: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 20, paddingTop: 12, paddingBottom: 16 },
   headerIcon: { width: 48, height: 48, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
   headerText: { flex: 1 },
   headerTitle: { fontFamily: FontFamily.display, fontSize: 22, color: Colors.textPrimary, letterSpacing: 1 },

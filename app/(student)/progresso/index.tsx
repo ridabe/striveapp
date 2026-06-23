@@ -11,6 +11,7 @@ import * as FileSystem from 'expo-file-system';
 import { supabase } from '@/lib/supabase';
 import { useStudent } from '@/hooks/useStudent';
 import { useThemeStore } from '@/stores/themeStore';
+import { TenantLogo } from '@/components/TenantLogo';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 import { MediaViewerModal } from '@/components/MediaViewerModal';
@@ -231,6 +232,7 @@ export default function ProgressoScreen() {
       <SafeAreaView style={s.safe} edges={['top']}>
         <View style={s.headerRow}>
           <Text style={s.title}>Evolução</Text>
+          <TenantLogo size={32} />
         </View>
         <ActivityIndicator color={primaryColor} style={{ marginTop: 60 }} />
       </SafeAreaView>
@@ -241,13 +243,16 @@ export default function ProgressoScreen() {
     <SafeAreaView style={s.safe} edges={['top']}>
       <View style={s.headerRow}>
         <Text style={s.title}>Evolução</Text>
-        <TouchableOpacity
-          style={[s.addBtn, { backgroundColor: primaryColor }]}
-          onPress={() => setAddVisible(true)}
-          activeOpacity={0.85}
-        >
-          <Ionicons name="add" size={20} color="#fff" />
-        </TouchableOpacity>
+        <View style={s.headerRight}>
+          <TenantLogo size={32} />
+          <TouchableOpacity
+            style={[s.addBtn, { backgroundColor: primaryColor }]}
+            onPress={() => setAddVisible(true)}
+            activeOpacity={0.85}
+          >
+            <Ionicons name="add" size={20} color="#fff" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <ScrollView contentContainerStyle={s.scroll} showsVerticalScrollIndicator={false}>
@@ -489,6 +494,7 @@ export default function ProgressoScreen() {
 const s = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.bg },
   headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: 20, paddingBottom: 8 },
+  headerRight: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   title: { fontFamily: FontFamily.display, fontSize: 28, color: Colors.textPrimary },
   addBtn: { width: 38, height: 38, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
   scroll: { paddingHorizontal: 16, paddingBottom: 40, paddingTop: 8, gap: 12 },
