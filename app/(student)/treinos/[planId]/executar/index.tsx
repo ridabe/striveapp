@@ -575,7 +575,7 @@ const s = StyleSheet.create({
   musclePillText: { fontFamily: FontFamily.bodyMedium, fontSize: 11 },
   prescText: { fontFamily: FontFamily.body, fontSize: 11, color: Colors.textSecondary },
 
-  instructionRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 6, paddingHorizontal: 14, paddingBottom: 10, gap: 6 },
+  instructionRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 6, paddingHorizontal: 14, paddingBottom: 10 },
   instructionText: { flex: 1, fontFamily: FontFamily.body, fontSize: 12, color: Colors.textSecondary, lineHeight: 17 },
 
   exBottom: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 14, paddingBottom: 12, paddingTop: 2 },

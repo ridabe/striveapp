@@ -171,7 +171,7 @@ export default function AvaliacaoScreen() {
   const selectedIdx = sortedAsc.findIndex(a => a.id === selected?.id);
   const prev = selectedIdx > 0 ? sortedAsc[selectedIdx - 1] : null;
 
-  function diff(curr: number | null, before: number | null) {
+  function diff(curr: number | null | undefined, before: number | null | undefined): number | null {
     if (curr == null || before == null) return null;
     const d = curr - before;
     return d === 0 ? null : d;
