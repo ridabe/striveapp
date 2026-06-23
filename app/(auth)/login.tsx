@@ -32,18 +32,25 @@ export default function LoginScreen() {
     }
   }, [available, hasSavedCreds]);
 
-  async function navigateAfterLogin(userId: string) {
+  async function navigateAfterLogin(userId: string): Promise<boolean> {
     const { data: profile } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', userId)
       .single();
     setProfile(profile ?? null);
+
+    if (profile?.must_change_password) {
+      router.replace('/(auth)/change-password');
+      return true;
+    }
+
     const role = profile?.role;
     const dest: Href = (role === 'personal' || role === 'global_admin')
       ? '/(admin)' as Href
       : '/(student)';
     router.replace(dest);
+    return false;
   }
 
   async function handleBiometricLogin() {
@@ -73,10 +80,10 @@ export default function LoginScreen() {
     setError(null);
     try {
       const { user } = await signIn(email, password);
-      await navigateAfterLogin(user.id);
+      const needsPasswordChange = await navigateAfterLogin(user.id);
 
-      // Offer to save biometric credentials after first successful password login
-      if (available && !hasSavedCreds) {
+      // Offer biometric only after a normal login (not when redirected to change password)
+      if (!needsPasswordChange && available && !hasSavedCreds) {
         Alert.alert(
           `Usar ${authType} para entrar?`,
           `Ative o acesso rápido com ${authType} para não precisar digitar a senha toda vez.`,

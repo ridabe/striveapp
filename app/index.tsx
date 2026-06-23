@@ -17,6 +17,10 @@ export default function Index() {
 
   if (!session) return <Redirect href="/(auth)/welcome" />;
 
+  if (profile?.must_change_password) {
+    return <Redirect href="/(auth)/change-password" />;
+  }
+
   const role = profile?.role;
   if (role === 'personal' || role === 'global_admin') {
     return <Redirect href={'/(admin)' as Href} />;
