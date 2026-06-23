@@ -111,9 +111,17 @@ jobs:
       - name: Injetar signing no build.gradle
         run: node scripts/inject-android-signing.js
 
-      # Mostra o build.gradle final para facilitar debug em caso de erro
-      - name: Debug — imprimir build.gradle
-        run: cat android/app/build.gradle
+      # Verifica que signingConfigs.release foi aplicado corretamente
+      - name: Verificar signing config
+        run: |
+          echo "=== signingConfigs block ==="
+          grep -A 8 'signingConfigs' android/app/build.gradle || echo "(não encontrado)"
+          echo ""
+          echo "=== buildTypes.release block ==="
+          awk '/buildTypes/,/^    \}/' android/app/build.gradle | grep -A 10 'release {' | head -15
+          echo ""
+          echo "=== Checagem: signingConfigs.release presente no buildTypes? ==="
+          grep 'signingConfig signingConfigs.release' android/app/build.gradle && echo "✅ OK" || (echo "❌ FALHOU — AAB será assinado com debug key" && exit 1)
 
       # Build do AAB (release)
       - name: Gradle bundleRelease
