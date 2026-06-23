@@ -1,19 +1,28 @@
 import { useState, useEffect } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,
-  TextInput, ActivityIndicator, Alert, Switch,
+  TextInput, ActivityIndicator, Alert,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system/legacy';
+import { Video as VideoCompressor } from 'react-native-compressor';
 import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
+import { MediaViewerModal } from '@/components/MediaViewerModal';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 import {
   MUSCLE_GROUPS, LOAD_TYPES, COUNT_TYPES, muscleColor,
 } from '@/lib/exerciseConfig';
+
+const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL!;
+const SUPABASE_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
+const BUCKET = 'exercise-videos';
+const MAX_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
 
 interface Exercise {
   id: string;
@@ -55,6 +64,13 @@ export default function ExerciseDetailScreen() {
   const [fDuration, setFDuration] = useState('');
   const [fInstructions, setFInstructions] = useState('');
 
+  // Video state
+  const [fVideoUri, setFVideoUri] = useState<string | null>(null); // local picked URI
+  const [fVideoUrl, setFVideoUrl] = useState<string | null>(null); // stored public URL
+  const [uploadingVideo, setUploadingVideo] = useState(false);
+  const [compressingVideo, setCompressingVideo] = useState(false);
+  const [videoModalVisible, setVideoModalVisible] = useState(false);
+
   const lightText = ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(primaryColor);
   const isOwned = isNew || exercise?.tenant_id === tenantId;
 
@@ -75,15 +91,107 @@ export default function ExerciseDetailScreen() {
           setFReps(data.default_reps ?? '');
           setFDuration(String(data.default_duration_secs ?? ''));
           setFInstructions(data.instructions ?? '');
+          setFVideoUrl(data.video_url ?? null);
         }
         setLoading(false);
       });
   }, [id]);
 
+  async function pickVideo() {
+    const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!perm.granted) {
+      Alert.alert('Permissão necessária', 'Permita o acesso à galeria para selecionar vídeos.');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: 'videos',
+      videoMaxDuration: 10,
+      allowsEditing: false,
+      quality: 1,
+    });
+
+    if (result.canceled || !result.assets?.length) return;
+    const asset = result.assets[0];
+
+    // Duration guard (10s)
+    if (asset.duration && asset.duration > 10000) {
+      Alert.alert('Vídeo muito longo', 'O vídeo deve ter no máximo 10 segundos.');
+      return;
+    }
+
+    let finalUri = asset.uri;
+
+    // Check size — compress if needed
+    const info = await FileSystem.getInfoAsync(asset.uri);
+    if (info.exists && info.size && info.size > MAX_SIZE_BYTES) {
+      try {
+        setCompressingVideo(true);
+        const compressed = await VideoCompressor.compress(asset.uri, {
+          compressionMethod: 'auto',
+          minimumFileSizeForCompress: 0,
+        });
+        finalUri = compressed;
+
+        // Re-check size after compression
+        const infoAfter = await FileSystem.getInfoAsync(compressed);
+        if (infoAfter.exists && infoAfter.size && infoAfter.size > MAX_SIZE_BYTES) {
+          Alert.alert(
+            'Vídeo ainda muito grande',
+            'Mesmo após compressão o arquivo excede 5 MB. Grave um vídeo mais curto ou em resolução menor.',
+          );
+          return;
+        }
+      } catch {
+        Alert.alert('Erro', 'Não foi possível comprimir o vídeo.');
+        return;
+      } finally {
+        setCompressingVideo(false);
+      }
+    }
+
+    setFVideoUri(finalUri);
+  }
+
+  async function uploadVideo(): Promise<string | null> {
+    if (!fVideoUri) return fVideoUrl;
+    setUploadingVideo(true);
+    try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
+      if (!token) throw new Error('Sessão expirada.');
+
+      const ext = fVideoUri.split('.').pop() ?? 'mp4';
+      const path = `exercises/${tenantId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+
+      const res = await FileSystem.uploadAsync(
+        `${SUPABASE_URL}/storage/v1/object/${BUCKET}/${path}`,
+        fVideoUri,
+        {
+          httpMethod: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            apikey: SUPABASE_KEY,
+            'Content-Type': ext === 'mov' ? 'video/quicktime' : 'video/mp4',
+          },
+        },
+      );
+
+      if (res.status >= 300) throw new Error(`Upload falhou: ${res.body}`);
+
+      const { data } = supabase.storage.from(BUCKET).getPublicUrl(path);
+      return data.publicUrl;
+    } finally {
+      setUploadingVideo(false);
+    }
+  }
+
   async function handleSave() {
     if (!fName.trim()) { Alert.alert('Atenção', 'Informe o nome do exercício.'); return; }
     setSaving(true);
     try {
+      const videoUrl = await uploadVideo();
+
       const payload = {
         name: fName.trim(),
         muscle_group: fMuscle,
@@ -93,6 +201,7 @@ export default function ExerciseDetailScreen() {
         default_reps: fReps.trim() || null,
         default_duration_secs: fDuration ? parseInt(fDuration) : null,
         instructions: fInstructions.trim() || null,
+        video_url: videoUrl,
         tenant_id: tenantId,
         is_global: false,
       };
@@ -139,6 +248,7 @@ export default function ExerciseDetailScreen() {
 
   const mc = muscleColor(fMuscle);
   const isReadOnly = !isNew && !isOwned;
+  const isBusy = saving || uploadingVideo || compressingVideo;
 
   return (
     <SafeAreaView style={s.safe} edges={['top']}>
@@ -269,23 +379,74 @@ export default function ExerciseDetailScreen() {
           <Text style={[s.value, { lineHeight: 22 }]}>{fInstructions || '—'}</Text>
         )}
 
-        {/* Video URL */}
-        {exercise?.video_url && (
-          <>
-            <Text style={[s.label, { marginTop: 18 }]}>VÍDEO DE DEMONSTRAÇÃO</Text>
-            <View style={s.videoBox}>
-              <Ionicons name="play-circle-outline" size={24} color={primaryColor} />
-              <Text style={s.videoText} numberOfLines={1}>{exercise.video_url}</Text>
+        {/* Video */}
+        <Text style={[s.label, { marginTop: 18 }]}>VÍDEO DE DEMONSTRAÇÃO</Text>
+        {editMode && !isReadOnly ? (
+          <View style={s.videoEditWrap}>
+            {fVideoUri ? (
+              <View style={s.videoPreview}>
+                <Ionicons name="videocam" size={28} color={primaryColor} />
+                <View style={{ flex: 1 }}>
+                  <Text style={s.videoPreviewLabel}>Vídeo selecionado</Text>
+                  <Text style={s.videoPreviewSub} numberOfLines={1}>{fVideoUri.split('/').pop()}</Text>
+                </View>
+                <TouchableOpacity onPress={() => setFVideoUri(null)} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+                  <Ionicons name="close-circle" size={22} color={Colors.error} />
+                </TouchableOpacity>
+              </View>
+            ) : fVideoUrl ? (
+              <View style={s.videoPreview}>
+                <Ionicons name="checkmark-circle" size={28} color="#4ADE80" />
+                <View style={{ flex: 1 }}>
+                  <Text style={s.videoPreviewLabel}>Vídeo salvo</Text>
+                  <Text style={s.videoPreviewSub}>Toque em "Reproduzir" para visualizar</Text>
+                </View>
+                <TouchableOpacity onPress={() => setVideoModalVisible(true)} style={[s.playBtn, { backgroundColor: `${primaryColor}20` }]}>
+                  <Ionicons name="play" size={16} color={primaryColor} />
+                </TouchableOpacity>
+              </View>
+            ) : null}
+
+            <TouchableOpacity
+              style={[s.pickVideoBtn, { borderColor: primaryColor }, compressingVideo && { opacity: 0.6 }]}
+              onPress={pickVideo}
+              disabled={compressingVideo}
+              activeOpacity={0.8}
+            >
+              {compressingVideo ? (
+                <>
+                  <ActivityIndicator size="small" color={primaryColor} />
+                  <Text style={[s.pickVideoBtnText, { color: primaryColor }]}>Comprimindo vídeo...</Text>
+                </>
+              ) : (
+                <>
+                  <Ionicons name="cloud-upload-outline" size={18} color={primaryColor} />
+                  <Text style={[s.pickVideoBtnText, { color: primaryColor }]}>
+                    {fVideoUri || fVideoUrl ? 'Substituir vídeo' : 'Selecionar vídeo'}
+                  </Text>
+                </>
+              )}
+            </TouchableOpacity>
+            <Text style={s.videoHint}>Máx. 10 segundos · 5 MB · MP4 ou MOV{'\n'}Vídeos maiores são comprimidos automaticamente</Text>
+          </View>
+        ) : fVideoUrl ? (
+          <TouchableOpacity style={s.videoBox} onPress={() => setVideoModalVisible(true)} activeOpacity={0.8}>
+            <View style={[s.videoPlayIcon, { backgroundColor: `${primaryColor}20` }]}>
+              <Ionicons name="play" size={20} color={primaryColor} />
             </View>
-          </>
+            <Text style={s.videoText}>Reproduzir demonstração</Text>
+            <Ionicons name="chevron-forward" size={16} color={Colors.textSecondary} />
+          </TouchableOpacity>
+        ) : (
+          <Text style={s.value}>—</Text>
         )}
 
         {/* Actions */}
         {editMode && !isReadOnly && (
           <TouchableOpacity
-            style={[s.saveBtn, { backgroundColor: primaryColor }, saving && { opacity: 0.6 }]}
-            onPress={handleSave} disabled={saving} activeOpacity={0.85}>
-            {saving
+            style={[s.saveBtn, { backgroundColor: primaryColor }, isBusy && { opacity: 0.6 }]}
+            onPress={handleSave} disabled={isBusy} activeOpacity={0.85}>
+            {isBusy
               ? <ActivityIndicator color={lightText ? '#000' : '#fff'} />
               : <Text style={[s.saveBtnText, { color: lightText ? '#000' : '#fff' }]}>
                   {isNew ? 'Criar Exercício' : 'Salvar Alterações'}
@@ -301,6 +462,14 @@ export default function ExerciseDetailScreen() {
           </TouchableOpacity>
         )}
       </ScrollView>
+
+      <MediaViewerModal
+        visible={videoModalVisible}
+        uri={fVideoUrl ?? ''}
+        type="video"
+        title={fName || 'Demonstração'}
+        onClose={() => setVideoModalVisible(false)}
+      />
     </SafeAreaView>
   );
 }
@@ -348,12 +517,33 @@ const s = StyleSheet.create({
     borderWidth: 1.5, borderColor: Colors.border, backgroundColor: Colors.surface,
   },
   countBtnText: { fontFamily: FontFamily.bodyMedium, fontSize: 12, color: Colors.textSecondary },
-  videoBox: {
-    flexDirection: 'row', alignItems: 'center', gap: 10,
-    backgroundColor: Colors.surface, borderRadius: 12, borderWidth: 1, borderColor: Colors.border,
-    padding: 12,
+
+  // Video — edit mode
+  videoEditWrap: { gap: 10 },
+  videoPreview: {
+    flexDirection: 'row', alignItems: 'center', gap: 12,
+    backgroundColor: Colors.surface, borderRadius: 12, borderWidth: 1, borderColor: Colors.border, padding: 12,
   },
-  videoText: { fontFamily: FontFamily.body, fontSize: 12, color: Colors.textSecondary, flex: 1 },
+  videoPreviewLabel: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm, color: Colors.textPrimary },
+  videoPreviewSub: { fontFamily: FontFamily.body, fontSize: 11, color: Colors.textSecondary, marginTop: 2 },
+  playBtn: { width: 32, height: 32, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
+  pickVideoBtn: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
+    borderWidth: 1.5, borderStyle: 'dashed', borderRadius: 12, paddingVertical: 14,
+    backgroundColor: Colors.surface,
+  },
+  pickVideoBtnText: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm },
+  videoHint: { fontFamily: FontFamily.body, fontSize: 11, color: Colors.textSecondary, textAlign: 'center' },
+
+  // Video — view mode
+  videoBox: {
+    flexDirection: 'row', alignItems: 'center', gap: 12,
+    backgroundColor: Colors.surface, borderRadius: 12, borderWidth: 1, borderColor: Colors.border,
+    padding: 14,
+  },
+  videoPlayIcon: { width: 40, height: 40, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+  videoText: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm, color: Colors.textPrimary, flex: 1 },
+
   saveBtn: {
     borderRadius: 14, paddingVertical: 16, alignItems: 'center', justifyContent: 'center',
     marginTop: 28,
