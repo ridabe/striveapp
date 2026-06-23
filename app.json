@@ -59,7 +59,6 @@
           "faceIDPermission": "O app usa o Face ID para autenticar seu acesso de forma segura."
         }
       ],
-      "react-native-compressor"
     ],
     "experiments": {
       "typedRoutes": true

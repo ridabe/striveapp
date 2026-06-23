@@ -8,7 +8,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system/legacy';
-import { Video as VideoCompressor } from 'react-native-compressor';
 import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
@@ -68,7 +67,6 @@ export default function ExerciseDetailScreen() {
   const [fVideoUri, setFVideoUri] = useState<string | null>(null); // local picked URI
   const [fVideoUrl, setFVideoUrl] = useState<string | null>(null); // stored public URL
   const [uploadingVideo, setUploadingVideo] = useState(false);
-  const [compressingVideo, setCompressingVideo] = useState(false);
   const [videoModalVisible, setVideoModalVisible] = useState(false);
 
   const lightText = ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(primaryColor);
@@ -120,37 +118,18 @@ export default function ExerciseDetailScreen() {
       return;
     }
 
-    let finalUri = asset.uri;
-
-    // Check size — compress if needed
+    // Size guard (5 MB)
     const info = await FileSystem.getInfoAsync(asset.uri);
     if (info.exists && info.size && info.size > MAX_SIZE_BYTES) {
-      try {
-        setCompressingVideo(true);
-        const compressed = await VideoCompressor.compress(asset.uri, {
-          compressionMethod: 'auto',
-          minimumFileSizeForCompress: 0,
-        });
-        finalUri = compressed;
-
-        // Re-check size after compression
-        const infoAfter = await FileSystem.getInfoAsync(compressed);
-        if (infoAfter.exists && infoAfter.size && infoAfter.size > MAX_SIZE_BYTES) {
-          Alert.alert(
-            'Vídeo ainda muito grande',
-            'Mesmo após compressão o arquivo excede 5 MB. Grave um vídeo mais curto ou em resolução menor.',
-          );
-          return;
-        }
-      } catch {
-        Alert.alert('Erro', 'Não foi possível comprimir o vídeo.');
-        return;
-      } finally {
-        setCompressingVideo(false);
-      }
+      const mb = (info.size / 1024 / 1024).toFixed(1);
+      Alert.alert(
+        'Vídeo muito grande',
+        `O arquivo tem ${mb} MB. Grave em resolução menor (720p ou inferior) ou reduza a duração para ficar abaixo de 5 MB.`,
+      );
+      return;
     }
 
-    setFVideoUri(finalUri);
+    setFVideoUri(asset.uri);
   }
 
   async function uploadVideo(): Promise<string | null> {
@@ -248,7 +227,7 @@ export default function ExerciseDetailScreen() {
 
   const mc = muscleColor(fMuscle);
   const isReadOnly = !isNew && !isOwned;
-  const isBusy = saving || uploadingVideo || compressingVideo;
+  const isBusy = saving || uploadingVideo;
 
   return (
     <SafeAreaView style={s.safe} edges={['top']}>
@@ -408,26 +387,16 @@ export default function ExerciseDetailScreen() {
             ) : null}
 
             <TouchableOpacity
-              style={[s.pickVideoBtn, { borderColor: primaryColor }, compressingVideo && { opacity: 0.6 }]}
+              style={[s.pickVideoBtn, { borderColor: primaryColor }]}
               onPress={pickVideo}
-              disabled={compressingVideo}
               activeOpacity={0.8}
             >
-              {compressingVideo ? (
-                <>
-                  <ActivityIndicator size="small" color={primaryColor} />
-                  <Text style={[s.pickVideoBtnText, { color: primaryColor }]}>Comprimindo vídeo...</Text>
-                </>
-              ) : (
-                <>
-                  <Ionicons name="cloud-upload-outline" size={18} color={primaryColor} />
-                  <Text style={[s.pickVideoBtnText, { color: primaryColor }]}>
-                    {fVideoUri || fVideoUrl ? 'Substituir vídeo' : 'Selecionar vídeo'}
-                  </Text>
-                </>
-              )}
+              <Ionicons name="cloud-upload-outline" size={18} color={primaryColor} />
+              <Text style={[s.pickVideoBtnText, { color: primaryColor }]}>
+                {fVideoUri || fVideoUrl ? 'Substituir vídeo' : 'Selecionar vídeo'}
+              </Text>
             </TouchableOpacity>
-            <Text style={s.videoHint}>Máx. 10 segundos · 5 MB · MP4 ou MOV{'\n'}Vídeos maiores são comprimidos automaticamente</Text>
+            <Text style={s.videoHint}>Máx. 10 segundos · 5 MB · MP4 ou MOV</Text>
           </View>
         ) : fVideoUrl ? (
           <TouchableOpacity style={s.videoBox} onPress={() => setVideoModalVisible(true)} activeOpacity={0.8}>
