@@ -183,6 +183,8 @@ export default function StudentHome() {
               { icon: 'trending-up-outline', label: 'Progresso', route: '/(student)/progresso' },
               { icon: 'calendar-outline', label: 'Frequência', route: '/(student)/mais/frequencia' },
               { icon: 'time-outline', label: 'Histórico', route: '/(student)/mais/historico' },
+              { icon: 'folder-outline', label: 'Arquivos', route: '/(student)/mais/arquivos' },
+              { icon: 'star-outline', label: 'Feedback', route: '/(student)/mais/feedback' },
             ].map(item => (
               <TouchableOpacity
                 key={item.label}
