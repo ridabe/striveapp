@@ -185,6 +185,8 @@ export default function StudentHome() {
               { icon: 'time-outline', label: 'Histórico', route: '/(student)/mais/historico' },
               { icon: 'folder-outline', label: 'Arquivos', route: '/(student)/mais/arquivos' },
               { icon: 'star-outline', label: 'Feedback', route: '/(student)/mais/feedback' },
+              { icon: 'restaurant-outline', label: 'Nutrição', route: '/(student)/mais/nutricao' },
+              { icon: 'calendar-outline', label: 'Agenda', route: '/(student)/mais/agenda' },
             ].map(item => (
               <TouchableOpacity
                 key={item.label}
