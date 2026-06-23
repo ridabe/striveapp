@@ -21,7 +21,7 @@ import {
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL!;
 const SUPABASE_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
 const BUCKET = 'exercise-videos';
-const MAX_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
+const MAX_SIZE_BYTES = 20 * 1024 * 1024; // 20 MB
 
 interface Exercise {
   id: string;
@@ -124,7 +124,7 @@ export default function ExerciseDetailScreen() {
       const mb = (info.size / 1024 / 1024).toFixed(1);
       Alert.alert(
         'Vídeo muito grande',
-        `O arquivo tem ${mb} MB. Grave em resolução menor (720p ou inferior) ou reduza a duração para ficar abaixo de 5 MB.`,
+        `O arquivo tem ${mb} MB. O limite é 20 MB. Reduza a duração ou grave em resolução menor.`,
       );
       return;
     }
@@ -396,7 +396,7 @@ export default function ExerciseDetailScreen() {
                 {fVideoUri || fVideoUrl ? 'Substituir vídeo' : 'Selecionar vídeo'}
               </Text>
             </TouchableOpacity>
-            <Text style={s.videoHint}>Máx. 10 segundos · 5 MB · MP4 ou MOV</Text>
+            <Text style={s.videoHint}>Máx. 10 segundos · 20 MB · MP4 ou MOV</Text>
           </View>
         ) : fVideoUrl ? (
           <TouchableOpacity style={s.videoBox} onPress={() => setVideoModalVisible(true)} activeOpacity={0.8}>
