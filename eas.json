@@ -24,10 +24,29 @@
     }
   },
   "submit": {
-    "production": {
+    "internal": {
       "android": {
         "serviceAccountKeyPath": "./google-play-key.json",
         "track": "internal"
+      }
+    },
+    "closed": {
+      "android": {
+        "serviceAccountKeyPath": "./google-play-key.json",
+        "track": "alpha"
+      }
+    },
+    "beta": {
+      "android": {
+        "serviceAccountKeyPath": "./google-play-key.json",
+        "track": "beta"
+      }
+    },
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "./google-play-key.json",
+        "track": "production",
+        "releaseStatus": "draft"
       }
     }
   }

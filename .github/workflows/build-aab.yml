@@ -26,6 +26,15 @@ on:
         description: 'Forçar build mesmo sem mudança de versão'
         type: boolean
         default: false
+      track:
+        description: 'Faixa de publicação na Play (push automático sempre vai para internal)'
+        type: choice
+        default: internal
+        options:
+          - internal     # Teste interno
+          - closed       # Teste fechado (alpha)
+          - beta         # Teste aberto (beta)
+          - production   # Produção (entra como RASCUNHO; aprovar manualmente na Play)
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -113,8 +122,9 @@ jobs:
       - name: Preparar chave de serviço do Google Play
         run: echo "${{ secrets.GOOGLE_PLAY_KEY_BASE64 }}" | base64 -d > google-play-key.json
 
-      - name: Enviar para Google Play (teste interno)
-        run: eas submit --platform android --profile production --path ./build/app-release.aab --non-interactive
+      - name: Enviar para Google Play
+        # Push automático (sem input) → internal. Disparo manual → faixa escolhida.
+        run: eas submit --platform android --profile "${{ github.event.inputs.track || 'internal' }}" --path ./build/app-release.aab --non-interactive
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
