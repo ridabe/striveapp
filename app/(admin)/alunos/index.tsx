@@ -11,6 +11,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
+import { NovoAlunoModal } from '@/components/NovoAlunoModal';
 
 interface Student {
   id: string;
@@ -31,6 +32,7 @@ export default function AlunosScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [filter, setFilter] = useState<'all' | 'active' | 'inactive'>('all');
+  const [showNovoAluno, setShowNovoAluno] = useState(false);
 
   const tenantId = profile?.tenant_id;
 
@@ -75,7 +77,11 @@ export default function AlunosScreen() {
     <SafeAreaView style={styles.safe} edges={['top']}>
       <View style={styles.header}>
         <Text style={styles.title}>Alunos</Text>
-        <TouchableOpacity style={[styles.addBtn, { backgroundColor: primaryColor }]}>
+        <TouchableOpacity
+          style={[styles.addBtn, { backgroundColor: primaryColor }]}
+          onPress={() => setShowNovoAluno(true)}
+          activeOpacity={0.85}
+        >
           <Ionicons name="add" size={22} color={Colors.bg} />
         </TouchableOpacity>
       </View>
@@ -167,6 +173,14 @@ export default function AlunosScreen() {
           )}
         />
       )}
+
+      <NovoAlunoModal
+        visible={showNovoAluno}
+        onClose={() => setShowNovoAluno(false)}
+        onSuccess={() => {
+          loadStudents();
+        }}
+      />
     </SafeAreaView>
   );
 }
