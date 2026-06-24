@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import {
   Modal, View, Text, TextInput, FlatList, TouchableOpacity,
-  StyleSheet, ActivityIndicator,
+  StyleSheet, ActivityIndicator, Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -20,6 +20,7 @@ export interface ExerciseSummary {
   default_reps: string | null;
   duration_secs: number | null;
   is_global: boolean;
+  video_url?: string | null;
 }
 
 interface Props {
@@ -29,29 +30,51 @@ interface Props {
   onClose: () => void;
 }
 
+const PAGE_SIZE = 30;
+
 export function ExercisePickerModal({ visible, tenantId, onSelect, onClose }: Props) {
-  const [exercises, setExercises] = useState<ExerciseSummary[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [search, setSearch] = useState('');
-  const [muscle, setMuscle] = useState('');
+  const [exercises, setExercises]     = useState<ExerciseSummary[]>([]);
+  const [loading, setLoading]         = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore]         = useState(true);
+  const [page, setPage]               = useState(0);
+  const [search, setSearch]           = useState('');
+  const [muscle, setMuscle]           = useState('');
 
-  const load = useCallback(async () => {
+  const fetchPage = useCallback(async (pageIndex: number, reset: boolean) => {
     if (!tenantId || !visible) return;
-    setLoading(true);
+    const from = pageIndex * PAGE_SIZE;
+    const to   = from + PAGE_SIZE - 1;
     let q = supabase.from('exercises')
-      .select('id, name, muscle_group, load_type, count_type, default_sets, default_reps, default_duration_secs, is_global')
+      .select('id, name, muscle_group, load_type, count_type, default_sets, default_reps, default_duration_secs, is_global, video_url')
       .or(`is_global.eq.true,tenant_id.eq.${tenantId}`)
-      .order('name');
-
+      .order('name')
+      .range(from, to);
     if (muscle) q = q.eq('muscle_group', muscle);
     if (search.trim()) q = q.ilike('name', `%${search.trim()}%`);
-
     const { data } = await q;
-    setExercises((data ?? []).map((e: any) => ({ ...e, duration_secs: e.default_duration_secs })));
-    setLoading(false);
+    const rows = (data ?? []).map((e: any) => ({ ...e, duration_secs: e.default_duration_secs }));
+    setExercises(prev => reset ? rows : [...prev, ...rows]);
+    setHasMore(rows.length === PAGE_SIZE);
   }, [tenantId, visible, search, muscle]);
 
-  useEffect(() => { load(); }, [load]);
+  // Reset on filter change or modal open
+  useEffect(() => {
+    if (!visible) return;
+    setPage(0);
+    setHasMore(true);
+    setLoading(true);
+    fetchPage(0, true).finally(() => setLoading(false));
+  }, [fetchPage, visible]);
+
+  const handleLoadMore = useCallback(async () => {
+    if (loadingMore || !hasMore) return;
+    setLoadingMore(true);
+    const next = page + 1;
+    await fetchPage(next, false);
+    setPage(next);
+    setLoadingMore(false);
+  }, [loadingMore, hasMore, page, fetchPage]);
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
@@ -83,7 +106,7 @@ export function ExercisePickerModal({ visible, tenantId, onSelect, onClose }: Pr
         <FlatList
           data={[{ key: '', label: 'Todos' }, ...MUSCLE_GROUPS.map(m => ({ key: m, label: m }))]}
           horizontal showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: 12, paddingBottom: 8, gap: 6 }}
+          contentContainerStyle={{ paddingHorizontal: 12, paddingVertical: 6, gap: 6 }}
           keyExtractor={i => i.key}
           renderItem={({ item }) => (
             <TouchableOpacity
@@ -101,6 +124,9 @@ export function ExercisePickerModal({ visible, tenantId, onSelect, onClose }: Pr
             keyExtractor={e => e.id}
             contentContainerStyle={{ paddingHorizontal: 12, paddingBottom: 32, gap: 6 }}
             showsVerticalScrollIndicator={false}
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.4}
+            ListFooterComponent={loadingMore ? <ActivityIndicator color={Colors.primary} style={{ marginVertical: 12 }} /> : null}
             ListEmptyComponent={
               <View style={s.empty}>
                 <Ionicons name="search-outline" size={40} color={Colors.border} />
@@ -109,11 +135,13 @@ export function ExercisePickerModal({ visible, tenantId, onSelect, onClose }: Pr
             }
             renderItem={({ item }) => (
               <TouchableOpacity style={s.exerciseRow} onPress={() => onSelect(item)} activeOpacity={0.75}>
-                <View style={[s.muscleTag, { backgroundColor: `${muscleColor(item.muscle_group)}22` }]}>
-                  <Text style={[s.muscleTagText, { color: muscleColor(item.muscle_group) }]} numberOfLines={1}>
-                    {item.muscle_group.split(' ')[0]}
-                  </Text>
-                </View>
+                {item.video_url ? (
+                  <Image source={{ uri: item.video_url }} style={s.thumb} resizeMode="cover" />
+                ) : (
+                  <View style={s.thumbPlaceholder}>
+                    <Ionicons name="barbell-outline" size={16} color={Colors.border} />
+                  </View>
+                )}
                 <View style={{ flex: 1 }}>
                   <Text style={s.exName}>{item.name}</Text>
                   <Text style={s.exMeta}>{item.load_type} · {item.count_type}</Text>
@@ -145,14 +173,20 @@ const s = StyleSheet.create({
   },
   searchInput: { flex: 1, fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textPrimary },
   chip: {
-    paddingHorizontal: 10, paddingVertical: 5, borderRadius: 20,
+    paddingHorizontal: 12, paddingVertical: 7, borderRadius: 20,
     borderWidth: 1, borderColor: Colors.border, backgroundColor: Colors.surface,
+    alignSelf: 'flex-start',
   },
-  chipText: { fontFamily: FontFamily.bodyMedium, fontSize: 11, color: Colors.textSecondary },
+  chipText: { fontFamily: FontFamily.bodyMedium, fontSize: 12, color: Colors.textSecondary },
   exerciseRow: {
     flexDirection: 'row', alignItems: 'center', gap: 10,
     backgroundColor: Colors.surface, borderRadius: 12, borderWidth: 1, borderColor: Colors.border,
     paddingVertical: 10, paddingHorizontal: 12,
+  },
+  thumb: { width: 44, height: 44, borderRadius: 10 },
+  thumbPlaceholder: {
+    width: 44, height: 44, borderRadius: 10,
+    backgroundColor: Colors.border, alignItems: 'center', justifyContent: 'center',
   },
   muscleTag: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8, minWidth: 56, alignItems: 'center' },
   muscleTagText: { fontFamily: FontFamily.bodyMedium, fontSize: 10 },

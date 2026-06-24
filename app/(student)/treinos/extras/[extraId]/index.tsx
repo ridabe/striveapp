@@ -186,7 +186,7 @@ export default function ExtraDetailScreen() {
       </ScrollView>
 
       {videoUri && (
-        <MediaViewerModal visible uri={videoUri} type="video" title={videoTitle} onClose={() => setVideoUri(null)} />
+        <MediaViewerModal visible uri={videoUri} type={videoUri.toLowerCase().includes('.gif') ? 'image' : 'video'} title={videoTitle} onClose={() => setVideoUri(null)} />
       )}
     </SafeAreaView>
   );

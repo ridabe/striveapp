@@ -18,7 +18,9 @@ export function useStudent() {
       .select('*')
       .eq('user_id', profile.id)
       .single()
-      .then(({ data }) => { setStudent(data ?? null); setLoading(false); });
+      .then(({ data }) => { setStudent(data ?? null); })
+      .catch(() => { setStudent(null); })
+      .finally(() => { setLoading(false); });
   }, [profile?.id]);
 
   return { student, loading };

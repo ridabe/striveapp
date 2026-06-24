@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,
-  ActivityIndicator,
+  ActivityIndicator, Image,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -199,17 +199,23 @@ export default function PlanDetailScreen() {
                       disabled={!hasVideo}
                       activeOpacity={0.75}
                     >
-                      <View style={[s.playBtn, { backgroundColor: hasVideo ? mc : Colors.border }]}>
-                        <Ionicons
-                          name={hasVideo ? 'play' : 'barbell-outline'}
-                          size={14}
-                          color={hasVideo ? '#fff' : Colors.textSecondary}
-                        />
-                      </View>
-                      {hasVideo && (
-                        <View style={s.videoLabel}>
-                          <Text style={[s.videoLabelText, { color: mc }]}>Vídeo</Text>
-                        </View>
+                      {hasVideo && ex.videoUrl?.toLowerCase().includes('.gif') ? (
+                        <Image source={{ uri: ex.videoUrl }} style={s.videoThumbImg} resizeMode="cover" />
+                      ) : (
+                        <>
+                          <View style={[s.playBtn, { backgroundColor: hasVideo ? mc : Colors.border }]}>
+                            <Ionicons
+                              name={hasVideo ? 'play' : 'barbell-outline'}
+                              size={14}
+                              color={hasVideo ? '#fff' : Colors.textSecondary}
+                            />
+                          </View>
+                          {hasVideo && (
+                            <View style={s.videoLabel}>
+                              <Text style={[s.videoLabelText, { color: mc }]}>Vídeo</Text>
+                            </View>
+                          )}
+                        </>
                       )}
                     </TouchableOpacity>
 
@@ -256,7 +262,7 @@ export default function PlanDetailScreen() {
         <MediaViewerModal
           visible
           uri={videoUri}
-          type="video"
+          type={videoUri.toLowerCase().includes('.gif') ? 'image' : 'video'}
           title={videoTitle}
           onClose={() => setVideoUri(null)}
         />
@@ -290,7 +296,8 @@ const s = StyleSheet.create({
   emptySection: { padding: 16, fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textSecondary, textAlign: 'center' },
   exRow: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 12, gap: 12 },
   exRowBorder: { borderTopWidth: 1, borderTopColor: Colors.border },
-  videoThumb: { width: 60, height: 60, borderRadius: 14, alignItems: 'center', justifyContent: 'center', gap: 4 },
+  videoThumb: { width: 60, height: 60, borderRadius: 14, alignItems: 'center', justifyContent: 'center', gap: 4, overflow: 'hidden' },
+  videoThumbImg: { width: 60, height: 60, borderRadius: 14 },
   playBtn: { width: 28, height: 28, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
   videoLabel: {},
   videoLabelText: { fontFamily: FontFamily.bodyBold, fontSize: 10 },

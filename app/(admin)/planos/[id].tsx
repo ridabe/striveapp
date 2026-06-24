@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,
   ActivityIndicator, Modal, TextInput, Alert,
-  KeyboardAvoidingView, Platform, FlatList,
+  KeyboardAvoidingView, Platform, FlatList, Image,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -26,7 +26,7 @@ interface WorkoutItem {
   count_type: string;
   display_order: number;
   notes: string | null;
-  exercise: { name: string; muscle_group: string } | null;
+  exercise: { name: string; muscle_group: string; video_url: string | null } | null;
 }
 
 interface Routine {
@@ -104,7 +104,7 @@ export default function PlanDetailScreen() {
     const routineIds: string[] = (routinesRes.data ?? []).map((r: any) => r.id);
     const itemsRes = routineIds.length > 0
       ? await supabase.from('workout_items')
-          .select('id,exercise_id,sets,reps,duration_secs,rest_seconds,load,count_type,display_order,notes,routine_id,exercises(name,muscle_group)')
+          .select('id,exercise_id,sets,reps,duration_secs,rest_seconds,load,count_type,display_order,notes,routine_id,exercises(name,muscle_group,video_url)')
           .eq('tenant_id', tenantId)
           .in('routine_id', routineIds)
           .order('display_order')
@@ -126,7 +126,7 @@ export default function PlanDetailScreen() {
 
   async function reloadItems() {
     const itemsRes = await supabase.from('workout_items')
-      .select('id,exercise_id,sets,reps,duration_secs,rest_seconds,load,count_type,display_order,notes,routine_id,exercises(name,muscle_group)')
+      .select('id,exercise_id,sets,reps,duration_secs,rest_seconds,load,count_type,display_order,notes,routine_id,exercises(name,muscle_group,video_url)')
       .eq('tenant_id', tenantId)
       .in('routine_id', routines.map(r => r.id))
       .order('display_order');
@@ -361,11 +361,13 @@ export default function PlanDetailScreen() {
                     const mc = muscleColor(item.exercise?.muscle_group ?? '');
                     return (
                       <View key={item.id} style={[s.itemRow, idx < routine.items.length - 1 && s.itemBorder]}>
-                        <View style={[s.itemMuscle, { backgroundColor: `${mc}20` }]}>
-                          <Text style={[s.itemMuscleText, { color: mc }]} numberOfLines={1}>
-                            {(item.exercise?.muscle_group ?? '').split(' ')[0]}
-                          </Text>
-                        </View>
+                        {item.exercise?.video_url ? (
+                          <Image source={{ uri: item.exercise.video_url }} style={s.itemThumb} resizeMode="cover" />
+                        ) : (
+                          <View style={s.itemThumbPlaceholder}>
+                            <Ionicons name="barbell-outline" size={14} color={Colors.border} />
+                          </View>
+                        )}
                         <View style={{ flex: 1 }}>
                           <Text style={s.itemName} numberOfLines={1}>{item.exercise?.name ?? '—'}</Text>
                           <Text style={s.itemPrescription}>
@@ -556,6 +558,11 @@ const s = StyleSheet.create({
   itemsList: { borderTopWidth: 1, borderTopColor: Colors.border },
   itemRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 10, paddingHorizontal: 14, gap: 10 },
   itemBorder: { borderBottomWidth: 1, borderBottomColor: Colors.border },
+  itemThumb: { width: 40, height: 40, borderRadius: 8, marginRight: 4 },
+  itemThumbPlaceholder: {
+    width: 40, height: 40, borderRadius: 8, marginRight: 4,
+    backgroundColor: Colors.border, alignItems: 'center', justifyContent: 'center',
+  },
   itemMuscle: { paddingHorizontal: 7, paddingVertical: 3, borderRadius: 8, minWidth: 42, alignItems: 'center' },
   itemMuscleText: { fontFamily: FontFamily.bodyMedium, fontSize: 10 },
   itemName: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm, color: Colors.textPrimary },

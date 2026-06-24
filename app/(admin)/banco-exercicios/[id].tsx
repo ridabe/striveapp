@@ -435,7 +435,7 @@ export default function ExerciseDetailScreen() {
       <MediaViewerModal
         visible={videoModalVisible}
         uri={fVideoUrl ?? ''}
-        type="video"
+        type={(fVideoUrl ?? '').toLowerCase().includes('.gif') ? 'image' : 'video'}
         title={fName || 'Demonstração'}
         onClose={() => setVideoModalVisible(false)}
       />

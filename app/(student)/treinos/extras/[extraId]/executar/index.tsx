@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,
   TextInput, Alert, ActivityIndicator,
-  KeyboardAvoidingView, Platform, Modal,
+  KeyboardAvoidingView, Platform, Modal, Image,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -318,18 +318,22 @@ export default function ExtraExecutionScreen() {
                       activeOpacity={0.8}
                     >
                       {item.videoUrl ? (
-                        <>
-                          <Video
-                            source={{ uri: item.videoUrl }}
-                            style={s.thumb}
-                            shouldPlay={false}
-                            isMuted
-                            resizeMode={ResizeMode.COVER}
-                          />
-                          <View style={s.playOverlay}>
-                            <Ionicons name="play" size={16} color="#fff" />
-                          </View>
-                        </>
+                        item.videoUrl.toLowerCase().includes('.gif') ? (
+                          <Image source={{ uri: item.videoUrl }} style={s.thumb} resizeMode="cover" />
+                        ) : (
+                          <>
+                            <Video
+                              source={{ uri: item.videoUrl }}
+                              style={s.thumb}
+                              shouldPlay={false}
+                              isMuted
+                              resizeMode={ResizeMode.COVER}
+                            />
+                            <View style={s.playOverlay}>
+                              <Ionicons name="play" size={16} color="#fff" />
+                            </View>
+                          </>
+                        )
                       ) : (
                         <View style={[s.thumbPlaceholder, { backgroundColor: `${mc}25` }]}>
                           <Ionicons name="barbell-outline" size={22} color={mc} />
@@ -483,7 +487,7 @@ export default function ExtraExecutionScreen() {
       </Modal>
 
       {videoUri && (
-        <MediaViewerModal visible uri={videoUri} type="video" title={videoTitle} onClose={() => setVideoUri(null)} />
+        <MediaViewerModal visible uri={videoUri} type={videoUri.toLowerCase().includes('.gif') ? 'image' : 'video'} title={videoTitle} onClose={() => setVideoUri(null)} />
       )}
     </SafeAreaView>
   );
