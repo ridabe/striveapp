@@ -2,23 +2,27 @@
   "expo": {
     "name": "Strive Personal",
     "slug": "strive-app",
-    "version": "1.0.4",
+    "version": "1.0.5",
+    "platforms": ["android"],
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "striveapp",
     "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "jsEngine": "hermes",
+    "assetBundlePatterns": ["**/*"],
     "splash": {
       "image": "./assets/images/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#0E0E1A"
-    },    
+    },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#0E0E1A"
       },
       "package": "com.strive.personal",
-      "versionCode": 4,
+      "versionCode": 5,
       "permissions": [ 
         "android.permission.USE_BIOMETRIC",
         "android.permission.USE_FINGERPRINT"
@@ -32,6 +36,14 @@
     "plugins": [
       "expo-router",
       "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "backgroundColor": "#0E0E1A",
+          "resizeMode": "contain"
+        }
+      ],
       [
         "expo-image-picker",
         {
