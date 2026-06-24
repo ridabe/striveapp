@@ -10,6 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Video, ResizeMode } from 'expo-av';
 import { supabase } from '@/lib/supabase';
 import { useStudent } from '@/hooks/useStudent';
+import { useHealthConnect, type WearableMetrics } from '@/hooks/useHealthConnect';
 import { useThemeStore } from '@/stores/themeStore';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
@@ -274,11 +275,14 @@ export default function PlanExecutionScreen() {
 
   const [videoUri, setVideoUri] = useState<string | null>(null);
   const [videoTitle, setVideoTitle] = useState('');
+  const [wearableMetrics, setWearableMetrics] = useState<WearableMetrics | null>(null);
 
   const [restTarget, setRestTarget] = useState<{ name: string; secs: number } | null>(null);
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const sessionStart = useRef<Date | null>(null);
+
+  const { requestPermissions, getWorkoutMetrics } = useHealthConnect();
 
   useEffect(() => {
     if (planId) load();
@@ -351,10 +355,12 @@ export default function PlanExecutionScreen() {
     })));
   }
 
-  function startWorkout() {
+  async function startWorkout() {
     sessionStart.current = new Date();
     timerRef.current = setInterval(() => setSessionSecs(s => s + 1), 1000);
     setPhase('active');
+    // Pede permissão ao Health Connect em background — não bloqueia o início do treino
+    requestPermissions().catch(() => {});
   }
 
   function handleAbandon() {
@@ -369,9 +375,14 @@ export default function PlanExecutionScreen() {
     ]);
   }
 
-  function openFinish() {
+  async function openFinish() {
     if (timerRef.current) clearInterval(timerRef.current);
     setPhase('finishing');
+    // Coleta métricas do smartwatch referentes ao intervalo do treino
+    if (sessionStart.current) {
+      const metrics = await getWorkoutMetrics(sessionStart.current, new Date());
+      setWearableMetrics(metrics);
+    }
   }
 
   async function handleSave() {
@@ -393,6 +404,13 @@ export default function PlanExecutionScreen() {
         duration_seconds: sessionSecs,
         intensity,
         notes: finishNotes.trim() || null,
+        heart_rate_avg: wearableMetrics?.heartRateAvg ?? null,
+        heart_rate_max: wearableMetrics?.heartRateMax ?? null,
+        heart_rate_min: wearableMetrics?.heartRateMin ?? null,
+        calories_active: wearableMetrics?.caloriesActive ?? null,
+        spo2_avg: wearableMetrics?.spo2Avg ?? null,
+        steps: wearableMetrics?.steps ?? null,
+        wearable_source: wearableMetrics?.source ?? null,
       } as any)
       .select('id')
       .single();
@@ -680,6 +698,44 @@ export default function PlanExecutionScreen() {
                 </View>
               </View>
 
+              {wearableMetrics && (
+                <View style={s.wearableCard}>
+                  <View style={s.wearableHeader}>
+                    <Text style={s.wearableIcon}>⌚</Text>
+                    <Text style={s.wearableTitle}>Dados do Smartwatch</Text>
+                  </View>
+                  <View style={s.wearableMetrics}>
+                    {wearableMetrics.heartRateAvg !== null && (
+                      <View style={s.wearableMetric}>
+                        <Text style={[s.wearableValue, { color: '#EF4444' }]}>
+                          {wearableMetrics.heartRateAvg}
+                          {wearableMetrics.heartRateMax !== null && `/${wearableMetrics.heartRateMax}`}
+                        </Text>
+                        <Text style={s.wearableLabel}>FC méd/máx (bpm)</Text>
+                      </View>
+                    )}
+                    {wearableMetrics.caloriesActive !== null && (
+                      <View style={s.wearableMetric}>
+                        <Text style={[s.wearableValue, { color: '#F59E0B' }]}>{wearableMetrics.caloriesActive}</Text>
+                        <Text style={s.wearableLabel}>Calorias (kcal)</Text>
+                      </View>
+                    )}
+                    {wearableMetrics.spo2Avg !== null && (
+                      <View style={s.wearableMetric}>
+                        <Text style={[s.wearableValue, { color: '#60A5FA' }]}>{wearableMetrics.spo2Avg}%</Text>
+                        <Text style={s.wearableLabel}>SpO₂</Text>
+                      </View>
+                    )}
+                    {wearableMetrics.steps !== null && (
+                      <View style={s.wearableMetric}>
+                        <Text style={[s.wearableValue, { color: '#4ADE80' }]}>{wearableMetrics.steps}</Text>
+                        <Text style={s.wearableLabel}>Passos</Text>
+                      </View>
+                    )}
+                  </View>
+                </View>
+              )}
+
               {/* Star rating */}
               <Text style={[s.finishSectionLabel, { marginTop: 16 }]}>AVALIAÇÃO</Text>
               <View style={s.starsRow}>
@@ -830,6 +886,15 @@ const s = StyleSheet.create({
   summaryNum: { fontFamily: FontFamily.bodyBold, fontSize: 28 },
   summaryLabel: { fontFamily: FontFamily.body, fontSize: 11, color: Colors.textSecondary },
   summaryDiv: { width: 1, backgroundColor: Colors.border, marginHorizontal: 12 },
+
+  wearableCard: { backgroundColor: Colors.bg, borderRadius: 16, borderWidth: 1, borderColor: Colors.border, padding: 14, marginTop: 12 },
+  wearableHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 10 },
+  wearableIcon: { fontSize: 16 },
+  wearableTitle: { fontFamily: FontFamily.bodyBold, fontSize: 13, color: Colors.textPrimary },
+  wearableMetrics: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
+  wearableMetric: { flex: 1, minWidth: 80, alignItems: 'center', gap: 2 },
+  wearableValue: { fontFamily: FontFamily.bodyBold, fontSize: 20 },
+  wearableLabel: { fontFamily: FontFamily.body, fontSize: 10, color: Colors.textSecondary, textAlign: 'center' },
 
   finishSectionLabel: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.xs, color: Colors.textSecondary, letterSpacing: 1, marginBottom: 10 },
   optional: { fontFamily: FontFamily.body, fontWeight: '400', letterSpacing: 0 },

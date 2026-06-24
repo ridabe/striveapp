@@ -2,15 +2,19 @@
   "expo": {
     "name": "Strive Personal",
     "slug": "strive-app",
-    "version": "1.0.6",
-    "platforms": ["android"],
+    "version": "1.0.7",
+    "platforms": [
+      "android"
+    ],
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "striveapp",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "jsEngine": "hermes",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "splash": {
       "image": "./assets/images/splash-icon.png",
       "resizeMode": "contain",
@@ -22,10 +26,15 @@
         "backgroundColor": "#0E0E1A"
       },
       "package": "com.strive.personal",
-      "versionCode": 6,
-      "permissions": [ 
+      "versionCode": 7,
+      "minSdkVersion": 26,
+      "permissions": [
         "android.permission.USE_BIOMETRIC",
-        "android.permission.USE_FINGERPRINT"
+        "android.permission.USE_FINGERPRINT",
+        "android.permission.health.READ_HEART_RATE",
+        "android.permission.health.READ_ACTIVE_CALORIES_BURNED",
+        "android.permission.health.READ_OXYGEN_SATURATION",
+        "android.permission.health.READ_STEPS"
       ]
     },
     "web": {
@@ -50,14 +59,15 @@
           "photosPermission": "O app acessa suas fotos para registrar seu progresso.",
           "cameraPermission": "O app usa a câmera para registrar seu progresso."
         }
-      ],    
+      ],
       "expo-secure-store",
       [
         "expo-local-authentication",
         {
           "faceIDPermission": "O app usa o Face ID para autenticar seu acesso de forma segura."
         }
-      ]
+      ],
+      "react-native-health-connect"
     ],
     "experiments": {
       "typedRoutes": true
