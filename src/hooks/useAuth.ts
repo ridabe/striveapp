@@ -25,26 +25,29 @@ export function useAuth() {
   const { session, user, profile, isLoading, setSession, setProfile, setLoading } = useAuthStore();
 
   useEffect(() => {
-    let mounted = true;
-
-    async function initSession() {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!mounted) return;
-        setSession(session);
-        await fetchAndSetProfile(session, setProfile);
-      } catch {
-        if (!mounted) return;
-        setSession(null);
-      } finally {
-        if (mounted) setLoading(false);
+    // onAuthStateChange é a única fonte de verdade para o estado de autenticação.
+    // O evento INITIAL_SESSION dispara uma vez ao registrar o listener, com a sessão
+    // armazenada (ou null), eliminando a race condition com initSession() paralelo.
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_OUT') {
+        // Fire-and-forget: não aguarda para não bloquear a atualização de estado
+        // (await aqui causava loop quando o token expirava e o refresh falhava).
+        supabase.removeAllChannels();
       }
-    }
 
-    initSession();
+      setSession(session);
 
-    // Revalida a sessão toda vez que o app volta ao foreground,
-    // evitando o spinner infinito quando o token foi renovado em background.
+      try {
+        await fetchAndSetProfile(session, setProfile);
+      } finally {
+        // Resolve o isLoading somente após o INITIAL_SESSION ser processado.
+        // Usar finally garante que o loading sempre termina mesmo se o fetch falhar.
+        if (event === 'INITIAL_SESSION') {
+          setLoading(false);
+        }
+      }
+    });
+
     const appStateSubscription = AppState.addEventListener('change', (state) => {
       if (state === 'active') {
         supabase.auth.startAutoRefresh();
@@ -53,19 +56,7 @@ export function useAuth() {
       }
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_OUT') {
-        // Remove todos os canais realtime antes de trocar de sessão,
-        // evitando o erro "cannot add postgres_changes callbacks" ao logar com outro usuário.
-        await supabase.removeAllChannels();
-      }
-      if (!mounted) return;
-      setSession(session);
-      await fetchAndSetProfile(session, setProfile);
-    });
-
     return () => {
-      mounted = false;
       subscription.unsubscribe();
       appStateSubscription.remove();
     };

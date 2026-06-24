@@ -2,17 +2,14 @@ name: Build Android AAB
 
 # Secrets necessários (Settings → Secrets and variables → Actions → New repository secret):
 #
-#   EXPO_TOKEN                   Token EAS → expo.dev → Account Settings → Access Tokens
-#   SUPABASE_URL                 URL do projeto Supabase  (EXPO_PUBLIC_SUPABASE_URL)
-#   SUPABASE_ANON_KEY            Chave anon do Supabase   (EXPO_PUBLIC_SUPABASE_ANON_KEY)
-#   GOOGLE_PLAY_KEY_BASE64       google-play-key.json (conta de serviço) em base64.
-#                                Gere com:  base64 -w0 google-play-key.json   (Linux)
-#                                ou:        certutil -encode google-play-key.json tmp && type tmp  (Windows)
+#   EXPO_TOKEN          Token EAS → expo.dev → Account Settings → Access Tokens
+#   SUPABASE_URL        URL do projeto Supabase  (EXPO_PUBLIC_SUPABASE_URL)
+#   SUPABASE_ANON_KEY   Chave anon do Supabase   (EXPO_PUBLIC_SUPABASE_ANON_KEY)
 #
 # O keystore de signing é gerenciado pelo EAS (expo.dev → project → Credentials).
 # O build roda localmente no runner do GitHub — sem consumir minutos EAS.
-# Após o build, o AAB é enviado automaticamente para a faixa de teste interno
-# da Play Store via `eas submit` (track configurado em eas.json → submit.production).
+# O AAB gerado fica disponível como artefato e como GitHub Release para download manual.
+# O envio para a Play Store deve ser feito manualmente via Google Play Console.
 
 on:
   push:
@@ -26,15 +23,6 @@ on:
         description: 'Forçar build mesmo sem mudança de versão'
         type: boolean
         default: false
-      track:
-        description: 'Faixa de publicação na Play (push automático sempre vai para internal)'
-        type: choice
-        default: internal
-        options:
-          - internal     # Teste interno
-          - closed       # Teste fechado (alpha)
-          - beta         # Teste aberto (beta)
-          - production   # Produção (entra como RASCUNHO; aprovar manualmente na Play)
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -118,19 +106,6 @@ jobs:
           name: strive-personal-v${{ needs.check-version.outputs.version }}-vc${{ needs.check-version.outputs.version_code }}
           path: ./build/app-release.aab
           retention-days: 60
-
-      - name: Preparar chave de serviço do Google Play
-        run: echo "${{ secrets.GOOGLE_PLAY_KEY_BASE64 }}" | base64 -d > google-play-key.json
-
-      - name: Enviar para Google Play
-        # Push automático (sem input) → internal. Disparo manual → faixa escolhida.
-        run: eas submit --platform android --profile "${{ github.event.inputs.track || 'internal' }}" --path ./build/app-release.aab --non-interactive
-        env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-
-      - name: Remover chave de serviço
-        if: always()
-        run: rm -f google-play-key.json
 
       - name: Criar GitHub Release
         uses: softprops/action-gh-release@v2

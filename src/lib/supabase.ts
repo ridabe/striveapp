@@ -27,6 +27,14 @@ const ExpoSecureStoreAdapter = {
   setItem: async (key: string, value: string) => {
     if (value.length <= CHUNK_SIZE) {
       await SecureStore.setItemAsync(key, value);
+      // Remove chunks de uma gravação anterior maior para evitar leitura corrompida
+      let i = 0;
+      while (true) {
+        const chunk = await SecureStore.getItemAsync(`${key}_chunk_${i}`);
+        if (chunk === null) break;
+        await SecureStore.deleteItemAsync(`${key}_chunk_${i}`);
+        i++;
+      }
       return;
     }
     // Remove any old direct value before chunking
@@ -37,6 +45,14 @@ const ExpoSecureStoreAdapter = {
         `${key}_chunk_${i}`,
         value.slice(offset, offset + CHUNK_SIZE),
       );
+      i++;
+    }
+    // Remove chunks excedentes de uma sessão anterior que era maior,
+    // evitando que getItem monte um JSON corrompido na próxima leitura
+    while (true) {
+      const extra = await SecureStore.getItemAsync(`${key}_chunk_${i}`);
+      if (extra === null) break;
+      await SecureStore.deleteItemAsync(`${key}_chunk_${i}`);
       i++;
     }
   },
