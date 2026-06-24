@@ -85,6 +85,9 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Instalar NDK 27.1.12297006
+        run: echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "ndk;27.1.12297006"
+
       - name: Instalar dependências
         run: npm ci --legacy-peer-deps
 
