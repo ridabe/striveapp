@@ -114,7 +114,8 @@ export default function BancoExerciciosScreen() {
       <FlatList
         data={[{ key: '', label: 'Todos' }, ...MUSCLE_GROUPS.map(m => ({ key: m, label: m }))]}
         horizontal showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 12, paddingTop: 6, paddingBottom: 2, gap: 6 }}
+        style={{ maxHeight: 52, flexGrow: 0 }}
+        contentContainerStyle={{ paddingHorizontal: 12, paddingVertical: 8, gap: 6 }}
         keyExtractor={i => i.key}
         renderItem={({ item }) => (
           <TouchableOpacity
