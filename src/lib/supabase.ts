@@ -53,8 +53,19 @@ const ExpoSecureStoreAdapter = {
   },
 };
 
-const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  // Falha explícita no build/launch em vez de crash mudo com `undefined`.
+  // Se isso disparar em produção, as variáveis EXPO_PUBLIC_SUPABASE_* não
+  // foram embutidas no build (verifique os GitHub Secrets SUPABASE_URL /
+  // SUPABASE_ANON_KEY usados pelo workflow build-aab.yml).
+  throw new Error(
+    'Configuração do Supabase ausente: defina EXPO_PUBLIC_SUPABASE_URL e ' +
+      'EXPO_PUBLIC_SUPABASE_ANON_KEY no ambiente de build.',
+  );
+}
 
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   auth: {
