@@ -5,9 +5,14 @@ name: Build Android AAB
 #   EXPO_TOKEN                   Token EAS → expo.dev → Account Settings → Access Tokens
 #   SUPABASE_URL                 URL do projeto Supabase  (EXPO_PUBLIC_SUPABASE_URL)
 #   SUPABASE_ANON_KEY            Chave anon do Supabase   (EXPO_PUBLIC_SUPABASE_ANON_KEY)
+#   GOOGLE_PLAY_KEY_BASE64       google-play-key.json (conta de serviço) em base64.
+#                                Gere com:  base64 -w0 google-play-key.json   (Linux)
+#                                ou:        certutil -encode google-play-key.json tmp && type tmp  (Windows)
 #
 # O keystore de signing é gerenciado pelo EAS (expo.dev → project → Credentials).
 # O build roda localmente no runner do GitHub — sem consumir minutos EAS.
+# Após o build, o AAB é enviado automaticamente para a faixa de teste interno
+# da Play Store via `eas submit` (track configurado em eas.json → submit.production).
 
 on:
   push:
@@ -104,6 +109,18 @@ jobs:
           name: strive-personal-v${{ needs.check-version.outputs.version }}-vc${{ needs.check-version.outputs.version_code }}
           path: ./build/app-release.aab
           retention-days: 60
+
+      - name: Preparar chave de serviço do Google Play
+        run: echo "${{ secrets.GOOGLE_PLAY_KEY_BASE64 }}" | base64 -d > google-play-key.json
+
+      - name: Enviar para Google Play (teste interno)
+        run: eas submit --platform android --profile production --path ./build/app-release.aab --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Remover chave de serviço
+        if: always()
+        run: rm -f google-play-key.json
 
       - name: Criar GitHub Release
         uses: softprops/action-gh-release@v2
