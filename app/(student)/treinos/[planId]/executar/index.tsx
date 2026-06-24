@@ -278,6 +278,7 @@ export default function PlanExecutionScreen() {
   const [wearableMetrics, setWearableMetrics] = useState<WearableMetrics | null>(null);
 
   const [restTarget, setRestTarget] = useState<{ name: string; secs: number } | null>(null);
+  const [fetchingMetrics, setFetchingMetrics] = useState(false);
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const sessionStart = useRef<Date | null>(null);
@@ -378,10 +379,11 @@ export default function PlanExecutionScreen() {
   async function openFinish() {
     if (timerRef.current) clearInterval(timerRef.current);
     setPhase('finishing');
-    // Coleta métricas do smartwatch referentes ao intervalo do treino
     if (sessionStart.current) {
+      setFetchingMetrics(true);
       const metrics = await getWorkoutMetrics(sessionStart.current, new Date());
       setWearableMetrics(metrics);
+      setFetchingMetrics(false);
     }
   }
 
@@ -702,7 +704,17 @@ export default function PlanExecutionScreen() {
                 </View>
               </View>
 
-              {wearableMetrics && (
+              {fetchingMetrics && (
+                <View style={s.wearableCard}>
+                  <View style={s.wearableHeader}>
+                    <Text style={s.wearableIcon}>⌚</Text>
+                    <Text style={s.wearableTitle}>Buscando dados do smartwatch...</Text>
+                  </View>
+                  <ActivityIndicator color={primaryColor} style={{ marginVertical: 8 }} />
+                </View>
+              )}
+
+              {!fetchingMetrics && wearableMetrics && (
                 <View style={s.wearableCard}>
                   <View style={s.wearableHeader}>
                     <Text style={s.wearableIcon}>⌚</Text>

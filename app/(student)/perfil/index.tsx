@@ -16,9 +16,7 @@ import { MODULE } from '@/lib/modules';
 import { TenantLogo } from '@/components/TenantLogo';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
-
-const APP_VERSION = '1.0.1';
-const APP_BUILD   = '1';
+import { APP_VERSION_NAME, APP_VERSION_CODE } from '@/lib/appVersion';
 
 interface TenantContact {
   business_name: string;
@@ -267,7 +265,7 @@ export default function PerfilScreen() {
           <TenantLogo size={28} radius={7} />
           <View style={{ alignItems: 'center', gap: 2 }}>
             <Text style={s.appInfoName}>{tenantName}</Text>
-            <Text style={s.appInfoVersion}>Versão {APP_VERSION} (Build {APP_BUILD})</Text>
+            <Text style={s.appInfoVersion}>Versão {APP_VERSION_NAME} (Build {APP_VERSION_CODE})</Text>
           </View>
           <Text style={s.appInfoPowered}>Powered by Strive Personal</Text>
         </View>

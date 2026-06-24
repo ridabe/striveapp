@@ -12,6 +12,7 @@ import { TenantLogo } from '@/components/TenantLogo';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 import { signOut } from '@/services/auth';
+import { APP_VERSION_NAME } from '@/lib/appVersion';
 
 interface ModuleItem {
   slug: string;
@@ -240,7 +241,7 @@ export default function MaisScreen() {
           </View>
         ))}
 
-        <Text style={styles.version}>Strive Personal v1.0.0</Text>
+        <Text style={styles.version}>Strive Personal v{APP_VERSION_NAME}</Text>
       </ScrollView>
     </SafeAreaView>
   );

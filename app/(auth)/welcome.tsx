@@ -23,7 +23,7 @@ export default function WelcomeScreen() {
         </View>
 
         <View style={styles.heroSection}>
-          <Text style={styles.headline}>Evolução que{'\n'}você vê.</Text>
+          <Text style={styles.headline}>Evolução que você vê.</Text>
           <Text style={styles.subheadline}>
             Acompanhe cada treino, cada série, cada avanço.
           </Text>
@@ -53,7 +53,7 @@ export default function WelcomeScreen() {
           style={styles.ctaSecondary}
           activeOpacity={0.7}
         >
-          <Text style={styles.ctaSecondaryText}>Já tenho conta. Fazer login</Text>
+          {/* <Text style={styles.ctaSecondaryText}>Já tenho conta. Fazer login</Text> */}
         </TouchableOpacity>
       </View>
     </View>
@@ -73,16 +73,16 @@ const styles = StyleSheet.create({
   },
   logoSection: {
     alignItems: 'center',
-    marginBottom: 40,
+    marginBottom: 37,
   },
   heroSection: {
-    marginBottom: 40,
+    marginBottom: 35,
   },
   headline: {
     fontFamily: FontFamily.display,
-    fontSize: 34,
+    fontSize: 14,
     color: Colors.textPrimary,
-    lineHeight: 42,
+    lineHeight: 38,
     marginBottom: 16,
   },
   subheadline: {

@@ -114,7 +114,7 @@ export default function BancoExerciciosScreen() {
       <FlatList
         data={[{ key: '', label: 'Todos' }, ...MUSCLE_GROUPS.map(m => ({ key: m, label: m }))]}
         horizontal showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 12, paddingVertical: 6, gap: 6 }}
+        contentContainerStyle={{ paddingHorizontal: 12, paddingTop: 6, paddingBottom: 2, gap: 6 }}
         keyExtractor={i => i.key}
         renderItem={({ item }) => (
           <TouchableOpacity
@@ -136,14 +136,15 @@ export default function BancoExerciciosScreen() {
 
       {/* List */}
       {loading ? <ActivityIndicator color={primaryColor} style={{ marginTop: 40 }} /> : (
-        <FlatList
-          data={exercises}
-          keyExtractor={e => e.id}
-          contentContainerStyle={s.list}
-          showsVerticalScrollIndicator={false}
-          onEndReached={handleLoadMore}
-          onEndReachedThreshold={0.4}
-          ListFooterComponent={loadingMore ? <ActivityIndicator color={primaryColor} style={{ marginVertical: 16 }} /> : null}
+        <View style={{ flex: 1 }}>
+          <FlatList
+            data={exercises}
+            keyExtractor={e => e.id}
+            contentContainerStyle={s.list}
+            showsVerticalScrollIndicator={false}
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.4}
+            ListFooterComponent={loadingMore ? <ActivityIndicator color={primaryColor} style={{ marginVertical: 16 }} /> : null}
           ListEmptyComponent={
             <View style={s.empty}>
               <Ionicons name="barbell-outline" size={52} color={Colors.border} />
@@ -191,7 +192,8 @@ export default function BancoExerciciosScreen() {
               </TouchableOpacity>
             );
           }}
-        />
+          />
+        </View>
       )}
     </SafeAreaView>
   );
@@ -219,7 +221,7 @@ const s = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   chipText: { fontFamily: FontFamily.bodyMedium, fontSize: 12, color: Colors.textSecondary },
-  statsRow: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 16, paddingBottom: 10 },
+  statsRow: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 16, paddingVertical: 6 },
   statsText: { fontFamily: FontFamily.body, fontSize: 12, color: Colors.textSecondary },
   statsDot: { width: 3, height: 3, borderRadius: 2, backgroundColor: Colors.border },
   list: { paddingHorizontal: 16, paddingBottom: 32, gap: 8 },
