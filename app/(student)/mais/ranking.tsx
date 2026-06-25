@@ -106,17 +106,19 @@ export default function StudentRankingScreen() {
 
     if (!active) { setLoading(false); return; }
 
+    // Ranking GLOBAL — todos os alunos de todos os studios competem entre si
     const { data: rankData } = await supabase
       .from('monthly_points')
       .select('student_id, total_points, workouts_completed, students(full_name)')
-      .eq('month', month).eq('year', year)
+      .eq('month', month)
+      .eq('year', year)
       .order('total_points', { ascending: false })
       .order('workouts_completed', { ascending: false });
 
     const entries: RankingEntry[] = ((rankData ?? []) as any[]).map((r, i) => ({
       student_id: r.student_id, total_points: r.total_points,
       workouts_completed: r.workouts_completed,
-      student_name: r.students?.full_name,
+      student_name: (r.students as any)?.full_name,
       rank_position: i + 1,
     }));
     setRanking(entries);
@@ -124,9 +126,10 @@ export default function StudentRankingScreen() {
     if (student) {
       const { data: mp } = await supabase.from('monthly_points')
         .select('total_points, workouts_completed, exercises_completed, active_minutes, weekly_bonuses')
-        .eq('student_id', student.id).eq('month', month).eq('year', year).single();
+        .eq('student_id', student.id).eq('month', month).eq('year', year).maybeSingle();
       setMyPoints((mp as MyPoints) ?? null);
 
+      // Posição global — conta todos acima independente do studio
       const { count } = await supabase.from('monthly_points')
         .select('id', { count: 'exact', head: true })
         .eq('month', month).eq('year', year)

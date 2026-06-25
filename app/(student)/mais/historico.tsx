@@ -47,7 +47,13 @@ export default function HistoricoScreen() {
     if (!student) return;
     const { data } = await supabase
       .from('workout_sessions')
-      .select('id, started_at, finished_at, duration_seconds, intensity, notes, workout_plans(name), workout_routines(name)')
+      .select(`
+        id, started_at, finished_at, duration_seconds, intensity, notes,
+        heart_rate_avg, heart_rate_max, heart_rate_min,
+        calories_active, spo2_avg, steps, distance_meters,
+        wearable_device,
+        workout_plans(name), workout_routines(name)
+      `)
       .eq('student_id', student.id)
       .not('finished_at', 'is', null)
       .order('started_at', { ascending: false })
@@ -100,8 +106,12 @@ export default function HistoricoScreen() {
           }
           renderItem={({ item }) => {
             const ic = item.intensity ? INTENSITY_CONFIG[item.intensity] : null;
+            const hasHealth = item.heart_rate_avg || item.calories_active ||
+              item.spo2_avg || item.steps || item.distance_meters;
+
             return (
               <View style={s.sessionCard}>
+                {/* ── Header: data + intensidade + duração ── */}
                 <View style={s.sessionTop}>
                   <View>
                     <Text style={s.sessionDate}>{fmtDate(item.started_at)}</Text>
@@ -120,6 +130,8 @@ export default function HistoricoScreen() {
                     </View>
                   </View>
                 </View>
+
+                {/* ── Plano ── */}
                 {(item.workout_plans?.name || item.workout_routines?.name) && (
                   <View style={s.planRow}>
                     <Ionicons name="document-text-outline" size={12} color={Colors.textSecondary} />
@@ -128,6 +140,64 @@ export default function HistoricoScreen() {
                     </Text>
                   </View>
                 )}
+
+                {/* ── Dados do smartwatch ── */}
+                {hasHealth && (
+                  <View style={s.healthSection}>
+                    <View style={s.healthHeader}>
+                      <Text style={s.healthIcon}>⌚</Text>
+                      <Text style={s.healthSourceText}>
+                        {item.wearable_device ?? 'Smartwatch'}
+                      </Text>
+                    </View>
+                    <View style={s.healthGrid}>
+                      {item.heart_rate_avg != null && (
+                        <View style={s.healthItem}>
+                          <Ionicons name="heart" size={13} color="#EF4444" />
+                          <Text style={s.healthValue}>
+                            {item.heart_rate_avg}
+                            {item.heart_rate_max != null ? `/${item.heart_rate_max}` : ''}
+                          </Text>
+                          <Text style={s.healthLabel}>FC méd/máx</Text>
+                        </View>
+                      )}
+                      {item.calories_active != null && (
+                        <View style={s.healthItem}>
+                          <Ionicons name="flame" size={13} color="#F59E0B" />
+                          <Text style={s.healthValue}>{item.calories_active}</Text>
+                          <Text style={s.healthLabel}>kcal</Text>
+                        </View>
+                      )}
+                      {item.spo2_avg != null && (
+                        <View style={s.healthItem}>
+                          <Ionicons name="water" size={13} color="#60A5FA" />
+                          <Text style={s.healthValue}>{item.spo2_avg}%</Text>
+                          <Text style={s.healthLabel}>SpO₂</Text>
+                        </View>
+                      )}
+                      {item.steps != null && (
+                        <View style={s.healthItem}>
+                          <Ionicons name="footsteps" size={13} color="#4ADE80" />
+                          <Text style={s.healthValue}>{item.steps.toLocaleString('pt-BR')}</Text>
+                          <Text style={s.healthLabel}>Passos</Text>
+                        </View>
+                      )}
+                      {item.distance_meters != null && (
+                        <View style={s.healthItem}>
+                          <Ionicons name="navigate" size={13} color="#A78BFA" />
+                          <Text style={s.healthValue}>
+                            {item.distance_meters >= 1000
+                              ? `${(item.distance_meters / 1000).toFixed(1)} km`
+                              : `${item.distance_meters} m`}
+                          </Text>
+                          <Text style={s.healthLabel}>Distância</Text>
+                        </View>
+                      )}
+                    </View>
+                  </View>
+                )}
+
+                {/* ── Observações ── */}
                 {item.notes && (
                   <Text style={s.notes} numberOfLines={2}>{item.notes}</Text>
                 )}
@@ -166,4 +236,18 @@ const s = StyleSheet.create({
   empty: { alignItems: 'center', paddingTop: 64, gap: 10, paddingHorizontal: 32 },
   emptyTitle: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.md, color: Colors.textPrimary },
   emptyDesc: { fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textSecondary, textAlign: 'center' },
+
+  // ── Health data ──────────────────────────────────────────────────────────────
+  healthSection: {
+    backgroundColor: Colors.bg, borderRadius: 12,
+    borderWidth: 1, borderColor: Colors.border,
+    padding: 10, gap: 8,
+  },
+  healthHeader: { flexDirection: 'row', alignItems: 'center', gap: 5 },
+  healthIcon: { fontSize: 12 },
+  healthSourceText: { fontFamily: FontFamily.bodyMedium, fontSize: 11, color: Colors.textSecondary },
+  healthGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
+  healthItem: { alignItems: 'center', gap: 2, minWidth: 56 },
+  healthValue: { fontFamily: FontFamily.bodyBold, fontSize: 14, color: Colors.textPrimary },
+  healthLabel: { fontFamily: FontFamily.body, fontSize: 10, color: Colors.textSecondary, textAlign: 'center' },
 });

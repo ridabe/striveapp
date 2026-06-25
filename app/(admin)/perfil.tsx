@@ -24,6 +24,15 @@ interface Plan {
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
+function maskPhone(value: string): string {
+  const d = value.replace(/\D/g, '').slice(0, 11);
+  if (d.length === 0) return '';
+  if (d.length <= 2) return `(${d}`;
+  if (d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
+  if (d.length <= 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;
+  return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
+}
+
 function SectionLabel({ children }: { children: string }) {
   return <Text style={styles.sectionLabel}>{children}</Text>;
 }
@@ -55,6 +64,7 @@ export default function PerfilScreen() {
   // Business data
   const [contactEmail, setContactEmail] = useState('');
   const [contactPhone, setContactPhone] = useState('');
+  const [cref, setCref] = useState('');
   const [savingBusiness, setSavingBusiness] = useState(false);
 
   // Plans
@@ -68,7 +78,7 @@ export default function PerfilScreen() {
 
     Promise.all([
       supabase.from('tenants')
-        .select('contact_email, contact_phone, plan')
+        .select('contact_email, contact_phone, plan, cref')
         .eq('id', tenantId)
         .single(),
       supabase.from('plans')
@@ -79,6 +89,7 @@ export default function PerfilScreen() {
       if (tenantRes.data) {
         setContactEmail(tenantRes.data.contact_email ?? '');
         setContactPhone(tenantRes.data.contact_phone ?? '');
+        setCref((tenantRes.data as any).cref ?? '');
         setCurrentPlanSlug(tenantRes.data.plan ?? 'free');
       }
       if (plansRes.data) setPlans(plansRes.data as Plan[]);
@@ -147,7 +158,8 @@ export default function PerfilScreen() {
         .update({
           contact_email: contactEmail.trim() || null,
           contact_phone: contactPhone.trim() || null,
-        })
+          cref: cref.trim() || null,
+        } as any)
         .eq('id', tenantId);
       if (error) throw error;
       Alert.alert('Salvo!', 'Dados do negócio atualizados.');
@@ -319,12 +331,27 @@ export default function PerfilScreen() {
             <Text style={styles.fieldLabel}>Telefone / WhatsApp</Text>
             <TextInput
               value={contactPhone}
-              onChangeText={setContactPhone}
+              onChangeText={v => setContactPhone(maskPhone(v))}
               placeholder="(11) 99999-9999"
               placeholderTextColor={Colors.textSecondary}
               keyboardType="phone-pad"
+              maxLength={16}
               style={styles.input}
             />
+          </View>
+          <View style={[styles.cardField, { borderTopWidth: 1, borderTopColor: Colors.border }]}>
+            <Text style={styles.fieldLabel}>Nº de Registro (CREF)</Text>
+            <TextInput
+              value={cref}
+              onChangeText={setCref}
+              placeholder="Ex: 012345-G/SP"
+              placeholderTextColor={Colors.textSecondary}
+              autoCapitalize="characters"
+              style={styles.input}
+            />
+            <Text style={styles.fieldHint}>
+              Formato: XXXXXX-G/UF · Será exibido aos alunos
+            </Text>
           </View>
         </View>
         <TouchableOpacity

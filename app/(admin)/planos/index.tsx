@@ -4,7 +4,7 @@ import {
   ActivityIndicator, Modal, TextInput, Alert,
   KeyboardAvoidingView, Platform, ScrollView,
 } from 'react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
@@ -13,6 +13,128 @@ import { useThemeStore } from '@/stores/themeStore';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 import { PLAN_GOALS, GOAL_COLORS } from '@/lib/exerciseConfig';
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+interface StudentPlan {
+  plan_id: string;
+  assignment_status: string;
+  name: string;
+  goal: string | null;
+  plan_status: 'active' | 'inactive';
+  start_date: string | null;
+  end_date: string | null;
+}
+
+interface StudentExtra {
+  id: string;
+  name: string;
+  category: string;
+  description: string | null;
+}
+
+const EXTRA_CATEGORY_COLORS: Record<string, string> = {
+  aquecimento: '#F97316', hiit: '#EF4444', mobilidade: '#8B5CF6',
+  cardio: '#EC4899', desafio: '#F59E0B', forca: '#3B82F6', outros: '#64748B',
+};
+
+// ─── Student plans view ───────────────────────────────────────────────────────
+function StudentPlansView({
+  studentName, plans, extras, loading, primaryColor,
+}: {
+  studentName: string;
+  plans: StudentPlan[];
+  extras: StudentExtra[];
+  loading: boolean;
+  primaryColor: string;
+}) {
+  if (loading) return <ActivityIndicator color={primaryColor} style={{ marginTop: 60 }} />;
+
+  const hasContent = plans.length > 0 || extras.length > 0;
+
+  return (
+    <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={sp.scroll}>
+      {!hasContent && (
+        <View style={sp.empty}>
+          <Ionicons name="clipboard-outline" size={52} color={Colors.border} />
+          <Text style={sp.emptyTitle}>Nenhum plano atribuído</Text>
+          <Text style={sp.emptyText}>Este aluno ainda não possui planos ou treinos extras atribuídos.</Text>
+        </View>
+      )}
+
+      {plans.length > 0 && (
+        <>
+          <Text style={sp.sectionLabel}>PLANOS DE TREINO</Text>
+          {plans.map(item => {
+            const gc = item.goal ? (GOAL_COLORS[item.goal] ?? Colors.textSecondary) : Colors.textSecondary;
+            return (
+              <TouchableOpacity
+                key={item.plan_id}
+                style={sp.card}
+                onPress={() => router.push(`/(admin)/planos/${item.plan_id}` as any)}
+                activeOpacity={0.75}
+              >
+                <View style={sp.cardRow}>
+                  <View style={[sp.planIcon, { backgroundColor: `${primaryColor}18` }]}>
+                    <Ionicons name="clipboard-outline" size={18} color={primaryColor} />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={sp.planName} numberOfLines={1}>{item.name}</Text>
+                    <View style={sp.badges}>
+                      {item.goal && (
+                        <View style={[sp.badge, { backgroundColor: `${gc}18`, borderColor: `${gc}40` }]}>
+                          <Text style={[sp.badgeText, { color: gc }]}>{item.goal}</Text>
+                        </View>
+                      )}
+                      <View style={[sp.badge, { backgroundColor: item.plan_status === 'active' ? `${Colors.success}18` : `${Colors.border}` }]}>
+                        <View style={[sp.statusDot, { backgroundColor: item.plan_status === 'active' ? Colors.success : Colors.textSecondary }]} />
+                        <Text style={[sp.badgeText, { color: item.plan_status === 'active' ? Colors.success : Colors.textSecondary }]}>
+                          {item.plan_status === 'active' ? 'Ativo' : 'Inativo'}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                  <Ionicons name="chevron-forward" size={16} color={Colors.textSecondary} />
+                </View>
+              </TouchableOpacity>
+            );
+          })}
+        </>
+      )}
+
+      {extras.length > 0 && (
+        <>
+          <Text style={[sp.sectionLabel, { marginTop: plans.length > 0 ? 24 : 0 }]}>TREINOS EXTRAS</Text>
+          {extras.map(item => {
+            const color = EXTRA_CATEGORY_COLORS[item.category] ?? Colors.textSecondary;
+            return (
+              <TouchableOpacity
+                key={item.id}
+                style={sp.card}
+                onPress={() => router.push(`/(admin)/treinos-extras/${item.id}` as any)}
+                activeOpacity={0.75}
+              >
+                <View style={sp.cardRow}>
+                  <View style={[sp.planIcon, { backgroundColor: `${color}18` }]}>
+                    <Ionicons name="flash-outline" size={18} color={color} />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={sp.planName} numberOfLines={1}>{item.name}</Text>
+                    <View style={sp.badges}>
+                      <View style={[sp.badge, { backgroundColor: `${color}18`, borderColor: `${color}40` }]}>
+                        <Text style={[sp.badgeText, { color }]}>{item.category}</Text>
+                      </View>
+                    </View>
+                  </View>
+                  <Ionicons name="chevron-forward" size={16} color={Colors.textSecondary} />
+                </View>
+              </TouchableOpacity>
+            );
+          })}
+        </>
+      )}
+    </ScrollView>
+  );
+}
 
 interface WorkoutPlan {
   id: string;
@@ -33,12 +155,19 @@ function fmtDate(iso: string | null) {
 export default function PlanosScreen() {
   const { profile } = useAuthStore();
   const { primaryColor } = useThemeStore();
+  const { studentId } = useLocalSearchParams<{ studentId?: string }>();
   const tenantId = profile?.tenant_id ?? '';
   const lightText = ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(primaryColor);
 
+  // Generic mode state
   const [plans, setPlans] = useState<WorkoutPlan[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'active' | 'inactive'>('all');
+
+  // Student mode state
+  const [studentName, setStudentName] = useState('');
+  const [studentPlans, setStudentPlans] = useState<StudentPlan[]>([]);
+  const [studentExtras, setStudentExtras] = useState<StudentExtra[]>([]);
 
   // New plan modal
   const [modalVisible, setModalVisible] = useState(false);
@@ -46,6 +175,35 @@ export default function PlanosScreen() {
   const [fName, setFName] = useState('');
   const [fGoal, setFGoal] = useState('');
   const [fDescription, setFDescription] = useState('');
+
+  const loadStudent = useCallback(async () => {
+    if (!tenantId || !studentId) return;
+    const [studentRes, assignRes, extrasRes] = await Promise.all([
+      supabase.from('students').select('full_name').eq('id', studentId).single(),
+      supabase.from('student_plan_assignments')
+        .select('plan_id, status, workout_plans(id, name, goal, status, start_date, end_date)')
+        .eq('student_id', studentId),
+      supabase.from('extra_workouts')
+        .select('id, name, category, description')
+        .eq('student_id', studentId)
+        .eq('tenant_id', tenantId)
+        .eq('is_template', false),
+    ]);
+
+    setStudentName(studentRes.data?.full_name ?? '');
+    setStudentPlans(
+      (assignRes.data ?? []).map((a: any) => ({
+        plan_id: a.plan_id,
+        assignment_status: a.status,
+        name: a.workout_plans?.name ?? '',
+        goal: a.workout_plans?.goal ?? null,
+        plan_status: a.workout_plans?.status ?? 'inactive',
+        start_date: a.workout_plans?.start_date ?? null,
+        end_date: a.workout_plans?.end_date ?? null,
+      }))
+    );
+    setStudentExtras(extrasRes.data ?? []);
+  }, [tenantId, studentId]);
 
   const load = useCallback(async () => {
     if (!tenantId) return;
@@ -69,7 +227,13 @@ export default function PlanosScreen() {
     setPlans(plansData.map(p => ({ ...p, student_count: countMap[p.id] ?? 0 })));
   }, [tenantId]);
 
-  useEffect(() => { load().finally(() => setLoading(false)); }, [load]);
+  useEffect(() => {
+    if (studentId) {
+      loadStudent().finally(() => setLoading(false));
+    } else {
+      load().finally(() => setLoading(false));
+    }
+  }, [studentId, load, loadStudent]);
 
   const filtered = filter === 'all' ? plans : plans.filter(p => p.status === filter);
 
@@ -98,6 +262,29 @@ export default function PlanosScreen() {
 
   function resetForm() {
     setFName(''); setFGoal(''); setFDescription('');
+  }
+
+  if (studentId) {
+    return (
+      <SafeAreaView style={s.safe} edges={['top']}>
+        <View style={s.header}>
+          <TouchableOpacity onPress={() => router.back()} style={s.iconBtn}>
+            <Ionicons name="arrow-back" size={22} color={Colors.textPrimary} />
+          </TouchableOpacity>
+          <Text style={s.title} numberOfLines={1}>
+            {studentName ? studentName.split(' ')[0] : 'Aluno'}
+          </Text>
+          <View style={{ width: 38 }} />
+        </View>
+        <StudentPlansView
+          studentName={studentName}
+          plans={studentPlans}
+          extras={studentExtras}
+          loading={loading}
+          primaryColor={primaryColor}
+        />
+      </SafeAreaView>
+    );
   }
 
   return (
@@ -260,4 +447,26 @@ const s = StyleSheet.create({
   goalBtnText: { fontFamily: FontFamily.bodyMedium, fontSize: 13, color: Colors.textSecondary },
   saveBtn: { borderRadius: 14, paddingVertical: 16, alignItems: 'center', justifyContent: 'center', marginTop: 28 },
   saveBtnText: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.md },
+});
+
+const sp = StyleSheet.create({
+  scroll: { paddingHorizontal: 16, paddingTop: 16, paddingBottom: 40 },
+  sectionLabel: {
+    fontFamily: FontFamily.bodyBold, fontSize: FontSize.xs,
+    color: Colors.textSecondary, letterSpacing: 1.2, marginBottom: 10,
+  },
+  card: {
+    backgroundColor: Colors.surface, borderRadius: 16, borderWidth: 1,
+    borderColor: Colors.border, padding: 14, marginBottom: 10,
+  },
+  cardRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  planIcon: { width: 40, height: 40, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
+  planName: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm, color: Colors.textPrimary, marginBottom: 6 },
+  badges: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
+  badge: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 20, borderWidth: 1, borderColor: 'transparent' },
+  badgeText: { fontFamily: FontFamily.body, fontSize: 11, color: Colors.textSecondary },
+  statusDot: { width: 6, height: 6, borderRadius: 3 },
+  empty: { alignItems: 'center', paddingTop: 60, gap: 12, paddingHorizontal: 32 },
+  emptyTitle: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.md, color: Colors.textPrimary },
+  emptyText: { fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textSecondary, textAlign: 'center' },
 });

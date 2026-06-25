@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,
-  ActivityIndicator, Image,
+  ActivityIndicator, Image, LayoutAnimation,
 } from 'react-native';
+import { Video, ResizeMode } from 'expo-av';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -48,6 +49,17 @@ export default function PlanDetailScreen() {
 
   const [videoUri, setVideoUri] = useState<string | null>(null);
   const [videoTitle, setVideoTitle] = useState('');
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+
+  const toggleExpand = useCallback((itemId: string) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setExpanded(prev => {
+      const next = new Set(prev);
+      if (next.has(itemId)) next.delete(itemId);
+      else next.add(itemId);
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
     if (!planId) return;
@@ -185,58 +197,94 @@ export default function PlanDetailScreen() {
               section.exercises.map((ex, idx) => {
                 const mc = muscleColor(ex.muscleGroup);
                 const hasVideo = !!ex.videoUrl;
-                return (
-                  <View key={ex.itemId} style={[s.exRow, idx > 0 && s.exRowBorder]}>
-                    {/* Video thumbnail button */}
-                    <TouchableOpacity
-                      style={[s.videoThumb, { backgroundColor: `${mc}22` }]}
-                      onPress={() => {
-                        if (hasVideo) {
-                          setVideoTitle(ex.name);
-                          setVideoUri(ex.videoUrl!);
-                        }
-                      }}
-                      disabled={!hasVideo}
-                      activeOpacity={0.75}
-                    >
-                      {hasVideo && ex.videoUrl?.toLowerCase().includes('.gif') ? (
-                        <Image source={{ uri: ex.videoUrl }} style={s.videoThumbImg} resizeMode="cover" />
-                      ) : (
-                        <>
-                          <View style={[s.playBtn, { backgroundColor: hasVideo ? mc : Colors.border }]}>
-                            <Ionicons
-                              name={hasVideo ? 'play' : 'barbell-outline'}
-                              size={14}
-                              color={hasVideo ? '#fff' : Colors.textSecondary}
-                            />
-                          </View>
-                          {hasVideo && (
-                            <View style={s.videoLabel}>
-                              <Text style={[s.videoLabelText, { color: mc }]}>Vídeo</Text>
-                            </View>
-                          )}
-                        </>
-                      )}
-                    </TouchableOpacity>
+                const isGif = ex.videoUrl?.toLowerCase().includes('.gif');
+                const isExpanded = expanded.has(ex.itemId);
+                const hasInstructions = !!ex.instructions;
 
-                    {/* Exercise info */}
-                    <View style={{ flex: 1 }}>
-                      <Text style={s.exName}>{ex.name}</Text>
-                      <View style={s.exMeta}>
-                        <View style={[s.musclePill, { backgroundColor: `${mc}20` }]}>
-                          <View style={[s.muscleDot, { backgroundColor: mc }]} />
-                          <Text style={[s.musclePillText, { color: mc }]}>
-                            {ex.muscleGroup || 'Geral'}
-                          </Text>
+                return (
+                  <View key={ex.itemId} style={[s.exCard, idx > 0 && s.exCardBorder]}>
+                    {/* ── Main row ── */}
+                    <View style={s.exRow}>
+                      {/* Thumbnail — clicável se tiver vídeo */}
+                      <TouchableOpacity
+                        style={[s.thumbWrap, { backgroundColor: `${mc}18` }]}
+                        onPress={() => { if (hasVideo) { setVideoTitle(ex.name); setVideoUri(ex.videoUrl!); } }}
+                        disabled={!hasVideo}
+                        activeOpacity={hasVideo ? 0.75 : 1}
+                      >
+                        {hasVideo && isGif ? (
+                          <Image source={{ uri: ex.videoUrl! }} style={s.thumbImg} resizeMode="cover" />
+                        ) : hasVideo ? (
+                          <>
+                            <Video
+                              source={{ uri: ex.videoUrl! }}
+                              style={s.thumbImg}
+                              shouldPlay={false}
+                              isMuted
+                              resizeMode={ResizeMode.COVER}
+                            />
+                            <View style={s.thumbPlayOverlay}>
+                              <Ionicons name="play-circle" size={22} color="#fff" />
+                            </View>
+                          </>
+                        ) : (
+                          <Ionicons name="barbell-outline" size={20} color={mc} />
+                        )}
+                      </TouchableOpacity>
+
+                      {/* Info */}
+                      <View style={s.exInfo}>
+                        <Text style={s.exName} numberOfLines={2}>{ex.name}</Text>
+                        <View style={s.exMeta}>
+                          <View style={[s.musclePill, { backgroundColor: `${mc}20` }]}>
+                            <View style={[s.muscleDot, { backgroundColor: mc }]} />
+                            <Text style={[s.musclePillText, { color: mc }]}>
+                              {ex.muscleGroup || 'Geral'}
+                            </Text>
+                          </View>
+                          {ex.prescription ? (
+                            <Text style={s.prescription}>{ex.prescription}</Text>
+                          ) : null}
                         </View>
-                        {ex.prescription ? (
-                          <Text style={s.prescription}>{ex.prescription}</Text>
-                        ) : null}
                       </View>
-                      {ex.instructions ? (
-                        <Text style={s.instructions} numberOfLines={2}>{ex.instructions}</Text>
-                      ) : null}
+
+                      {/* Video pill button — visível sempre que tiver vídeo */}
+                      {hasVideo && (
+                        <TouchableOpacity
+                          style={[s.videoPill, { backgroundColor: `${mc}18`, borderColor: `${mc}35` }]}
+                          onPress={() => { setVideoTitle(ex.name); setVideoUri(ex.videoUrl!); }}
+                          activeOpacity={0.75}
+                        >
+                          <Ionicons name={isGif ? 'image-outline' : 'play-circle-outline'} size={15} color={mc} />
+                          <Text style={[s.videoPillText, { color: mc }]}>{isGif ? 'GIF' : 'Vídeo'}</Text>
+                        </TouchableOpacity>
+                      )}
                     </View>
+
+                    {/* ── Accordion toggle ── */}
+                    {hasInstructions && (
+                      <TouchableOpacity
+                        style={s.accordionToggle}
+                        onPress={() => toggleExpand(ex.itemId)}
+                        activeOpacity={0.7}
+                      >
+                        <Ionicons
+                          name={isExpanded ? 'chevron-up' : 'chevron-down'}
+                          size={13}
+                          color={Colors.textSecondary}
+                        />
+                        <Text style={s.accordionLabel}>
+                          {isExpanded ? 'Fechar instruções' : 'Como executar'}
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+
+                    {/* ── Accordion content ── */}
+                    {isExpanded && hasInstructions && (
+                      <View style={s.accordionBody}>
+                        <Text style={s.accordionText}>{ex.instructions}</Text>
+                      </View>
+                    )}
                   </View>
                 );
               })
@@ -294,20 +342,36 @@ const s = StyleSheet.create({
   sectionName: { flex: 1, fontFamily: FontFamily.bodyBold, fontSize: FontSize.sm, color: Colors.textPrimary },
   sectionCount: { fontFamily: FontFamily.body, fontSize: 11, color: Colors.textSecondary },
   emptySection: { padding: 16, fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textSecondary, textAlign: 'center' },
-  exRow: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 12, gap: 12 },
-  exRowBorder: { borderTopWidth: 1, borderTopColor: Colors.border },
-  videoThumb: { width: 60, height: 60, borderRadius: 14, alignItems: 'center', justifyContent: 'center', gap: 4, overflow: 'hidden' },
-  videoThumbImg: { width: 60, height: 60, borderRadius: 14 },
-  playBtn: { width: 28, height: 28, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
-  videoLabel: {},
-  videoLabelText: { fontFamily: FontFamily.bodyBold, fontSize: 10 },
-  exName: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm, color: Colors.textPrimary },
+  // Exercise accordion card
+  exCard: { paddingHorizontal: 14, paddingVertical: 0 },
+  exCardBorder: { borderTopWidth: 1, borderTopColor: Colors.border },
+  exRow: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 12 },
+  thumbWrap: { width: 52, height: 52, borderRadius: 14, alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden' },
+  thumbImg: { width: 52, height: 52 },
+  thumbPlayOverlay: { position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.32)', alignItems: 'center', justifyContent: 'center' },
+  exInfo: { flex: 1 },
+  exName: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm, color: Colors.textPrimary, lineHeight: 18 },
   exMeta: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 6, marginTop: 4 },
   musclePill: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 20 },
-  muscleDot: { width: 7, height: 7, borderRadius: 4 },
+  muscleDot: { width: 6, height: 6, borderRadius: 3 },
   musclePillText: { fontFamily: FontFamily.bodyMedium, fontSize: 11 },
   prescription: { fontFamily: FontFamily.body, fontSize: 11, color: Colors.textSecondary },
-  instructions: { fontFamily: FontFamily.body, fontSize: 11, color: Colors.textSecondary, marginTop: 4, lineHeight: 16 },
+  // Video pill button
+  videoPill: {
+    flexDirection: 'row', alignItems: 'center', gap: 4,
+    paddingHorizontal: 10, paddingVertical: 6,
+    borderRadius: 20, borderWidth: 1, flexShrink: 0,
+  },
+  videoPillText: { fontFamily: FontFamily.bodyBold, fontSize: 11 },
+  // Accordion
+  accordionToggle: {
+    flexDirection: 'row', alignItems: 'center', gap: 5,
+    paddingVertical: 8, borderTopWidth: 1, borderTopColor: Colors.border,
+  },
+  accordionLabel: { fontFamily: FontFamily.bodyMedium, fontSize: 11, color: Colors.textSecondary },
+  accordionBody: { paddingBottom: 12 },
+  accordionText: { fontFamily: FontFamily.body, fontSize: 12, color: Colors.textSecondary, lineHeight: 18 },
+  // Start button
   startBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, paddingVertical: 18, borderRadius: 18, marginTop: 8 },
   startBtnText: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.md, color: '#fff' },
 });

@@ -12,14 +12,14 @@ export function useTenant() {
   async function loadTenant(tid: string) {
     const { data: tenant } = await supabase
       .from('tenants')
-      .select('business_name, app_name, logo_url, primary_color')
+      .select('business_name, app_name, logo_url, primary_color, cref')
       .eq('id', tid)
       .single();
 
     if (tenant) {
       const displayName = tenant.business_name ?? 'Strive Personal';
       const displayApp  = tenant.app_name ?? displayName;
-      setTenant(displayName, displayApp, tenant.logo_url ?? null);
+      setTenant(displayName, displayApp, tenant.logo_url ?? null, (tenant as any).cref ?? null);
       if (tenant.primary_color) setPrimaryColor(tenant.primary_color);
     }
   }

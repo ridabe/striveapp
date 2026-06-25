@@ -8,6 +8,7 @@ import { supabase } from '@/lib/supabase';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 import { useThemeStore } from '@/stores/themeStore';
+import { GOAL_COLORS } from '@/lib/exerciseConfig';
 
 interface Props {
   visible: boolean;
@@ -20,18 +21,50 @@ interface FormState {
   email: string;
   phone: string;
   birth_date: string;
-  goal: string;
   notes: string;
 }
 
 const EMPTY: FormState = {
-  full_name: '', email: '', phone: '', birth_date: '', goal: '', notes: '',
+  full_name: '', email: '', phone: '', birth_date: '', notes: '',
 };
 
+const STUDENT_GOALS = [
+  'Hipertrofia', 'Emagrecimento', 'Resistência',
+  'Força', 'Condicionamento', 'Reabilitação', 'Outros',
+];
+
+// ─── Mask helpers ─────────────────────────────────────────────────────────────
+function maskPhone(value: string): string {
+  const d = value.replace(/\D/g, '').slice(0, 11);
+  if (d.length === 0) return '';
+  if (d.length <= 2) return `(${d}`;
+  if (d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
+  if (d.length <= 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;
+  return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
+}
+
+function maskDate(value: string): string {
+  const d = value.replace(/\D/g, '').slice(0, 8);
+  if (d.length <= 2) return d;
+  if (d.length <= 4) return `${d.slice(0, 2)}/${d.slice(2)}`;
+  return `${d.slice(0, 2)}/${d.slice(2, 4)}/${d.slice(4)}`;
+}
+
+function dateToISO(masked: string): string | null {
+  const d = masked.replace(/\D/g, '');
+  if (d.length !== 8) return null;
+  return `${d.slice(4)}-${d.slice(2, 4)}-${d.slice(0, 2)}`;
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
 export function NovoAlunoModal({ visible, onClose, onSuccess }: Props) {
   const { primaryColor } = useThemeStore();
   const [form, setForm] = useState<FormState>(EMPTY);
+  const [goalOption, setGoalOption] = useState('');
+  const [goalCustom, setGoalCustom] = useState('');
   const [saving, setSaving] = useState(false);
+
+  const lightText = ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(primaryColor);
 
   function set(field: keyof FormState, value: string) {
     setForm(prev => ({ ...prev, [field]: value }));
@@ -40,6 +73,8 @@ export function NovoAlunoModal({ visible, onClose, onSuccess }: Props) {
   function handleClose() {
     if (saving) return;
     setForm(EMPTY);
+    setGoalOption('');
+    setGoalCustom('');
     onClose();
   }
 
@@ -58,6 +93,16 @@ export function NovoAlunoModal({ visible, onClose, onSuccess }: Props) {
       return;
     }
 
+    const isoDate = form.birth_date ? dateToISO(form.birth_date) : null;
+    if (form.birth_date && !isoDate) {
+      Alert.alert('Data inválida', 'Informe a data no formato DD/MM/AAAA.');
+      return;
+    }
+
+    const finalGoal = goalOption === 'Outros'
+      ? goalCustom.trim() || null
+      : goalOption || null;
+
     setSaving(true);
     try {
       const { data, error } = await supabase.functions.invoke('invite-student', {
@@ -65,16 +110,25 @@ export function NovoAlunoModal({ visible, onClose, onSuccess }: Props) {
           full_name: form.full_name.trim(),
           email: form.email.trim().toLowerCase(),
           phone: form.phone.trim() || null,
-          birth_date: form.birth_date.trim() || null,
-          goal: form.goal.trim() || null,
+          birth_date: isoDate,
+          goal: finalGoal,
           notes: form.notes.trim() || null,
         },
       });
 
-      if (error) throw new Error(error.message);
+      if (error) {
+        let msg = error.message;
+        try {
+          const body = await (error as any).context?.json?.();
+          if (body?.error) msg = body.error;
+        } catch {}
+        throw new Error(msg);
+      }
       if (data?.error) throw new Error(data.error);
 
       setForm(EMPTY);
+      setGoalOption('');
+      setGoalCustom('');
       onSuccess();
       onClose();
     } catch (err: unknown) {
@@ -136,10 +190,11 @@ export function NovoAlunoModal({ visible, onClose, onSuccess }: Props) {
                 <TextInput
                   style={s.input}
                   value={form.phone}
-                  onChangeText={v => set('phone', v)}
+                  onChangeText={v => set('phone', maskPhone(v))}
                   placeholder="(00) 00000-0000"
                   placeholderTextColor={Colors.textSecondary}
                   keyboardType="phone-pad"
+                  maxLength={16}
                   editable={!saving}
                 />
               </Field>
@@ -148,27 +203,62 @@ export function NovoAlunoModal({ visible, onClose, onSuccess }: Props) {
                 <TextInput
                   style={s.input}
                   value={form.birth_date}
-                  onChangeText={v => set('birth_date', v)}
-                  placeholder="AAAA-MM-DD"
+                  onChangeText={v => set('birth_date', maskDate(v))}
+                  placeholder="DD/MM/AAAA"
                   placeholderTextColor={Colors.textSecondary}
                   keyboardType="numeric"
+                  maxLength={10}
                   editable={!saving}
                 />
               </Field>
 
               <Text style={[s.sectionLabel, { marginTop: 20 }]}>TREINO</Text>
 
-              <Field label="Objetivo" icon="fitness-outline">
-                <TextInput
-                  style={s.input}
-                  value={form.goal}
-                  onChangeText={v => set('goal', v)}
-                  placeholder="Ex: Hipertrofia, emagrecimento..."
-                  placeholderTextColor={Colors.textSecondary}
-                  autoCapitalize="sentences"
-                  editable={!saving}
-                />
-              </Field>
+              {/* Goal picker */}
+              <View style={s.field}>
+                <View style={s.fieldHeader}>
+                  <Ionicons name="fitness-outline" size={13} color={Colors.textSecondary} />
+                  <Text style={s.fieldLabel}>Objetivo</Text>
+                </View>
+                <View style={s.goalGrid}>
+                  {STUDENT_GOALS.map(g => {
+                    const isSelected = goalOption === g;
+                    const gc = g !== 'Outros' ? (GOAL_COLORS[g] ?? primaryColor) : Colors.textSecondary;
+                    return (
+                      <TouchableOpacity
+                        key={g}
+                        style={[
+                          s.goalChip,
+                          isSelected && {
+                            borderColor: gc,
+                            backgroundColor: `${gc}18`,
+                          },
+                        ]}
+                        onPress={() => {
+                          setGoalOption(g === goalOption ? '' : g);
+                          if (g !== 'Outros') setGoalCustom('');
+                        }}
+                        activeOpacity={0.75}
+                        disabled={saving}
+                      >
+                        <Text style={[s.goalChipText, isSelected && { color: gc }]}>{g}</Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+
+                {goalOption === 'Outros' && (
+                  <TextInput
+                    style={[s.input, s.goalCustomInput]}
+                    value={goalCustom}
+                    onChangeText={setGoalCustom}
+                    placeholder="Descreva o objetivo..."
+                    placeholderTextColor={Colors.textSecondary}
+                    autoCapitalize="sentences"
+                    editable={!saving}
+                  />
+                )}
+              </View>
 
               <Field label="Observações" icon="document-text-outline">
                 <TextInput
@@ -199,11 +289,11 @@ export function NovoAlunoModal({ visible, onClose, onSuccess }: Props) {
                 activeOpacity={0.85}
               >
                 {saving ? (
-                  <ActivityIndicator color="#000" />
+                  <ActivityIndicator color={lightText ? '#000' : '#fff'} />
                 ) : (
                   <>
-                    <Ionicons name="person-add-outline" size={18} color="#000" />
-                    <Text style={s.submitText}>Criar aluno e enviar convite</Text>
+                    <Ionicons name="person-add-outline" size={18} color={lightText ? '#000' : '#fff'} />
+                    <Text style={[s.submitText, { color: lightText ? '#000' : '#fff' }]}>Criar aluno e enviar convite</Text>
                   </>
                 )}
               </TouchableOpacity>
@@ -304,6 +394,36 @@ const s = StyleSheet.create({
     paddingTop: 12,
     textAlignVertical: 'top',
   },
+  // Goal chips
+  goalGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginBottom: 4,
+  },
+  goalChip: {
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1.5,
+    borderColor: Colors.border,
+    backgroundColor: Colors.bg,
+  },
+  goalChipText: {
+    fontFamily: FontFamily.bodyMedium,
+    fontSize: 13,
+    color: Colors.textSecondary,
+  },
+  goalCustomInput: {
+    marginTop: 10,
+    backgroundColor: Colors.bg,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+  },
+  // Info box
   info: {
     flexDirection: 'row', alignItems: 'flex-start', gap: 6,
     backgroundColor: Colors.bg,
@@ -328,6 +448,5 @@ const s = StyleSheet.create({
   submitText: {
     fontFamily: FontFamily.bodyBold,
     fontSize: FontSize.sm,
-    color: '#000',
   },
 });

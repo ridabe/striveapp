@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,
-  ActivityIndicator, Dimensions,
+  ActivityIndicator, Dimensions, Alert, Modal,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -80,7 +80,7 @@ function getModuleLabel(counts: ModuleCounts) {
       iconBg: '#3B82F6',
       badge: `${counts.planos} ${counts.planos === 1 ? 'plano' : 'planos'}`,
       badgeColor: Colors.textSecondary,
-      onPress: (_sid: string) => router.push('/(admin)/treinos' as any),
+      onPress: (sid: string) => router.push({ pathname: '/(admin)/planos' as any, params: { studentId: sid } }),
     },
     {
       key: 'avaliacoes',
@@ -157,6 +157,8 @@ export default function StudentDetailScreen() {
   const [rankingInfo, setRankingInfo] = useState<RankingInfo | null>(null);
   const [gamificationActive, setGamificationActive] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [actionsVisible, setActionsVisible] = useState(false);
+  const [resetting, setResetting] = useState(false);
 
   const now   = new Date();
   const month = now.getMonth() + 1;
@@ -189,7 +191,7 @@ export default function StudentDetailScreen() {
     ]);
 
     const [planosRes, financeiroRes, historicoRes] = await Promise.all([
-      supabase.from('workout_plans')
+      supabase.from('student_plan_assignments')
         .select('id', { count: 'exact', head: true })
         .eq('student_id', id),
       supabase.from('financial_plans')
@@ -256,6 +258,49 @@ export default function StudentDetailScreen() {
     setLoading(false);
   }
 
+  async function handleResetPassword() {
+    setActionsVisible(false);
+    Alert.alert(
+      'Enviar nova senha provisória',
+      `Uma nova senha temporária será gerada e enviada para o e-mail de ${student?.full_name ?? 'este aluno'}. Ele precisará alterá-la no próximo acesso.\n\nDeseja continuar?`,
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Enviar',
+          style: 'default',
+          onPress: async () => {
+            setResetting(true);
+            try {
+              const { data: { session } } = await supabase.auth.getSession();
+              const token = session?.access_token;
+              if (!token) throw new Error('Sessão expirada. Faça login novamente.');
+
+              const { data, error } = await supabase.functions.invoke('reset-student-password', {
+                body: { student_id: id },
+              });
+
+              if (error) {
+                let msg = error.message;
+                try { const b = await (error as any).context?.json?.(); if (b?.error) msg = b.error; } catch {}
+                throw new Error(msg);
+              }
+              if (data?.error) throw new Error(data.error);
+
+              Alert.alert(
+                'Senha enviada!',
+                `Uma nova senha provisória foi enviada para o e-mail de ${student?.full_name}. O aluno precisará alterá-la no próximo login.`,
+              );
+            } catch (err: any) {
+              Alert.alert('Erro', err.message ?? 'Não foi possível redefinir a senha.');
+            } finally {
+              setResetting(false);
+            }
+          },
+        },
+      ],
+    );
+  }
+
   if (loading) {
     return (
       <SafeAreaView style={s.safe} edges={['top']}>
@@ -304,8 +349,64 @@ export default function StudentDetailScreen() {
           <Ionicons name="arrow-back" size={22} color={Colors.textPrimary} />
         </TouchableOpacity>
         <Text style={s.headerTitle}>Alunos</Text>
-        <View style={{ width: 38 }} />
+        <TouchableOpacity
+          style={s.iconBtn}
+          onPress={() => setActionsVisible(true)}
+          disabled={resetting}
+        >
+          {resetting
+            ? <ActivityIndicator size="small" color={Colors.textSecondary} />
+            : <Ionicons name="ellipsis-vertical" size={22} color={Colors.textPrimary} />
+          }
+        </TouchableOpacity>
       </View>
+
+      {/* Action sheet */}
+      <Modal
+        visible={actionsVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setActionsVisible(false)}
+      >
+        <TouchableOpacity
+          style={s.actionsOverlay}
+          activeOpacity={1}
+          onPress={() => setActionsVisible(false)}
+        >
+          <View style={s.actionsSheet}>
+            <View style={s.actionsHandle} />
+            <Text style={s.actionsTitle}>Ações do aluno</Text>
+
+            <TouchableOpacity
+              style={s.actionItem}
+              onPress={handleResetPassword}
+              activeOpacity={0.75}
+            >
+              <View style={[s.actionIconWrap, { backgroundColor: `${Colors.warning}18` }]}>
+                <Ionicons name="key-outline" size={20} color={Colors.warning} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={s.actionItemLabel}>Enviar nova senha provisória</Text>
+                <Text style={s.actionItemDesc}>
+                  Gera uma nova senha e envia por e-mail para {student?.full_name?.split(' ')[0]}
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward" size={16} color={Colors.border} />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[s.actionItem, { marginBottom: 0 }]}
+              onPress={() => setActionsVisible(false)}
+              activeOpacity={0.75}
+            >
+              <View style={[s.actionIconWrap, { backgroundColor: Colors.border }]}>
+                <Ionicons name="close-outline" size={20} color={Colors.textSecondary} />
+              </View>
+              <Text style={[s.actionItemLabel, { color: Colors.textSecondary }]}>Cancelar</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={s.scroll}>
         {/* Profile hero */}
@@ -509,4 +610,57 @@ const s = StyleSheet.create({
   // States
   emptyState: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12 },
   emptyTitle: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.md, color: Colors.textSecondary },
+
+  // Action sheet
+  actionsOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'flex-end',
+  },
+  actionsSheet: {
+    backgroundColor: Colors.surface,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    paddingBottom: 36,
+  },
+  actionsHandle: {
+    width: 36, height: 4, borderRadius: 2,
+    backgroundColor: Colors.border,
+    alignSelf: 'center',
+    marginBottom: 16,
+  },
+  actionsTitle: {
+    fontFamily: FontFamily.bodyBold,
+    fontSize: FontSize.xs,
+    color: Colors.textSecondary,
+    letterSpacing: 1,
+    marginBottom: 16,
+  },
+  actionItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+    paddingVertical: 14,
+    borderTopWidth: 1,
+    borderTopColor: Colors.border,
+    marginBottom: 0,
+  },
+  actionIconWrap: {
+    width: 40, height: 40, borderRadius: 12,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  actionItemLabel: {
+    fontFamily: FontFamily.bodyMedium,
+    fontSize: FontSize.sm,
+    color: Colors.textPrimary,
+  },
+  actionItemDesc: {
+    fontFamily: FontFamily.body,
+    fontSize: 11,
+    color: Colors.textSecondary,
+    marginTop: 2,
+    lineHeight: 15,
+  },
 });

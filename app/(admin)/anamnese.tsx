@@ -45,21 +45,28 @@ const FIELD_TYPES = [
   { key: 'text',     label: 'Texto curto', icon: 'text-outline' as const },
   { key: 'textarea', label: 'Texto longo', icon: 'document-text-outline' as const },
   { key: 'number',   label: 'Número',      icon: 'calculator-outline' as const },
-  { key: 'date',     label: 'Data',        icon: 'calendar-outline' as const },
   { key: 'select',   label: 'Seleção',     icon: 'chevron-down-circle-outline' as const },
-  { key: 'radio',    label: 'Opção única', icon: 'radio-button-on-outline' as const },
-  { key: 'checkbox', label: 'Múltipla',    icon: 'checkbox-outline' as const },
   { key: 'boolean',  label: 'Sim/Não',     icon: 'toggle-outline' as const },
 ] as const;
 
-const DEFAULT_CATEGORIES = ['Dados Pessoais', 'Saúde', 'Estilo de Vida', 'Objetivos', 'Outros'];
+const DEFAULT_CATEGORIES = ['saude', 'historico', 'objetivos', 'habitos', 'alimentacao', 'outros'];
+
+const CATEGORY_LABELS: Record<string, string> = {
+  saude:       'Saúde',
+  historico:   'Histórico',
+  objetivos:   'Objetivos',
+  habitos:     'Hábitos',
+  alimentacao: 'Alimentação',
+  outros:      'Outros',
+};
 
 const CATEGORY_ICONS: Record<string, any> = {
-  'Dados Pessoais': 'person-outline',
-  'Saúde': 'medical-outline',
-  'Estilo de Vida': 'bicycle-outline',
-  'Objetivos': 'flag-outline',
-  'Outros': 'list-outline',
+  saude:       'medical-outline',
+  historico:   'time-outline',
+  objetivos:   'flag-outline',
+  habitos:     'bicycle-outline',
+  alimentacao: 'nutrition-outline',
+  outros:      'list-outline',
 };
 
 function catIcon(cat: string): any {
@@ -73,6 +80,8 @@ function fmtDate(iso: string) {
 function formatFieldValue(value: any): string {
   if (value === null || value === undefined || value === '') return '—';
   if (typeof value === 'boolean') return value ? 'Sim' : 'Não';
+  if (value === 'true') return 'Sim';
+  if (value === 'false') return 'Não';
   if (Array.isArray(value)) return value.join(', ') || '—';
   return String(value);
 }
@@ -103,7 +112,7 @@ function fieldTypeLabel(key: string): string {
   return FIELD_TYPES.find(t => t.key === key)?.label ?? key;
 }
 
-const needsOptions = (t: string) => ['select', 'radio', 'checkbox'].includes(t);
+const needsOptions = (t: string) => t === 'select';
 
 // ─── Field Editor Modal ───────────────────────────────────────────────────────
 function FieldEditorModal({
@@ -120,7 +129,6 @@ function FieldEditorModal({
 }) {
   const [label, setLabel] = useState('');
   const [category, setCategory] = useState('');
-  const [customCategory, setCustomCategory] = useState('');
   const [fieldType, setFieldType] = useState('text');
   const [required, setRequired] = useState(false);
   const [options, setOptions] = useState<string[]>(['']);
@@ -133,16 +141,13 @@ function FieldEditorModal({
     if (visible) {
       if (field) {
         setLabel(field.label);
-        const knownCat = DEFAULT_CATEGORIES.includes(field.category);
-        setCategory(knownCat ? field.category : '__custom__');
-        setCustomCategory(knownCat ? '' : field.category);
+        setCategory(field.category);
         setFieldType(field.field_type);
         setRequired(field.required);
         setOptions(field.options && field.options.length > 0 ? field.options : ['']);
       } else {
         setLabel('');
         setCategory('');
-        setCustomCategory('');
         setFieldType('text');
         setRequired(false);
         setOptions(['']);
@@ -158,9 +163,9 @@ function FieldEditorModal({
 
   async function handleSave() {
     const finalLabel = label.trim();
-    const finalCategory = category === '__custom__' ? customCategory.trim() : category;
+    const finalCategory = category;
     if (!finalLabel) { Alert.alert('Atenção', 'Informe o rótulo do campo.'); return; }
-    if (!finalCategory) { Alert.alert('Atenção', 'Selecione ou informe a categoria.'); return; }
+    if (!finalCategory) { Alert.alert('Atenção', 'Selecione uma categoria.'); return; }
     if (needsOptions(fieldType)) {
       const validOpts = options.filter(o => o.trim() !== '');
       if (validOpts.length < 1) { Alert.alert('Atenção', 'Adicione pelo menos uma opção.'); return; }
@@ -228,23 +233,10 @@ function FieldEditorModal({
               <TouchableOpacity key={cat}
                 style={[fe.catChip, category === cat && { backgroundColor: primaryColor, borderColor: primaryColor }]}
                 onPress={() => setCategory(cat)} activeOpacity={0.75}>
-                <Text style={[fe.catChipText, category === cat && { color: '#000' }]}>{cat}</Text>
+                <Text style={[fe.catChipText, category === cat && { color: '#000' }]}>{CATEGORY_LABELS[cat] ?? cat}</Text>
               </TouchableOpacity>
             ))}
-            <TouchableOpacity
-              style={[fe.catChip, category === '__custom__' && { backgroundColor: primaryColor, borderColor: primaryColor }]}
-              onPress={() => setCategory('__custom__')} activeOpacity={0.75}>
-              <Text style={[fe.catChipText, category === '__custom__' && { color: '#000' }]}>Personalizada</Text>
-            </TouchableOpacity>
           </ScrollView>
-          {category === '__custom__' && (
-            <TextInput
-              value={customCategory} onChangeText={setCustomCategory}
-              placeholder="Nome da categoria"
-              placeholderTextColor={Colors.textSecondary}
-              style={[fe.input, { marginTop: 10 }]}
-            />
-          )}
 
           {/* Field type */}
           <Text style={[fe.label, { marginTop: 18 }]}>TIPO DE CAMPO</Text>
@@ -261,7 +253,7 @@ function FieldEditorModal({
             ))}
           </View>
 
-          {/* Options (for select/radio/checkbox) */}
+          {/* Options (for select) */}
           {needsOptions(fieldType) && (
             <>
               <Text style={[fe.label, { marginTop: 18 }]}>OPÇÕES</Text>
@@ -680,7 +672,7 @@ export default function AnamneseScreen() {
                 <View key={cat} style={{ marginBottom: 20 }}>
                   <View style={s.catHeader}>
                     <Ionicons name={catIcon(cat)} size={15} color={primaryColor} />
-                    <Text style={[s.catHeaderText, { color: primaryColor }]}>{cat}</Text>
+                    <Text style={[s.catHeaderText, { color: primaryColor }]}>{CATEGORY_LABELS[cat] ?? cat}</Text>
                   </View>
                   <View style={s.catCard}>
                     {catFields.map((field, idx) => {

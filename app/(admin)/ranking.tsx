@@ -9,8 +9,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
-import { ModuleGuard } from '@/components/ModuleGuard';
-import { MODULE } from '@/lib/modules';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 
@@ -74,7 +72,8 @@ export default function AdminRankingScreen() {
 
     if (!settings?.is_active) { setLoading(false); return; }
 
-    // Load ranking for current month
+    // Ranking GLOBAL — todos os alunos de todos os studios
+    // O filtro "apenas meus alunos" é aplicado no frontend via myStudentIds
     const { data: rankData } = await supabase
       .from('monthly_points')
       .select('student_id, total_points, workouts_completed, exercises_completed, load_increases, active_minutes, students(full_name, tenant_id)')
@@ -139,7 +138,7 @@ export default function AdminRankingScreen() {
         <View style={{ width: 40 }} />
       </View>
 
-      <ModuleGuard slug={MODULE.GAMIFICACAO}>
+      {/* Ranking é padrão do sistema — sem ModuleGuard, acesso irrestrito */}
         {loading ? (
           <ActivityIndicator color={primaryColor} style={{ marginTop: 60 }} />
         ) : isActive === false ? (
@@ -259,7 +258,6 @@ export default function AdminRankingScreen() {
             }
           />
         )}
-      </ModuleGuard>
     </SafeAreaView>
   );
 }

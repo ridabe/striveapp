@@ -44,7 +44,7 @@ function fmtDuration(secs: number | null) {
 export default function StudentHome() {
   const { student, loading: studentLoading } = useStudent();
   const { profile } = useAuthStore();
-  const { primaryColor, tenantName } = useThemeStore();
+  const { primaryColor, tenantName, tenantCref } = useThemeStore();
   const { has: hasModule, isLoaded: modulesLoaded } = useModulesStore();
 
   const [todayPlan, setTodayPlan]       = useState<any>(null);
@@ -54,20 +54,75 @@ export default function StudentHome() {
   const [totalSessions, setTotalSessions] = useState(0);
   const [loading, setLoading]           = useState(true);
 
+  // ── Notification states ────────────────────────────────────────────────────
+  const [anamnesePending, setAnamnesePending] = useState(false);
+  const [unseenAssignment, setUnseenAssignment] = useState<{
+    label: string; route: string; icon: string;
+  } | null>(null);
+
   const fadeAnim  = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(28)).current;
 
   useEffect(() => {
     if (!student) { if (!studentLoading) setLoading(false); return; }
-    loadData(student.id);
+    loadData(student.id, student.tenant_id);
   }, [student?.id, studentLoading]);
 
-  async function loadData(studentId: string) {
+  // ── Real-time subscription for new assignments ────────────────────────────
+  useEffect(() => {
+    if (!student?.id) return;
+    const sid = student.id;
+
+    const channel = supabase
+      .channel(`student-notify:${sid}:${Date.now()}`)
+      .on('postgres_changes', {
+        event: 'INSERT', schema: 'public',
+        table: 'student_plan_assignments',
+        filter: `student_id=eq.${sid}`,
+      }, async (payload: any) => {
+        const { data } = await supabase
+          .from('workout_plans').select('name').eq('id', payload.new.plan_id).single();
+        setUnseenAssignment({
+          label: `Novo plano atribuído: ${data?.name ?? 'Treino'}`,
+          route: '/(student)/treinos',
+          icon: 'barbell-outline',
+        });
+      })
+      .on('postgres_changes', {
+        event: 'INSERT', schema: 'public',
+        table: 'extra_workouts',
+        filter: `student_id=eq.${sid}`,
+      }, (payload: any) => {
+        setUnseenAssignment({
+          label: `Novo treino extra: ${payload.new.name ?? 'Treino extra'}`,
+          route: '/(student)/treinos',
+          icon: 'flash-outline',
+        });
+      })
+      .on('postgres_changes', {
+        event: 'INSERT', schema: 'public',
+        table: 'student_meal_plan_assignments',
+        filter: `student_id=eq.${sid}`,
+      }, async (payload: any) => {
+        const { data } = await supabase
+          .from('meal_plans').select('name').eq('id', payload.new.meal_plan_id).single();
+        setUnseenAssignment({
+          label: `Novo plano alimentar: ${data?.name ?? 'Dieta'}`,
+          route: '/(student)/mais/planos-alimentares',
+          icon: 'restaurant-outline',
+        });
+      })
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [student?.id]);
+
+  async function loadData(studentId: string, tenantId?: string | null) {
     const today     = new Date().getDay();
     const todayStart = new Date(); todayStart.setHours(0, 0, 0, 0);
     const weekStart  = new Date(); weekStart.setDate(weekStart.getDate() - weekStart.getDay()); weekStart.setHours(0, 0, 0, 0);
 
-    const [assignRes, sessionsRes] = await Promise.all([
+    const [assignRes, sessionsRes, anamneseRes, templateCountRes] = await Promise.all([
       supabase
         .from('student_plan_assignments')
         .select('plan_id, workout_plans(id, name, goal, status, workout_routines(id, name, day_of_week, display_order))')
@@ -79,7 +134,16 @@ export default function StudentHome() {
         .eq('student_id', studentId)
         .not('finished_at', 'is', null)
         .order('started_at', { ascending: false }),
+      supabase.from('anamnese_responses').select('completed_at').eq('student_id', studentId).maybeSingle(),
+      tenantId
+        ? supabase.from('anamnese_templates').select('id', { count: 'exact', head: true }).eq('tenant_id', tenantId)
+        : Promise.resolve({ count: 0 }),
     ]);
+
+    // Anamnese: show banner if templates exist but not yet filled/completed
+    const hasTemplates = (templateCountRes.count ?? 0) > 0;
+    const isCompleted  = !!anamneseRes.data?.completed_at;
+    setAnamnesePending(hasTemplates && !isCompleted);
 
     const sessions: any[]    = sessionsRes.data ?? [];
     const assignments: any[] = assignRes.data ?? [];
@@ -262,11 +326,57 @@ export default function StudentHome() {
               <TenantLogo size={44} />
             </TouchableOpacity>
           </View>
-          <View style={[s.tenantPill, { backgroundColor: `${primaryColor}15` }]}>
-            <Ionicons name="shield-checkmark" size={11} color={primaryColor} />
-            <Text style={[s.tenantPillText, { color: primaryColor }]}>{tenantName}</Text>
+          <View style={s.tenantRow}>
+            <View style={[s.tenantPill, { backgroundColor: `${primaryColor}15` }]}>
+              <Ionicons name="shield-checkmark" size={11} color={primaryColor} />
+              <Text style={[s.tenantPillText, { color: primaryColor }]}>{tenantName}</Text>
+            </View>
+            {!!tenantCref && (
+              <View style={s.crefPill}>
+                <Ionicons name="id-card-outline" size={11} color={Colors.textSecondary} />
+                <Text style={s.crefText}>CREF {tenantCref}</Text>
+              </View>
+            )}
           </View>
         </Animated.View>
+
+        {/* ── Banner: anamnese pendente ── */}
+        {anamnesePending && (
+          <TouchableOpacity
+            style={s.bannerWarning}
+            onPress={() => router.push('/(student)/mais/anamnese' as any)}
+            activeOpacity={0.85}
+          >
+            <View style={s.bannerIconWrap}>
+              <Ionicons name="document-text-outline" size={18} color="#F59E0B" />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={s.bannerTitle}>Anamnese pendente</Text>
+              <Text style={s.bannerDesc}>Preencha seu histórico de saúde para que seu personal personalize seu treino.</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color="#F59E0B" />
+          </TouchableOpacity>
+        )}
+
+        {/* ── Banner: nova atribuição em tempo real ── */}
+        {unseenAssignment && (
+          <TouchableOpacity
+            style={[s.bannerInfo, { backgroundColor: `${primaryColor}10`, borderColor: `${primaryColor}35` }]}
+            onPress={() => { setUnseenAssignment(null); router.push(unseenAssignment.route as any); }}
+            activeOpacity={0.85}
+          >
+            <View style={[s.bannerIconWrapBlue, { backgroundColor: `${primaryColor}18` }]}>
+              <Ionicons name={unseenAssignment.icon as any} size={18} color={primaryColor} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={s.bannerTitleBlue}>Nova atribuição!</Text>
+              <Text style={s.bannerDescBlue}>{unseenAssignment.label}</Text>
+            </View>
+            <TouchableOpacity onPress={() => setUnseenAssignment(null)} style={s.bannerClose} hitSlop={{ top: 8, right: 8, bottom: 8, left: 8 }}>
+              <Ionicons name="close" size={16} color={primaryColor} />
+            </TouchableOpacity>
+          </TouchableOpacity>
+        )}
 
         {/* Treino de hoje */}
         <Animated.View style={[s.section, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
@@ -337,8 +447,11 @@ const s = StyleSheet.create({
   greetName:    { fontFamily: FontFamily.display, fontSize: 30, color: Colors.textPrimary, marginTop: 2 },
   avatar:       { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center' },
   avatarText:   { fontFamily: FontFamily.bodyBold, fontSize: 20 },
-  tenantPill:   { flexDirection: 'row', alignItems: 'center', gap: 5, alignSelf: 'flex-start', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 20, marginTop: 14 },
+  tenantRow:    { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginTop: 14 },
+  tenantPill:   { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 20 },
   tenantPillText: { fontFamily: FontFamily.bodyMedium, fontSize: 11 },
+  crefPill:     { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 8, paddingVertical: 5, borderRadius: 20, backgroundColor: Colors.surface, borderWidth: 1, borderColor: Colors.border },
+  crefText:     { fontFamily: FontFamily.body, fontSize: 10, color: Colors.textSecondary },
   section:      { marginTop: 28 },
   sectionLabel: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.xs, color: Colors.textSecondary, letterSpacing: 1, marginBottom: 12 },
 
@@ -383,6 +496,30 @@ const s = StyleSheet.create({
   statCard:   { flex: 1, backgroundColor: Colors.surface, borderRadius: 16, borderWidth: 1.5, paddingVertical: 18, alignItems: 'center', gap: 4 },
   statNum:    { fontFamily: FontFamily.bodyBold, fontSize: 30 },
   statLabel:  { fontFamily: FontFamily.body, fontSize: 11, color: Colors.textSecondary },
+
+  // ── Banners ───────────────────────────────────────────────────────────────
+  bannerWarning: {
+    flexDirection: 'row', alignItems: 'center', gap: 12,
+    backgroundColor: '#F59E0B12',
+    borderWidth: 1, borderColor: '#F59E0B35',
+    borderRadius: 16, padding: 14, marginBottom: 12,
+  },
+  bannerInfo: {
+    flexDirection: 'row', alignItems: 'center', gap: 12,
+    borderWidth: 1, borderRadius: 16, padding: 14, marginBottom: 12,
+  },
+  bannerIconWrap: {
+    width: 36, height: 36, borderRadius: 10,
+    backgroundColor: '#F59E0B18', alignItems: 'center', justifyContent: 'center',
+  },
+  bannerIconWrapBlue: {
+    width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center',
+  },
+  bannerTitle: { fontFamily: FontFamily.bodyBold, fontSize: 13, color: '#F59E0B' },
+  bannerDesc:  { fontFamily: FontFamily.body, fontSize: 11, color: '#F59E0B', opacity: 0.8, marginTop: 2, lineHeight: 15 },
+  bannerTitleBlue: { fontFamily: FontFamily.bodyBold, fontSize: 13, color: Colors.textPrimary },
+  bannerDescBlue:  { fontFamily: FontFamily.body, fontSize: 11, color: Colors.textSecondary, marginTop: 2, lineHeight: 15 },
+  bannerClose: { padding: 4 },
 
   // ── Shortcuts ─────────────────────────────────────────────────────────────
   shortcuts:    { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },

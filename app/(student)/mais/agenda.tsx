@@ -41,6 +41,19 @@ function toYMD(y: number, m: number, d: number) {
   return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
 }
 
+function maskDate(value: string): string {
+  const d = value.replace(/\D/g, '').slice(0, 8);
+  if (d.length <= 2) return d;
+  if (d.length <= 4) return `${d.slice(0, 2)}/${d.slice(2)}`;
+  return `${d.slice(0, 2)}/${d.slice(2, 4)}/${d.slice(4)}`;
+}
+
+function displayToISO(display: string): string {
+  const d = display.replace(/\D/g, '');
+  if (d.length !== 8) return display;
+  return `${d.slice(4)}-${d.slice(2, 4)}-${d.slice(0, 2)}`;
+}
+
 export default function StudentAgendaScreen() {
   const { student }        = useStudent();
   const { primaryColor }   = useThemeStore();
@@ -118,7 +131,7 @@ export default function StudentAgendaScreen() {
       tenant_id: tenantId,
       type: 'presencial',
       title: `Solicitação: ${student.full_name}`,
-      event_date: fDate,
+      event_date: displayToISO(fDate),
       start_time: fTime.length >= 4 ? fTime : null,
       student_id: student.id,
       student_name: student.full_name,
@@ -197,8 +210,8 @@ export default function StudentAgendaScreen() {
 
             {showForm && (
               <View style={s.requestForm}>
-                <Text style={s.fieldLabel}>Data (AAAA-MM-DD) *</Text>
-                <TextInput style={s.input} value={fDate} onChangeText={setFDate} placeholder="2026-06-28" placeholderTextColor={Colors.textSecondary} keyboardType="numbers-and-punctuation" />
+                <Text style={s.fieldLabel}>Data *</Text>
+                <TextInput style={s.input} value={fDate} onChangeText={v => setFDate(maskDate(v))} placeholder="DD/MM/AAAA" placeholderTextColor={Colors.textSecondary} keyboardType="numeric" maxLength={10} />
                 <Text style={s.fieldLabel}>Horário (HH:MM) *</Text>
                 <TextInput style={s.input} value={fTime} onChangeText={setFTime} placeholder="08:00" placeholderTextColor={Colors.textSecondary} keyboardType="numbers-and-punctuation" />
                 <Text style={s.fieldLabel}>CEP</Text>

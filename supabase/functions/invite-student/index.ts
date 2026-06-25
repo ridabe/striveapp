@@ -21,10 +21,10 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
-    );
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const serviceKey  = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+
+    const supabase = createClient(supabaseUrl, serviceKey);
 
     // Verifica autenticação
     const authHeader = req.headers.get('Authorization');
@@ -35,10 +35,10 @@ Deno.serve(async (req) => {
     );
     if (authError || !user) throw new Error('Unauthorized');
 
-    // Verifica que o solicitante é um personal
+    // Verifica que o solicitante é um personal e busca seus dados
     const { data: callerProfile, error: profileErr } = await supabase
       .from('profiles')
-      .select('role, tenant_id')
+      .select('role, tenant_id, full_name')
       .eq('id', user.id)
       .single();
 
@@ -46,6 +46,15 @@ Deno.serve(async (req) => {
     if (callerProfile.role !== 'personal') throw new Error('Forbidden');
 
     const tenantId = callerProfile.tenant_id!;
+
+    // Busca dados do tenant (branding)
+    const { data: tenant, error: tenantErr } = await supabase
+      .from('tenants')
+      .select('business_name, logo_url, primary_color')
+      .eq('id', tenantId)
+      .single();
+
+    if (tenantErr || !tenant) throw new Error('Studio não encontrado');
 
     const { full_name, email, phone, birth_date, goal, notes } = await req.json();
     if (!full_name?.trim()) throw new Error('Nome é obrigatório');
@@ -63,31 +72,33 @@ Deno.serve(async (req) => {
 
     const tempPassword = generateTempPassword();
 
-    // Cria usuário no Supabase Auth
+    // Cria usuário no Supabase Auth passando role nos metadados
+    // O trigger handle_new_user lê raw_user_meta_data->>'role' e cria o perfil corretamente
     const { data: authUser, error: createErr } = await supabase.auth.admin.createUser({
       email: email.trim().toLowerCase(),
       password: tempPassword,
       email_confirm: true,
-      user_metadata: { full_name: full_name.trim() },
+      user_metadata: {
+        full_name: full_name.trim(),
+        role: 'student',
+      },
     });
     if (createErr) throw new Error(createErr.message);
 
     const userId = authUser.user.id;
 
-    // Cria perfil
-    const { error: profInsertErr } = await supabase.from('profiles').insert({
-      id: userId,
-      email: email.trim().toLowerCase(),
-      full_name: full_name.trim(),
-      role: 'student',
-      tenant_id: tenantId,
-      must_change_password: true,
-    });
+    // Atualiza o perfil criado pelo trigger: vincula tenant e força troca de senha
+    const { error: profUpdateErr } = await supabase
+      .from('profiles')
+      .update({
+        tenant_id: tenantId,
+        must_change_password: true,
+      })
+      .eq('id', userId);
 
-    if (profInsertErr) {
-      // Rollback auth user
+    if (profUpdateErr) {
       await supabase.auth.admin.deleteUser(userId);
-      throw new Error(profInsertErr.message);
+      throw new Error(profUpdateErr.message);
     }
 
     // Cria registro na tabela students
@@ -112,50 +123,24 @@ Deno.serve(async (req) => {
       throw new Error(studentErr.message);
     }
 
-    // Envia email de boas-vindas via Resend
-    const resendKey = Deno.env.get('RESEND_API_KEY');
-    const emailFrom = Deno.env.get('EMAIL_FROM') ?? 'Strive Personal <noreply@strivepersonal.com.br>';
-
-    if (resendKey) {
-      await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${resendKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          from: emailFrom,
-          to: email.trim().toLowerCase(),
-          subject: '🏋️ Bem-vindo ao Strive Personal!',
-          html: `
-<!DOCTYPE html>
-<html lang="pt-BR">
-<body style="font-family:Arial,sans-serif;background:#f4f4f8;margin:0;padding:24px;">
-  <div style="max-width:480px;margin:0 auto;background:#1a1a2e;border-radius:16px;padding:32px;color:#fff;">
-    <h1 style="color:#E8FF47;font-size:24px;margin:0 0 8px;">Strive Personal</h1>
-    <h2 style="font-size:18px;margin:0 0 24px;color:#fff;">Olá, ${full_name.trim()}! 👋</h2>
-    <p style="color:#b0b0c3;line-height:1.6;margin:0 0 24px;">
-      Sua conta foi criada com sucesso pelo seu personal trainer.<br>
-      Use os dados abaixo para fazer seu primeiro acesso no app.
-    </p>
-    <div style="background:#0e0e1a;border-radius:12px;padding:20px;margin:0 0 24px;">
-      <p style="margin:0 0 8px;font-size:13px;color:#b0b0c3;">EMAIL</p>
-      <p style="margin:0 0 16px;font-size:15px;font-weight:bold;color:#E8FF47;">${email.trim().toLowerCase()}</p>
-      <p style="margin:0 0 8px;font-size:13px;color:#b0b0c3;">SENHA TEMPORÁRIA</p>
-      <p style="margin:0;font-size:20px;font-weight:bold;color:#E8FF47;letter-spacing:2px;">${tempPassword}</p>
-    </div>
-    <p style="color:#b0b0c3;font-size:13px;line-height:1.6;margin:0 0 24px;">
-      ⚠️ Por segurança, você será solicitado a criar uma nova senha no primeiro acesso.
-    </p>
-    <p style="color:#b0b0c3;font-size:13px;margin:0;">
-      Baixe o app Strive Personal e comece sua jornada! 💪
-    </p>
-  </div>
-</body>
-</html>`,
-        }),
-      }).catch(() => {});
-    }
+    // Envia e-mail via send-student-welcome (mesma função usada pelo sistema web)
+    await fetch(`${supabaseUrl}/functions/v1/send-student-welcome`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${serviceKey}`,
+        'apikey': serviceKey,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email.trim().toLowerCase(),
+        studentName: full_name.trim(),
+        personalName: callerProfile.full_name ?? tenant.business_name,
+        businessName: tenant.business_name,
+        tempPassword,
+        logoUrl: tenant.logo_url,
+        primaryColor: tenant.primary_color,
+      }),
+    }).catch(() => {});
 
     return new Response(
       JSON.stringify({ ok: true, studentId: student.id }),

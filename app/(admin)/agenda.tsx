@@ -37,6 +37,24 @@ type AgendaEvent = {
 function toYMD(y: number, m: number, d: number) {
   return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
 }
+
+function maskDate(value: string): string {
+  const d = value.replace(/\D/g, '').slice(0, 8);
+  if (d.length <= 2) return d;
+  if (d.length <= 4) return `${d.slice(0, 2)}/${d.slice(2)}`;
+  return `${d.slice(0, 2)}/${d.slice(2, 4)}/${d.slice(4)}`;
+}
+
+function isoToDisplay(iso: string): string {
+  if (!iso || iso.length !== 10) return iso;
+  return `${iso.slice(8, 10)}/${iso.slice(5, 7)}/${iso.slice(0, 4)}`;
+}
+
+function displayToISO(display: string): string {
+  const d = display.replace(/\D/g, '');
+  if (d.length !== 8) return display;
+  return `${d.slice(4)}-${d.slice(2, 4)}-${d.slice(0, 2)}`;
+}
 function fmtCurrency(v: number | null) {
   if (!v) return '';
   return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -133,7 +151,7 @@ export default function AdminAgendaScreen() {
 
   function openCreate() {
     setEditEvent(null);
-    setFType('presencial'); setFTitle(''); setFDate(toYMD(year, month, selectedDay));
+    setFType('presencial'); setFTitle(''); setFDate(isoToDisplay(toYMD(year, month, selectedDay)));
     setFTime(''); setFStudentId(''); setFLocation(''); setFMeetingUrl('');
     setFAmount(''); setFDescription(''); setFNotes('');
     setShowModal(true);
@@ -141,7 +159,7 @@ export default function AdminAgendaScreen() {
 
   function openEdit(ev: AgendaEvent) {
     setEditEvent(ev);
-    setFType(ev.type); setFTitle(ev.title); setFDate(ev.event_date);
+    setFType(ev.type); setFTitle(ev.title); setFDate(isoToDisplay(ev.event_date));
     setFTime(ev.start_time ? ev.start_time.slice(0, 5) : '');
     setFStudentId(ev.student_id ?? ''); setFLocation(ev.location ?? '');
     setFMeetingUrl(ev.meeting_url ?? ''); setFAmount(ev.amount ? String(ev.amount) : '');
@@ -157,7 +175,7 @@ export default function AdminAgendaScreen() {
     const selectedStudent = students.find(s => s.id === fStudentId);
     const payload = {
       tenant_id: tenantId, type: fType, title: fTitle.trim(),
-      event_date: fDate, start_time: fTime || null,
+      event_date: displayToISO(fDate), start_time: fTime || null,
       student_id: fStudentId || null,
       student_name: selectedStudent?.full_name || null,
       location:    fType === 'presencial' ? (fLocation || null) : null,
@@ -347,8 +365,8 @@ export default function AdminAgendaScreen() {
 
                 <View style={{ flexDirection: 'row', gap: 10 }}>
                   <View style={{ flex: 3 }}>
-                    <Text style={s.fieldLabel}>Data (AAAA-MM-DD) *</Text>
-                    <TextInput style={s.input} value={fDate} onChangeText={setFDate} placeholder="2026-06-25" placeholderTextColor={Colors.textSecondary} keyboardType="numbers-and-punctuation" />
+                    <Text style={s.fieldLabel}>Data *</Text>
+                    <TextInput style={s.input} value={fDate} onChangeText={v => setFDate(maskDate(v))} placeholder="DD/MM/AAAA" placeholderTextColor={Colors.textSecondary} keyboardType="numeric" maxLength={10} />
                   </View>
                   <View style={{ flex: 2 }}>
                     <Text style={s.fieldLabel}>Horário</Text>

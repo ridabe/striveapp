@@ -11,7 +11,6 @@ import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
-import { signOut } from '@/services/auth';
 import { useModulesStore } from '@/stores/modulesStore';
 import { MODULE } from '@/lib/modules';
 import { TenantLogo } from '@/components/TenantLogo';
@@ -39,33 +38,19 @@ export default function AdminDashboard() {
   const [refreshing, setRefreshing] = useState(false);
 
   const tenantId = profile?.tenant_id;
-  const displayName = profile?.full_name ?? 'Personal';
+  const displayName = profile?.full_name?.split(' ')[0] ?? 'Personal';
   const { has } = useModulesStore();
+
+  const lightText = ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(primaryColor);
 
   async function loadDashboard() {
     if (!tenantId) return;
 
     const [studentsRes, pendingRes, plansRes, recentRes] = await Promise.all([
-      supabase
-        .from('students')
-        .select('id, status', { count: 'exact' })
-        .eq('tenant_id', tenantId),
-      supabase
-        .from('financial_plans')
-        .select('id', { count: 'exact' })
-        .eq('tenant_id', tenantId)
-        .eq('status', 'pending'),
-      supabase
-        .from('workout_plans')
-        .select('id', { count: 'exact' })
-        .eq('tenant_id', tenantId)
-        .eq('status', 'active'),
-      supabase
-        .from('students')
-        .select('id, full_name, status, created_at')
-        .eq('tenant_id', tenantId)
-        .order('created_at', { ascending: false })
-        .limit(5),
+      supabase.from('students').select('id, status', { count: 'exact' }).eq('tenant_id', tenantId),
+      supabase.from('financial_plans').select('id', { count: 'exact' }).eq('tenant_id', tenantId).eq('status', 'pending'),
+      supabase.from('workout_plans').select('id', { count: 'exact' }).eq('tenant_id', tenantId).eq('status', 'active'),
+      supabase.from('students').select('id, full_name, status, created_at').eq('tenant_id', tenantId).order('created_at', { ascending: false }).limit(5),
     ]);
 
     const allStudents = studentsRes.data ?? [];
@@ -78,9 +63,7 @@ export default function AdminDashboard() {
     setRecentStudents(recentRes.data ?? []);
   }
 
-  useEffect(() => {
-    loadDashboard().finally(() => setLoading(false));
-  }, [tenantId]);
+  useEffect(() => { loadDashboard().finally(() => setLoading(false)); }, [tenantId]);
 
   async function onRefresh() {
     setRefreshing(true);
@@ -88,52 +71,80 @@ export default function AdminDashboard() {
     setRefreshing(false);
   }
 
+  const activeRate = stats && stats.totalStudents > 0
+    ? Math.round((stats.activeStudents / stats.totalStudents) * 100)
+    : 0;
+
   return (
-    <SafeAreaView style={styles.safe} edges={['top']}>
+    <SafeAreaView style={s.safe} edges={['top']}>
       <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={styles.content}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={Colors.primary} />}
+        style={s.scroll}
+        contentContainerStyle={s.content}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={primaryColor} />}
         showsVerticalScrollIndicator={false}
       >
-        {/* Header */}
-        <View style={styles.header}>
-          <TenantLogo size={42} />
-          <View style={styles.headerText}>
-            <Text style={styles.greeting}>Olá, {displayName} 👋</Text>
-            <Text style={styles.tenantName}>{tenantName}</Text>
+        {/* ── Header ── */}
+        <View style={s.header}>
+          <TenantLogo size={40} />
+          <View style={{ flex: 1 }}>
+            <Text style={s.greeting}>Olá, {displayName} 👋</Text>
+            <Text style={s.tenantName}>{tenantName}</Text>
           </View>
         </View>
 
         {loading ? (
-          <ActivityIndicator color={Colors.primary} style={{ marginTop: 40 }} />
+          <ActivityIndicator color={primaryColor} style={{ marginTop: 40 }} />
         ) : (
           <>
-            {/* Stats */}
-            <View style={styles.statsGrid}>
-              <StatCard
-                label="Alunos ativos"
-                value={stats?.activeStudents ?? 0}
-                icon="people"
-                color={primaryColor}
-                onPress={() => router.push('/(admin)/alunos')}
-              />
-              <StatCard
+            {/* ── Hero card — alunos ativos ── */}
+            <TouchableOpacity
+              style={[s.heroCard, { backgroundColor: primaryColor }]}
+              onPress={() => router.push('/(admin)/alunos')}
+              activeOpacity={0.88}
+            >
+              <View style={s.heroLeft}>
+                <Text style={[s.heroLabel, { color: lightText ? 'rgba(0,0,0,0.55)' : 'rgba(255,255,255,0.7)' }]}>
+                  ALUNOS ATIVOS
+                </Text>
+                <Text style={[s.heroValue, { color: lightText ? '#000' : '#fff' }]}>
+                  {stats?.activeStudents ?? 0}
+                  <Text style={[s.heroTotal, { color: lightText ? 'rgba(0,0,0,0.45)' : 'rgba(255,255,255,0.55)' }]}>
+                    {' '}/ {stats?.totalStudents ?? 0}
+                  </Text>
+                </Text>
+                <View style={s.progressTrack}>
+                  <View style={[s.progressFill, {
+                    width: `${activeRate}%` as any,
+                    backgroundColor: lightText ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.85)',
+                  }]} />
+                </View>
+                <Text style={[s.progressLabel, { color: lightText ? 'rgba(0,0,0,0.45)' : 'rgba(255,255,255,0.6)' }]}>
+                  {activeRate}% ativos
+                </Text>
+              </View>
+              <View style={[s.heroIconWrap, { backgroundColor: lightText ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.15)' }]}>
+                <Ionicons name="people" size={28} color={lightText ? '#000' : '#fff'} />
+              </View>
+            </TouchableOpacity>
+
+            {/* ── Mini stats row ── */}
+            <View style={s.miniRow}>
+              <MiniStat
                 label="Planos ativos"
                 value={stats?.activePlans ?? 0}
-                icon="barbell"
+                icon="clipboard"
                 color="#60A5FA"
                 onPress={() => router.push('/(admin)/treinos')}
               />
-              <StatCard
-                label="Pagamentos pendentes"
+              <MiniStat
+                label="Pag. pendentes"
                 value={stats?.pendingPayments ?? 0}
                 icon="alert-circle"
                 color={stats?.pendingPayments ? Colors.warning : Colors.success}
                 onPress={() => router.push('/(admin)/mais')}
               />
-              <StatCard
-                label="Total de alunos"
+              <MiniStat
+                label="Total alunos"
                 value={stats?.totalStudents ?? 0}
                 icon="people-circle"
                 color={Colors.textSecondary}
@@ -141,73 +152,86 @@ export default function AdminDashboard() {
               />
             </View>
 
-            {/* Quick actions */}
-            <Text style={styles.sectionTitle}>Ações rápidas</Text>
-            <View style={styles.actions}>
-              <QuickAction
-                icon="person-add"
+            {/* ── Quick actions ── */}
+            <Text style={s.sectionTitle}>Ações rápidas</Text>
+            <View style={s.actionsRow}>
+              <ActionPill
+                icon="person-add-outline"
                 label="Novo aluno"
                 onPress={() => router.push('/(admin)/alunos')}
                 primary
                 primaryColor={primaryColor}
+                lightText={lightText}
               />
               {has(MODULE.PLANOS_TREINO) && (
-                <QuickAction
-                  icon="add-circle"
+                <ActionPill
+                  icon="add-circle-outline"
                   label="Novo treino"
                   onPress={() => router.push('/(admin)/treinos')}
                 />
               )}
               {has(MODULE.FREQUENCIA) && (
-                <QuickAction
-                  icon="calendar"
+                <ActionPill
+                  icon="calendar-outline"
                   label="Frequência"
-                  onPress={() => router.push('/(admin)/mais')}
+                  onPress={() => router.push('/(admin)/frequencia' as any)}
                 />
               )}
               {has(MODULE.AVALIACOES) && (
-                <QuickAction
-                  icon="stats-chart"
+                <ActionPill
+                  icon="stats-chart-outline"
                   label="Avaliação"
-                  onPress={() => router.push('/(admin)/mais')}
+                  onPress={() => router.push('/(admin)/avaliacao' as any)}
                 />
               )}
+              <ActionPill
+                icon="trophy-outline"
+                label="Ranking"
+                onPress={() => router.push('/(admin)/ranking' as any)}
+              />
             </View>
 
-            {/* Recent students */}
+            {/* ── Recent students ── */}
             {recentStudents.length > 0 && (
               <>
-                <View style={styles.sectionHeader}>
-                  <Text style={styles.sectionTitle}>Alunos recentes</Text>
+                <View style={s.sectionHeader}>
+                  <Text style={s.sectionTitle}>Alunos recentes</Text>
                   <TouchableOpacity onPress={() => router.push('/(admin)/alunos')}>
-                    <Text style={[styles.seeAll, { color: primaryColor }]}>Ver todos</Text>
+                    <Text style={[s.seeAll, { color: primaryColor }]}>Ver todos</Text>
                   </TouchableOpacity>
                 </View>
-                <View style={styles.studentList}>
-                  {recentStudents.map(student => (
-                    <TouchableOpacity
-                      key={student.id}
-                      style={styles.studentRow}
-                      onPress={() => router.push(`/(admin)/alunos/${student.id}` as any)}
-                      activeOpacity={0.7}
-                    >
-                      <View style={styles.studentAvatar}>
-                        <Text style={styles.studentInitial}>
-                          {student.full_name.charAt(0).toUpperCase()}
-                        </Text>
-                      </View>
-                      <View style={styles.studentInfo}>
-                        <Text style={styles.studentName}>{student.full_name}</Text>
-                        <Text style={styles.studentStatus}>
-                          {student.status === 'active' ? 'Ativo' : 'Inativo'}
-                        </Text>
-                      </View>
-                      <View style={[
-                        styles.statusDot,
-                        { backgroundColor: student.status === 'active' ? Colors.success : Colors.textSecondary }
-                      ]} />
-                    </TouchableOpacity>
-                  ))}
+                <View style={s.studentList}>
+                  {recentStudents.slice(0, 5).map((student, idx) => {
+                    const list = recentStudents.slice(0, 5);
+                    const initials = student.full_name.split(' ').map((w: string) => w[0]).join('').slice(0, 2).toUpperCase();
+                    const isLast = idx === list.length - 1;
+                    return (
+                      <TouchableOpacity
+                        key={student.id}
+                        style={[s.studentRow, !isLast && s.studentRowBorder]}
+                        onPress={() => router.push(`/(admin)/alunos/${student.id}` as any)}
+                        activeOpacity={0.7}
+                      >
+                        <View style={[s.studentAvatar, { backgroundColor: `${primaryColor}20` }]}>
+                          <Text style={[s.studentInitials, { color: primaryColor }]}>{initials}</Text>
+                        </View>
+                        <View style={{ flex: 1 }}>
+                          <Text style={s.studentName}>{student.full_name}</Text>
+                          <Text style={s.studentStatus}>
+                            {student.status === 'active' ? 'Ativo' : 'Inativo'}
+                          </Text>
+                        </View>
+                        <View style={[s.statusPill, {
+                          backgroundColor: student.status === 'active' ? `${Colors.success}18` : `${Colors.border}`,
+                        }]}>
+                          <View style={[s.statusDot, {
+                            backgroundColor: student.status === 'active' ? Colors.success : Colors.textSecondary,
+                          }]} />
+                        </View>
+                        <Ionicons name="chevron-forward" size={14} color={Colors.border} />
+                      </TouchableOpacity>
+                    );
+                  })}
                 </View>
               </>
             )}
@@ -218,44 +242,52 @@ export default function AdminDashboard() {
   );
 }
 
-function StatCard({ label, value, icon, color, onPress }: {
+// ─── Mini stat card (3-column row) ───────────────────────────────────────────
+function MiniStat({ label, value, icon, color, onPress }: {
   label: string; value: number; icon: any; color: string; onPress: () => void;
 }) {
   return (
-    <TouchableOpacity style={styles.statCard} onPress={onPress} activeOpacity={0.75}>
-      <Ionicons name={icon} size={22} color={color} />
-      <Text style={[styles.statValue, { color }]}>{value}</Text>
-      <Text style={styles.statLabel}>{label}</Text>
+    <TouchableOpacity style={s.miniCard} onPress={onPress} activeOpacity={0.75}>
+      <View style={[s.miniIconWrap, { backgroundColor: `${color}18` }]}>
+        <Ionicons name={icon} size={16} color={color} />
+      </View>
+      <Text style={[s.miniValue, { color }]}>{value}</Text>
+      <Text style={s.miniLabel}>{label}</Text>
     </TouchableOpacity>
   );
 }
 
-function QuickAction({ icon, label, onPress, primary, primaryColor }: {
-  icon: any; label: string; onPress: () => void; primary?: boolean; primaryColor?: string;
+// ─── Action pill ──────────────────────────────────────────────────────────────
+function ActionPill({ icon, label, onPress, primary, primaryColor, lightText }: {
+  icon: any; label: string; onPress: () => void;
+  primary?: boolean; primaryColor?: string; lightText?: boolean;
 }) {
+  const bg = primary ? primaryColor : Colors.surface;
+  const iconColor = primary ? (lightText ? '#000' : '#fff') : Colors.textPrimary;
+  const labelColor = primary ? (lightText ? '#000' : '#fff') : Colors.textPrimary;
   return (
     <TouchableOpacity
-      style={[styles.actionBtn, primary && { backgroundColor: primaryColor ?? Colors.primary }]}
+      style={[s.actionPill, { backgroundColor: bg }, !primary && s.actionPillBorder]}
       onPress={onPress}
-      activeOpacity={0.75}
+      activeOpacity={0.78}
     >
-      <Ionicons name={icon} size={20} color={primary ? Colors.bg : Colors.textPrimary} />
-      <Text style={[styles.actionLabel, primary && { color: Colors.bg }]}>{label}</Text>
+      <Ionicons name={icon} size={19} color={iconColor} />
+      <Text style={[s.actionLabel, { color: labelColor }]}>{label}</Text>
     </TouchableOpacity>
   );
 }
 
-const styles = StyleSheet.create({
+// ─── Styles ───────────────────────────────────────────────────────────────────
+const s = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.bg },
   scroll: { flex: 1 },
-  content: { paddingHorizontal: 20, paddingBottom: 24 },
+  content: { paddingHorizontal: 18, paddingBottom: 32 },
+
+  // Header
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    paddingVertical: 20,
+    flexDirection: 'row', alignItems: 'center',
+    gap: 12, paddingTop: 16, paddingBottom: 18,
   },
-  headerText: { flex: 1 },
   greeting: {
     fontFamily: FontFamily.bodyBold,
     fontSize: FontSize.md,
@@ -263,80 +295,145 @@ const styles = StyleSheet.create({
   },
   tenantName: {
     fontFamily: FontFamily.body,
-    fontSize: FontSize.sm,
+    fontSize: FontSize.xs,
     color: Colors.textSecondary,
-    marginTop: 2,
+    marginTop: 1,
   },
-  statsGrid: {
+
+  // Hero card
+  heroCard: {
+    borderRadius: 20,
+    padding: 20,
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  heroLeft: { flex: 1 },
+  heroLabel: {
+    fontFamily: FontFamily.bodyBold,
+    fontSize: 10,
+    letterSpacing: 1.2,
+    marginBottom: 4,
+  },
+  heroValue: {
+    fontFamily: FontFamily.display,
+    fontSize: 40,
+    lineHeight: 44,
+  },
+  heroTotal: {
+    fontFamily: FontFamily.body,
+    fontSize: 22,
+  },
+  progressTrack: {
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    marginTop: 10,
+    marginBottom: 5,
+    overflow: 'hidden',
+  },
+  progressFill: {
+    height: 4,
+    borderRadius: 2,
+  },
+  progressLabel: {
+    fontFamily: FontFamily.body,
+    fontSize: 11,
+  },
+  heroIconWrap: {
+    width: 56,
+    height: 56,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 16,
+  },
+
+  // Mini stats
+  miniRow: {
+    flexDirection: 'row',
+    gap: 8,
     marginBottom: 24,
   },
-  statCard: {
+  miniCard: {
     flex: 1,
-    minWidth: '45%',
     backgroundColor: Colors.surface,
     borderRadius: 14,
     borderWidth: 1,
     borderColor: Colors.border,
-    padding: 16,
-    gap: 6,
+    padding: 12,
+    alignItems: 'center',
+    gap: 5,
   },
-  statValue: {
-    fontFamily: FontFamily.display,
-    fontSize: FontSize['3xl'],
+  miniIconWrap: {
+    width: 32,
+    height: 32,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  statLabel: {
+  miniValue: {
+    fontFamily: FontFamily.bodyBold,
+    fontSize: FontSize.lg,
+    lineHeight: 22,
+  },
+  miniLabel: {
     fontFamily: FontFamily.body,
-    fontSize: FontSize.xs,
+    fontSize: 9,
     color: Colors.textSecondary,
-    lineHeight: 16,
+    textAlign: 'center',
+    lineHeight: 12,
   },
+
+  // Section titles
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   sectionTitle: {
     fontFamily: FontFamily.bodyBold,
-    fontSize: FontSize.md,
+    fontSize: FontSize.sm,
     color: Colors.textPrimary,
-    marginBottom: 12,
+    marginBottom: 10,
   },
   seeAll: {
-    fontFamily: FontFamily.body,
-    fontSize: FontSize.sm,
-    marginBottom: 12,
+    fontFamily: FontFamily.bodyMedium,
+    fontSize: FontSize.xs,
+    marginBottom: 10,
   },
-  actions: {
+
+  // Quick actions
+  actionsRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
+    gap: 8,
     marginBottom: 28,
+    flexWrap: 'wrap',
   },
-  actionBtn: {
+  actionPill: {
     flex: 1,
     minWidth: '45%',
-    backgroundColor: Colors.surface,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    paddingVertical: 14,
-    paddingHorizontal: 12,
+    borderRadius: 14,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
     alignItems: 'center',
     gap: 6,
   },
+  actionPillBorder: {
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
   actionLabel: {
     fontFamily: FontFamily.bodyMedium,
-    fontSize: FontSize.xs,
-    color: Colors.textPrimary,
+    fontSize: 11,
     textAlign: 'center',
   },
+
+  // Student list
   studentList: {
     backgroundColor: Colors.surface,
-    borderRadius: 14,
+    borderRadius: 16,
     borderWidth: 1,
     borderColor: Colors.border,
     overflow: 'hidden',
@@ -344,26 +441,25 @@ const styles = StyleSheet.create({
   studentRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 11,
+    gap: 10,
+  },
+  studentRowBorder: {
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
-    gap: 12,
   },
   studentAvatar: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: Colors.border,
+    width: 36,
+    height: 36,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  studentInitial: {
+  studentInitials: {
     fontFamily: FontFamily.bodyBold,
-    fontSize: FontSize.md,
-    color: Colors.primary,
+    fontSize: 13,
   },
-  studentInfo: { flex: 1 },
   studentName: {
     fontFamily: FontFamily.bodyMedium,
     fontSize: FontSize.sm,
@@ -371,13 +467,20 @@ const styles = StyleSheet.create({
   },
   studentStatus: {
     fontFamily: FontFamily.body,
-    fontSize: FontSize.xs,
+    fontSize: 11,
     color: Colors.textSecondary,
-    marginTop: 2,
+    marginTop: 1,
+  },
+  statusPill: {
+    width: 20,
+    height: 20,
+    borderRadius: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   statusDot: {
-    width: 8,
-    height: 8,
+    width: 7,
+    height: 7,
     borderRadius: 4,
   },
 });

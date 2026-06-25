@@ -222,9 +222,9 @@ function StudentDetailView({
                 </View>
                 {latest.sex && (
                   <View style={[det.sexBadge, { backgroundColor: `${primaryColor}18` }]}>
-                    <Ionicons name={latest.sex === 'male' ? 'male-outline' : 'female-outline'} size={14} color={primaryColor} />
+                    <Ionicons name={latest.sex === 'M' ? 'male-outline' : 'female-outline'} size={14} color={primaryColor} />
                     <Text style={[det.sexText, { color: primaryColor }]}>
-                      {latest.sex === 'male' ? 'Masculino' : 'Feminino'}
+                      {latest.sex === 'M' ? 'Masculino' : 'Feminino'}
                     </Text>
                   </View>
                 )}
@@ -417,7 +417,7 @@ export default function AvaliacaoScreen() {
       const { error } = await supabase.from('physical_assessments').insert({
         tenant_id: tenantId, student_id: modalStudent.id,
         assessed_at: new Date().toISOString(),
-        weight, height, sex: fSex || null, bmi,
+        weight, height, sex: fSex === 'male' ? 'M' : fSex === 'female' ? 'F' : null, bmi,
         body_fat: fBodyFat ? parseFloat(fBodyFat) : null,
         chest:  fChest  ? parseFloat(fChest)  : null,
         arm:    fArm    ? parseFloat(fArm)    : null,
