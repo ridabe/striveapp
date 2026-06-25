@@ -208,13 +208,14 @@ export default function PlanExecutionScreen() {
   const [videoUri, setVideoUri] = useState<string | null>(null);
   const [videoTitle, setVideoTitle] = useState('');
 
-  const timerRef     = useRef<ReturnType<typeof setInterval> | null>(null);
-  const restTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const sessionStart = useRef<Date | null>(null);
-  const restStartAt  = useRef<Date | null>(null); // wall clock para o descanso
-  const restDuration = useRef<number>(0);          // duração total do descanso atual
+  const timerRef              = useRef<ReturnType<typeof setInterval> | null>(null);
+  const restTimerRef          = useRef<ReturnType<typeof setInterval> | null>(null);
+  const sessionStart          = useRef<Date | null>(null);
+  const restStartAt           = useRef<Date | null>(null); // wall clock para o descanso
+  const restDuration          = useRef<number>(0);          // duração total do descanso atual
+  const awaitingHcPermissions = useRef<boolean>(false);     // flag: usuário foi ao HC conceder permissões
 
-  const { requestPermissions, getWorkoutMetrics } = useHealthConnect();
+  const { openPermissionsSettings, getWorkoutMetrics } = useHealthConnect();
 
   // Derived flat list
   const flatItems: ExItem[] = sections.flatMap(s => s.items);
@@ -255,11 +256,9 @@ export default function PlanExecutionScreen() {
     const sub = AppState.addEventListener('change', (next: AppStateStatus) => {
       if (next !== 'active') return;
       if (phase === 'active' && sessionStart.current) {
-        // Recalcula tempo de sessão pelo relógio real
         setSessionSecs(Math.floor((Date.now() - sessionStart.current.getTime()) / 1000));
       }
       if (phase === 'active' && isResting && restStartAt.current) {
-        // Recalcula descanso restante pelo relógio real
         const elapsed = Math.floor((Date.now() - restStartAt.current.getTime()) / 1000);
         const remaining = Math.max(0, restDuration.current - elapsed);
         if (remaining === 0) {
@@ -271,9 +270,24 @@ export default function PlanExecutionScreen() {
           setRestRemaining(remaining);
         }
       }
+      // Auto-retry métricas do smartwatch após usuário retornar do app Health Connect
+      if (awaitingHcPermissions.current && sessionStart.current) {
+        awaitingHcPermissions.current = false;
+        const start = sessionStart.current;
+        setFetchingMetrics(true);
+        // Aguarda 1.5s para o HC sincronizar os dados antes de ler
+        setTimeout(() => {
+          getWorkoutMetrics(start, new Date())
+            .catch(() => null)
+            .then(metrics => {
+              setWearableMetrics(metrics);
+              setFetchingMetrics(false);
+            });
+        }, 1500);
+      }
     });
     return () => sub.remove();
-  }, [phase, isResting]);
+  }, [phase, isResting, getWorkoutMetrics]);
 
   // Init series state when sections load
   useEffect(() => {
@@ -336,15 +350,16 @@ export default function PlanExecutionScreen() {
 
   function startWorkout() {
     sessionStart.current = new Date();
-    // Usa wall clock: calcula tempo real em vez de contar ticks
-    // Evita congelamento se o JS thread atrasar ou o app for ao background
     timerRef.current = setInterval(() => {
       if (sessionStart.current) {
         setSessionSecs(Math.floor((Date.now() - sessionStart.current.getTime()) / 1000));
       }
     }, 1000);
     setPhase('active');
-    requestPermissions().catch(() => {});
+    // Não solicitamos permissões do Health Connect aqui para evitar crash nativo
+    // (requestPermission lança uma Activity Android que pode falhar silenciosamente).
+    // As permissões são solicitadas apenas quando o usuário toca "Conectar Smartwatch"
+    // na tela de finalização do treino.
     preloadRestBeep().catch(() => {});
     requestNotificationPermission().catch(() => {});
   }
@@ -429,12 +444,20 @@ export default function PlanExecutionScreen() {
     setIsResting(false);
     releaseRestBeep().catch(() => {});
     setPhase('finishing');
+    // Tenta ler métricas sem pedir permissão (silencioso — retorna null se não autorizado)
     if (sessionStart.current) {
       setFetchingMetrics(true);
-      const metrics = await getWorkoutMetrics(sessionStart.current, new Date());
+      const metrics = await getWorkoutMetrics(sessionStart.current, new Date()).catch(() => null);
       setWearableMetrics(metrics);
       setFetchingMetrics(false);
     }
+  }
+
+  async function handleConnectSmartwatch() {
+    // Abre o Health Connect para o usuário conceder permissões.
+    // Quando o usuário voltar, o AppState 'active' listener auto-busca os dados.
+    awaitingHcPermissions.current = true;
+    await openPermissionsSettings();
   }
 
   async function handleSave() {
@@ -1057,6 +1080,18 @@ export default function PlanExecutionScreen() {
                   <Text style={s.wearableTitle}>Buscando dados do smartwatch...</Text>
                   <ActivityIndicator color={primaryColor} style={{ marginTop: 8 }} />
                 </View>
+              )}
+
+              {!fetchingMetrics && !wearableMetrics && (
+                <TouchableOpacity style={s.wearableCard} onPress={handleConnectSmartwatch} activeOpacity={0.8}>
+                  <View style={s.wearableHeader}>
+                    <Text style={s.wearableIcon}>⌚</Text>
+                    <Text style={s.wearableTitle}>Conectar Smartwatch</Text>
+                  </View>
+                  <Text style={{ fontFamily: FontFamily.body, fontSize: FontSize.xs, color: 'rgba(255,255,255,0.4)', marginTop: 4 }}>
+                    Toque para buscar dados de frequência cardíaca e calorias
+                  </Text>
+                </TouchableOpacity>
               )}
 
               {!fetchingMetrics && wearableMetrics && (

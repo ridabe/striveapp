@@ -2,8 +2,9 @@ import { useCallback, useRef } from 'react';
 import {
   getSdkStatus,
   initialize,
-  requestPermission,
   readRecords,
+  getGrantedPermissions,
+  openHealthConnectSettings,
   SdkAvailabilityStatus,
 } from 'react-native-health-connect';
 
@@ -15,7 +16,7 @@ export interface WearableMetrics {
   spo2Avg:         number | null;
   steps:           number | null;
   distanceMeters:  number | null;
-  wearableDevice:  string | null;   // ex: "Samsung Health", "Garmin Connect"
+  wearableDevice:  string | null;
   source:          'health_connect';
 }
 
@@ -32,6 +33,15 @@ const KNOWN_SOURCES: Record<string, string> = {
   'nodomain.freeyourgadget.gadgetbridge': 'Gadget Bridge',
 };
 
+const REQUIRED_PERMISSIONS = [
+  'READ_HEART_RATE',
+  'READ_ACTIVE_CALORIES_BURNED',
+  'READ_TOTAL_CALORIES_BURNED',
+  'READ_OXYGEN_SATURATION',
+  'READ_STEPS',
+  'READ_DISTANCE',
+];
+
 function detectDevice(records: any[]): string | null {
   for (const r of records) {
     const pkg = r.metadata?.dataOrigin?.packageName;
@@ -39,15 +49,6 @@ function detectDevice(records: any[]): string | null {
   }
   return null;
 }
-
-const PERMISSIONS = [
-  { accessType: 'read' as const, recordType: 'HeartRate'            as const },
-  { accessType: 'read' as const, recordType: 'ActiveCaloriesBurned' as const },
-  { accessType: 'read' as const, recordType: 'TotalCaloriesBurned'  as const },
-  { accessType: 'read' as const, recordType: 'OxygenSaturation'     as const },
-  { accessType: 'read' as const, recordType: 'Steps'                as const },
-  { accessType: 'read' as const, recordType: 'Distance'             as const },
-];
 
 export function useHealthConnect() {
   const available = useRef<boolean | null>(null);
@@ -63,16 +64,30 @@ export function useHealthConnect() {
     return available.current;
   }, []);
 
-  const requestPermissions = useCallback(async (): Promise<boolean> => {
+  // Verifica se as permissões necessárias já foram concedidas
+  const checkPermissionsGranted = useCallback(async (): Promise<boolean> => {
     const isAvailable = await checkAvailability();
     if (!isAvailable) return false;
     try {
       await initialize();
-      const granted = await requestPermission(PERMISSIONS);
-      return granted.length > 0;
+      const granted = await getGrantedPermissions();
+      const grantedTypes = granted.map((p: any) => p.recordType);
+      return REQUIRED_PERMISSIONS.some(p => grantedTypes.includes(p));
     } catch {
       return false;
     }
+  }, [checkAvailability]);
+
+  // Abre o Health Connect para o usuário conceder permissões manualmente.
+  // NÃO usa requestPermission() — causa crash nativo com "lateinit property
+  // requestPermission has not been initialized" (HealthConnectPermissionDelegate.kt:45)
+  // porque o ActivityResultLauncher não é registrado corretamente no Expo.
+  const openPermissionsSettings = useCallback(async (): Promise<void> => {
+    const isAvailable = await checkAvailability();
+    if (!isAvailable) return;
+    try {
+      await openHealthConnectSettings();
+    } catch {}
   }, [checkAvailability]);
 
   const getWorkoutMetrics = useCallback(
@@ -84,8 +99,8 @@ export function useHealthConnect() {
         await initialize();
 
         // Samsung Health pode levar alguns segundos para sincronizar com o
-        // Health Connect após o fim do treino — aguarda 3 s antes de ler.
-        await new Promise(resolve => setTimeout(resolve, 3000));
+        // Health Connect após o fim do treino — aguarda 2s antes de ler.
+        await new Promise(resolve => setTimeout(resolve, 2000));
 
         const timeRangeFilter = {
           operator: 'between' as const,
@@ -200,5 +215,5 @@ export function useHealthConnect() {
     [checkAvailability]
   );
 
-  return { requestPermissions, getWorkoutMetrics, checkAvailability };
+  return { openPermissionsSettings, checkPermissionsGranted, getWorkoutMetrics, checkAvailability };
 }
