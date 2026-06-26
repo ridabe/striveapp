@@ -142,6 +142,7 @@ export function MaxOnboardingModal({ userId }: Props) {
       <View style={s.overlay}>
         <Animated.View style={[s.card, { opacity: cardOpacity }]}>
           <ScrollView
+            style={s.scrollView}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={s.scrollContent}
             bounces={false}
@@ -188,8 +189,8 @@ export function MaxOnboardingModal({ userId }: Props) {
               </Text>
             </View>
 
-            {/* ── Steps ── */}
-            {typingDone && (
+            {/* ── Steps — apenas os revelados são montados no layout ── */}
+            {shownSteps > 0 && (
               <View style={s.stepsList}>
                 <Text style={s.stepsTitle}>Como usar</Text>
                 {STEPS.map((step, idx) => {
@@ -258,11 +259,15 @@ const s = StyleSheet.create({
   card: {
     width: '100%',
     maxHeight: '92%',
+    flexDirection: 'column',
     backgroundColor: Colors.surface,
     borderRadius: 24,
     borderWidth: 1,
     borderColor: `${MAX_COLOR}40`,
     overflow: 'hidden',
+  },
+  scrollView: {
+    flex: 1,
   },
   scrollContent: {
     padding: 22,
