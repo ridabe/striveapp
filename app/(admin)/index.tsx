@@ -14,6 +14,7 @@ import { FontFamily, FontSize } from '@/theme/typography';
 import { useModulesStore } from '@/stores/modulesStore';
 import { MODULE } from '@/lib/modules';
 import { TenantLogo } from '@/components/TenantLogo';
+import { MaxOnboardingModal } from '@/components/ai/MaxOnboardingModal';
 
 interface DashboardStats {
   totalStudents: number;
@@ -77,6 +78,10 @@ export default function AdminDashboard() {
 
   return (
     <SafeAreaView style={s.safe} edges={['top']}>
+      {/* Max Strive IA — onboarding mostrado uma vez por usuário */}
+      {has(MODULE.ASSISTENTE_IA) && (
+        <MaxOnboardingModal userId={profile?.id ?? null} />
+      )}
       <ScrollView
         style={s.scroll}
         contentContainerStyle={s.content}

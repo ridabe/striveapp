@@ -8,8 +8,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
 import { useThemeStore } from '@/stores/themeStore';
+import { useModulesStore } from '@/stores/modulesStore';
+import { MODULE } from '@/lib/modules';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
+
+const MAX_COLOR = '#7C3AED';
 
 const { width: W } = Dimensions.get('window');
 const CARD_W = (W - 48) / 2;
@@ -149,6 +153,7 @@ const MONTH_NAMES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out'
 export default function StudentDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { primaryColor } = useThemeStore();
+  const hasMaxModule = useModulesStore().has(MODULE.ASSISTENTE_IA);
 
   const [student, setStudent] = useState<StudentDetail | null>(null);
   const [counts, setCounts] = useState<ModuleCounts>({
@@ -510,6 +515,24 @@ export default function StudentDetailScreen() {
           ))}
         </View>
 
+        {/* Max Strive IA */}
+        {hasMaxModule && (
+          <TouchableOpacity
+            style={s.maxCard}
+            onPress={() => router.push({ pathname: '/(admin)/assistente-ia' as any, params: { studentId: student!.id } })}
+            activeOpacity={0.8}
+          >
+            <View style={s.maxIconWrap}>
+              <Ionicons name="flash-outline" size={22} color="#FFFFFF" />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={s.maxCardTitle}>Consultar Max Strive</Text>
+              <Text style={s.maxCardSub}>IA consultora — crie treinos, analise progresso e mais</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color={MAX_COLOR} />
+          </TouchableOpacity>
+        )}
+
         {/* Observações */}
         {(student.notes !== null && student.notes !== undefined) && (
           <>
@@ -600,6 +623,19 @@ const s = StyleSheet.create({
     borderColor: Colors.border, padding: 16, marginBottom: 24,
   },
   notesText: { fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textPrimary, lineHeight: 22 },
+
+  // Max Strive IA
+  maxCard: {
+    flexDirection: 'row', alignItems: 'center', gap: 14,
+    backgroundColor: Colors.surface, borderRadius: 16, borderWidth: 1,
+    borderColor: `${MAX_COLOR}55`, padding: 14, marginBottom: 24,
+  },
+  maxIconWrap: {
+    width: 44, height: 44, borderRadius: 13,
+    backgroundColor: MAX_COLOR, alignItems: 'center', justifyContent: 'center',
+  },
+  maxCardTitle: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.sm, color: Colors.textPrimary, marginBottom: 2 },
+  maxCardSub: { fontFamily: FontFamily.body, fontSize: FontSize.xs, color: Colors.textSecondary, lineHeight: 16 },
 
   // Footer
   memberSince: {

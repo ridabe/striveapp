@@ -56,7 +56,7 @@ interface AssignedStudent {
 interface Student { id: string; full_name: string }
 
 export default function PlanDetailScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, studentId: fromStudentId } = useLocalSearchParams<{ id: string; studentId?: string }>();
   const { profile } = useAuthStore();
   const { primaryColor } = useThemeStore();
   const tenantId = profile?.tenant_id ?? '';
@@ -229,7 +229,13 @@ export default function PlanDetailScreen() {
       supabase.from('student_plan_assignments').select('student_id').eq('plan_id', id),
     ]);
     setAllStudents(studentsRes.data ?? []);
-    setAssigned((assignRes.data ?? []).map((a: any) => a.student_id));
+    const existingIds = (assignRes.data ?? []).map((a: any) => a.student_id as string);
+    // Pré-seleciona o aluno de origem (quando vindo do Max)
+    const preSelected =
+      fromStudentId && !existingIds.includes(fromStudentId)
+        ? [...existingIds, fromStudentId]
+        : existingIds;
+    setAssigned(preSelected);
     setLoadingAssign(false);
   }
 
@@ -293,6 +299,28 @@ export default function PlanDetailScreen() {
             </View>
           )}
           {plan.description && <Text style={s.descText}>{plan.description}</Text>}
+
+          {/* Botão de ativar/desativar — visível e explícito */}
+          <TouchableOpacity
+            style={[
+              s.activateBtn,
+              plan.status === 'active'
+                ? { backgroundColor: `${Colors.success}18`, borderColor: Colors.success }
+                : { backgroundColor: `${Colors.success}10`, borderColor: `${Colors.success}60` },
+            ]}
+            onPress={handleToggleStatus}
+            activeOpacity={0.8}
+          >
+            <Ionicons
+              name={plan.status === 'active' ? 'checkmark-circle' : 'checkmark-circle-outline'}
+              size={18}
+              color={Colors.success}
+            />
+            <Text style={[s.activateBtnText, { color: Colors.success }]}>
+              {plan.status === 'active' ? 'Ativo — toque para desativar' : 'Ativar Plano'}
+            </Text>
+          </TouchableOpacity>
+
           <View style={s.actionRow}>
             <TouchableOpacity style={[s.actionBtn, { backgroundColor: `${primaryColor}18` }]}
               onPress={openAssignModal} activeOpacity={0.8}>
@@ -543,6 +571,15 @@ const s = StyleSheet.create({
   goalBadge: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 20, borderWidth: 1, alignSelf: 'flex-start' },
   goalText: { fontFamily: FontFamily.bodyMedium, fontSize: 13 },
   descText: { fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textSecondary, lineHeight: 20 },
+  activateBtn: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+    gap: 8, borderRadius: 12, paddingVertical: 12, paddingHorizontal: 14,
+    borderWidth: 1,
+  },
+  activateBtnText: {
+    fontFamily: FontFamily.bodyBold, fontSize: FontSize.sm,
+    flexShrink: 1, textAlign: 'center',
+  },
   actionRow: { flexDirection: 'row', gap: 8 },
   actionBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, borderRadius: 10, paddingVertical: 10 },
   actionBtnText: { fontFamily: FontFamily.bodyMedium, fontSize: 13, color: Colors.textPrimary },
