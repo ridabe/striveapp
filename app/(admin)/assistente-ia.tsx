@@ -28,11 +28,39 @@ const FEATURE_LABELS: Record<MaxFeature, string> = {
   chat:             'Processando...',
 };
 
+const PLAN_STEPS = [
+  {
+    icon: 'barbell-outline' as const,
+    color: '#3B82F6',
+    title: 'Crie o treino',
+    desc: 'Toque em "Criar Treino" nas ações acima. O Max gerará um plano completo baseado no perfil do aluno.',
+  },
+  {
+    icon: 'eye-outline' as const,
+    color: MAX_COLOR,
+    title: 'Visualize o plano',
+    desc: 'Após a geração, toque em "Ver plano criado". Você será levado direto ao plano com todas as rotinas e exercícios.',
+  },
+  {
+    icon: 'people-outline' as const,
+    color: '#10B981',
+    title: 'Atribua os alunos',
+    desc: 'Na tela do plano, toque em "Atribuir Alunos" e selecione quem irá receber este treino. O aluno de origem já vem pré-selecionado.',
+  },
+  {
+    icon: 'checkmark-circle-outline' as const,
+    color: '#22C55E',
+    title: 'Ative o plano',
+    desc: 'Toque no botão "Ativar Plano" para liberar o treino ao aluno. Ele aparecerá imediatamente no app.',
+  },
+];
+
 export default function AssistenteIAScreen() {
   const { studentId } = useLocalSearchParams<{ studentId: string }>();
-  const [student, setStudent] = useState<StudentMini | null>(null);
+  const [student, setStudent]           = useState<StudentMini | null>(null);
   const [loadingStudent, setLoadingStudent] = useState(true);
-  const [activeFeature, setActiveFeature] = useState<MaxFeature | null>(null);
+  const [activeFeature, setActiveFeature]   = useState<MaxFeature | null>(null);
+  const [guideOpen, setGuideOpen]           = useState(false);
   const scrollRef = useRef<ScrollView>(null);
 
   const { text, isStreaming, error, conversationId, planId, trigger, reset } = useMaxStream();
@@ -82,7 +110,7 @@ export default function AssistenteIAScreen() {
   }
 
   const avatarVariant = isStreaming ? 'thinking' : text && !error ? 'happy' : 'default';
-  const firstName = student?.full_name.split(' ')[0] ?? '...';
+  const firstName     = student?.full_name.split(' ')[0] ?? '...';
 
   return (
     <SafeAreaView style={s.safe} edges={['top']}>
@@ -154,6 +182,62 @@ export default function AssistenteIAScreen() {
           disabled={isStreaming}
         />
 
+        {/* Guia de fluxo — colapsável */}
+        {!isStreaming && (
+          <View style={s.guideCard}>
+            <TouchableOpacity
+              style={s.guideHeader}
+              onPress={() => setGuideOpen(v => !v)}
+              activeOpacity={0.75}
+            >
+              <View style={s.guideTitleRow}>
+                <View style={s.guideIconWrap}>
+                  <Ionicons name="map-outline" size={15} color={MAX_COLOR} />
+                </View>
+                <Text style={s.guideTitle}>Como criar e ativar um treino</Text>
+              </View>
+              <Ionicons
+                name={guideOpen ? 'chevron-up' : 'chevron-down'}
+                size={16}
+                color={Colors.textSecondary}
+              />
+            </TouchableOpacity>
+
+            {guideOpen && (
+              <View style={s.guideBody}>
+                {PLAN_STEPS.map((step, idx) => (
+                  <View key={idx} style={s.guideStep}>
+                    {/* Linha vertical conectora */}
+                    <View style={s.guideStepLeft}>
+                      <View style={[s.guideStepBadge, { backgroundColor: `${step.color}20`, borderColor: `${step.color}40` }]}>
+                        <Ionicons name={step.icon} size={14} color={step.color} />
+                      </View>
+                      {idx < PLAN_STEPS.length - 1 && (
+                        <View style={[s.guideConnector, { backgroundColor: `${step.color}30` }]} />
+                      )}
+                    </View>
+                    <View style={s.guideStepContent}>
+                      <View style={s.guideStepTitleRow}>
+                        <Text style={[s.guideStepNum, { color: step.color }]}>{idx + 1}</Text>
+                        <Text style={s.guideStepTitle}>{step.title}</Text>
+                      </View>
+                      <Text style={s.guideStepDesc}>{step.desc}</Text>
+                    </View>
+                  </View>
+                ))}
+
+                {/* Dica final */}
+                <View style={s.guideTip}>
+                  <Ionicons name="information-circle-outline" size={15} color={Colors.textSecondary} />
+                  <Text style={s.guideTipText}>
+                    Se o treino não aparecer de imediato para o aluno, basta ele atualizar o app puxando a tela para baixo.
+                  </Text>
+                </View>
+              </View>
+            )}
+          </View>
+        )}
+
         {/* Result area */}
         {(isStreaming || text) && (
           <View style={s.resultCard}>
@@ -184,12 +268,15 @@ export default function AssistenteIAScreen() {
               <View style={s.resultActions}>
                 {planId && (
                   <TouchableOpacity
-                    style={s.resultBtn}
-                    onPress={() => router.push({ pathname: '/(admin)/planos/[id]' as any, params: { id: planId!, studentId } })}
+                    style={[s.resultBtn, s.resultBtnPrimary]}
+                    onPress={() => router.push({
+                      pathname: '/(admin)/planos/[id]' as any,
+                      params: { id: planId!, studentId },
+                    })}
                     activeOpacity={0.8}
                   >
-                    <Ionicons name="clipboard-outline" size={16} color={Colors.textPrimary} />
-                    <Text style={s.resultBtnText}>Ver plano criado</Text>
+                    <Ionicons name="clipboard-outline" size={16} color="#fff" />
+                    <Text style={[s.resultBtnText, { color: '#fff' }]}>Ver plano criado</Text>
                   </TouchableOpacity>
                 )}
                 {!planId && (
@@ -287,6 +374,47 @@ const s = StyleSheet.create({
     color: Colors.textSecondary, letterSpacing: 1.2, marginBottom: 12,
   },
 
+  // ── Guia de fluxo ────────────────────────────────────────────────────────────
+  guideCard: {
+    backgroundColor: Colors.surface, borderRadius: 16, borderWidth: 1,
+    borderColor: Colors.border, marginTop: 20, overflow: 'hidden',
+  },
+  guideHeader: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    paddingHorizontal: 14, paddingVertical: 13,
+  },
+  guideTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 10, flex: 1 },
+  guideIconWrap: {
+    width: 28, height: 28, borderRadius: 8,
+    backgroundColor: `${MAX_COLOR}15`, borderWidth: 1, borderColor: `${MAX_COLOR}28`,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  guideTitle: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm, color: Colors.textPrimary },
+  guideBody: {
+    paddingHorizontal: 14, paddingBottom: 16,
+    borderTopWidth: 1, borderTopColor: Colors.border,
+    paddingTop: 14,
+  },
+  guideStep: { flexDirection: 'row', gap: 12, marginBottom: 0 },
+  guideStepLeft: { alignItems: 'center', width: 32 },
+  guideStepBadge: {
+    width: 32, height: 32, borderRadius: 10, borderWidth: 1,
+    alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+  },
+  guideConnector: { width: 2, flex: 1, minHeight: 12, marginVertical: 4, borderRadius: 1 },
+  guideStepContent: { flex: 1, paddingBottom: 16 },
+  guideStepTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 4 },
+  guideStepNum: { fontFamily: FontFamily.bodyBold, fontSize: 11 },
+  guideStepTitle: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.sm, color: Colors.textPrimary },
+  guideStepDesc: { fontFamily: FontFamily.body, fontSize: FontSize.xs, color: Colors.textSecondary, lineHeight: 18 },
+  guideTip: {
+    flexDirection: 'row', alignItems: 'flex-start', gap: 8,
+    backgroundColor: `${Colors.textSecondary}10`, borderRadius: 10,
+    padding: 10, marginTop: 4,
+  },
+  guideTipText: { fontFamily: FontFamily.body, fontSize: FontSize.xs, color: Colors.textSecondary, flex: 1, lineHeight: 17 },
+
+  // ── Result card ──────────────────────────────────────────────────────────────
   resultCard: {
     backgroundColor: Colors.surface, borderRadius: 16, borderWidth: 1,
     borderColor: `${MAX_COLOR}44`, marginTop: 24, padding: 16,
@@ -304,9 +432,10 @@ const s = StyleSheet.create({
   resultActions: { flexDirection: 'row', gap: 8, marginTop: 14, flexWrap: 'wrap' },
   resultBtn: {
     flexDirection: 'row', alignItems: 'center', gap: 6,
-    backgroundColor: `${MAX_COLOR}22`, borderRadius: 10,
-    paddingVertical: 8, paddingHorizontal: 12,
+    backgroundColor: `${MAX_COLOR}18`, borderRadius: 10,
+    paddingVertical: 9, paddingHorizontal: 14,
   },
+  resultBtnPrimary: { backgroundColor: MAX_COLOR },
   resultBtnSecondary: { backgroundColor: Colors.border },
   resultBtnText: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.xs, color: Colors.textPrimary },
 
