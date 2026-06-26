@@ -1,8 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { View, Text, Animated, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { Colors } from '@/theme/colors';
-import { FontFamily } from '@/theme/typography';
+import { Animated, Image, StyleSheet } from 'react-native';
 
 export const MAX_COLOR = '#7C3AED';
 
@@ -14,41 +11,48 @@ interface MaxAvatarProps {
 }
 
 const SIZES = {
-  sm: { container: 40, icon: 18, text: 14 },
-  md: { container: 56, icon: 24, text: 20 },
-  lg: { container: 80, icon: 36, text: 28 },
+  sm: { container: 40, image: 32, borderRadius: 12 },
+  md: { container: 56, image: 46, borderRadius: 16 },
+  lg: { container: 80, image: 68, borderRadius: 22 },
+};
+
+const IMAGES = {
+  default:  require('../../../assets/ai/max-avatar.png'),
+  thinking: require('../../../assets/ai/max-avatar-thinking.png'),
+  happy:    require('../../../assets/ai/max-avatar-happy.png'),
+  small:    require('../../../assets/ai/max-avatar-small.png'),
 };
 
 export function MaxAvatar({ variant = 'default', size = 'md' }: MaxAvatarProps) {
   const pulseAnim = useRef(new Animated.Value(1)).current;
-  const rotateAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     if (variant === 'thinking') {
-      const pulse = Animated.loop(
+      const loop = Animated.loop(
         Animated.sequence([
-          Animated.timing(pulseAnim, { toValue: 0.6, duration: 700, useNativeDriver: true }),
-          Animated.timing(pulseAnim, { toValue: 1,   duration: 700, useNativeDriver: true }),
-        ])
+          Animated.timing(pulseAnim, { toValue: 0.65, duration: 650, useNativeDriver: true }),
+          Animated.timing(pulseAnim, { toValue: 1,    duration: 650, useNativeDriver: true }),
+        ]),
       );
-      pulse.start();
-      return () => pulse.stop();
+      loop.start();
+      return () => loop.stop();
+    }
+
+    pulseAnim.setValue(1);
+
+    if (variant === 'happy') {
+      Animated.sequence([
+        Animated.spring(scaleAnim, { toValue: 1.14, useNativeDriver: true, friction: 4, tension: 120 }),
+        Animated.spring(scaleAnim, { toValue: 1,    useNativeDriver: true, friction: 6, tension: 80 }),
+      ]).start();
     } else {
-      Animated.timing(pulseAnim, { toValue: 1, duration: 200, useNativeDriver: true }).start();
+      scaleAnim.setValue(1);
     }
   }, [variant]);
 
   const dim = SIZES[size];
-  const borderRadius = dim.container * 0.3;
-
-  const iconName =
-    variant === 'thinking' ? 'sync-outline' :
-    variant === 'happy'    ? 'checkmark-circle-outline' :
-                             'flash-outline';
-
-  const iconColor =
-    variant === 'happy' ? Colors.success :
-                          '#FFFFFF';
+  const source = size === 'sm' ? IMAGES.small : IMAGES[variant];
 
   return (
     <Animated.View
@@ -57,35 +61,28 @@ export function MaxAvatar({ variant = 'default', size = 'md' }: MaxAvatarProps) 
         {
           width: dim.container,
           height: dim.container,
-          borderRadius,
+          borderRadius: dim.borderRadius,
           opacity: pulseAnim,
+          transform: [{ scale: scaleAnim }],
         },
       ]}
     >
-      <View style={[styles.inner, { borderRadius: borderRadius - 2 }]}>
-        <Ionicons name={iconName} size={dim.icon} color={iconColor} />
-        <Text style={[styles.label, { fontSize: dim.text - 10 }]}>MAX</Text>
-      </View>
+      <Image
+        source={source}
+        style={{ width: dim.image, height: dim.image }}
+        resizeMode="contain"
+      />
     </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: MAX_COLOR,
-    padding: 2,
-  },
-  inner: {
-    flex: 1,
-    backgroundColor: `${MAX_COLOR}CC`,
+    backgroundColor: `${MAX_COLOR}15`,
+    borderWidth: 1,
+    borderColor: `${MAX_COLOR}28`,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 1,
-  },
-  label: {
-    fontFamily: FontFamily.bodyBold,
-    color: '#FFFFFF',
-    letterSpacing: 1,
-    lineHeight: 10,
+    overflow: 'hidden',
   },
 });

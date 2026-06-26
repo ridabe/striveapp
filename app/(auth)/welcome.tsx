@@ -5,8 +5,8 @@ import { FontFamily, FontSize } from '@/theme/typography';
 import { StriveLogo } from '@/components/StriveLogo';
 
 const BENEFITS = [
-  { icon: '⚡', text: 'Treinos personalizados pelo seu coach' },
-  { icon: '📊', text: 'Acompanhe sua evolução em tempo real' },
+  { icon: '⚡', text: 'Treinos personalizados' },
+  { icon: '📊', text: 'Acompanhe a evolução em tempo real' },
   { icon: '✅', text: 'Registre cargas e conquiste metas' },
 ];
 

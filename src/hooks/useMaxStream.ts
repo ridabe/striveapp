@@ -23,12 +23,12 @@ export interface UseMaxStreamResult {
 }
 
 export function useMaxStream(): UseMaxStreamResult {
-  const [text, setText] = useState('');
-  const [isStreaming, setIsStreaming] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [text, setText]                     = useState('');
+  const [isStreaming, setIsStreaming]        = useState(false);
+  const [error, setError]                   = useState<string | null>(null);
   const [conversationId, setConversationId] = useState<string | null>(null);
-  const [planId, setPlanId] = useState<string | null>(null);
-  const abortRef = useRef<AbortController | null>(null);
+  const [planId, setPlanId]                 = useState<string | null>(null);
+  const xhrRef = useRef<XMLHttpRequest | null>(null);
 
   const reset = useCallback(() => {
     setText('');
@@ -37,14 +37,14 @@ export function useMaxStream(): UseMaxStreamResult {
   }, []);
 
   const trigger = useCallback(async (params: MaxStreamParams) => {
-    abortRef.current?.abort();
-    const controller = new AbortController();
-    abortRef.current = controller;
+    xhrRef.current?.abort();
 
     setText('');
     setError(null);
     setPlanId(null);
     setIsStreaming(true);
+
+    let accumulated = '';
 
     try {
       const { data: sessionData } = await supabase.auth.getSession();
@@ -52,67 +52,86 @@ export function useMaxStream(): UseMaxStreamResult {
       if (!token) throw new Error('Sessão inválida. Faça login novamente.');
 
       const baseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!;
-      const response = await fetch(`${baseUrl}/functions/v1/ai-assistant`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          feature:         params.feature,
-          student_id:      params.studentId,
-          message:         params.message,
-          conversation_id: params.conversationId ?? conversationId,
-          period_days:     params.periodDays,
-          exercise_id:     params.exerciseId,
-        }),
-        signal: controller.signal,
+      const url     = `${baseUrl}/functions/v1/ai-assistant`;
+
+      const body = JSON.stringify({
+        feature:         params.feature,
+        student_id:      params.studentId,
+        message:         params.message,
+        conversation_id: params.conversationId ?? conversationId,
+        period_days:     params.periodDays,
+        exercise_id:     params.exerciseId,
       });
 
-      if (!response.ok) {
-        const errBody = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-        throw new Error(errBody.error ?? `HTTP ${response.status}`);
-      }
+      await new Promise<void>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhrRef.current = xhr;
 
-      const convId = response.headers.get('X-Conversation-Id');
-      if (convId) setConversationId(convId);
+        xhr.open('POST', url);
+        xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.responseType = 'text';
+        xhr.timeout      = 120_000; // 2 min
 
-      const reader = response.body?.getReader();
-      if (!reader) throw new Error('Stream não suportado neste ambiente.');
+        let lastIndex = 0;
+        let buffer    = '';
 
-      const decoder = new TextDecoder();
-      let buffer = '';
-      let accumulated = '';
+        function processChunk() {
+          const chunk = xhr.responseText.slice(lastIndex);
+          lastIndex   = xhr.responseText.length;
+          if (!chunk) return;
 
-      outer: while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+          buffer += chunk;
+          const lines = buffer.split('\n');
+          buffer = lines.pop() ?? '';
 
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop() ?? '';
-
-        for (const line of lines) {
-          if (!line.startsWith('data: ')) continue;
-          const payload = line.slice(6).trim();
-          if (payload === '[DONE]') break outer;
-
-          try {
-            const parsed = JSON.parse(payload);
-            if (parsed.error) throw new Error(parsed.error);
-            if (parsed.text) {
-              accumulated += parsed.text;
-              setText(accumulated);
-            }
-          } catch (parseErr: any) {
-            if (parseErr.message && !parseErr.message.startsWith('JSON')) {
-              throw parseErr;
-            }
+          for (const line of lines) {
+            if (!line.startsWith('data: ')) continue;
+            const payload = line.slice(6).trim();
+            if (payload === '[DONE]') continue;
+            try {
+              const parsed = JSON.parse(payload);
+              if (parsed.error) {
+                reject(new Error(parsed.error));
+                return;
+              }
+              if (parsed.text) {
+                accumulated += parsed.text;
+                setText(accumulated);
+              }
+            } catch { /* chunk de SSE incompleto — ignora */ }
           }
         }
-      }
 
-      // Extract plan_id if present in the final text (generate_plan feature)
+        xhr.onprogress = processChunk;
+
+        xhr.onload = () => {
+          processChunk(); // drena qualquer resto
+
+          if (xhr.status >= 400) {
+            try {
+              const err = JSON.parse(xhr.responseText);
+              reject(new Error(err.error ?? `HTTP ${xhr.status}`));
+            } catch {
+              reject(new Error(`HTTP ${xhr.status}`));
+            }
+            return;
+          }
+
+          const convId = xhr.getResponseHeader('X-Conversation-Id');
+          if (convId) setConversationId(convId);
+
+          resolve();
+        };
+
+        xhr.onerror   = () => reject(new Error('Erro de conexão'));
+        xhr.ontimeout = () => reject(new Error('Timeout — tente novamente'));
+        xhr.onabort   = () => reject(Object.assign(new Error('AbortError'), { name: 'AbortError' }));
+
+        xhr.send(body);
+      });
+
+      // Extrai plan_id do texto final (feature generate_plan)
       const match = accumulated.match(/plan_id:([a-f0-9-]{36})/);
       if (match) setPlanId(match[1]);
 

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,
-  ActivityIndicator, Share,
+  ActivityIndicator, Share, Image,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -110,7 +110,11 @@ export default function AssistenteIAScreen() {
       >
         {/* Avatar hero */}
         <View style={s.hero}>
-          <MaxAvatar variant={avatarVariant} size="lg" />
+          <View style={s.avatarGlowWrap}>
+            <View style={s.glowRing1} />
+            <View style={s.glowRing2} />
+            <MaxAvatar variant={avatarVariant} size="lg" />
+          </View>
           <View style={s.heroText}>
             <Text style={s.heroTitle}>Olá, sou o Max!</Text>
             <Text style={s.heroSub}>
@@ -155,8 +159,14 @@ export default function AssistenteIAScreen() {
           <View style={s.resultCard}>
             <View style={s.resultHeader}>
               <View style={s.maxTagWrap}>
-                <View style={s.maxTagDot} />
-                <Text style={s.maxTag}>MAX</Text>
+                <View style={s.maxTagAvatar}>
+                  <Image
+                    source={require('../../assets/ai/max-avatar-small.png')}
+                    style={s.maxTagAvatarImg}
+                    resizeMode="contain"
+                  />
+                </View>
+                <Text style={s.maxTag}>MAX STRIVE</Text>
               </View>
               {isStreaming && <ActivityIndicator size="small" color={MAX_COLOR} />}
             </View>
@@ -175,7 +185,7 @@ export default function AssistenteIAScreen() {
                 {planId && (
                   <TouchableOpacity
                     style={s.resultBtn}
-                    onPress={() => router.push({ pathname: '/(admin)/planos' as any, params: { studentId } })}
+                    onPress={() => router.push({ pathname: '/(admin)/planos/[id]' as any, params: { id: planId!, studentId } })}
                     activeOpacity={0.8}
                   >
                     <Ionicons name="clipboard-outline" size={16} color={Colors.textPrimary} />
@@ -249,6 +259,15 @@ const s = StyleSheet.create({
   scroll: { paddingHorizontal: 16, paddingBottom: 40 },
 
   hero: { flexDirection: 'row', alignItems: 'center', gap: 16, paddingVertical: 24 },
+  avatarGlowWrap: { position: 'relative', width: 96, height: 96, alignItems: 'center', justifyContent: 'center' },
+  glowRing1: {
+    position: 'absolute', width: 96, height: 96, borderRadius: 48,
+    backgroundColor: `${MAX_COLOR}10`, borderWidth: 1, borderColor: `${MAX_COLOR}20`,
+  },
+  glowRing2: {
+    position: 'absolute', width: 80, height: 80, borderRadius: 40,
+    backgroundColor: `${MAX_COLOR}14`,
+  },
   heroText: { flex: 1, gap: 4 },
   heroTitle: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.lg, color: Colors.textPrimary },
   heroSub: { fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textSecondary, lineHeight: 20 },
@@ -273,8 +292,13 @@ const s = StyleSheet.create({
     borderColor: `${MAX_COLOR}44`, marginTop: 24, padding: 16,
   },
   resultHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 },
-  maxTagWrap: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  maxTagDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: MAX_COLOR },
+  maxTagWrap: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  maxTagAvatar: {
+    width: 26, height: 26, borderRadius: 8,
+    backgroundColor: `${MAX_COLOR}15`, borderWidth: 1, borderColor: `${MAX_COLOR}28`,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  maxTagAvatarImg: { width: 18, height: 18 },
   maxTag: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.xs, color: MAX_COLOR, letterSpacing: 1 },
   resultText: { fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textPrimary, lineHeight: 22 },
   resultActions: { flexDirection: 'row', gap: 8, marginTop: 14, flexWrap: 'wrap' },

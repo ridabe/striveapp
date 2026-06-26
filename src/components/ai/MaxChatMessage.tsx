@@ -1,8 +1,10 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { Image, View, Text, StyleSheet } from 'react-native';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 import { MAX_COLOR } from './MaxAvatar';
 import { MaxStreamingText } from './MaxStreamingText';
+
+const SMALL_AVATAR = require('../../../assets/ai/max-avatar-small.png');
 
 interface MaxChatMessageProps {
   role: 'user' | 'assistant';
@@ -15,7 +17,11 @@ export function MaxChatMessage({ role, content, isStreaming = false }: MaxChatMe
 
   return (
     <View style={[styles.row, isUser && styles.rowUser]}>
-      {!isUser && <View style={styles.assistantDot} />}
+      {!isUser && (
+        <View style={styles.avatarWrap}>
+          <Image source={SMALL_AVATAR} style={styles.avatarImg} resizeMode="contain" />
+        </View>
+      )}
       <View style={[styles.bubble, isUser ? styles.bubbleUser : styles.bubbleAssistant]}>
         {isStreaming ? (
           <MaxStreamingText text={content} style={styles.textAssistant} />
@@ -39,12 +45,21 @@ const styles = StyleSheet.create({
   rowUser: {
     justifyContent: 'flex-end',
   },
-  assistantDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: MAX_COLOR,
-    marginBottom: 6,
+  avatarWrap: {
+    width: 30,
+    height: 30,
+    borderRadius: 10,
+    backgroundColor: `${MAX_COLOR}15`,
+    borderWidth: 1,
+    borderColor: `${MAX_COLOR}28`,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+    marginBottom: 2,
+  },
+  avatarImg: {
+    width: 22,
+    height: 22,
   },
   bubble: {
     maxWidth: '80%',

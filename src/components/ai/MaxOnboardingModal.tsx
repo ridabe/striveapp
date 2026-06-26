@@ -163,7 +163,7 @@ export function MaxOnboardingModal({ userId }: Props) {
               <View style={s.glowRing1} />
               <View style={s.glowRing2} />
               <Image
-                source={require('@/assets/ai/max-avatar.png')}
+                source={require('../../../assets/ai/max-avatar.png')}
                 style={s.avatar}
                 resizeMode="contain"
               />
@@ -258,6 +258,7 @@ const s = StyleSheet.create({
   },
   card: {
     width: '100%',
+    flex: 1,
     maxHeight: '92%',
     flexDirection: 'column',
     backgroundColor: Colors.surface,

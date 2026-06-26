@@ -121,20 +121,20 @@ Deno.serve(async (req) => {
     // 9. Rota para o handler dedicado de cada feature
     switch (feature) {
       case 'generate_plan':
-        return handleGeneratePlan(supabase, ctx, systemPrompt, student_id, tenantId, convId);
+        return await handleGeneratePlan(supabase, ctx, systemPrompt, student_id, tenantId, convId);
 
       case 'analyze_progress':
-        return handleAnalyzeProgress(supabase, ctx, systemPrompt, student_id, convId, period_days ?? 30);
+        return await handleAnalyzeProgress(supabase, ctx, systemPrompt, student_id, convId, period_days ?? 30);
 
       case 'suggest_load':
-        return handleSuggestLoad(supabase, systemPrompt, student_id, convId, exercise_id);
+        return await handleSuggestLoad(supabase, systemPrompt, student_id, convId, exercise_id);
 
       case 'motivation':
-        return handleMotivation(supabase, ctx, systemPrompt, student_id, convId);
+        return await handleMotivation(supabase, ctx, systemPrompt, student_id, convId);
 
       case 'chat':
         if (!message?.trim()) return errorResponse('Campo "message" é obrigatório para o chat', 400);
-        return handleChat(supabase, systemPrompt, message, convId, tenantId);
+        return await handleChat(supabase, systemPrompt, message, convId, tenantId);
 
       default:
         return errorResponse(`Feature desconhecida: ${feature}`, 400);

@@ -150,7 +150,11 @@ export default function AssistenteIAChatScreen() {
             <ActivityIndicator color={MAX_COLOR} style={{ marginTop: 32 }} />
           ) : isEmpty ? (
             <View style={s.emptyState}>
-              <MaxAvatar variant="default" size="lg" />
+              <View style={s.emptyAvatarWrap}>
+                <View style={s.emptyGlow1} />
+                <View style={s.emptyGlow2} />
+                <MaxAvatar variant="default" size="lg" />
+              </View>
               <Text style={s.emptyTitle}>Chat com Max</Text>
               <Text style={s.emptySub}>
                 Tire dúvidas sobre {firstName}, peça ajustes no treino ou explore alternativas de exercícios.
@@ -233,6 +237,15 @@ const s = StyleSheet.create({
   messagesContent: { padding: 16, paddingBottom: 8 },
 
   emptyState: { alignItems: 'center', gap: 12, paddingTop: 40, paddingHorizontal: 24 },
+  emptyAvatarWrap: { position: 'relative', width: 96, height: 96, alignItems: 'center', justifyContent: 'center', marginBottom: 4 },
+  emptyGlow1: {
+    position: 'absolute', width: 96, height: 96, borderRadius: 48,
+    backgroundColor: '#7C3AED10', borderWidth: 1, borderColor: '#7C3AED20',
+  },
+  emptyGlow2: {
+    position: 'absolute', width: 80, height: 80, borderRadius: 40,
+    backgroundColor: '#7C3AED14',
+  },
   emptyTitle: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.md, color: Colors.textPrimary },
   emptySub: {
     fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textSecondary,
