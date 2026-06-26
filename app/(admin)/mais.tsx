@@ -104,6 +104,18 @@ export default function MaisScreen() {
       ],
     },
     {
+      title: 'INTELIGÊNCIA ARTIFICIAL',
+      items: [
+        {
+          slug: 'assistente-ia',
+          icon: 'flash-outline',
+          label: 'Max Strive IA',
+          description: 'Consultoria IA — crie treinos e analise alunos',
+          route: '/(admin)/alunos/',
+        },
+      ],
+    },
+    {
       title: 'COMUNICAÇÃO',
       items: [
         {

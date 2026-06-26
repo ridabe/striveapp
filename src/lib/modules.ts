@@ -15,6 +15,7 @@ export const MODULE = {
   MINHA_AGENDA:       'minha-agenda',
   PLANOS_ALIMENTARES: 'planos-alimentares',
   GAMIFICACAO:        'gamificacao-ranking',
+  ASSISTENTE_IA:      'assistente-ia',
 } as const;
 
 export type ModuleSlug = typeof MODULE[keyof typeof MODULE];
