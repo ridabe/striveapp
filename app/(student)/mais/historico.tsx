@@ -37,14 +37,14 @@ function fmtTime(iso: string) {
 }
 
 export default function HistoricoScreen() {
-  const { student } = useStudent();
+  const { selectedStudent } = useStudent();
   const { primaryColor } = useThemeStore();
 
   const [sessions, setSessions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
-    if (!student) return;
+    if (!selectedStudent) return;
     const { data } = await supabase
       .from('workout_sessions')
       .select(`
@@ -54,13 +54,13 @@ export default function HistoricoScreen() {
         wearable_device,
         workout_plans(name), workout_routines(name)
       `)
-      .eq('student_id', student.id)
+      .eq('student_id', selectedStudent.id)
       .not('finished_at', 'is', null)
       .order('started_at', { ascending: false })
       .limit(50);
     setSessions(data ?? []);
     setLoading(false);
-  }, [student?.id]);
+  }, [selectedStudent?.id]);
 
   useEffect(() => { load(); }, [load]);
 

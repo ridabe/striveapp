@@ -1,15 +1,30 @@
-import { Tabs } from 'expo-router';
+import { Tabs, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useThemeStore } from '@/stores/themeStore';
 import { useModulesStore } from '@/stores/modulesStore';
 import { MODULE } from '@/lib/modules';
 import { Colors } from '@/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useStudent } from '@/hooks/useStudent';
+import { View, ActivityIndicator } from 'react-native';
 
 export default function StudentLayout() {
   const { primaryColor } = useThemeStore();
+  const { selectedStudent, allStudents, loading } = useStudent();
   const insets = useSafeAreaInsets();
   const { has, isLoaded } = useModulesStore();
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.bg }}>
+        <ActivityIndicator color={primaryColor} size="large" />
+      </View>
+    );
+  }
+
+  if (allStudents.length > 1 && !selectedStudent) {
+    return <Redirect href="/(student)/select-tenant" />;
+  }
 
   // While loading, keep tabs visible to avoid flicker. Once loaded, apply gating.
   const showTreinos   = !isLoaded || has(MODULE.PLANOS_TREINO) || has(MODULE.EXECUCAO_TREINO);
@@ -68,6 +83,7 @@ export default function StudentLayout() {
       />
       {/* Telas de detalhe — ocultas do tab bar */}
       <Tabs.Screen name="mais" options={{ href: null }} />
+      <Tabs.Screen name="select-tenant" options={{ href: null }} />
     </Tabs>
   );
 }

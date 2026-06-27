@@ -52,7 +52,7 @@ async function openWhatsApp(phone: string) {
 }
 
 export default function PerfilScreen() {
-  const { student, loading: studentLoading } = useStudent();
+  const { selectedStudent, allStudents, loading: studentLoading } = useStudent();
   const { profile } = useAuthStore();
   const { primaryColor, tenantName, tenantLogoUrl } = useThemeStore();
   const { has: hasModule, isLoaded: modulesLoaded } = useModulesStore();
@@ -62,15 +62,15 @@ export default function PerfilScreen() {
   const [tenantContact, setTenantContact] = useState<TenantContact | null>(null);
   const [loadingTenant, setLoadingTenant] = useState(true);
 
-  const fullName = student?.full_name ?? profile?.full_name ?? 'Aluno';
-  const email    = student?.email ?? profile?.email ?? '';
-  const phone    = student?.phone ?? null;
-  const goal     = student?.goal ?? null;
+  const fullName = selectedStudent?.full_name ?? profile?.full_name ?? 'Aluno';
+  const email    = selectedStudent?.email ?? profile?.email ?? '';
+  const phone    = selectedStudent?.phone ?? null;
+  const goal     = selectedStudent?.goal ?? null;
 
   const initials = fullName.split(' ').map((w: string) => w[0]).join('').slice(0, 2).toUpperCase();
 
   useEffect(() => {
-    const tenantId = profile?.tenant_id;
+    const tenantId = selectedStudent?.tenant_id;
     if (!tenantId) { setLoadingTenant(false); return; }
     supabase
       .from('tenants')
@@ -81,7 +81,7 @@ export default function PerfilScreen() {
         setTenantContact(data ?? null);
         setLoadingTenant(false);
       });
-  }, [profile?.tenant_id]);
+  }, [selectedStudent?.tenant_id]);
 
   async function handleSignOut() {
     Alert.alert('Sair da conta', 'Deseja encerrar sua sessão?', [
@@ -208,8 +208,24 @@ export default function PerfilScreen() {
         {/* ── Account settings ─────────────────────────────────────────── */}
         <Text style={s.sectionLabel}>MINHA CONTA</Text>
         <View style={s.menuGroup}>
+          {allStudents.length > 1 && (
+            <TouchableOpacity
+              style={[s.menuItem, s.menuItemBorder]}
+              onPress={() => router.push('/(student)/select-tenant' as any)}
+              activeOpacity={0.75}
+            >
+              <View style={[s.menuIcon, { backgroundColor: `${primaryColor}12` }]}>
+                <Ionicons name="swap-horizontal-outline" size={18} color={primaryColor} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={s.menuLabel}>Trocar de Personal/Estúdio</Text>
+                <Text style={s.menuDesc}>Mude para outra conta</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={16} color={Colors.textSecondary} />
+            </TouchableOpacity>
+          )}
           <TouchableOpacity
-            style={[s.menuItem, s.menuItemBorder]}
+            style={[s.menuItem, allStudents.length > 1 ? s.menuItemBorder : undefined]}
             onPress={() => router.push('/(auth)/change-password' as any)}
             activeOpacity={0.75}
           >

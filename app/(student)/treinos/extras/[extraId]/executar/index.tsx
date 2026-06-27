@@ -78,7 +78,7 @@ function groupByCombo(items: ExItem[]): ExGroup[] {
 
 export default function ExtraExecutionScreen() {
   const { extraId } = useLocalSearchParams<{ extraId: string }>();
-  const { student } = useStudent();
+  const { selectedStudent } = useStudent();
   const { primaryColor } = useThemeStore();
 
   const [workoutName, setWorkoutName] = useState('Treino Extra');
@@ -172,7 +172,7 @@ export default function ExtraExecutionScreen() {
   }
 
   async function handleSave() {
-    if (!student) return;
+    if (!selectedStudent) return;
     setPhase('saving');
 
     const finishedAt = new Date().toISOString();
@@ -181,8 +181,8 @@ export default function ExtraExecutionScreen() {
     const { data: session, error } = await supabase
       .from('workout_sessions')
       .insert({
-        student_id: student.id,
-        tenant_id: student.tenant_id,
+        student_id: selectedStudent.id,
+        tenant_id: selectedStudent.tenant_id,
         workout_plan_id: null,
         workout_routine_id: null,
         started_at: startedAt,

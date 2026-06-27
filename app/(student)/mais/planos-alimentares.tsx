@@ -54,7 +54,7 @@ function calcMealMacros(foods: MealFood[]) {
 function fmt1(v: number) { return v.toFixed(1); }
 
 export default function StudentPlanosAlimentaresScreen() {
-  const { student }      = useStudent();
+  const { selectedStudent }      = useStudent();
   const { primaryColor } = useThemeStore();
 
   const [plans, setPlans]   = useState<Plan[]>([]);
@@ -63,7 +63,7 @@ export default function StudentPlanosAlimentaresScreen() {
   const [expandedMeals, setExpandedMeals] = useState<Record<string, boolean>>({});
 
   const load = useCallback(async () => {
-    if (!student) return;
+    if (!selectedStudent) return;
     setLoading(true);
     const { data } = await supabase
       .from('student_meal_plan_assignments')
@@ -79,7 +79,7 @@ export default function StudentPlanosAlimentaresScreen() {
           )
         )
       `)
-      .eq('student_id', student.id)
+      .eq('student_id', selectedStudent.id)
       .eq('status', 'active');
 
     const loaded: Plan[] = ((data ?? []) as any[])
@@ -102,7 +102,7 @@ export default function StudentPlanosAlimentaresScreen() {
     loaded.forEach((p, i) => { expanded[p.id] = i === 0; });
     setExpandedPlans(expanded);
     setLoading(false);
-  }, [student?.id]);
+  }, [selectedStudent?.id]);
 
   useEffect(() => { load(); }, [load]);
 

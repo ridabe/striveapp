@@ -4,11 +4,12 @@ import {
   ActivityIndicator, Image, LayoutAnimation,
 } from 'react-native';
 import { Video, ResizeMode } from 'expo-av';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
 import { useThemeStore } from '@/stores/themeStore';
+import { useStudent } from '@/hooks/useStudent';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 import { GOAL_COLORS, muscleColor } from '@/lib/exerciseConfig';
@@ -42,14 +43,17 @@ interface Plan {
 export default function PlanDetailScreen() {
   const { planId } = useLocalSearchParams<{ planId: string }>();
   const { primaryColor } = useThemeStore();
+  const { selectedStudent } = useStudent();
 
   const [plan, setPlan] = useState<Plan | null>(null);
   const [sections, setSections] = useState<Section[]>([]);
+  const [completedRoutines, setCompletedRoutines] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
 
   const [videoUri, setVideoUri] = useState<string | null>(null);
   const [videoTitle, setVideoTitle] = useState('');
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
 
   const toggleExpand = useCallback((itemId: string) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -61,18 +65,38 @@ export default function PlanDetailScreen() {
     });
   }, []);
 
-  useEffect(() => {
-    if (!planId) return;
-    load();
-  }, [planId]);
+  const toggleSection = useCallback((sectionId: string) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setExpandedSections(prev => {
+      const next = new Set(prev);
+      if (next.has(sectionId)) next.delete(sectionId);
+      else next.add(sectionId);
+      return next;
+    });
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!planId || !selectedStudent) return;
+      load();
+    }, [planId, selectedStudent])
+  );
 
   async function load() {
-    const [planRes, routinesRes] = await Promise.all([
+    const [planRes, routinesRes, sessionsRes] = await Promise.all([
       supabase.from('workout_plans').select('id, name, goal, description').eq('id', planId).single(),
       supabase.from('workout_routines').select('id, name, day_of_week, display_order').eq('workout_plan_id', planId).order('display_order'),
+      supabase.from('workout_sessions').select('workout_routine_id').eq('student_id', selectedStudent.id).eq('workout_plan_id', planId).not('workout_routine_id', 'is', null),
     ]);
 
     setPlan(planRes.data as Plan);
+
+    // Mark completed routines
+    const completed = new Set<string>();
+    (sessionsRes.data ?? []).forEach((s: any) => {
+      if (s.workout_routine_id) completed.add(s.workout_routine_id);
+    });
+    setCompletedRoutines(completed);
 
     const rIds = (routinesRes.data ?? []).map((r: any) => r.id);
     const itemsRes = rIds.length > 0
@@ -157,152 +181,153 @@ export default function PlanDetailScreen() {
           {plan?.description && (
             <Text style={s.planDesc}>{plan.description}</Text>
           )}
-          {/* Day dots */}
-          <View style={s.dayRow}>
-            {DAY_SHORT.map((label, idx) => {
-              const has = sections.some(sec => sec.dayOfWeek === idx);
-              const isToday = idx === todayIdx;
-              return (
-                <View key={idx} style={[s.dayDot, has && { backgroundColor: isToday ? primaryColor : `${primaryColor}45` }]}>
-                  <Text style={[s.dayDotText, has && { color: isToday ? '#fff' : primaryColor }]}>{label[0]}</Text>
-                </View>
-              );
-            })}
-          </View>
         </View>
 
         {/* Exercise list grouped by routine section */}
-        {sections.map(section => (
-          <View key={section.routineId} style={s.section}>
-            <View style={s.sectionHeader}>
-              {section.dayOfWeek != null && (
-                <View style={[
-                  s.dayPill,
-                  section.dayOfWeek === todayIdx
-                    ? { backgroundColor: primaryColor }
-                    : { backgroundColor: Colors.border }
-                ]}>
-                  <Text style={[s.dayPillText, section.dayOfWeek === todayIdx && { color: '#fff' }]}>
-                    {DAY_SHORT[section.dayOfWeek]}
-                  </Text>
+        {sections.map(section => {
+          const isSectionExpanded = expandedSections.has(section.routineId);
+          const isCompleted = completedRoutines.has(section.routineId);
+          return (
+            <View key={section.routineId} style={[s.section, isCompleted && s.sectionCompleted]}>
+              <TouchableOpacity
+                style={s.sectionHeader}
+                onPress={() => toggleSection(section.routineId)}
+                activeOpacity={0.7}
+              >
+                {isCompleted && (
+                  <Ionicons name="checkmark-circle" size={24} color={primaryColor} />
+                )}
+                <Text style={[s.sectionName, isCompleted && s.sectionNameCompleted]}>{section.name}</Text>
+                <Text style={s.sectionCount}>{section.exercises.length} exercícios</Text>
+                <Ionicons
+                  name={isSectionExpanded ? 'chevron-up' : 'chevron-down'}
+                  size={20}
+                  color={Colors.textSecondary}
+                />
+              </TouchableOpacity>
+
+              {/* Iniciar Rotina button — sempre visível */}
+              {section.exercises.length > 0 && (
+                <View style={s.sectionFooter}>
+                  <TouchableOpacity
+                    style={[s.startRoutineBtn, { backgroundColor: isCompleted ? Colors.border : primaryColor }]}
+                    onPress={() => router.push(`/(student)/treinos/${planId}/executar/${section.routineId}` as any)}
+                    activeOpacity={0.87}
+                  >
+                    <Ionicons name={isCompleted ? "refresh" : "play"} size={18} color={isCompleted ? Colors.textSecondary : "#000"} />
+                    <Text style={[s.startRoutineBtnText, isCompleted && s.startRoutineBtnTextCompleted]}>
+                      {isCompleted ? "Refazer " + section.name : "Iniciar " + section.name}
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               )}
-              <Text style={s.sectionName}>{section.name}</Text>
-              <Text style={s.sectionCount}>{section.exercises.length} exerc.</Text>
-            </View>
 
-            {section.exercises.length === 0 ? (
-              <Text style={s.emptySection}>Sem exercícios cadastrados.</Text>
-            ) : (
-              section.exercises.map((ex, idx) => {
-                const mc = muscleColor(ex.muscleGroup);
-                const hasVideo = !!ex.videoUrl;
-                const isGif = ex.videoUrl?.toLowerCase().includes('.gif');
-                const isExpanded = expanded.has(ex.itemId);
-                const hasInstructions = !!ex.instructions;
+              {/* Exercícios — visíveis apenas quando a seção está expandida */}
+              {isSectionExpanded && (
+                <>
+                  {section.exercises.length === 0 ? (
+                    <Text style={s.emptySection}>Sem exercícios cadastrados.</Text>
+                  ) : (
+                    section.exercises.map((ex, idx) => {
+                      const mc = muscleColor(ex.muscleGroup);
+                      const hasVideo = !!ex.videoUrl;
+                      const isGif = ex.videoUrl?.toLowerCase().includes('.gif');
+                      const isExpanded = expanded.has(ex.itemId);
+                      const hasInstructions = !!ex.instructions;
 
-                return (
-                  <View key={ex.itemId} style={[s.exCard, idx > 0 && s.exCardBorder]}>
-                    {/* ── Main row ── */}
-                    <View style={s.exRow}>
-                      {/* Thumbnail — clicável se tiver vídeo */}
-                      <TouchableOpacity
-                        style={[s.thumbWrap, { backgroundColor: `${mc}18` }]}
-                        onPress={() => { if (hasVideo) { setVideoTitle(ex.name); setVideoUri(ex.videoUrl!); } }}
-                        disabled={!hasVideo}
-                        activeOpacity={hasVideo ? 0.75 : 1}
-                      >
-                        {hasVideo && isGif ? (
-                          <Image source={{ uri: ex.videoUrl! }} style={s.thumbImg} resizeMode="cover" />
-                        ) : hasVideo ? (
-                          <>
-                            <Video
-                              source={{ uri: ex.videoUrl! }}
-                              style={s.thumbImg}
-                              shouldPlay={false}
-                              isMuted
-                              resizeMode={ResizeMode.COVER}
-                            />
-                            <View style={s.thumbPlayOverlay}>
-                              <Ionicons name="play-circle" size={22} color="#fff" />
+                      return (
+                        <View key={ex.itemId} style={[s.exCard, idx > 0 && s.exCardBorder]}>
+                          {/* ── Main row ── */}
+                          <View style={s.exRow}>
+                            {/* Thumbnail — clicável se tiver vídeo */}
+                            <TouchableOpacity
+                              style={[s.thumbWrap, { backgroundColor: `${mc}18` }]}
+                              onPress={() => { if (hasVideo) { setVideoTitle(ex.name); setVideoUri(ex.videoUrl!); } }}
+                              disabled={!hasVideo}
+                              activeOpacity={hasVideo ? 0.75 : 1}
+                            >
+                              {hasVideo && isGif ? (
+                                <Image source={{ uri: ex.videoUrl! }} style={s.thumbImg} resizeMode="cover" />
+                              ) : hasVideo ? (
+                                <>
+                                  <Video
+                                    source={{ uri: ex.videoUrl! }}
+                                    style={s.thumbImg}
+                                    shouldPlay={false}
+                                    isMuted
+                                    resizeMode={ResizeMode.COVER}
+                                  />
+                                  <View style={s.thumbPlayOverlay}>
+                                    <Ionicons name="play-circle" size={22} color="#fff" />
+                                  </View>
+                                </>
+                              ) : (
+                                <Ionicons name="barbell-outline" size={20} color={mc} />
+                              )}
+                            </TouchableOpacity>
+
+                            {/* Info */}
+                            <View style={s.exInfo}>
+                              <Text style={s.exName} numberOfLines={2}>{ex.name}</Text>
+                              <View style={s.exMeta}>
+                                <View style={[s.musclePill, { backgroundColor: `${mc}20` }]}>
+                                  <View style={[s.muscleDot, { backgroundColor: mc }]} />
+                                  <Text style={[s.musclePillText, { color: mc }]}>
+                                    {ex.muscleGroup || 'Geral'}
+                                  </Text>
+                                </View>
+                                {ex.prescription ? (
+                                  <Text style={s.prescription}>{ex.prescription}</Text>
+                                ) : null}
+                              </View>
                             </View>
-                          </>
-                        ) : (
-                          <Ionicons name="barbell-outline" size={20} color={mc} />
-                        )}
-                      </TouchableOpacity>
 
-                      {/* Info */}
-                      <View style={s.exInfo}>
-                        <Text style={s.exName} numberOfLines={2}>{ex.name}</Text>
-                        <View style={s.exMeta}>
-                          <View style={[s.musclePill, { backgroundColor: `${mc}20` }]}>
-                            <View style={[s.muscleDot, { backgroundColor: mc }]} />
-                            <Text style={[s.musclePillText, { color: mc }]}>
-                              {ex.muscleGroup || 'Geral'}
-                            </Text>
+                            {/* Video pill button — visível sempre que tiver vídeo */}
+                            {hasVideo && (
+                              <TouchableOpacity
+                                style={[s.videoPill, { backgroundColor: `${mc}18`, borderColor: `${mc}35` }]}
+                                onPress={() => { setVideoTitle(ex.name); setVideoUri(ex.videoUrl!); }}
+                                activeOpacity={0.75}
+                              >
+                                <Ionicons name={isGif ? 'image-outline' : 'play-circle-outline'} size={15} color={mc} />
+                                <Text style={[s.videoPillText, { color: mc }]}>{isGif ? 'GIF' : 'Vídeo'}</Text>
+                              </TouchableOpacity>
+                            )}
                           </View>
-                          {ex.prescription ? (
-                            <Text style={s.prescription}>{ex.prescription}</Text>
-                          ) : null}
+
+                          {/* ── Accordion toggle ── */}
+                          {hasInstructions && (
+                            <TouchableOpacity
+                              style={s.accordionToggle}
+                              onPress={() => toggleExpand(ex.itemId)}
+                              activeOpacity={0.7}
+                            >
+                              <Ionicons
+                                name={isExpanded ? 'chevron-up' : 'chevron-down'}
+                                size={13}
+                                color={Colors.textSecondary}
+                              />
+                              <Text style={s.accordionLabel}>
+                                {isExpanded ? 'Fechar instruções' : 'Como executar'}
+                              </Text>
+                            </TouchableOpacity>
+                          )}
+
+                          {/* ── Accordion content ── */}
+                          {isExpanded && hasInstructions && (
+                            <View style={s.accordionBody}>
+                              <Text style={s.accordionText}>{ex.instructions}</Text>
+                            </View>
+                          )}
                         </View>
-                      </View>
-
-                      {/* Video pill button — visível sempre que tiver vídeo */}
-                      {hasVideo && (
-                        <TouchableOpacity
-                          style={[s.videoPill, { backgroundColor: `${mc}18`, borderColor: `${mc}35` }]}
-                          onPress={() => { setVideoTitle(ex.name); setVideoUri(ex.videoUrl!); }}
-                          activeOpacity={0.75}
-                        >
-                          <Ionicons name={isGif ? 'image-outline' : 'play-circle-outline'} size={15} color={mc} />
-                          <Text style={[s.videoPillText, { color: mc }]}>{isGif ? 'GIF' : 'Vídeo'}</Text>
-                        </TouchableOpacity>
-                      )}
-                    </View>
-
-                    {/* ── Accordion toggle ── */}
-                    {hasInstructions && (
-                      <TouchableOpacity
-                        style={s.accordionToggle}
-                        onPress={() => toggleExpand(ex.itemId)}
-                        activeOpacity={0.7}
-                      >
-                        <Ionicons
-                          name={isExpanded ? 'chevron-up' : 'chevron-down'}
-                          size={13}
-                          color={Colors.textSecondary}
-                        />
-                        <Text style={s.accordionLabel}>
-                          {isExpanded ? 'Fechar instruções' : 'Como executar'}
-                        </Text>
-                      </TouchableOpacity>
-                    )}
-
-                    {/* ── Accordion content ── */}
-                    {isExpanded && hasInstructions && (
-                      <View style={s.accordionBody}>
-                        <Text style={s.accordionText}>{ex.instructions}</Text>
-                      </View>
-                    )}
-                  </View>
-                );
-              })
-            )}
-          </View>
-        ))}
-
-        {/* Iniciar Treino button */}
-        {totalExercises > 0 && (
-          <TouchableOpacity
-            style={[s.startBtn, { backgroundColor: primaryColor }]}
-            onPress={() => router.push(`/(student)/treinos/${planId}/executar` as any)}
-            activeOpacity={0.87}
-          >
-            <Ionicons name="play-circle" size={22} color="#fff" />
-            <Text style={s.startBtnText}>Iniciar Treino</Text>
-          </TouchableOpacity>
-        )}
+                      );
+                    })
+                  )}
+                </>
+              )}
+            </View>
+          );
+        })}
       </ScrollView>
 
       {/* Video viewer modal */}
@@ -336,7 +361,7 @@ const s = StyleSheet.create({
   dayDot: { width: 32, height: 32, borderRadius: 16, backgroundColor: Colors.border, alignItems: 'center', justifyContent: 'center' },
   dayDotText: { fontFamily: FontFamily.bodyBold, fontSize: 11, color: Colors.textSecondary },
   section: { backgroundColor: Colors.surface, borderRadius: 18, borderWidth: 1, borderColor: Colors.border, overflow: 'hidden' },
-  sectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 14, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: Colors.border },
+  sectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 14, paddingVertical: 12 },
   dayPill: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
   dayPillText: { fontFamily: FontFamily.bodyBold, fontSize: 11, color: Colors.textSecondary },
   sectionName: { flex: 1, fontFamily: FontFamily.bodyBold, fontSize: FontSize.sm, color: Colors.textPrimary },
@@ -374,4 +399,11 @@ const s = StyleSheet.create({
   // Start button
   startBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, paddingVertical: 18, borderRadius: 18, marginTop: 8 },
   startBtnText: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.md, color: '#fff' },
+  // Section footer and routine button
+  sectionFooter: { paddingHorizontal: 14, paddingVertical: 12, borderTopWidth: 1, borderTopColor: Colors.border },
+  startRoutineBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingVertical: 10, paddingHorizontal: 16, borderRadius: 12 },
+  startRoutineBtnText: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.xs, color: '#000' },
+  startRoutineBtnTextCompleted: { color: Colors.textSecondary },
+  sectionCompleted: { borderColor: 'rgba(59, 130, 246, 0.3)', opacity: 0.9 },
+  sectionNameCompleted: { textDecorationLine: 'line-through', opacity: 0.7 },
 });

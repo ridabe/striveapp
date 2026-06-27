@@ -31,9 +31,12 @@ export function useMaxStream(): UseMaxStreamResult {
   const xhrRef = useRef<XMLHttpRequest | null>(null);
 
   const reset = useCallback(() => {
+    xhrRef.current?.abort();
     setText('');
     setError(null);
     setPlanId(null);
+    setConversationId(null);
+    setIsStreaming(false);
   }, []);
 
   const trigger = useCallback(async (params: MaxStreamParams) => {
@@ -45,6 +48,8 @@ export function useMaxStream(): UseMaxStreamResult {
     setIsStreaming(true);
 
     let accumulated = '';
+    let streamCompleted = false;
+    let inactivityTimer: NodeJS.Timeout | null = null;
 
     try {
       const { data: sessionData } = await supabase.auth.getSession();
@@ -67,6 +72,18 @@ export function useMaxStream(): UseMaxStreamResult {
         const xhr = new XMLHttpRequest();
         xhrRef.current = xhr;
 
+        const resetTimer = () => {
+          if (inactivityTimer) clearTimeout(inactivityTimer);
+          inactivityTimer = setTimeout(() => {
+            if (!streamCompleted && accumulated.length > 0) {
+              processChunk();
+              const convId = xhr.getResponseHeader('X-Conversation-Id');
+              if (convId) setConversationId(convId);
+              resolve();
+            }
+          }, 3000);
+        };
+
         xhr.open('POST', url);
         xhr.setRequestHeader('Authorization', `Bearer ${token}`);
         xhr.setRequestHeader('Content-Type', 'application/json');
@@ -77,6 +94,7 @@ export function useMaxStream(): UseMaxStreamResult {
         let buffer    = '';
 
         function processChunk() {
+          resetTimer();
           const chunk = xhr.responseText.slice(lastIndex);
           lastIndex   = xhr.responseText.length;
           if (!chunk) return;
@@ -88,10 +106,15 @@ export function useMaxStream(): UseMaxStreamResult {
           for (const line of lines) {
             if (!line.startsWith('data: ')) continue;
             const payload = line.slice(6).trim();
-            if (payload === '[DONE]') continue;
+            if (payload === '[DONE]') {
+              streamCompleted = true;
+              if (inactivityTimer) clearTimeout(inactivityTimer);
+              continue;
+            }
             try {
               const parsed = JSON.parse(payload);
               if (parsed.error) {
+                if (inactivityTimer) clearTimeout(inactivityTimer);
                 reject(new Error(parsed.error));
                 return;
               }
@@ -106,6 +129,7 @@ export function useMaxStream(): UseMaxStreamResult {
         xhr.onprogress = processChunk;
 
         xhr.onload = () => {
+          if (inactivityTimer) clearTimeout(inactivityTimer);
           processChunk(); // drena qualquer resto
 
           if (xhr.status >= 400) {
@@ -120,15 +144,26 @@ export function useMaxStream(): UseMaxStreamResult {
 
           const convId = xhr.getResponseHeader('X-Conversation-Id');
           if (convId) setConversationId(convId);
-
           resolve();
         };
 
-        xhr.onerror   = () => reject(new Error('Erro de conexão'));
-        xhr.ontimeout = () => reject(new Error('Timeout — tente novamente'));
-        xhr.onabort   = () => reject(Object.assign(new Error('AbortError'), { name: 'AbortError' }));
+        xhr.onerror   = () => {
+          if (inactivityTimer) clearTimeout(inactivityTimer);
+          reject(new Error('Erro de conexão'));
+        };
+        xhr.ontimeout = () => {
+          if (inactivityTimer) clearTimeout(inactivityTimer);
+          reject(new Error('Timeout — tente novamente'));
+        };
+        xhr.onabort   = () => {
+          if (inactivityTimer) clearTimeout(inactivityTimer);
+          const abortErr = new Error('AbortError');
+          abortErr.name = 'AbortError';
+          reject(abortErr);
+        };
 
         xhr.send(body);
+        resetTimer();
       });
 
       // Extrai plan_id do texto final (feature generate_plan)
@@ -136,7 +171,8 @@ export function useMaxStream(): UseMaxStreamResult {
       if (match) setPlanId(match[1]);
 
     } catch (err: any) {
-      if (err.name !== 'AbortError') {
+      // Ignore abort errors completely
+      if (err?.name !== 'AbortError') {
         setError(err.message ?? 'Erro desconhecido');
       }
     } finally {

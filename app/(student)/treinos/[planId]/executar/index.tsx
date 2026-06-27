@@ -155,7 +155,7 @@ function StarRow({ rating, onRate }: { rating: number; onRate: (n: number) => vo
 // ─── Main screen ──────────────────────────────────────────────────────────────
 export default function PlanExecutionScreen() {
   const { planId } = useLocalSearchParams<{ planId: string }>();
-  const { student } = useStudent();
+  const { selectedStudent } = useStudent();
   const { primaryColor } = useThemeStore();
 
   const [planName, setPlanName] = useState('Treino');
@@ -461,7 +461,7 @@ export default function PlanExecutionScreen() {
   }
 
   async function handleSave() {
-    if (!student) return;
+    if (!selectedStudent) return;
     setPhase('saving');
     const finishedAt = new Date().toISOString();
     const startedAt = sessionStart.current?.toISOString() ?? finishedAt;
@@ -469,7 +469,7 @@ export default function PlanExecutionScreen() {
     const { data: session, error } = await supabase
       .from('workout_sessions')
       .insert({
-        student_id: student.id, tenant_id: student.tenant_id,
+        student_id: selectedStudent.id, tenant_id: selectedStudent.tenant_id,
         workout_plan_id: planId ?? null, workout_routine_id: null,
         started_at: startedAt, finished_at: finishedAt,
         duration_seconds: sessionSecs, intensity,
@@ -505,7 +505,7 @@ export default function PlanExecutionScreen() {
         flatItems.every(it => (seriesDone[it.itemId] ?? []).every(Boolean));
       try {
         await supabase.rpc('award_workout_points', {
-          p_student_id:      student.id,
+          p_student_id:      selectedStudent.id,
           p_duration_secs:   sessionSecs,
           p_exercises_count: completed.length,
           p_all_done:        allExDone,
@@ -517,7 +517,7 @@ export default function PlanExecutionScreen() {
 
     if (finishRating > 0) {
       await supabase.from('workout_feedbacks').insert({
-        tenant_id: student.tenant_id, student_id: student.id,
+        tenant_id: selectedStudent.tenant_id, student_id: selectedStudent.id,
         workout_plan_id: planId ?? null,
         rating: finishRating, comment: finishNotes.trim() || null,
       } as any);

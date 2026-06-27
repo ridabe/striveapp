@@ -44,10 +44,12 @@ export async function handleMotivation(
     .map((b) => (b as any).text)
     .join('');
 
+  const cleanText = sanitizeDirectStudentMessage(text);
+
   await supabase.from('ai_messages').insert({
     conversation_id: conversationId,
     role: 'assistant',
-    content: text,
+    content: cleanText,
     metadata: {
       tokens_input:  response.usage.input_tokens,
       tokens_output: response.usage.output_tokens,
@@ -59,7 +61,7 @@ export async function handleMotivation(
   const encoder = new TextEncoder();
   const body = new ReadableStream({
     start(controller) {
-      controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text })}\n\n`));
+      controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text: cleanText })}\n\n`));
       controller.enqueue(encoder.encode('data: [DONE]\n\n'));
       controller.close();
     },
@@ -158,9 +160,16 @@ function calcStreak(dates: string[]): number {
 
 function buildMotivationPrompt(g: GamificationContext): string {
   const parts: string[] = [
-    'Escreva uma mensagem motivacional curta que o Personal poderá enviar ao aluno.',
+    'Escreva apenas a mensagem final que o aluno irá ler.',
     'A mensagem deve ser escrita em segunda pessoa (como se o Personal estivesse falando diretamente com o aluno).',
     'Baseie-se nos dados do perfil do aluno que já estão no contexto.',
+    'INSTRUÇÕES IMPORTANTES:',
+    '- Esta resposta será diretamente enviada ao aluno!',
+    '- Não escreva qualquer introdução, explicação, observação, apresentação ou contexto para o Personal',
+    '- Não comece com "aqui está a mensagem", "pronto para enviar", "segue uma mensagem", "você pode enviar", "para o Ricardo", ou qualquer frase parecida',
+    '- Não use frases como "para você enviar ao aluno", "mensagem pronta", "feito pela IA", "copie e envie" ou similares',
+    '- Seja direto e comece imediatamente com a mensagem motivacional',
+    '- A primeira palavra da resposta já deve fazer parte da mensagem ao aluno',
   ];
 
   if (g.workoutsThisMonth > 0)
@@ -181,4 +190,12 @@ function buildMotivationPrompt(g: GamificationContext): string {
   parts.push('Máximo 3 linhas. Tom: genuíno e específico — evite frases genéricas.');
 
   return parts.join('\n');
+}
+
+// Remove prefácios voltados ao personal e preserva apenas a mensagem final do aluno.
+function sanitizeDirectStudentMessage(text: string): string {
+  return text
+    .replace(/^(?:aqui\s+est[aá].*?|segue\s+(?:abaixo\s+)?(?:uma\s+)?mensagem.*?|prontinho.*?|mensagem\s+pronta.*?|você\s+pode\s+enviar.*?|para\s+o\s+[^\n:.-]+[:,-]?\s*)[\s:,-]*/i, '')
+    .replace(/^(?:oi[,!.\s]+)?personal[,!.\s]*/i, '')
+    .trim();
 }

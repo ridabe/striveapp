@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,
   Animated, ActivityIndicator, Dimensions,
 } from 'react-native';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
@@ -42,7 +42,7 @@ function fmtDuration(secs: number | null) {
 }
 
 export default function StudentHome() {
-  const { student, loading: studentLoading } = useStudent();
+  const { selectedStudent, loading: studentLoading } = useStudent();
   const { profile } = useAuthStore();
   const { primaryColor, tenantName, tenantCref } = useThemeStore();
   const { has: hasModule, isLoaded: modulesLoaded } = useModulesStore();
@@ -53,6 +53,7 @@ export default function StudentHome() {
   const [weekSessions, setWeekSessions] = useState(0);
   const [totalSessions, setTotalSessions] = useState(0);
   const [loading, setLoading]           = useState(true);
+  const [unreadMessageCount, setUnreadMessageCount] = useState(0);
 
   // ── Notification states ────────────────────────────────────────────────────
   const [anamnesePending, setAnamnesePending] = useState(false);
@@ -63,15 +64,52 @@ export default function StudentHome() {
   const fadeAnim  = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(28)).current;
 
+  // Recalcula a quantidade de mensagens não lidas para manter o sino sincronizado.
+  async function refreshUnreadMessageCount(studentId: string) {
+    const { data } = await supabase
+      .from('student_messages')
+      .select('*')
+      .eq('student_id', studentId)
+      .is('read_at', null)
+      .order('created_at', { ascending: false });
+
+    const unreadMessages = data ?? [];
+    setUnreadMessageCount(unreadMessages.length);
+
+    if (unreadMessages.length > 0) {
+      setUnseenAssignment({
+        label: unreadMessages.length === 1
+          ? `Nova mensagem: ${unreadMessages[0].title ?? 'do personal'}`
+          : `${unreadMessages.length} mensagens novas do personal`,
+        route: '/(student)/mais/mensagens',
+        icon: 'notifications-outline',
+      });
+    } else {
+      setUnseenAssignment((prev) => prev?.route === '/(student)/mais/mensagens' ? null : prev);
+    }
+  }
+
   useEffect(() => {
-    if (!student) { if (!studentLoading) setLoading(false); return; }
-    loadData(student.id, student.tenant_id);
-  }, [student?.id, studentLoading]);
+    if (!selectedStudent) { if (!studentLoading) setLoading(false); return; }
+    loadData(selectedStudent.id, selectedStudent.tenant_id);
+  }, [selectedStudent?.id, studentLoading]);
+
+  // Atualiza o sino ao retornar para a home depois de ler mensagens.
+  useFocusEffect(
+    useCallback(() => {
+      if (!selectedStudent?.id) {
+        setUnreadMessageCount(0);
+        return;
+      }
+
+      void refreshUnreadMessageCount(selectedStudent.id);
+    }, [selectedStudent?.id])
+  );
 
   // ── Real-time subscription for new assignments ────────────────────────────
   useEffect(() => {
-    if (!student?.id) return;
-    const sid = student.id;
+    if (!selectedStudent?.id) return;
+    const sid = selectedStudent.id;
 
     const channel = supabase
       .channel(`student-notify:${sid}:${Date.now()}`)
@@ -112,17 +150,37 @@ export default function StudentHome() {
           icon: 'restaurant-outline',
         });
       })
+      .on('postgres_changes', {
+        event: 'INSERT', schema: 'public',
+        table: 'student_messages',
+        filter: `student_id=eq.${sid}`,
+      }, async (payload: any) => {
+        setUnseenAssignment({
+          label: payload.new.title ?? 'Nova mensagem do personal',
+          route: '/(student)/mais/mensagens',
+          icon: 'notifications-outline',
+        });
+        await refreshUnreadMessageCount(sid);
+      })
+      .on('postgres_changes', {
+        event: 'UPDATE', schema: 'public',
+        table: 'student_messages',
+        filter: `student_id=eq.${sid}`,
+      }, async () => {
+        await refreshUnreadMessageCount(sid);
+      })
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
-  }, [student?.id]);
+  }, [selectedStudent?.id]);
 
+  // Carrega o resumo inicial da home e os indicadores visuais do aluno.
   async function loadData(studentId: string, tenantId?: string | null) {
     const today     = new Date().getDay();
     const todayStart = new Date(); todayStart.setHours(0, 0, 0, 0);
     const weekStart  = new Date(); weekStart.setDate(weekStart.getDate() - weekStart.getDay()); weekStart.setHours(0, 0, 0, 0);
 
-    const [assignRes, sessionsRes, anamneseRes, templateCountRes] = await Promise.all([
+    const [assignRes, sessionsRes, anamneseRes, templateCountRes, messagesRes] = await Promise.all([
       supabase
         .from('student_plan_assignments')
         .select('plan_id, workout_plans(id, name, goal, status, workout_routines(id, name, day_of_week, display_order))')
@@ -138,12 +196,26 @@ export default function StudentHome() {
       tenantId
         ? supabase.from('anamnese_templates').select('id', { count: 'exact', head: true }).eq('tenant_id', tenantId)
         : Promise.resolve({ count: 0 }),
+      supabase.from('student_messages').select('*').eq('student_id', studentId).is('read_at', null).order('created_at', { ascending: false }),
     ]);
 
     // Anamnese: show banner if templates exist but not yet filled/completed
     const hasTemplates = (templateCountRes.count ?? 0) > 0;
     const isCompleted  = !!anamneseRes.data?.completed_at;
     setAnamnesePending(hasTemplates && !isCompleted);
+
+    // Check for unread messages to show banner
+    const unreadMessages = messagesRes.data ?? [];
+    setUnreadMessageCount(unreadMessages.length);
+    if (unreadMessages.length > 0) {
+      setUnseenAssignment({
+        label: unreadMessages.length === 1 
+          ? `Nova mensagem: ${unreadMessages[0].title ?? 'do personal'}`
+          : `${unreadMessages.length} mensagens novas do personal`,
+        route: '/(student)/mais/mensagens',
+        icon: 'notifications-outline',
+      });
+    }
 
     const sessions: any[]    = sessionsRes.data ?? [];
     const assignments: any[] = assignRes.data ?? [];
@@ -187,7 +259,7 @@ export default function StudentHome() {
     );
   }
 
-  const displayName = student?.full_name ?? profile?.full_name ?? 'Aluno';
+  const displayName = selectedStudent?.full_name ?? profile?.full_name ?? 'Aluno';
   const nameFontSize = displayName.length > 20 ? 18 : displayName.length > 15 ? 22 : displayName.length > 10 ? 26 : 30;
   const todayLabel = DAY_LABELS[new Date().getDay()];
 
@@ -322,9 +394,25 @@ export default function StudentHome() {
               <Text style={s.greetSmall}>{greeting()},</Text>
               <Text style={[s.greetName, { fontSize: nameFontSize }]} numberOfLines={1} adjustsFontSizeToFit>{displayName} 👋</Text>
             </View>
-            <TouchableOpacity onPress={() => router.push('/(student)/perfil' as any)} activeOpacity={0.8}>
-              <TenantLogo size={44} />
-            </TouchableOpacity>
+            <View style={s.headerActions}>
+              <TouchableOpacity
+                onPress={() => router.push('/(student)/mais/mensagens' as any)}
+                activeOpacity={0.8}
+                style={[s.notificationBtn, unreadMessageCount > 0 && { borderColor: `${primaryColor}45` }]}
+              >
+                <Ionicons name="notifications-outline" size={20} color={primaryColor} />
+                {unreadMessageCount > 0 && (
+                  <View style={[s.notificationBadge, { backgroundColor: primaryColor }]}>
+                    <Text style={s.notificationBadgeText}>
+                      {unreadMessageCount > 9 ? '9+' : unreadMessageCount}
+                    </Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => router.push('/(student)/perfil' as any)} activeOpacity={0.8}>
+                <TenantLogo size={44} />
+              </TouchableOpacity>
+            </View>
           </View>
           <View style={s.tenantRow}>
             <View style={[s.tenantPill, { backgroundColor: `${primaryColor}15` }]}>
@@ -409,6 +497,7 @@ export default function StudentHome() {
             {(
               [
                 { icon: 'barbell-outline',     label: 'Treinos',    route: '/(student)/treinos',           slug: MODULE.PLANOS_TREINO },
+                { icon: 'chatbubble-outline',  label: 'Mensagens',  route: '/(student)/mais/mensagens',    slug: null },
                 { icon: 'trending-up-outline', label: 'Progresso',  route: '/(student)/progresso',         slug: MODULE.MEU_PROGRESSO },
                 { icon: 'calendar-outline',    label: 'Frequência', route: '/(student)/mais/frequencia',   slug: MODULE.FREQUENCIA },
                 { icon: 'time-outline',        label: 'Histórico',  route: '/(student)/mais/historico',    slug: MODULE.EXECUCAO_TREINO },
@@ -427,6 +516,13 @@ export default function StudentHome() {
                   onPress={() => router.push(item.route as any)}
                   activeOpacity={0.75}
                 >
+                  {item.route === '/(student)/mais/mensagens' && unreadMessageCount > 0 && (
+                    <View style={[s.shortcutBadge, { backgroundColor: primaryColor }]}>
+                      <Text style={s.shortcutBadgeText}>
+                        {unreadMessageCount > 9 ? '9+' : unreadMessageCount}
+                      </Text>
+                    </View>
+                  )}
                   <Ionicons name={item.icon as any} size={26} color={primaryColor} />
                   <Text style={[s.shortcutLabel, { color: primaryColor }]}>{item.label}</Text>
                 </TouchableOpacity>
@@ -443,8 +539,18 @@ const s = StyleSheet.create({
   safe:         { flex: 1, backgroundColor: Colors.bg },
   scroll:       { paddingHorizontal: 20, paddingBottom: 48, paddingTop: 18 },
   header:       { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
+  headerActions:{ flexDirection: 'row', alignItems: 'center', gap: 10 },
   greetSmall:   { fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textSecondary },
   greetName:    { fontFamily: FontFamily.display, fontSize: 30, color: Colors.textPrimary, marginTop: 2 },
+  notificationBtn: {
+    width: 44, height: 44, borderRadius: 22, borderWidth: 1, borderColor: Colors.border,
+    backgroundColor: Colors.surface, alignItems: 'center', justifyContent: 'center',
+  },
+  notificationBadge: {
+    position: 'absolute', top: -2, right: -2, minWidth: 18, height: 18, borderRadius: 9,
+    alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4,
+  },
+  notificationBadgeText: { fontFamily: FontFamily.bodyBold, fontSize: 10, color: '#fff' },
   avatar:       { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center' },
   avatarText:   { fontFamily: FontFamily.bodyBold, fontSize: 20 },
   tenantRow:    { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginTop: 14 },
@@ -523,6 +629,11 @@ const s = StyleSheet.create({
 
   // ── Shortcuts ─────────────────────────────────────────────────────────────
   shortcuts:    { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
-  shortcutCard: { width: (W - 50) / 2, borderRadius: 18, padding: 20, alignItems: 'center', gap: 10 },
+  shortcutCard: { width: (W - 50) / 2, borderRadius: 18, padding: 20, alignItems: 'center', gap: 10, position: 'relative' },
   shortcutLabel:{ fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm },
+  shortcutBadge: {
+    position: 'absolute', top: 10, right: 10, minWidth: 20, height: 20, borderRadius: 10,
+    alignItems: 'center', justifyContent: 'center', paddingHorizontal: 5,
+  },
+  shortcutBadgeText: { fontFamily: FontFamily.bodyBold, fontSize: 10, color: '#fff' },
 });

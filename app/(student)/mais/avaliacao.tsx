@@ -146,24 +146,24 @@ function Measure({ label, value, unit, diff }: { label: string; value: number | 
 // ── Screen ────────────────────────────────────────────────────────────────────
 
 export default function AvaliacaoScreen() {
-  const { student } = useStudent();
+  const { selectedStudent } = useStudent();
   const { primaryColor } = useThemeStore();
   const [assessments, setAssessments] = useState<Assessment[]>([]);
   const [selected, setSelected] = useState<Assessment | null>(null);
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
-    if (!student) return;
+    if (!selectedStudent) return;
     const { data } = await supabase
       .from('physical_assessments')
       .select('id, assessed_at, height, weight, bmi, body_fat, chest, waist, hip, arm, thigh, notes')
-      .eq('student_id', student.id)
+      .eq('student_id', selectedStudent.id)
       .order('assessed_at', { ascending: false });
     const list = data ?? [];
     setAssessments(list as Assessment[]);
     if (list.length > 0) setSelected(list[0] as Assessment);
     setLoading(false);
-  }, [student?.id]);
+  }, [selectedStudent?.id]);
 
   useEffect(() => { load(); }, [load]);
 
