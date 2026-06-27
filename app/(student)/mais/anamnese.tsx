@@ -33,7 +33,7 @@ function fmtDate(iso: string) {
 }
 
 export default function AnamneseScreen() {
-  const { student } = useStudent();
+  const { selectedStudent } = useStudent();
   const { primaryColor } = useThemeStore();
 
   const [templates, setTemplates] = useState<AnamneseTemplate[]>([]);
@@ -44,8 +44,8 @@ export default function AnamneseScreen() {
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    if (!student) return;
-    const tenantId = student.tenant_id;
+    if (!selectedStudent) return;
+    const tenantId = selectedStudent.tenant_id;
 
     const [templatesRes, responseRes] = await Promise.all([
       supabase
@@ -57,7 +57,7 @@ export default function AnamneseScreen() {
       supabase
         .from('anamnese_responses')
         .select('responses, updated_at')
-        .eq('student_id', student.id)
+        .eq('student_id', selectedStudent.id)
         .maybeSingle(),
     ]);
 
@@ -81,7 +81,7 @@ export default function AnamneseScreen() {
     }
 
     setLoading(false);
-  }, [student?.id]);
+  }, [selectedStudent?.id]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -90,8 +90,8 @@ export default function AnamneseScreen() {
   }
 
   async function handleSave() {
-    if (!student) return;
-    const tenantId = student.tenant_id;
+    if (!selectedStudent) return;
+    const tenantId = selectedStudent.tenant_id;
 
     const missing = templates.filter(t => t.required && !answers[t.field_key]?.trim());
     if (missing.length > 0) {
@@ -104,7 +104,7 @@ export default function AnamneseScreen() {
     const { error } = await supabase
       .from('anamnese_responses')
       .upsert(
-        { student_id: student.id, tenant_id: tenantId, responses: answers, completed_at: now },
+        { student_id: selectedStudent.id, tenant_id: tenantId, responses: answers, completed_at: now },
         { onConflict: 'student_id,tenant_id' }
       );
 

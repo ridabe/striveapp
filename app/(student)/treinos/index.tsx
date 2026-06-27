@@ -35,6 +35,7 @@ interface Plan {
   goal: string | null;
   status: string;
   routines: { id: string; name: string; day_of_week: number | null }[];
+  totalExercises?: number;
 }
 
 interface ExtraWorkout {
@@ -124,7 +125,7 @@ function WeekTracker({ executedDays, primaryColor }: { executedDays: Set<number>
 // ─── Main screen ──────────────────────────────────────────────────────────────
 
 export default function TreinosScreen() {
-  const { student } = useStudent();
+  const { selectedStudent } = useStudent();
   const { primaryColor } = useThemeStore();
 
   const [tab, setTab] = useState<'treinos' | 'extras'>('treinos');
@@ -134,7 +135,7 @@ export default function TreinosScreen() {
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
-    if (!student) return;
+    if (!selectedStudent) return;
 
     // Current week bounds (Sun → Sat)
     const now = new Date();
@@ -148,19 +149,19 @@ export default function TreinosScreen() {
     const [assignRes, extraRes, sessionsRes] = await Promise.all([
       supabase
         .from('student_plan_assignments')
-        .select('plan_id, status, workout_plans(id, name, goal, status, workout_routines(id, name, day_of_week, display_order))')
-        .eq('student_id', student.id)
+        .select('plan_id, status, workout_plans(id, name, goal, status, workout_routines(id, name, day_of_week, display_order, workout_items(id)))')
+        .eq('student_id', selectedStudent.id)
         .order('assigned_at', { ascending: false }),
       supabase
         .from('extra_workouts')
         .select('id, name, category, description')
-        .eq('student_id', student.id)
+        .eq('student_id', selectedStudent.id)
         .eq('is_template', false)
         .order('created_at', { ascending: false }),
       supabase
         .from('workout_sessions')
         .select('started_at')
-        .eq('student_id', student.id)
+        .eq('student_id', selectedStudent.id)
         .not('finished_at', 'is', null)
         .gte('started_at', weekStart.toISOString())
         .lte('started_at', weekEnd.toISOString()),
@@ -168,14 +169,19 @@ export default function TreinosScreen() {
 
     const mapped: Plan[] = (assignRes.data ?? [])
       .filter((a: any) => a.workout_plans)
-      .map((a: any) => ({
-        id: a.workout_plans.id,
-        name: a.workout_plans.name,
-        goal: a.workout_plans.goal,
-        status: a.workout_plans.status,
-        routines: (a.workout_plans.workout_routines ?? [])
-          .sort((x: any, y: any) => x.display_order - y.display_order),
-      }));
+      .map((a: any) => {
+        const routines = (a.workout_plans.workout_routines ?? [])
+          .sort((x: any, y: any) => x.display_order - y.display_order);
+        const totalExercises = routines.reduce((sum: number, r: any) => sum + (r.workout_items?.length ?? 0), 0);
+        return {
+          id: a.workout_plans.id,
+          name: a.workout_plans.name,
+          goal: a.workout_plans.goal,
+          status: a.workout_plans.status,
+          routines,
+          totalExercises,
+        };
+      });
 
     const days = new Set<number>(
       (sessionsRes.data ?? []).map((s: any) => new Date(s.started_at).getDay())
@@ -185,7 +191,7 @@ export default function TreinosScreen() {
     setExtras(extraRes.data ?? []);
     setExecutedDays(days);
     setLoading(false);
-  }, [student?.id]);
+  }, [selectedStudent?.id]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -254,7 +260,7 @@ export default function TreinosScreen() {
             return (
               <TouchableOpacity
                 style={s.planCard}
-                onPress={() => router.push(`/(student)/treinos/${item.id}/executar` as any)}
+                onPress={() => router.push(`/(student)/treinos/${item.id}` as any)}
                 activeOpacity={0.8}
               >
                 {/* Active status stripe */}
@@ -285,7 +291,7 @@ export default function TreinosScreen() {
                   <View style={s.planMeta}>
                     <Ionicons name="barbell-outline" size={12} color={Colors.textSecondary} />
                     <Text style={s.planMetaText}>
-                      {item.routines.length} {item.routines.length !== 1 ? 'Exercícios' : 'Exercício'}
+                      {item.totalExercises} {item.totalExercises !== 1 ? 'Exercícios' : 'Exercício'}
                     </Text>
                     <View style={[s.statusDot, { backgroundColor: item.status === 'active' ? '#4ADE80' : Colors.border }]} />
                     <Text style={s.planMetaText}>{item.status === 'active' ? 'Ativo' : 'Inativo'}</Text>

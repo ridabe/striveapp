@@ -69,7 +69,7 @@ function StarRow({
 }
 
 export default function FeedbackScreen() {
-  const { student } = useStudent();
+  const { selectedStudent } = useStudent();
   const { primaryColor } = useThemeStore();
 
   const [feedbacks, setFeedbacks] = useState<WorkoutFeedback[]>([]);
@@ -85,24 +85,24 @@ export default function FeedbackScreen() {
   const [ratingError, setRatingError] = useState(false);
 
   const load = useCallback(async () => {
-    if (!student) return;
+    if (!selectedStudent) return;
     const [fbRes, plansRes] = await Promise.all([
       supabase
         .from('workout_feedbacks')
         .select('id, rating, comment, created_at, workout_plan_id, workout_plans(name)')
-        .eq('student_id', student.id)
+        .eq('student_id', selectedStudent.id)
         .order('created_at', { ascending: false })
         .limit(50),
       supabase
         .from('workout_plans')
         .select('id, name')
-        .eq('student_id', student.id)
+        .eq('student_id', selectedStudent.id)
         .order('name'),
     ]);
     setFeedbacks((fbRes.data ?? []) as WorkoutFeedback[]);
     setPlans((plansRes.data ?? []) as WorkoutPlan[]);
     setLoading(false);
-  }, [student?.id]);
+  }, [selectedStudent?.id]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -116,13 +116,13 @@ export default function FeedbackScreen() {
 
   async function submitFeedback() {
     if (rating === 0) { setRatingError(true); return; }
-    if (!student) return;
+    if (!selectedStudent) return;
     setSaving(true);
     const { data: inserted, error } = await supabase
       .from('workout_feedbacks')
       .insert({
-        tenant_id: student.tenant_id,
-        student_id: student.id,
+        tenant_id: selectedStudent.tenant_id,
+        student_id: selectedStudent.id,
         workout_plan_id: selectedPlan?.id ?? null,
         rating,
         comment: comment.trim() || null,

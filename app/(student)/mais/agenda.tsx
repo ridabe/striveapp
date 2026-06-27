@@ -55,7 +55,7 @@ function displayToISO(display: string): string {
 }
 
 export default function StudentAgendaScreen() {
-  const { student }        = useStudent();
+  const { selectedStudent }        = useStudent();
   const { primaryColor }   = useThemeStore();
 
   const today = new Date();
@@ -76,28 +76,28 @@ export default function StudentAgendaScreen() {
   const [submitting, setSubmitting] = useState(false);
 
   const load = useCallback(async () => {
-    if (!student) return;
+    if (!selectedStudent) return;
     setLoading(true);
     const start = toYMD(year, month, 1);
     const end   = toYMD(year, month, new Date(year, month, 0).getDate());
     const { data } = await supabase
       .from('agenda_events')
       .select('id, type, title, event_date, start_time, location, meeting_url, amount, description, status, origin, rejection_reason, notes')
-      .eq('student_id', student.id)
+      .eq('student_id', selectedStudent.id)
       .gte('event_date', start)
       .lte('event_date', end)
       .order('start_time', { ascending: true });
     setEvents((data ?? []) as AgendaEvent[]);
     setLoading(false);
-  }, [student?.id, year, month]);
+  }, [selectedStudent?.id, year, month]);
 
   useEffect(() => { load(); }, [load]);
 
   useEffect(() => {
-    if (!student?.tenant_id) return;
-    supabase.from('tenants').select('contact_phone').eq('id', student.tenant_id).single()
+    if (!selectedStudent?.tenant_id) return;
+    supabase.from('tenants').select('contact_phone').eq('id', selectedStudent.tenant_id).single()
       .then(({ data }) => setTrainerPhone(data?.contact_phone ?? null));
-  }, [student?.tenant_id]);
+  }, [selectedStudent?.tenant_id]);
 
   function prevMonth() {
     if (month === 1) { setYear(y => y - 1); setMonth(12); } else setMonth(m => m - 1);
@@ -121,20 +121,20 @@ export default function StudentAgendaScreen() {
   }
 
   async function handleSubmitRequest() {
-    if (!student || !fDate || !fTime || !fAddress) {
+    if (!selectedStudent || !fDate || !fTime || !fAddress) {
       return Alert.alert('Atenção', 'Preencha data, horário e endereço.');
     }
     setSubmitting(true);
-    const { data: tenantRow } = await supabase.from('students').select('tenant_id').eq('id', student.id).single();
+    const { data: tenantRow } = await supabase.from('students').select('tenant_id').eq('id', selectedStudent.id).single();
     const tenantId = (tenantRow as any)?.tenant_id;
     await supabase.from('agenda_events').insert({
       tenant_id: tenantId,
       type: 'presencial',
-      title: `Solicitação: ${student.full_name}`,
+      title: `Solicitação: ${selectedStudent.full_name}`,
       event_date: displayToISO(fDate),
       start_time: fTime.length >= 4 ? fTime : null,
-      student_id: student.id,
-      student_name: student.full_name,
+      student_id: selectedStudent.id,
+      student_name: selectedStudent.full_name,
       location: fAddress,
       notes: fNotes || null,
       status: 'pending_confirmation',

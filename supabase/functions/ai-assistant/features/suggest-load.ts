@@ -85,7 +85,14 @@ Formato da resposta:
 **Exercício** — carga atual → carga sugerida
 _(motivo em uma linha)_
 
-Seja direto. Não repita os dados de histórico na resposta.
+INSTRUÇÕES IMPORTANTES:
+- Esta resposta será diretamente enviada ao aluno!
+- Não escreva qualquer introdução, explicação, observação, apresentação ou contexto para o Personal
+- Não comece com "aqui está a sugestão", "prontinho", "segue abaixo", "mensagem pronta", "você pode enviar", "para o aluno" ou frases parecidas
+- Não use frases como "para você enviar ao aluno", "copie e envie", "feito pela IA" ou similares
+- Seja direto e comece imediatamente com a sugestão de carga
+- A primeira linha já deve ser a sugestão final para o aluno
+- Seja direto. Não repita os dados de histórico na resposta.
 `.trim();
 }
 
@@ -135,6 +142,8 @@ function buildSseResponse(
       }
 
       if (fullText) {
+        fullText = sanitizeDirectStudentMessage(fullText);
+
         await supabase.from('ai_messages').insert({
           conversation_id: conversationId,
           role: 'assistant',
@@ -153,6 +162,14 @@ function buildSseResponse(
   return new Response(body, {
     headers: { ...CORS_HEADERS, 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache' },
   });
+}
+
+// Remove prefácios voltados ao personal e preserva apenas o conteúdo final enviado ao aluno.
+function sanitizeDirectStudentMessage(text: string): string {
+  return text
+    .replace(/^(?:aqui\s+est[aá].*?|segue\s+(?:abaixo\s+)?(?:uma\s+)?(?:sugest[aã]o|mensagem).*?|prontinho.*?|mensagem\s+pronta.*?|você\s+pode\s+enviar.*?|para\s+o\s+aluno[:,-]?\s*)[\s:,-]*/i, '')
+    .replace(/^(?:oi[,!.\s]+)?personal[,!.\s]*/i, '')
+    .trim();
 }
 
 async function streamText(

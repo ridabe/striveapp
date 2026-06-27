@@ -69,7 +69,7 @@ function formatDate(iso: string): string {
 }
 
 export default function ArquivosStudentScreen() {
-  const { student } = useStudent();
+  const { selectedStudent } = useStudent();
   const { primaryColor } = useThemeStore();
 
   const [files, setFiles] = useState<SharedFile[]>([]);
@@ -83,16 +83,16 @@ export default function ArquivosStudentScreen() {
   const [mediaVisible, setMediaVisible] = useState(false);
 
   const load = useCallback(async () => {
-    if (!student) return;
+    if (!selectedStudent) return;
     const { data } = await supabase
       .from('shared_files')
       .select('id, title, description, file_url, file_type, file_name, file_size, created_at')
-      .eq('tenant_id', student.tenant_id)
-      .or(`student_id.is.null,student_id.eq.${student.id}`)
+      .eq('tenant_id', selectedStudent.tenant_id)
+      .or(`student_id.is.null,student_id.eq.${selectedStudent.id}`)
       .order('created_at', { ascending: false });
     setFiles((data ?? []) as SharedFile[]);
     setLoading(false);
-  }, [student?.id]);
+  }, [selectedStudent?.id]);
 
   useEffect(() => { load(); }, [load]);
 

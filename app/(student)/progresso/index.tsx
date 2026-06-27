@@ -189,7 +189,7 @@ function Counter({ value, suffix = '' }: { value: number; suffix?: string }) {
 
 // ─── Main screen ──────────────────────────────────────────────────────────────
 export default function ProgressoScreen() {
-  const { student } = useStudent();
+  const { selectedStudent } = useStudent();
   const { primaryColor } = useThemeStore();
   const lightText = ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(primaryColor);
 
@@ -216,7 +216,7 @@ export default function ProgressoScreen() {
   const [viewerUri, setViewerUri]       = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    if (!student) return;
+    if (!selectedStudent) return;
     const now     = new Date();
     const d30ago  = new Date(now); d30ago.setDate(d30ago.getDate() - 30);
     const d90ago  = new Date(now); d90ago.setDate(d90ago.getDate() - 90);
@@ -225,7 +225,7 @@ export default function ProgressoScreen() {
     const { data: progressData } = await supabase
       .from('student_progress')
       .select('id, recorded_at, weight, notes, photo_urls')
-      .eq('student_id', student.id)
+      .eq('student_id', selectedStudent.id)
       .order('recorded_at', { ascending: true })
       .limit(30);
     setEntries((progressData ?? []).map((e: any) => ({ ...e, photo_urls: e.photo_urls ?? [] })));
@@ -234,7 +234,7 @@ export default function ProgressoScreen() {
     const { data: sessions } = await supabase
       .from('workout_sessions')
       .select('id, started_at')
-      .eq('student_id', student.id)
+      .eq('student_id', selectedStudent.id)
       .not('finished_at', 'is', null)
       .gte('started_at', d30ago.toISOString())
       .order('started_at', { ascending: true });
@@ -307,7 +307,7 @@ export default function ProgressoScreen() {
     }
 
     setLoading(false);
-  }, [student?.id]);
+  }, [selectedStudent?.id]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -334,7 +334,7 @@ export default function ProgressoScreen() {
   }
 
   async function handleAdd() {
-    if (!student) return;
+    if (!selectedStudent) return;
     if (!fWeight.trim() && pickedPhotos.length === 0) {
       Alert.alert('Informe o peso ou adicione uma foto.'); return;
     }
@@ -343,10 +343,10 @@ export default function ProgressoScreen() {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) throw new Error('Sessão expirada.');
       const photoUrls = pickedPhotos.length > 0
-        ? await uploadPhotos(pickedPhotos, student.tenant_id, student.id, session.access_token)
+        ? await uploadPhotos(pickedPhotos, selectedStudent.tenant_id, selectedStudent.id, session.access_token)
         : [];
       const { error } = await supabase.from('student_progress').insert({
-        student_id: student.id, tenant_id: student.tenant_id,
+        student_id: selectedStudent.id, tenant_id: selectedStudent.tenant_id,
         recorded_at: new Date().toISOString(),
         weight: fWeight.trim() ? parseFloat(fWeight.replace(',', '.')) : null,
         notes: fNotes.trim() || null,
@@ -370,14 +370,14 @@ export default function ProgressoScreen() {
     const res = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'], allowsMultipleSelection: true, quality: 0.75,
     });
-    if (res.canceled || !editEntry || !student) return;
+    if (res.canceled || !editEntry || !selectedStudent) return;
     setEditSaving(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) throw new Error('Sessão expirada.');
       const newUrls = await uploadPhotos(
         res.assets.slice(0, 5 - editPhotos.length),
-        student.tenant_id, student.id, session.access_token,
+        selectedStudent.tenant_id, selectedStudent.id, session.access_token,
       );
       setEditPhotos(prev => [...prev, ...newUrls]);
     } catch (e: any) { Alert.alert('Erro', e.message); }

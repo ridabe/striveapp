@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,
-  ActivityIndicator, Share, Image,
+  ActivityIndicator, Share, Image, Linking, Alert,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -18,6 +18,7 @@ interface StudentMini {
   full_name: string;
   goal: string | null;
   status: string;
+  phone: string | null;
 }
 
 const FEATURE_LABELS: Record<MaxFeature, string> = {
@@ -57,7 +58,7 @@ const PLAN_STEPS = [
 
 export default function AssistenteIAScreen() {
   const { studentId } = useLocalSearchParams<{ studentId: string }>();
-  const [student, setStudent]           = useState<StudentMini | null>(null);
+  const [student, setStudent]           = useState<StudentMini & { tenant_id: string } | null>(null);
   const [loadingStudent, setLoadingStudent] = useState(true);
   const [activeFeature, setActiveFeature]   = useState<MaxFeature | null>(null);
   const [guideOpen, setGuideOpen]           = useState(false);
@@ -66,10 +67,15 @@ export default function AssistenteIAScreen() {
   const { text, isStreaming, error, conversationId, planId, trigger, reset } = useMaxStream();
 
   useEffect(() => {
+    // Reset when switching to a different student
+    reset();
+  }, [studentId, reset]);
+
+  useEffect(() => {
     if (!studentId) return;
     supabase
       .from('students')
-      .select('full_name, goal, status')
+      .select('full_name, goal, status, phone, tenant_id')
       .eq('id', studentId)
       .single()
       .then(({ data }) => {
@@ -104,9 +110,46 @@ export default function AssistenteIAScreen() {
     await trigger({ feature, studentId });
   }
 
+  // Remove prefácios da IA para que o aluno receba apenas a mensagem final.
+  function sanitizeStudentFacingText(rawText: string) {
+    return rawText
+      .replace(/\nplan_id:[a-f0-9-]{36}/g, '')
+      .replace(/^(?:aqui\s+est[aá].*?|segue\s+(?:abaixo\s+)?(?:uma\s+)?(?:mensagem|sugest[aã]o).*?|prontinho.*?|mensagem\s+pronta.*?|você\s+pode\s+enviar.*?|para\s+o\s+[^\n:.-]+[:,-]?\s*)[\s:,-]*/i, '')
+      .replace(/^(?:oi[,!.\s]+)?personal[,!.\s]*/i, '')
+      .trim();
+  }
+
   function handleShareText() {
-    const clean = text.replace(/\nplan_id:[a-f0-9-]{36}/g, '').trim();
+    const clean = sanitizeStudentFacingText(text);
     Share.share({ message: clean });
+  }
+
+  async function handleSendMessage() {
+    const clean = sanitizeStudentFacingText(text);
+    if (!studentId || !student?.tenant_id) return;
+
+    try {
+      setLoadingStudent(true);
+
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+
+      await supabase.from('student_messages').insert({
+        tenant_id: student.tenant_id,
+        student_id: studentId,
+        trainer_id: user?.id,
+        message: clean,
+        message_type: activeFeature === 'suggest_load' ? 'load_suggestion' : activeFeature === 'motivation' ? 'motivation' : 'general',
+        title: activeFeature === 'suggest_load' ? 'Sugestão de carga' : activeFeature === 'motivation' ? 'Mensagem motivacional' : 'Mensagem do personal',
+      });
+
+      Alert.alert('Sucesso', 'Mensagem enviada ao aluno!');
+    } catch (e) {
+      console.error('Error sending message:', e);
+      Alert.alert('Erro', 'Não foi possível enviar a mensagem.');
+    } finally {
+      setLoadingStudent(false);
+    }
   }
 
   const avatarVariant = isStreaming ? 'thinking' : text && !error ? 'happy' : 'default';
@@ -279,16 +322,22 @@ export default function AssistenteIAScreen() {
                     <Text style={[s.resultBtnText, { color: '#fff' }]}>Ver plano criado</Text>
                   </TouchableOpacity>
                 )}
-                {!planId && (
-                  <TouchableOpacity
-                    style={s.resultBtn}
-                    onPress={handleShareText}
-                    activeOpacity={0.8}
-                  >
-                    <Ionicons name="share-social-outline" size={16} color={Colors.textPrimary} />
-                    <Text style={s.resultBtnText}>Compartilhar</Text>
-                  </TouchableOpacity>
-                )}
+                <TouchableOpacity
+                  style={[s.resultBtn, { backgroundColor: `${MAX_COLOR}18` }]}
+                  onPress={handleSendMessage}
+                  activeOpacity={0.8}
+                >
+                  <Ionicons name="send-outline" size={16} color={MAX_COLOR} />
+                  <Text style={[s.resultBtnText, { color: MAX_COLOR }]}>Enviar para aluno</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={s.resultBtn}
+                  onPress={handleShareText}
+                  activeOpacity={0.8}
+                >
+                  <Ionicons name="share-social-outline" size={16} color={Colors.textPrimary} />
+                  <Text style={s.resultBtnText}>Compartilhar</Text>
+                </TouchableOpacity>
                 <TouchableOpacity
                   style={[s.resultBtn, s.resultBtnSecondary]}
                   onPress={reset}

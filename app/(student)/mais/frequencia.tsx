@@ -25,7 +25,7 @@ function getFirstDayOfWeek(year: number, month: number) {
 }
 
 export default function FrequenciaScreen() {
-  const { student } = useStudent();
+  const { selectedStudent } = useStudent();
   const { primaryColor } = useThemeStore();
 
   const [attendedDays, setAttendedDays] = useState<Set<string>>(new Set());
@@ -38,11 +38,11 @@ export default function FrequenciaScreen() {
   const [viewMonth, setViewMonth] = useState(now.getMonth());
 
   const load = useCallback(async () => {
-    if (!student) return;
+    if (!selectedStudent) return;
     const { data } = await supabase
       .from('workout_sessions')
       .select('started_at')
-      .eq('student_id', student.id)
+      .eq('student_id', selectedStudent.id)
       .not('finished_at', 'is', null);
 
     const all = data ?? [];
@@ -63,7 +63,7 @@ export default function FrequenciaScreen() {
     setTotalMonth(monthCount);
     setTotalAll(all.length);
     setLoading(false);
-  }, [student?.id, viewYear, viewMonth]);
+  }, [selectedStudent?.id, viewYear, viewMonth]);
 
   useEffect(() => { load(); }, [load]);
 

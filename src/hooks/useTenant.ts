@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useThemeStore } from '@/stores/themeStore';
-import { useAuthStore } from '@/stores/authStore';
+import { useStudent } from './useStudent';
 
 export function useTenant() {
-  const { profile } = useAuthStore();
+  const { selectedStudent } = useStudent();
   const { primaryColor, tenantName, appName, tenantLogoUrl, setTenant, setPrimaryColor } = useThemeStore();
 
-  const tenantId = profile?.tenant_id;
+  const tenantId = selectedStudent?.tenant_id;
 
   async function loadTenant(tid: string) {
     const { data: tenant } = await supabase

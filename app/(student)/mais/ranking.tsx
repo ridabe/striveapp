@@ -81,7 +81,7 @@ function HowItWorksCard({ color }: { color: string }) {
 }
 
 export default function StudentRankingScreen() {
-  const { student }      = useStudent();
+  const { selectedStudent }      = useStudent();
   const { primaryColor } = useThemeStore();
 
   const now   = new Date();
@@ -123,10 +123,10 @@ export default function StudentRankingScreen() {
     }));
     setRanking(entries);
 
-    if (student) {
+    if (selectedStudent) {
       const { data: mp } = await supabase.from('monthly_points')
         .select('total_points, workouts_completed, exercises_completed, active_minutes, weekly_bonuses')
-        .eq('student_id', student.id).eq('month', month).eq('year', year).maybeSingle();
+        .eq('student_id', selectedStudent.id).eq('month', month).eq('year', year).maybeSingle();
       setMyPoints((mp as MyPoints) ?? null);
 
       // Posição global — conta todos acima independente do studio
@@ -138,7 +138,7 @@ export default function StudentRankingScreen() {
 
       const { data: bdgs } = await supabase.from('student_badges')
         .select('badge_type, earned_at')
-        .eq('student_id', student.id).eq('month', month).eq('year', year);
+        .eq('student_id', selectedStudent.id).eq('month', month).eq('year', year);
       setBadges((bdgs ?? []) as Badge[]);
     }
 
@@ -149,7 +149,7 @@ export default function StudentRankingScreen() {
     setSnapshots((hist ?? []) as Snapshot[]);
 
     setLoading(false);
-  }, [student?.id, month, year]);
+  }, [selectedStudent?.id, month, year]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -318,7 +318,7 @@ export default function StudentRankingScreen() {
             </View>
           }
           renderItem={({ item }) => {
-            const isMe  = item.student_id === student?.id;
+            const isMe  = item.student_id === selectedStudent?.id;
             const medal = item.rank_position <= 3 ? MEDAL[item.rank_position - 1] : null;
             return (
               <View style={[s.rankRow, isMe && { backgroundColor: `${primaryColor}12`, borderColor: `${primaryColor}50` }]}>

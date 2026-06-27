@@ -30,21 +30,21 @@ function fmtCurrency(value: number) {
 }
 
 export default function FinanceiroScreen() {
-  const { student } = useStudent();
+  const { selectedStudent } = useStudent();
   const { primaryColor } = useThemeStore();
   const [plans, setPlans] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
-    if (!student) return;
+    if (!selectedStudent) return;
     const { data } = await supabase
       .from('financial_plans')
       .select('id, plan_name, amount, due_date, status, paid_at, notes')
-      .eq('student_id', student.id)
+      .eq('student_id', selectedStudent.id)
       .order('due_date', { ascending: false });
     setPlans(data ?? []);
     setLoading(false);
-  }, [student?.id]);
+  }, [selectedStudent?.id]);
 
   useEffect(() => { load(); }, [load]);
 
