@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import {
   View, Text, FlatList, TouchableOpacity, StyleSheet,
-  ActivityIndicator, Dimensions,
+  Dimensions,
 } from 'react-native';
+import { StriveLoader } from '@/components/StriveLoader';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -79,31 +80,27 @@ function WeekTracker({ executedDays, primaryColor }: { executedDays: Set<number>
           const isToday = idx === today;
           return (
             <View key={idx} style={wt.dayCol}>
+              <Text style={[
+                wt.dayLetter,
+                done && { color: primaryColor, fontFamily: FontFamily.bodyBold },
+                isToday && !done && { color: primaryColor, fontFamily: FontFamily.bodyBold },
+                !done && !isToday && { color: Colors.textSecondary },
+              ]}>
+                {DAY_SHORT[idx]}
+              </Text>
               <View
                 style={[
-                  wt.dot,
+                  wt.dayBar,
                   done && { backgroundColor: primaryColor },
-                  isToday && !done && { borderColor: primaryColor, borderWidth: 1.5 },
-                  isToday && done && wt.dotTodayDone,
+                  isToday && !done && { backgroundColor: 'transparent', borderWidth: 1.5, borderColor: primaryColor },
+                  !done && !isToday && { backgroundColor: Colors.border },
                 ]}
-              >
-                <Text style={[
-                  wt.dotText,
-                  done && { color: '#fff' },
-                  isToday && !done && { color: primaryColor },
-                  !done && !isToday && { color: Colors.textSecondary },
-                ]}>
-                  {DAY_SHORT[idx]}
-                </Text>
-                {done && (
-                  <View style={[wt.checkMark, { backgroundColor: primaryColor }]}>
-                    <Ionicons name="checkmark" size={8} color="#fff" />
-                  </View>
-                )}
-              </View>
-              <Text style={[wt.dayLabel, isToday && { color: primaryColor, fontFamily: FontFamily.bodyBold }]}>
-                {label.substring(0, 3)}
-              </Text>
+              />
+              {done && (
+                <View style={[wt.checkDot, { backgroundColor: primaryColor }]}>
+                  <Ionicons name="checkmark" size={7} color="#fff" />
+                </View>
+              )}
             </View>
           );
         })}
@@ -210,7 +207,9 @@ export default function TreinosScreen() {
         <View style={s.headerRow}>
           <Text style={s.title}>Treinos</Text>
         </View>
-        <ActivityIndicator color={primaryColor} style={{ marginTop: 60 }} />
+        <View style={{ marginTop: 60, alignItems: 'center' }}>
+          <StriveLoader color={primaryColor} size={32} />
+        </View>
       </SafeAreaView>
     );
   }
@@ -346,33 +345,26 @@ export default function TreinosScreen() {
 
 // ─── Week tracker styles ──────────────────────────────────────────────────────
 
-const DOT_SIZE = Math.floor((W - 32 - 24 - 12 * 6) / 7); // fit 7 dots with gaps
+const BAR_W = Math.floor((W - 32 - 24 - 8 * 6) / 7); // column width for 7 bars with gaps
 
 const wt = StyleSheet.create({
   card: { backgroundColor: Colors.surface, borderRadius: 20, borderWidth: 1, padding: 18, marginBottom: 14, gap: 14 },
   cardTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
   cardTitle: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.xs, color: Colors.textSecondary, letterSpacing: 1 },
-  rangeText: { fontFamily: FontFamily.body, fontSize: 11, color: Colors.textSecondary, marginTop: 2 },
+  rangeText: { fontFamily: FontFamily.body, fontSize: FontSize.xs, color: Colors.textSecondary, marginTop: 2 },
   countBadge: { alignItems: 'center', paddingHorizontal: 14, paddingVertical: 6, borderRadius: 20 },
   countNum: { fontFamily: FontFamily.bodyBold, fontSize: 22, lineHeight: 26 },
-  countLabel: { fontFamily: FontFamily.body, fontSize: 10, letterSpacing: 0.5 },
+  countLabel: { fontFamily: FontFamily.body, fontSize: FontSize.xs, letterSpacing: 0.5 },
 
   dotsRow: { flexDirection: 'row', justifyContent: 'space-between' },
-  dayCol: { alignItems: 'center', gap: 6 },
-  dot: {
-    width: DOT_SIZE,
-    height: DOT_SIZE,
-    borderRadius: DOT_SIZE / 2,
-    backgroundColor: Colors.bg,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: Colors.border,
+  dayCol: { alignItems: 'center', gap: 6, minHeight: 44, justifyContent: 'center' },
+  dayLetter: { fontFamily: FontFamily.body, fontSize: FontSize.xs },
+  dayBar: {
+    width: BAR_W,
+    height: 7,
+    borderRadius: 4,
   },
-  dotTodayDone: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.2, shadowRadius: 4, elevation: 4 },
-  dotText: { fontFamily: FontFamily.bodyBold, fontSize: 11 },
-  checkMark: { position: 'absolute', bottom: -2, right: -2, width: 14, height: 14, borderRadius: 7, alignItems: 'center', justifyContent: 'center', borderWidth: 1.5, borderColor: Colors.surface },
-  dayLabel: { fontFamily: FontFamily.body, fontSize: 10, color: Colors.textSecondary },
+  checkDot: { width: 14, height: 14, borderRadius: 7, alignItems: 'center', justifyContent: 'center', borderWidth: 1.5, borderColor: Colors.surface },
   motivational: { fontFamily: FontFamily.body, fontSize: FontSize.xs, color: Colors.textSecondary, textAlign: 'center', marginTop: 2 },
 });
 
@@ -393,11 +385,11 @@ const s = StyleSheet.create({
   planTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
   planName: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.md, color: Colors.textPrimary, flex: 1 },
   pill: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 20, flexShrink: 0 },
-  pillText: { fontFamily: FontFamily.bodyMedium, fontSize: 11 },
+  pillText: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.xs },
   scheduledRow: { flexDirection: 'row', alignItems: 'center', gap: 5 },
-  scheduledText: { fontFamily: FontFamily.body, fontSize: 12, color: Colors.textSecondary },
+  scheduledText: { fontFamily: FontFamily.body, fontSize: FontSize.xs, color: Colors.textSecondary },
   planMeta: { flexDirection: 'row', alignItems: 'center', gap: 5 },
-  planMetaText: { fontFamily: FontFamily.body, fontSize: 12, color: Colors.textSecondary },
+  planMetaText: { fontFamily: FontFamily.body, fontSize: FontSize.xs, color: Colors.textSecondary },
   statusDot: { width: 6, height: 6, borderRadius: 3, marginLeft: 4 },
 
   extraCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.surface, borderRadius: 16, borderWidth: 1, borderColor: Colors.border, padding: 14, gap: 12 },

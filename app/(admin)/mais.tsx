@@ -50,7 +50,7 @@ export default function MaisScreen() {
 
   const ALL_GROUPS: ModuleGroup[] = [
     {
-      title: 'ACOMPANHAMENTO',
+      title: 'GESTÃO',
       items: [
         {
           slug: MODULE.GAMIFICACAO,
@@ -58,13 +58,6 @@ export default function MaisScreen() {
           label: 'Ranking',
           description: 'Competição mensal de treinos',
           route: '/(admin)/ranking',
-        },
-        {
-          slug: MODULE.PLANOS_ALIMENTARES,
-          icon: 'restaurant-outline',
-          label: 'Planos Alimentares',
-          description: 'Cardápios e macronutrientes',
-          route: '/(admin)/planos-alimentares/',
         },
         {
           slug: MODULE.FREQUENCIA,
@@ -76,7 +69,7 @@ export default function MaisScreen() {
         {
           slug: MODULE.AVALIACOES,
           icon: 'stats-chart-outline',
-          label: 'Avaliações Físicas',
+          label: 'Avaliações',
           description: 'Medidas e composição corporal',
           route: '/(admin)/avaliacao',
         },
@@ -101,27 +94,28 @@ export default function MaisScreen() {
           description: 'Avaliações dos alunos sobre os treinos',
           route: '/(admin)/feedbacks',
         },
-      ],
-    },
-    {
-      title: 'INTELIGÊNCIA ARTIFICIAL',
-      items: [
         {
-          slug: 'assistente-ia',
-          icon: 'flash-outline',
-          label: 'Max Strive IA',
-          description: 'Consultoria IA — crie treinos e analise alunos',
-          route: '/(admin)/alunos/',
+          slug: MODULE.FATURAS,
+          icon: 'card-outline',
+          label: 'Faturas',
+          description: 'Planos e pagamentos dos alunos',
         },
       ],
     },
     {
-      title: 'COMUNICAÇÃO',
+      title: 'CONTEÚDO',
       items: [
         {
+          slug: MODULE.PLANOS_ALIMENTARES,
+          icon: 'restaurant-outline',
+          label: 'Alimentação',
+          description: 'Cardápios e macronutrientes',
+          route: '/(admin)/planos-alimentares/',
+        },
+        {
           slug: MODULE.MINHA_AGENDA,
-          icon: 'calendar-outline',
-          label: 'Minha Agenda',
+          icon: 'calendar-number-outline',
+          label: 'Agenda',
           description: 'Atendimentos e compromissos',
           route: '/(admin)/agenda',
         },
@@ -141,13 +135,14 @@ export default function MaisScreen() {
       ],
     },
     {
-      title: 'FINANCEIRO',
+      title: 'IA',
       items: [
         {
-          slug: MODULE.FATURAS,
-          icon: 'card-outline',
-          label: 'Faturas e Cobranças',
-          description: 'Planos e pagamentos dos alunos',
+          slug: 'assistente-ia',
+          icon: 'flash-outline',
+          label: 'Max Strive IA',
+          description: 'Consultoria IA — crie treinos e analise alunos',
+          route: '/(admin)/alunos/',
         },
       ],
     },
@@ -211,19 +206,16 @@ export default function MaisScreen() {
         {visibleGroups.map(group => (
           <View key={group.title} style={styles.section}>
             <Text style={styles.sectionTitle}>{group.title}</Text>
-            <View style={styles.sectionCard}>
-              {group.items.map((item, idx) => (
+            <View style={styles.grid}>
+              {group.items.map(item => (
                 <TouchableOpacity
                   key={item.slug}
-                  style={[
-                    styles.menuItem,
-                    idx < group.items.length - 1 && styles.menuItemBorder,
-                  ]}
+                  style={styles.gridCell}
                   onPress={() => handleItemPress(item)}
                   activeOpacity={0.7}
                 >
                   <View style={[
-                    styles.iconBox,
+                    styles.gridIcon,
                     {
                       backgroundColor: item.danger
                         ? 'rgba(248,113,113,0.12)'
@@ -232,21 +224,16 @@ export default function MaisScreen() {
                   ]}>
                     <Ionicons
                       name={item.icon}
-                      size={20}
+                      size={24}
                       color={item.danger ? Colors.error : primaryColor}
                     />
                   </View>
-                  <View style={styles.menuText}>
-                    <Text style={[styles.menuLabel, item.danger && { color: Colors.error }]}>
-                      {item.label}
-                    </Text>
-                    {!!item.description && (
-                      <Text style={styles.menuDesc} numberOfLines={1}>{item.description}</Text>
-                    )}
-                  </View>
-                  {!item.danger && (
-                    <Ionicons name="chevron-forward" size={16} color={Colors.textSecondary} />
-                  )}
+                  <Text
+                    style={[styles.gridLabel, item.danger && { color: Colors.error }]}
+                    numberOfLines={2}
+                  >
+                    {item.label}
+                  </Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -304,41 +291,34 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     marginBottom: 8,
   },
-  sectionCard: {
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     backgroundColor: Colors.surface,
-    borderRadius: 14,
+    borderRadius: 16,
     borderWidth: 1,
     borderColor: Colors.border,
     overflow: 'hidden',
   },
-  menuItem: {
-    flexDirection: 'row',
+  gridCell: {
+    width: '33.33%',
     alignItems: 'center',
-    gap: 12,
-    padding: 14,
+    gap: 8,
+    paddingVertical: 18,
+    paddingHorizontal: 6,
   },
-  menuItemBorder: {
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
-  },
-  iconBox: {
-    width: 38,
-    height: 38,
-    borderRadius: 10,
+  gridIcon: {
+    width: 52,
+    height: 52,
+    borderRadius: 15,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  menuText: { flex: 1 },
-  menuLabel: {
+  gridLabel: {
     fontFamily: FontFamily.bodyMedium,
-    fontSize: FontSize.sm,
-    color: Colors.textPrimary,
-  },
-  menuDesc: {
-    fontFamily: FontFamily.body,
     fontSize: FontSize.xs,
-    color: Colors.textSecondary,
-    marginTop: 2,
+    color: Colors.textPrimary,
+    textAlign: 'center',
   },
   version: {
     fontFamily: FontFamily.body,

@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity,
-  StyleSheet, ActivityIndicator, RefreshControl,
+  StyleSheet, RefreshControl,
 } from 'react-native';
+import * as Haptics from 'expo-haptics';
+import { StriveLoader } from '@/components/StriveLoader';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -98,7 +100,9 @@ export default function AdminDashboard() {
         </View>
 
         {loading ? (
-          <ActivityIndicator color={primaryColor} style={{ marginTop: 40 }} />
+          <View style={{ marginTop: 40, alignItems: 'center' }}>
+            <StriveLoader color={primaryColor} size={32} />
+          </View>
         ) : (
           <>
             {/* ── Hero card — alunos ativos ── */}
@@ -159,15 +163,22 @@ export default function AdminDashboard() {
 
             {/* ── Quick actions ── */}
             <Text style={s.sectionTitle}>Ações rápidas</Text>
+
+            {/* Primary CTA — full width */}
+            <TouchableOpacity
+              style={[s.primaryCTA, { backgroundColor: primaryColor }]}
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                router.push('/(admin)/alunos');
+              }}
+              activeOpacity={0.85}
+            >
+              <Ionicons name="person-add-outline" size={22} color={lightText ? '#000' : '#fff'} />
+              <Text style={[s.primaryCTAText, { color: lightText ? '#000' : '#fff' }]}>Novo Aluno</Text>
+            </TouchableOpacity>
+
+            {/* Secondary 2-column grid */}
             <View style={s.actionsRow}>
-              <ActionPill
-                icon="person-add-outline"
-                label="Novo aluno"
-                onPress={() => router.push('/(admin)/alunos')}
-                primary
-                primaryColor={primaryColor}
-                lightText={lightText}
-              />
               {has(MODULE.PLANOS_TREINO) && (
                 <ActionPill
                   icon="add-circle-outline"
@@ -263,21 +274,17 @@ function MiniStat({ label, value, icon, color, onPress }: {
 }
 
 // ─── Action pill ──────────────────────────────────────────────────────────────
-function ActionPill({ icon, label, onPress, primary, primaryColor, lightText }: {
+function ActionPill({ icon, label, onPress }: {
   icon: any; label: string; onPress: () => void;
-  primary?: boolean; primaryColor?: string; lightText?: boolean;
 }) {
-  const bg = primary ? primaryColor : Colors.surface;
-  const iconColor = primary ? (lightText ? '#000' : '#fff') : Colors.textPrimary;
-  const labelColor = primary ? (lightText ? '#000' : '#fff') : Colors.textPrimary;
   return (
     <TouchableOpacity
-      style={[s.actionPill, { backgroundColor: bg }, !primary && s.actionPillBorder]}
+      style={[s.actionPill, s.actionPillBorder]}
       onPress={onPress}
       activeOpacity={0.78}
     >
-      <Ionicons name={icon} size={19} color={iconColor} />
-      <Text style={[s.actionLabel, { color: labelColor }]}>{label}</Text>
+      <Ionicons name={icon} size={19} color={Colors.textPrimary} />
+      <Text style={[s.actionLabel, { color: Colors.textPrimary }]}>{label}</Text>
     </TouchableOpacity>
   );
 }
@@ -316,7 +323,7 @@ const s = StyleSheet.create({
   heroLeft: { flex: 1 },
   heroLabel: {
     fontFamily: FontFamily.bodyBold,
-    fontSize: 10,
+    fontSize: FontSize.xs,
     letterSpacing: 1.2,
     marginBottom: 4,
   },
@@ -343,7 +350,7 @@ const s = StyleSheet.create({
   },
   progressLabel: {
     fontFamily: FontFamily.body,
-    fontSize: 11,
+    fontSize: FontSize.xs,
   },
   heroIconWrap: {
     width: 56,
@@ -384,10 +391,10 @@ const s = StyleSheet.create({
   },
   miniLabel: {
     fontFamily: FontFamily.body,
-    fontSize: 9,
+    fontSize: FontSize.xs,
     color: Colors.textSecondary,
     textAlign: 'center',
-    lineHeight: 12,
+    lineHeight: 15,
   },
 
   // Section titles
@@ -410,6 +417,19 @@ const s = StyleSheet.create({
   },
 
   // Quick actions
+  primaryCTA: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    borderRadius: 16,
+    paddingVertical: 16,
+    marginBottom: 10,
+  },
+  primaryCTAText: {
+    fontFamily: FontFamily.bodyBold,
+    fontSize: FontSize.md,
+  },
   actionsRow: {
     flexDirection: 'row',
     gap: 8,
@@ -418,12 +438,13 @@ const s = StyleSheet.create({
   },
   actionPill: {
     flex: 1,
-    minWidth: '45%',
+    minWidth: '47%',
     borderRadius: 14,
-    paddingVertical: 12,
+    paddingVertical: 14,
     paddingHorizontal: 10,
     alignItems: 'center',
     gap: 6,
+    backgroundColor: Colors.surface,
   },
   actionPillBorder: {
     borderWidth: 1,
@@ -431,8 +452,9 @@ const s = StyleSheet.create({
   },
   actionLabel: {
     fontFamily: FontFamily.bodyMedium,
-    fontSize: 11,
+    fontSize: FontSize.xs,
     textAlign: 'center',
+    color: Colors.textPrimary,
   },
 
   // Student list
@@ -472,7 +494,7 @@ const s = StyleSheet.create({
   },
   studentStatus: {
     fontFamily: FontFamily.body,
-    fontSize: 11,
+    fontSize: FontSize.xs,
     color: Colors.textSecondary,
     marginTop: 1,
   },

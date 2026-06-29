@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,
-  Animated, ActivityIndicator, Dimensions,
+  Animated, Dimensions,
 } from 'react-native';
+import * as Haptics from 'expo-haptics';
+import { StriveLoader } from '@/components/StriveLoader';
 import { router, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -27,6 +29,16 @@ const INTENSITY_LABEL: Record<string, { label: string; emoji: string }> = {
   intenso:       { label: 'Intenso',    emoji: '🔥' },
   muito_intenso: { label: 'Pesado',     emoji: '😤' },
 };
+
+const REST_MOTIVATIONS = [
+  { message: 'Beba bastante água hoje! 💧', detail: 'A hidratação acelera a recuperação muscular.' },
+  { message: 'Priorize o sono esta noite 😴', detail: 'É descansando que os músculos crescem.' },
+  { message: 'Você merece esse descanso! 🌟', detail: 'Consistência é mais importante que intensidade.' },
+  { message: 'Que tal alongar 10 minutos? 🧘', detail: 'Mobilidade também é parte do treinamento.' },
+  { message: 'Movimento leve faz bem! 🚶', detail: 'Uma caminhada curta ajuda na recuperação ativa.' },
+  { message: 'Cuide da alimentação hoje 🥗', detail: 'Nutrição é o combustível da sua evolução.' },
+  { message: 'Aproveite o descanso! 💤', detail: 'Músculos se fortalecem no repouso, não no treino.' },
+];
 
 function greeting() {
   const h = new Date().getHours();
@@ -254,7 +266,9 @@ export default function StudentHome() {
   if (studentLoading || loading) {
     return (
       <SafeAreaView style={s.safe} edges={['top']}>
-        <ActivityIndicator color={primaryColor} style={{ marginTop: 80 }} />
+        <View style={{ marginTop: 80, alignItems: 'center' }}>
+          <StriveLoader color={primaryColor} size={32} />
+        </View>
       </SafeAreaView>
     );
   }
@@ -355,7 +369,10 @@ export default function StudentHome() {
           </View>
           <TouchableOpacity
             style={[s.startBtn, { backgroundColor: primaryColor }]}
-            onPress={() => router.push(`/(student)/treinos/${todayPlan.plan.id}/executar` as any)}
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+              router.push(`/(student)/treinos/${todayPlan.plan.id}/executar` as any);
+            }}
             activeOpacity={0.85}
           >
             <Ionicons name="play" size={16} color="#fff" />
@@ -366,11 +383,16 @@ export default function StudentHome() {
     }
 
     // ─ CASE C: Rest day ───────────────────────────────────────────────────
+    const motivation = REST_MOTIVATIONS[new Date().getDay() % REST_MOTIVATIONS.length];
     return (
       <View style={s.restCard}>
         <Ionicons name="moon-outline" size={34} color={Colors.textSecondary} />
         <Text style={s.restTitle}>Dia de descanso</Text>
         <Text style={s.restDesc}>Nenhum treino programado para hoje.</Text>
+        <View style={[s.restTipBox, { borderColor: `${primaryColor}25` }]}>
+          <Text style={[s.restTipMessage, { color: primaryColor }]}>{motivation.message}</Text>
+          <Text style={s.restTipDetail}>{motivation.detail}</Text>
+        </View>
         <TouchableOpacity
           onPress={() => router.push('/(student)/treinos' as any)}
           activeOpacity={0.75}
@@ -555,9 +577,9 @@ const s = StyleSheet.create({
   avatarText:   { fontFamily: FontFamily.bodyBold, fontSize: 20 },
   tenantRow:    { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginTop: 14 },
   tenantPill:   { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 20 },
-  tenantPillText: { fontFamily: FontFamily.bodyMedium, fontSize: 11 },
+  tenantPillText: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.xs },
   crefPill:     { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 8, paddingVertical: 5, borderRadius: 20, backgroundColor: Colors.surface, borderWidth: 1, borderColor: Colors.border },
-  crefText:     { fontFamily: FontFamily.body, fontSize: 10, color: Colors.textSecondary },
+  crefText:     { fontFamily: FontFamily.body, fontSize: FontSize.xs, color: Colors.textSecondary },
   section:      { marginTop: 28 },
   sectionLabel: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.xs, color: Colors.textSecondary, letterSpacing: 1, marginBottom: 12 },
 
@@ -570,7 +592,7 @@ const s = StyleSheet.create({
   todayRoutine: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.md, color: Colors.textPrimary },
   todayPlan:    { fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textSecondary, marginTop: 3 },
   goalPill:     { alignSelf: 'flex-start', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 20, marginTop: 8 },
-  goalPillText: { fontFamily: FontFamily.bodyMedium, fontSize: 11 },
+  goalPillText: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.xs },
   startBtn:     { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 14, paddingVertical: 11, borderRadius: 14, margin: 14 },
   startBtnText: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.sm, color: '#fff' },
 
@@ -591,17 +613,20 @@ const s = StyleSheet.create({
   doneTreinosBtnText: { fontFamily: FontFamily.bodyBold, fontSize: 12 },
 
   // ── Rest day card ─────────────────────────────────────────────────────────
-  restCard:     { backgroundColor: Colors.surface, borderRadius: 18, borderWidth: 1, borderColor: Colors.border, padding: 28, alignItems: 'center', gap: 8 },
-  restTitle:    { fontFamily: FontFamily.bodyBold, fontSize: FontSize.md, color: Colors.textPrimary },
-  restDesc:     { fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textSecondary },
-  restLink:     { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 4 },
-  restLinkText: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm },
+  restCard:       { backgroundColor: Colors.surface, borderRadius: 18, borderWidth: 1, borderColor: Colors.border, padding: 24, alignItems: 'center', gap: 8 },
+  restTitle:      { fontFamily: FontFamily.bodyBold, fontSize: FontSize.md, color: Colors.textPrimary },
+  restDesc:       { fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textSecondary, textAlign: 'center' },
+  restTipBox:     { borderRadius: 12, borderWidth: 1, paddingVertical: 10, paddingHorizontal: 14, alignItems: 'center', gap: 4, marginTop: 4, alignSelf: 'stretch' },
+  restTipMessage: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.sm, textAlign: 'center' },
+  restTipDetail:  { fontFamily: FontFamily.body, fontSize: FontSize.xs, color: Colors.textSecondary, textAlign: 'center' },
+  restLink:       { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 4 },
+  restLinkText:   { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm },
 
   // ── Stats ─────────────────────────────────────────────────────────────────
   statsRow:   { flexDirection: 'row', gap: 10 },
   statCard:   { flex: 1, backgroundColor: Colors.surface, borderRadius: 16, borderWidth: 1.5, paddingVertical: 18, alignItems: 'center', gap: 4 },
   statNum:    { fontFamily: FontFamily.bodyBold, fontSize: 30 },
-  statLabel:  { fontFamily: FontFamily.body, fontSize: 11, color: Colors.textSecondary },
+  statLabel:  { fontFamily: FontFamily.body, fontSize: FontSize.xs, color: Colors.textSecondary },
 
   // ── Banners ───────────────────────────────────────────────────────────────
   bannerWarning: {
@@ -622,9 +647,9 @@ const s = StyleSheet.create({
     width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center',
   },
   bannerTitle: { fontFamily: FontFamily.bodyBold, fontSize: 13, color: '#F59E0B' },
-  bannerDesc:  { fontFamily: FontFamily.body, fontSize: 11, color: '#F59E0B', opacity: 0.8, marginTop: 2, lineHeight: 15 },
-  bannerTitleBlue: { fontFamily: FontFamily.bodyBold, fontSize: 13, color: Colors.textPrimary },
-  bannerDescBlue:  { fontFamily: FontFamily.body, fontSize: 11, color: Colors.textSecondary, marginTop: 2, lineHeight: 15 },
+  bannerDesc:  { fontFamily: FontFamily.body, fontSize: FontSize.xs, color: '#F59E0B', opacity: 0.8, marginTop: 2, lineHeight: 17 },
+  bannerTitleBlue: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.sm, color: Colors.textPrimary },
+  bannerDescBlue:  { fontFamily: FontFamily.body, fontSize: FontSize.xs, color: Colors.textSecondary, marginTop: 2, lineHeight: 17 },
   bannerClose: { padding: 4 },
 
   // ── Shortcuts ─────────────────────────────────────────────────────────────

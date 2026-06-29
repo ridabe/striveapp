@@ -1,13 +1,17 @@
 import { useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useThemeStore } from '@/stores/themeStore';
+import { useAuthStore } from '@/stores/authStore';
 import { useStudent } from './useStudent';
 
 export function useTenant() {
   const { selectedStudent } = useStudent();
+  const { profile } = useAuthStore();
   const { primaryColor, tenantName, appName, tenantLogoUrl, setTenant, setPrimaryColor } = useThemeStore();
 
-  const tenantId = selectedStudent?.tenant_id;
+  // Aluno: usa o tenant do registro de aluno selecionado.
+  // Admin/personal: usa o tenant_id do próprio perfil (não tem registro em students).
+  const tenantId = selectedStudent?.tenant_id ?? profile?.tenant_id;
 
   async function loadTenant(tid: string) {
     const { data: tenant } = await supabase

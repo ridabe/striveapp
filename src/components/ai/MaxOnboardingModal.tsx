@@ -12,8 +12,8 @@ const MAX_COLOR = '#7C3AED';
 const STORAGE_PREFIX = 'max_onboarding_seen_';
 
 const DESCRIPTION =
-  'Olá! Sou a Max Strive — sua nova parceira de inteligência artificial.\n\n' +
-  'Fui criada para ajudar você a treinar seus alunos com mais inteligência, ' +
+  'Olá! Sou o Max Strive — seu novo parceiro de inteligência artificial.\n\n' +
+  'Fui criado para ajudar você a treinar seus alunos com mais inteligência, ' +
   'velocidade e personalização. Vou analisar dados, criar planos e sugerir ' +
   'estratégias em segundos.';
 
@@ -170,7 +170,7 @@ export function MaxOnboardingModal({ userId }: Props) {
             </Animated.View>
 
             {/* ── Title ── */}
-            <Text style={s.title}>Conheça a Max</Text>
+            <Text style={s.title}>Conheça o Max</Text>
             <Text style={s.subtitle}>Assistente de Inteligência Artificial</Text>
 
             {/* ── Typewriter ── */}
