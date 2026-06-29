@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from 'react';
+import { Platform } from 'react-native';
 import { supabase } from '@/lib/supabase';
 
 export type MaxFeature = 'chat' | 'generate_plan' | 'analyze_progress' | 'suggest_load' | 'motivation';
@@ -66,6 +67,7 @@ export function useMaxStream(): UseMaxStreamResult {
         conversation_id: params.conversationId ?? conversationId,
         period_days:     params.periodDays,
         exercise_id:     params.exerciseId,
+        client_platform: Platform.OS,
       });
 
       await new Promise<void>((resolve, reject) => {
