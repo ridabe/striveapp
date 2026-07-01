@@ -7,27 +7,24 @@ import { FontFamily, FontSize } from '@/theme/typography';
 
 interface StudentHeaderProps {
   title: string;
-  showBack?: boolean;
+  onBack?: () => void;
+  rightSlot?: React.ReactNode;
 }
 
-export function StudentHeader({ title, showBack = true }: StudentHeaderProps) {
+export function StudentHeader({ title, onBack, rightSlot }: StudentHeaderProps) {
   return (
-    <View style={s.row}>
-      {showBack ? (
-        <TouchableOpacity onPress={() => router.back()} style={s.backBtn} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-          <Ionicons name="chevron-back" size={22} color={Colors.textPrimary} />
-        </TouchableOpacity>
-      ) : (
-        <View style={s.backBtn} />
-      )}
+    <View style={s.header}>
+      <TouchableOpacity onPress={onBack ?? (() => router.back())} style={s.iconBtn}>
+        <Ionicons name="arrow-back" size={22} color={Colors.textPrimary} />
+      </TouchableOpacity>
       <Text style={s.title} numberOfLines={1}>{title}</Text>
-      <TenantLogo size={32} radius={9} />
+      {rightSlot ?? <TenantLogo size={32} radius={9} />}
     </View>
   );
 }
 
 const s = StyleSheet.create({
-  row:     { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 14 },
-  backBtn: { width: 32, alignItems: 'flex-start' },
-  title:   { flex: 1, fontFamily: FontFamily.bodyBold, fontSize: FontSize.md, color: Colors.textPrimary, textAlign: 'center' },
+  header:  { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: Colors.border },
+  iconBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
+  title:   { fontFamily: FontFamily.bodyBold, fontSize: FontSize.md, color: Colors.textPrimary },
 });

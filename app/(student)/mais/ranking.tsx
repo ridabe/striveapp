@@ -3,13 +3,12 @@ import {
   View, Text, FlatList, TouchableOpacity, StyleSheet,
   ActivityIndicator, ScrollView,
 } from 'react-native';
-import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
 import { useStudent } from '@/hooks/useStudent';
 import { useThemeStore } from '@/stores/themeStore';
-import { TenantLogo } from '@/components/TenantLogo';
+import { StudentHeader } from '@/components/StudentHeader';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 
@@ -161,13 +160,7 @@ export default function StudentRankingScreen() {
   if (!loading && isActive === false) {
     return (
       <SafeAreaView style={s.safe} edges={['top']}>
-        <View style={s.header}>
-          <TouchableOpacity onPress={() => router.back()} style={s.iconBtn}>
-            <Ionicons name="arrow-back" size={22} color={Colors.textPrimary} />
-          </TouchableOpacity>
-          <Text style={s.title}>Ranking dos Campeões</Text>
-          <TenantLogo size={32} radius={9} />
-        </View>
+        <StudentHeader title="Ranking dos Campeões" />
         <ScrollView contentContainerStyle={{ padding: 16, gap: 16 }} showsVerticalScrollIndicator={false}>
           {/* Hero */}
           <View style={[s.heroCard, { borderColor: `${primaryColor}30` }]}>
@@ -231,13 +224,7 @@ export default function StudentRankingScreen() {
   // ──────────── Active state ─────────────
   return (
     <SafeAreaView style={s.safe} edges={['top']}>
-      <View style={s.header}>
-        <TouchableOpacity onPress={() => router.back()} style={s.iconBtn}>
-          <Ionicons name="arrow-back" size={22} color={Colors.textPrimary} />
-        </TouchableOpacity>
-        <Text style={s.title}>Ranking dos Campeões</Text>
-        <TenantLogo size={32} radius={9} />
-      </View>
+      <StudentHeader title="Ranking dos Campeões" />
 
       {loading ? (
         <ActivityIndicator color={primaryColor} style={{ marginTop: 60 }} />
@@ -392,9 +379,6 @@ export default function StudentRankingScreen() {
 // ──────────── Styles ─────────────
 const s = StyleSheet.create({
   safe:    { flex: 1, backgroundColor: Colors.bg },
-  header:  { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: Colors.border },
-  iconBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
-  title:   { fontFamily: FontFamily.bodyBold, fontSize: FontSize.md, color: Colors.textPrimary },
   subtitle:{ fontFamily: FontFamily.body, fontSize: FontSize.xs, color: Colors.textSecondary, textAlign: 'center', marginTop: 8, marginBottom: 4 },
 
   // Hero (inactive)

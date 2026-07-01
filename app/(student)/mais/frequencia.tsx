@@ -2,13 +2,12 @@ import { useState, useEffect, useCallback } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator,
 } from 'react-native';
-import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
 import { useStudent } from '@/hooks/useStudent';
 import { useThemeStore } from '@/stores/themeStore';
-import { TenantLogo } from '@/components/TenantLogo';
+import { StudentHeader } from '@/components/StudentHeader';
 import { ModuleGuard } from '@/components/ModuleGuard';
 import { MODULE } from '@/lib/modules';
 import { Colors } from '@/theme/colors';
@@ -84,13 +83,7 @@ export default function FrequenciaScreen() {
 
   return (
     <SafeAreaView style={s.safe} edges={['top']}>
-      <View style={s.header}>
-        <TouchableOpacity onPress={() => router.back()} style={s.iconBtn}>
-          <Ionicons name="arrow-back" size={22} color={Colors.textPrimary} />
-        </TouchableOpacity>
-        <Text style={s.title}>Frequência</Text>
-        <TenantLogo size={32} radius={9} />
-      </View>
+      <StudentHeader title="Frequência" />
 
       <ModuleGuard slug={MODULE.FREQUENCIA}>
       {loading ? <ActivityIndicator color={primaryColor} style={{ marginTop: 60 }} /> : (
@@ -183,9 +176,7 @@ export default function FrequenciaScreen() {
 
 const s = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.bg },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: Colors.border },
   iconBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
-  title: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.md, color: Colors.textPrimary },
   scroll: { paddingHorizontal: 16, paddingBottom: 40, paddingTop: 16, gap: 14 },
   statsRow: { flexDirection: 'row', gap: 12 },
   statCard: { flex: 1, backgroundColor: Colors.surface, borderRadius: 18, borderWidth: 1.5, paddingVertical: 20, alignItems: 'center', gap: 4 },

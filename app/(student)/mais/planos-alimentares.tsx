@@ -3,7 +3,6 @@ import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,
   ActivityIndicator,
 } from 'react-native';
-import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
@@ -11,7 +10,7 @@ import { useStudent } from '@/hooks/useStudent';
 import { useThemeStore } from '@/stores/themeStore';
 import { ModuleGuard } from '@/components/ModuleGuard';
 import { MODULE } from '@/lib/modules';
-import { TenantLogo } from '@/components/TenantLogo';
+import { StudentHeader } from '@/components/StudentHeader';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 
@@ -108,13 +107,7 @@ export default function StudentPlanosAlimentaresScreen() {
 
   return (
     <SafeAreaView style={s.safe} edges={['top']}>
-      <View style={s.header}>
-        <TouchableOpacity onPress={() => router.back()} style={s.iconBtn}>
-          <Ionicons name="arrow-back" size={22} color={Colors.textPrimary} />
-        </TouchableOpacity>
-        <Text style={s.title}>Plano Alimentar</Text>
-        <TenantLogo size={32} radius={9} />
-      </View>
+      <StudentHeader title="Plano Alimentar" />
 
       <ModuleGuard slug={MODULE.PLANOS_ALIMENTARES}>
         {loading ? (
@@ -270,9 +263,6 @@ export default function StudentPlanosAlimentaresScreen() {
 
 const s = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.bg },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: Colors.border },
-  iconBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
-  title: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.md, color: Colors.textPrimary },
   scroll: { paddingHorizontal: 16, paddingTop: 16, paddingBottom: 40, gap: 16 },
   empty: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12, paddingHorizontal: 40 },
   emptyTitle: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.md, color: Colors.textPrimary },
