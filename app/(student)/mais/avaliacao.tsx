@@ -3,13 +3,12 @@ import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator,
   Dimensions,
 } from 'react-native';
-import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
 import { useStudent } from '@/hooks/useStudent';
 import { useThemeStore } from '@/stores/themeStore';
-import { TenantLogo } from '@/components/TenantLogo';
+import { StudentHeader } from '@/components/StudentHeader';
 import { ModuleGuard } from '@/components/ModuleGuard';
 import { MODULE } from '@/lib/modules';
 import { Colors } from '@/theme/colors';
@@ -182,13 +181,7 @@ export default function AvaliacaoScreen() {
 
   return (
     <SafeAreaView style={m.safe} edges={['top']}>
-      <View style={m.header}>
-        <TouchableOpacity onPress={() => router.back()} style={m.iconBtn}>
-          <Ionicons name="arrow-back" size={22} color={Colors.textPrimary} />
-        </TouchableOpacity>
-        <Text style={m.title}>Avaliação Física</Text>
-        <TenantLogo size={32} radius={9} />
-      </View>
+      <StudentHeader title="Avaliação Física" />
 
       <ModuleGuard slug={MODULE.AVALIACOES}>
       {loading ? (
@@ -338,9 +331,6 @@ const delta = StyleSheet.create({
 
 const m = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.bg },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: Colors.border },
-  iconBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
-  title: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.md, color: Colors.textPrimary },
   scroll: { paddingHorizontal: 16, paddingTop: 16, paddingBottom: 40, gap: 14 },
 
   datePill: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20, backgroundColor: Colors.surface, borderWidth: 1, borderColor: Colors.border },

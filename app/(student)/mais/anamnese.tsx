@@ -9,7 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
 import { useStudent } from '@/hooks/useStudent';
 import { useThemeStore } from '@/stores/themeStore';
-import { TenantLogo } from '@/components/TenantLogo';
+import { StudentHeader } from '@/components/StudentHeader';
 import { ModuleGuard } from '@/components/ModuleGuard';
 import { MODULE } from '@/lib/modules';
 import { Colors } from '@/theme/colors';
@@ -344,16 +344,10 @@ export default function AnamneseScreen() {
 
   return (
     <SafeAreaView style={s.safe} edges={['top']}>
-      <View style={s.header}>
-        <TouchableOpacity
-          onPress={mode === 'edit' && lastUpdated ? () => setMode('view') : () => router.back()}
-          style={s.iconBtn}
-        >
-          <Ionicons name="arrow-back" size={22} color={Colors.textPrimary} />
-        </TouchableOpacity>
-        <Text style={s.title}>Anamnese</Text>
-        <TenantLogo size={32} radius={9} />
-      </View>
+      <StudentHeader
+        title="Anamnese"
+        onBack={mode === 'edit' && lastUpdated ? () => setMode('view') : () => router.back()}
+      />
 
       <ModuleGuard slug={MODULE.ANAMNESE}>
       {loading ? (
@@ -372,9 +366,6 @@ export default function AnamneseScreen() {
 
 const s = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.bg },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: Colors.border },
-  iconBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
-  title: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.md, color: Colors.textPrimary },
 
   scroll: { paddingHorizontal: 16, paddingTop: 16, paddingBottom: 48, gap: 14 },
 

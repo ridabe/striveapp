@@ -4,7 +4,6 @@ import {
   ActivityIndicator, Modal, TextInput, Alert, Linking,
   KeyboardAvoidingView, Platform,
 } from 'react-native';
-import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
@@ -12,7 +11,7 @@ import { useStudent } from '@/hooks/useStudent';
 import { useThemeStore } from '@/stores/themeStore';
 import { ModuleGuard } from '@/components/ModuleGuard';
 import { MODULE } from '@/lib/modules';
-import { TenantLogo } from '@/components/TenantLogo';
+import { StudentHeader } from '@/components/StudentHeader';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 
@@ -169,13 +168,7 @@ export default function StudentAgendaScreen() {
 
   return (
     <SafeAreaView style={s.safe} edges={['top']}>
-      <View style={s.header}>
-        <TouchableOpacity onPress={() => router.back()} style={s.iconBtn}>
-          <Ionicons name="arrow-back" size={22} color={Colors.textPrimary} />
-        </TouchableOpacity>
-        <Text style={s.title}>Minha Agenda</Text>
-        <TenantLogo size={32} radius={9} />
-      </View>
+      <StudentHeader title="Minha Agenda" />
 
       <ModuleGuard slug={MODULE.MINHA_AGENDA}>
         {/* Pending banner */}
@@ -385,9 +378,6 @@ function StudentEventCard({ ev, primaryColor, trainerPhone }: { ev: AgendaEvent;
 
 const s = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.bg },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: Colors.border },
-  iconBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
-  title: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.md, color: Colors.textPrimary },
   pendingBanner: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: '#F59E0B10', borderBottomWidth: 1, borderBottomColor: '#F59E0B30', paddingHorizontal: 16, paddingVertical: 10 },
   pendingText: { flex: 1, fontFamily: FontFamily.bodyMedium, fontSize: FontSize.xs, color: '#F59E0B' },
   requestBtn: { flexDirection: 'row', alignItems: 'center', gap: 8, borderWidth: 1, borderRadius: 12, padding: 12 },

@@ -4,7 +4,6 @@ import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,
   ActivityIndicator, Alert,
 } from 'react-native';
-import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
@@ -12,6 +11,7 @@ import { useStudent } from '@/hooks/useStudent';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 import { useThemeStore } from '@/stores/themeStore';
+import { StudentHeader } from '@/components/StudentHeader';
 
 interface StudentMessage {
   id: string;
@@ -207,19 +207,16 @@ export default function StudentMessages() {
 
   return (
     <SafeAreaView style={s.safe} edges={['top']}>
-      <View style={s.header}>
-        <TouchableOpacity onPress={() => router.back()} style={s.iconBtn}>
-          <Ionicons name="arrow-back" size={22} color={Colors.textPrimary} />
-        </TouchableOpacity>
-        <Text style={s.title}>Mensagens</Text>
-        {messages.length > 0 ? (
+      <StudentHeader
+        title="Mensagens"
+        rightSlot={messages.length > 0 ? (
           <TouchableOpacity onPress={openManageActions} style={s.iconBtn}>
             <Ionicons name="trash-outline" size={20} color={Colors.textPrimary} />
           </TouchableOpacity>
         ) : (
           <View style={{ width: 40 }} />
         )}
-      </View>
+      />
 
       {loading ? (
         <ActivityIndicator color={primaryColor} style={{ marginTop: 40 }} />
@@ -277,13 +274,7 @@ export default function StudentMessages() {
 
 const s = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.bg },
-  header: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 16, paddingVertical: 14,
-    borderBottomWidth: 1, borderBottomColor: Colors.border,
-  },
   iconBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
-  title: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.md, color: Colors.textPrimary },
 
   scroll: { padding: 16, gap: 12 },
 
