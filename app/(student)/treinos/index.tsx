@@ -1,10 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import {
   View, Text, FlatList, TouchableOpacity, StyleSheet,
   Dimensions,
 } from 'react-native';
 import { StriveLoader } from '@/components/StriveLoader';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
@@ -190,7 +190,7 @@ export default function TreinosScreen() {
     setLoading(false);
   }, [selectedStudent?.id]);
 
-  useEffect(() => { load(); }, [load]);
+  useFocusEffect(useCallback(() => { load(); }, [load]));
 
   // Scheduled days display for a plan: e.g. "Seg · Qua · Sex"
   function scheduledDaysText(routines: Plan['routines']): string {
