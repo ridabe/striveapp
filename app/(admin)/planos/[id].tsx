@@ -66,6 +66,7 @@ export default function PlanDetailScreen() {
   const [routines, setRoutines] = useState<Routine[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   // Expanded routine
   const [expandedRoutine, setExpandedRoutine] = useState<string | null>(null);
@@ -142,6 +143,36 @@ export default function PlanDetailScreen() {
     const newStatus = plan.status === 'active' ? 'inactive' : 'active';
     await supabase.from('workout_plans').update({ status: newStatus }).eq('id', id);
     setPlan(p => p ? { ...p, status: newStatus } : p);
+  }
+
+  function handleDeletePlan() {
+    if (!plan) return;
+    Alert.alert(
+      'Excluir plano',
+      `Tem certeza que deseja excluir "${plan.name}"? Os alunos atribuídos serão desvinculados e todas as rotinas e exercícios deste plano serão removidos permanentemente.`,
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Excluir', style: 'destructive', onPress: async () => {
+            setDeleting(true);
+            try {
+              const routineIds = routines.map(r => r.id);
+              if (routineIds.length > 0) {
+                await supabase.from('workout_items').delete().in('routine_id', routineIds);
+              }
+              await supabase.from('student_plan_assignments').delete().eq('plan_id', id);
+              await supabase.from('workout_routines').delete().eq('workout_plan_id', id);
+              const { error } = await supabase.from('workout_plans').delete().eq('id', id);
+              if (error) throw error;
+              router.back();
+            } catch (e: any) {
+              setDeleting(false);
+              Alert.alert('Erro', e.message);
+            }
+          },
+        },
+      ]
+    );
   }
 
   async function handleAddRoutine() {
@@ -287,6 +318,11 @@ export default function PlanDetailScreen() {
           <Text style={[s.statusText, { color: plan.status === 'active' ? Colors.success : Colors.textSecondary }]}>
             {plan.status === 'active' ? 'Ativo' : 'Inativo'}
           </Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleDeletePlan} disabled={deleting} style={s.iconBtn} activeOpacity={0.75}>
+          {deleting
+            ? <ActivityIndicator size="small" color={Colors.error} />
+            : <Ionicons name="trash-outline" size={20} color={Colors.error} />}
         </TouchableOpacity>
       </View>
 

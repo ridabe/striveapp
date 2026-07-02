@@ -1,18 +1,13 @@
-# Graph Report - strivePersonalApp  (2026-07-02)
+# Graph Report - .  (2026-06-30)
 
 ## Corpus Check
-- 148 files · ~1,378,694 words
+- 14 files · ~1,378,566 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1170 nodes · 2198 edges · 162 communities (93 shown, 69 thin omitted)
-- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.65)
-- Token cost: 0 input · 0 output
-
-## Graph Freshness
-- Built from commit: `7c3d235c`
-- Run `git rev-parse HEAD` and compare to check if the graph is stale.
-- Run `graphify update .` after code changes (no API cost).
+- 1106 nodes · 1992 edges · 118 communities (91 shown, 27 thin omitted)
+- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 7 edges (avg confidence: 0.85)
+- Token cost: 28,534 input · 0 output
 
 ## Community Hubs (Navigation)
 - [[_COMMUNITY_Community 0|Community 0]]
@@ -118,82 +113,40 @@
 - [[_COMMUNITY_Community 111|Community 111]]
 - [[_COMMUNITY_Community 112|Community 112]]
 - [[_COMMUNITY_Community 113|Community 113]]
-- [[_COMMUNITY_Community 118|Community 118]]
-- [[_COMMUNITY_Community 119|Community 119]]
-- [[_COMMUNITY_Community 120|Community 120]]
-- [[_COMMUNITY_Community 121|Community 121]]
-- [[_COMMUNITY_Community 122|Community 122]]
-- [[_COMMUNITY_Community 123|Community 123]]
-- [[_COMMUNITY_Community 124|Community 124]]
-- [[_COMMUNITY_Community 125|Community 125]]
-- [[_COMMUNITY_Community 126|Community 126]]
-- [[_COMMUNITY_Community 127|Community 127]]
-- [[_COMMUNITY_Community 128|Community 128]]
-- [[_COMMUNITY_Community 129|Community 129]]
-- [[_COMMUNITY_Community 130|Community 130]]
-- [[_COMMUNITY_Community 131|Community 131]]
-- [[_COMMUNITY_Community 132|Community 132]]
-- [[_COMMUNITY_Community 133|Community 133]]
-- [[_COMMUNITY_Community 134|Community 134]]
-- [[_COMMUNITY_Community 135|Community 135]]
-- [[_COMMUNITY_Community 136|Community 136]]
-- [[_COMMUNITY_Community 137|Community 137]]
-- [[_COMMUNITY_Community 139|Community 139]]
-- [[_COMMUNITY_Community 140|Community 140]]
-- [[_COMMUNITY_Community 141|Community 141]]
-- [[_COMMUNITY_Community 142|Community 142]]
-- [[_COMMUNITY_Community 143|Community 143]]
-- [[_COMMUNITY_Community 144|Community 144]]
-- [[_COMMUNITY_Community 145|Community 145]]
-- [[_COMMUNITY_Community 146|Community 146]]
-- [[_COMMUNITY_Community 147|Community 147]]
-- [[_COMMUNITY_Community 148|Community 148]]
-- [[_COMMUNITY_Community 149|Community 149]]
-- [[_COMMUNITY_Community 150|Community 150]]
-- [[_COMMUNITY_Community 151|Community 151]]
-- [[_COMMUNITY_Community 152|Community 152]]
-- [[_COMMUNITY_Community 153|Community 153]]
-- [[_COMMUNITY_Community 154|Community 154]]
-- [[_COMMUNITY_Community 155|Community 155]]
-- [[_COMMUNITY_Community 156|Community 156]]
-- [[_COMMUNITY_Community 157|Community 157]]
-- [[_COMMUNITY_Community 158|Community 158]]
-- [[_COMMUNITY_Community 159|Community 159]]
-- [[_COMMUNITY_Community 160|Community 160]]
-- [[_COMMUNITY_Community 161|Community 161]]
+- [[_COMMUNITY_Community 116|Community 116]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `useThemeStore` - 101 edges
-2. `Colors` - 68 edges
-3. `FontFamily` - 65 edges
-4. `FontSize` - 62 edges
-5. `useAuthStore` - 61 edges
-6. `supabase` - 55 edges
-7. `useStudent()` - 47 edges
+1. `useThemeStore` - 79 edges
+2. `useAuthStore` - 61 edges
+3. `Colors` - 56 edges
+4. `FontFamily` - 53 edges
+5. `FontSize` - 50 edges
+6. `supabase` - 44 edges
+7. `useStudent()` - 25 edges
 8. `useModulesStore` - 21 edges
-9. `MODULE` - 20 edges
-10. `expo` - 19 edges
+9. `expo` - 19 edges
+10. `muscleColor()` - 14 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Index()` --calls--> `useAuthStore`  [EXTRACTED]
-  app/index.tsx → src/stores/authStore.ts
+- `AdminLayout()` --calls--> `useThemeStore`  [EXTRACTED]
+  app/(admin)/_layout.tsx → src/stores/themeStore.ts
 - `AdminAgendaScreen()` --calls--> `useAuthStore`  [EXTRACTED]
   app/(admin)/agenda.tsx → src/stores/authStore.ts
 - `AdminAgendaScreen()` --calls--> `useThemeStore`  [EXTRACTED]
   app/(admin)/agenda.tsx → src/stores/themeStore.ts
-- `StudentDetailScreen()` --calls--> `useModulesStore`  [EXTRACTED]
-  app/(admin)/alunos/[id].tsx → src/stores/modulesStore.ts
 - `StudentDetailScreen()` --calls--> `useThemeStore`  [EXTRACTED]
   app/(admin)/alunos/[id].tsx → src/stores/themeStore.ts
+- `AlunosScreen()` --calls--> `useAuthStore`  [EXTRACTED]
+  app/(admin)/alunos/index.tsx → src/stores/authStore.ts
 
 ## Import Cycles
-- 1-file cycle: `metro.config.js -> metro.config.js`
+- None detected.
 
-## Communities (162 total, 69 thin omitted)
+## Communities (118 total, 27 thin omitted)
 
 ### Community 0 - "Community 0"
-Cohesion: 0.09
-Nodes (18): DashboardStats, RecentStudent, s, ModuleGroup, ModuleItem, styles, FEATURES, s (+10 more)
+Cohesion: 0.06
+Nodes (47): calcAge(), fmtBirth(), getModuleLabel(), MEDAL, ModuleCounts, MONTH_NAMES, RankingInfo, s (+39 more)
 
 ### Community 1 - "Community 1"
 Cohesion: 0.04
@@ -201,11 +154,11 @@ Nodes (48): dependencies, expo, expo-av, expo-build-properties, expo-constants, 
 
 ### Community 2 - "Community 2"
 Cohesion: 0.08
-Nodes (35): ExItem, fmtTime(), INTENSITIES, Phase, RestRing(), rt, s, Section (+27 more)
+Nodes (38): ExItem, fmtTime(), INTENSITIES, Phase, PlanExecutionScreen(), RestRing(), rt, s (+30 more)
 
 ### Community 3 - "Community 3"
-Cohesion: 0.05
-Nodes (40): backgroundColor, foregroundImage, adaptiveIcon, minSdkVersion, package, permissions, versionCode, projectId (+32 more)
+Cohesion: 0.06
+Nodes (36): backgroundColor, foregroundImage, adaptiveIcon, minSdkVersion, package, permissions, versionCode, projectId (+28 more)
 
 ### Community 4 - "Community 4"
 Cohesion: 0.08
@@ -215,45 +168,49 @@ Nodes (32): Agenda de Hoje (Today's Schedule List), Alunos Recentes (Recent Stud
 Cohesion: 0.12
 Nodes (25): apiFetch(), buildBaseRecord(), fetchExercises(), IMPORT_LIMIT, main(), MAX_API_CALLS, PAGE_SIZE, REQUEST_DELAY_MS (+17 more)
 
+### Community 6 - "Community 6"
+Cohesion: 0.07
+Nodes (27): Edge Function ai-assistant (index.ts), npm:@anthropic-ai/sdk@0.39.0, Supabase Edge Functions (Deno) backend, Edge Function embed-exercises (index.ts), Tabela exercise_embeddings (pgvector), Feature 1 — Gerar Treino pelo Objetivo, Feature 2 — Explicar Evolução do Aluno, Feature 3 — Sugerir Ajuste de Carga (+19 more)
+
 ### Community 7 - "Community 7"
-Cohesion: 0.29
-Nodes (5): GOAL_COLORS, GOALS, MealPlan, PlanosAlimentaresScreen(), s
+Cohesion: 0.13
+Nodes (16): AlunosScreen(), Student, styles, BancoExerciciosScreen(), Exercise, s, GOAL_COLORS, GOALS (+8 more)
 
 ### Community 8 - "Community 8"
 Cohesion: 0.12
 Nodes (15): AnamneseField, AnamneseResponse, AnamneseScreen(), CATEGORY_ICONS, CATEGORY_LABELS, DEFAULT_CATEGORIES, fe, FIELD_TYPES (+7 more)
 
 ### Community 9 - "Community 9"
-Cohesion: 0.20
-Nodes (9): Index(), MaxChatMessage(), MaxChatMessageProps, SMALL_AVATAR, styles, MaxStreamingText(), MaxStreamingTextProps, styles (+1 more)
+Cohesion: 0.12
+Nodes (16): s, StoredMessage, StudentMini, IMAGES, MaxAvatar(), MaxAvatarProps, SIZES, styles (+8 more)
 
 ### Community 10 - "Community 10"
 Cohesion: 0.11
 Nodes (15): DAY_LABELS, DayCount, dv, fmtDate(), MONTHS, ProgressEntry, ProgressoScreen(), sl (+7 more)
 
 ### Community 11 - "Community 11"
-Cohesion: 0.14
-Nodes (12): BAR_W, CATEGORY_COLOR, CATEGORY_ICON, DAY_LABELS, DAY_SHORT, ExtraWorkout, Plan, s (+4 more)
+Cohesion: 0.11
+Nodes (15): FEATURES, s, BAR_W, CATEGORY_COLOR, CATEGORY_ICON, DAY_LABELS, DAY_SHORT, ExtraWorkout (+7 more)
 
 ### Community 12 - "Community 12"
-Cohesion: 0.10
-Nodes (24): AssistenteIAScreen(), AssistenteIAChatScreen(), s, StoredMessage, StudentMini, FEATURE_LABELS, PLAN_STEPS, s (+16 more)
+Cohesion: 0.16
+Nodes (15): AssistenteIAScreen(), AssistenteIAChatScreen(), FEATURE_LABELS, PLAN_STEPS, s, StudentMini, Action, ACTIONS (+7 more)
 
 ### Community 13 - "Community 13"
 Cohesion: 0.14
 Nodes (15): Assessment, AvaliacaoScreen(), BMIBar(), bmiCategory(), bmiSt, calcBMI(), det, fmtDate() (+7 more)
 
 ### Community 14 - "Community 14"
-Cohesion: 0.18
-Nodes (10): ExpoSecureStoreAdapter, CompositeTypes, Constants, Database, DatabaseWithoutInternals, DefaultSchema, Enums, Json (+2 more)
+Cohesion: 0.16
+Nodes (14): Student, ExpoSecureStoreAdapter, SelectedStudentState, useSelectedStudentStore, CompositeTypes, Constants, Database, DatabaseWithoutInternals (+6 more)
 
 ### Community 15 - "Community 15"
-Cohesion: 0.07
-Nodes (18): ArquivosScreen(), categoryFromMime(), FileCategory, fileIcon(), formatSize(), SharedFile, Student, styles (+10 more)
+Cohesion: 0.12
+Nodes (10): bs, DAY_LABELS, DayCount, fmtDate(), ProgressEntry, ProgressoScreen(), s, WEEK_ORDER (+2 more)
 
 ### Community 16 - "Community 16"
-Cohesion: 0.15
-Nodes (14): BENEFITS, styles, MaxOnboardingModal(), Props, s, STEPS, StriveLogo(), StriveLogoProps (+6 more)
+Cohesion: 0.23
+Nodes (9): styles, AppUpdateAlert(), s, useAppVersion(), Radius, Spacing, FontFamily, FontSize (+1 more)
 
 ### Community 17 - "Community 17"
 Cohesion: 0.23
@@ -264,32 +221,32 @@ Cohesion: 0.13
 Nodes (8): AdminAgendaScreen(), AgendaEvent, DAY_NAMES_SHORT, es, EVENT_TYPES, MONTH_NAMES, s, TYPE_CONFIG
 
 ### Community 19 - "Community 19"
-Cohesion: 0.26
-Nodes (11): AdminDashboard(), AdminLayout(), MaisScreen(), ModuleCard, styles, TREINO_MODULES, TreinosScreen(), StudentLayout() (+3 more)
+Cohesion: 0.15
+Nodes (10): AdminDashboard(), DashboardStats, RecentStudent, s, MaxOnboardingModal(), Props, s, STEPS (+2 more)
 
 ### Community 20 - "Student Header Component & Related Screens"
-Cohesion: 0.12
-Nodes (15): AnamneseScreen(), AnamneseTemplate, Mode, s, FinanceiroScreen(), fmtCurrency(), s, STATUS_CONFIG (+7 more)
+Cohesion: 0.15
+Nodes (7): INTENSITY_CONFIG, s, s, StudentMessage, s, StudentHeader(), StudentHeaderProps
 
 ### Community 21 - "Community 21"
 Cohesion: 0.18
 Nodes (15): App screenshot: Evolução - performance/progress chart screen, Play Store Feature Graphic (1024x500), Tagline: 'Evolução que você vê. Treinos personalizados. Acompanhe cada avanço.', App screenshot: Treino A - Peito e Tríceps (exercise list screen), Tablet Screenshot: Progresso (Evolução) Screen, STRIVE Personal (App Brand), Ana Lima (Aluna, Plano Premium, since Jan 2026), Carlos Trainer (Personal Trainer, logged-in user) (+7 more)
 
 ### Community 22 - "Community 22"
-Cohesion: 0.06
-Nodes (34): 001 — Habilitar pgvector, 002 — Tabela ai_conversations, 003 — Tabela ai_messages, 004 — Tabela exercise_embeddings, 005 — Função SQL de busca vetorial, 006 — Módulo ASSISTENTE_IA no sistema, 1. Visão Geral, 2. A Persona: Quem é o Assistente (+26 more)
+Cohesion: 0.18
+Nodes (9): ArquivosScreen(), categoryFromMime(), FileCategory, fileIcon(), formatSize(), SharedFile, Student, styles (+1 more)
 
 ### Community 23 - "Community 23"
 Cohesion: 0.16
 Nodes (11): AttRecord, det, FrequenciaScreen(), MONTHS, s, sl, Student, StudentDetailView() (+3 more)
 
 ### Community 24 - "Community 24"
-Cohesion: 0.40
-Nodes (5): isValidHex(), PRESET_COLORS, StudioScreen(), styles, supabase
+Cohesion: 0.20
+Nodes (9): PRESET_COLORS, styles, BENEFITS, styles, StriveLogo(), StriveLogoProps, styles, ColorKey (+1 more)
 
 ### Community 25 - "Community 25"
-Cohesion: 0.44
-Nodes (5): RootLayout(), useAuth(), useModules(), useTenant(), useAuthStore
+Cohesion: 0.29
+Nodes (8): Index(), RootLayout(), useAuth(), useModules(), useTenant(), AuthState, Profile, useAuthStore
 
 ### Community 26 - "Student Physical Assessment Screen"
 Cohesion: 0.18
@@ -304,12 +261,12 @@ Cohesion: 0.21
 Nodes (13): AssessmentContext, calcAge(), fetchActivePlan(), fetchLatestAssessment(), fetchProgressSummary(), fetchRecentSessions(), fetchStudent(), fetchStudentContext() (+5 more)
 
 ### Community 29 - "Community 29"
-Cohesion: 0.16
-Nodes (12): bioBtn, bioBtnText, dividerLine, dividerRow, dividerText, input, label, LoginScreen() (+4 more)
+Cohesion: 0.18
+Nodes (11): bioBtn, bioBtnText, dividerLine, dividerRow, dividerText, input, label, LoginScreen() (+3 more)
 
 ### Community 30 - "Student Agenda Screen"
 Cohesion: 0.15
-Nodes (8): AgendaEvent, DAY_NAMES, ec, MONTH_NAMES, s, StudentAgendaScreen(), TYPE_COLOR, TYPE_ICON
+Nodes (7): AgendaEvent, DAY_NAMES, ec, MONTH_NAMES, s, TYPE_COLOR, TYPE_ICON
 
 ### Community 31 - "Community 31"
 Cohesion: 0.35
@@ -320,12 +277,12 @@ Cohesion: 0.24
 Nodes (12): buildPlanSummary(), buildPlanTool(), CORS_HEADERS, errorSse(), fetchAvailableExercises(), formatExerciseList(), GeneratedPlan, handleGeneratePlan() (+4 more)
 
 ### Community 33 - "Community 33"
-Cohesion: 0.22
-Nodes (9): CATEGORY_COLORS, ExtraItem, ExtraWorkout, s, Student, ExercisePickerModal(), ExerciseSummary, Props (+1 more)
+Cohesion: 0.20
+Nodes (10): CATEGORY_COLORS, ExtraItem, ExtraWorkout, s, Student, ExercisePickerModal(), ExerciseSummary, Props (+2 more)
 
 ### Community 34 - "Community 34"
-Cohesion: 0.22
-Nodes (5): FeedbackItem, FeedbacksScreen(), s, AuthState, Profile
+Cohesion: 0.18
+Nodes (7): FeedbackItem, FeedbacksScreen(), s, AppVersionRow, UpdateStatus, UseAppVersionResult, supabase
 
 ### Community 35 - "Community 35"
 Cohesion: 0.20
@@ -333,19 +290,19 @@ Nodes (9): DraftFood, fmtMacro(), FoodItem, GOALS, Meal, MEAL_TYPES, Plan, Plano
 
 ### Community 36 - "Student Meal Plans Screen"
 Cohesion: 0.18
-Nodes (8): FoodItem, GOAL_COLORS, Meal, MEAL_TYPE_LABEL, MealFood, Plan, s, StudentPlanosAlimentaresScreen()
+Nodes (7): FoodItem, GOAL_COLORS, Meal, MEAL_TYPE_LABEL, MealFood, Plan, s
 
 ### Community 37 - "Community 37"
-Cohesion: 0.18
-Nodes (13): HistoricoScreen(), SelectTenantScreen(), styles, TreinosScreen(), PlanExecutionScreen(), RoutineExecutionScreen(), PlanDetailScreen(), useHealthConnect() (+5 more)
+Cohesion: 0.24
+Nodes (8): Exercise, ExerciseDetailScreen(), s, MediaViewerModal(), Props, s, { width: W, height: H }, muscleColor()
 
 ### Community 38 - "Community 38"
-Cohesion: 0.18
-Nodes (8): EXTRA_CATEGORY_COLORS, PlanosScreen(), s, sp, StudentExtra, StudentPlan, WorkoutPlan, PLAN_GOALS
+Cohesion: 0.20
+Nodes (7): EXTRA_CATEGORY_COLORS, PlanosScreen(), s, sp, StudentExtra, StudentPlan, WorkoutPlan
 
 ### Community 39 - "Student Files Screen"
 Cohesion: 0.20
-Nodes (5): ArquivosStudentScreen(), FileCategory, s, SharedFile, TYPE_FILTERS
+Nodes (4): FileCategory, s, SharedFile, TYPE_FILTERS
 
 ### Community 40 - "Community 40"
 Cohesion: 0.27
@@ -360,8 +317,8 @@ Cohesion: 0.29
 Nodes (8): fetchGif(), main(), MAX_API_CALLS, MAX_SESSION_BYTES, REQUEST_DELAY_MS, sleep(), supabase, uploadAndUpdate()
 
 ### Community 43 - "Community 43"
-Cohesion: 0.14
-Nodes (9): AlunosScreen(), Student, styles, EMPTY, FormState, NovoAlunoModal(), Props, s (+1 more)
+Cohesion: 0.20
+Nodes (5): EMPTY, FormState, Props, s, STUDENT_GOALS
 
 ### Community 44 - "Community 44"
 Cohesion: 0.22
@@ -374,6 +331,10 @@ Nodes (8): AssignedStudent, Plan, PlanDetailScreen(), Routine, s, Student, Worko
 ### Community 46 - "Community 46"
 Cohesion: 0.28
 Nodes (8): ExGroup, ExItem, ExtraExecutionScreen(), fmtTime(), groupByCombo(), INTENSITIES, Phase, s
+
+### Community 47 - "Community 47"
+Cohesion: 0.33
+Nodes (9): Assets do Max Strive — LEIA-ME, max-avatar-happy.png (variante comemorando), max-avatar.png (200x200, avatar principal), max-avatar-small.png (chat bubbles, 48x48), max-avatar-thinking.png (variante pensando), Max Strive (personagem/avatar), Claude Sonnet (Anthropic) — geração de linguagem natural, Persona Max Strive (assistente IA) (+1 more)
 
 ### Community 48 - "Community 48"
 Cohesion: 0.33
@@ -389,7 +350,7 @@ Nodes (7): ExtraWorkoutDetailScreen(), CATEGORY_COLOR, Extra, ExtraDetailScreen(
 
 ### Community 51 - "Student Feedback Screen"
 Cohesion: 0.25
-Nodes (6): FeedbackScreen(), LABEL_COLORS, LABELS, s, WorkoutFeedback, WorkoutPlan
+Nodes (5): LABEL_COLORS, LABELS, s, WorkoutFeedback, WorkoutPlan
 
 ### Community 52 - "Community 52"
 Cohesion: 0.32
@@ -404,8 +365,8 @@ Cohesion: 0.32
 Nodes (8): Barra de navegação inferior: Início, Treinos, Progresso (ativo), Nutrição, Perfil, Gráfico de linha 'Carga média (kg)' com filtro '4 semanas' mostrando progressão semanal: Sem1 64,3kg, Sem2 67,1kg, Sem3 70,5kg, Sem4 71,5kg, Tema visual dark com destaque em verde-limão (neon) usado em gráficos, ícones e elementos ativos, Seção 'Frequência Semanal' com barras diárias (SEG-DOM), legenda Treino concluído/Descanso, destaque em DOM (Hoje), Header 'Minha Evolução' com subtítulo 'Últimos 30 dias' e ícone de calendário, tela3_evolucao.png - Mockup Tela de Evolução/Progresso, Card 'Próxima Meta - Completar 20 treinos em novembro' com barra de progresso 75% concluído, Cards de resumo: Carga média aumentada (7,2 kg), Treinos concluídos (18 treinos), Aderência semanal (92%)
 
 ### Community 55 - "Community 55"
-Cohesion: 0.18
-Nodes (13): Exercise, ExerciseDetailScreen(), s, BancoExerciciosScreen(), Exercise, s, COUNT_TYPES, LOAD_TYPES (+5 more)
+Cohesion: 0.25
+Nodes (6): COUNT_TYPES, LOAD_TYPES, loadTypeLabel(), MUSCLE_COLORS, MuscleGroup, PLAN_GOALS
 
 ### Community 56 - "Community 56"
 Cohesion: 0.39
@@ -432,8 +393,8 @@ Cohesion: 0.38
 Nodes (6): DAYS_HEADER, FrequenciaScreen(), getDaysInMonth(), getFirstDayOfWeek(), MONTHS, s
 
 ### Community 62 - "Community 62"
-Cohesion: 0.17
-Nodes (11): DAY_SHORT, Exercise, Plan, s, Section, MediaType, MediaViewerModal(), Props (+3 more)
+Cohesion: 0.29
+Nodes (6): DAY_SHORT, Exercise, Plan, s, Section, GOAL_COLORS
 
 ### Community 63 - "Community 63"
 Cohesion: 0.33
@@ -448,12 +409,12 @@ Cohesion: 0.29
 Nodes (6): compilerOptions, paths, strict, extends, include, @/*
 
 ### Community 66 - "Student Anamnese Screen"
-Cohesion: 0.22
-Nodes (7): INTENSITY_CONFIG, s, ModuleGuard(), Props, s, ModuleSlug, ModulesState
+Cohesion: 0.33
+Nodes (3): AnamneseTemplate, Mode, s
 
 ### Community 67 - "Student Finance Screen"
-Cohesion: 0.19
-Nodes (11): calcAge(), fmtBirth(), getModuleLabel(), MEDAL, ModuleCounts, MONTH_NAMES, RankingInfo, s (+3 more)
+Cohesion: 0.40
+Nodes (4): FinanceiroScreen(), fmtCurrency(), s, STATUS_CONFIG
 
 ### Community 68 - "Community 68"
 Cohesion: 0.47
@@ -464,8 +425,8 @@ Cohesion: 0.40
 Nodes (6): Primary CTA button 'Comecar Agora' (yellow, black text), Feature list (3 items with icons): Treinos personalizados pelo seu coach; Acompanhe sua evolucao em tempo real; Registre cargas e conquiste metas, Headline text 'Evolucao que voce ve.' with subtext 'Acompanhe cada treino, cada serie, cada avanco.', tela4_splash.png - Splash/Onboarding Screen Mockup (STRIVE PERSONAL), Secondary link 'Ja tenho conta. Fazer login', STRIVE PERSONAL logo (hexagon with glowing yellow bar-chart icon)
 
 ### Community 70 - "Community 70"
-Cohesion: 0.50
-Nodes (5): Stack Tecnológica (Expo 54, Supabase, NativeWind, Expo Router), Build Android AAB Workflow, build job (EAS local), check-version job, EAS (Expo Application Services) build --local
+Cohesion: 0.40
+Nodes (6): Stack Tecnológica (Expo 54, Supabase, NativeWind, Expo Router), Arquitetura e Stack (React Native/Expo 54, TS, Expo Router, NativeWind, Zustand), Build Android AAB Workflow, build job (EAS local), check-version job, EAS (Expo Application Services) build --local
 
 ### Community 71 - "Community 71"
 Cohesion: 0.33
@@ -475,49 +436,45 @@ Nodes (3): CORS_HEADERS, Feature, RequestBody
 Cohesion: 0.47
 Nodes (4): buildMaxSystemPrompt(), formatContextSection(), MAX_BASE_PERSONA, StudentContext
 
+### Community 73 - "Community 73"
+Cohesion: 0.50
+Nodes (4): Role global_admin (Admin Global), src/lib/modules.ts ASSISTENTE_IA slug, Tabela system_modules, Tabela tenant_modules
+
 ### Community 74 - "Community 74"
-Cohesion: 0.67
+Cohesion: 0.50
 Nodes (3): config, { getDefaultConfig }, { withNativeWind }
 
-### Community 118 - "Community 118"
-Cohesion: 0.17
-Nodes (11): 1. Introdução, 2. Arquitetura e Stack, 3. Estrutura de Diretórios (Proposta), 4.1. Autenticação, 4.2. Acesso a Dados e RLS, 4.3. Upload de Arquivos (Storage), 4. Integração com Supabase, 5. Implementação do Design System (+3 more)
+### Community 75 - "Graphify Project Rule (CLAUDE.md)"
+Cohesion: 1.00
+Nodes (3): Atualização automática via /graphify --update, Consulta ao Graphify antes de mudanças, Graphify Obrigatório (Regra do Projeto)
 
-### Community 119 - "Community 119"
-Cohesion: 0.18
-Nodes (10): 1. Visão Geral do Produto, 2. Objetivos, 3.1. Autenticação e White-label, 3.2. Navegação Principal (Bottom Navigation), 3.3. Módulos do Aluno, 3. Escopo Funcional, 4. Design System e Interface, 5. Regras de Negócio e Restrições (+2 more)
-
-### Community 120 - "Community 120"
-Cohesion: 0.25
-Nodes (7): DAY_LABELS, greeting(), INTENSITY_LABEL, REST_MOTIVATIONS, s, StudentHome(), { width: W }
-
-### Community 121 - "Community 121"
-Cohesion: 0.29
-Nodes (6): 1. Migration (rodar uma vez), 2. Configurar, 3. Rodar, Importação ExerciseDB → Supabase, Notas, Variáveis principais
-
-### Community 122 - "Community 122"
+### Community 76 - "Community 76"
 Cohesion: 0.67
-Nodes (3): AppUpdateAlert(), s, useAppVersion()
+Nodes (3): Design System (cores, tipografia, espaçamento), Arquitetura White-label (cor/logo dinâmicos por tenant), Implementação do Design System (src/theme)
+
+## Ambiguous Edges - Review These
+- `Supabase Edge Functions (Deno) backend` → `Integração com Supabase (Auth/RLS/Storage)`  [AMBIGUOUS]
+  docs/SPEC_Mobile_StrivePersonal.md · relation: conceptually_related_to
 
 ## Knowledge Gaps
-- **587 isolated node(s):** `name`, `slug`, `version`, `platforms`, `orientation` (+582 more)
+- **526 isolated node(s):** `name`, `slug`, `version`, `platforms`, `orientation` (+521 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **69 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **27 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `useThemeStore` connect `Community 19` to `Community 0`, `Community 2`, `Community 7`, `Community 8`, `Community 10`, `Community 11`, `Community 13`, `Community 15`, `Community 18`, `Student Header Component & Related Screens`, `Community 23`, `Community 24`, `Community 25`, `Student Physical Assessment Screen`, `Student Ranking Screen`, `Student Agenda Screen`, `Community 33`, `Community 34`, `Community 35`, `Student Meal Plans Screen`, `Community 37`, `Community 38`, `Student Files Screen`, `Community 43`, `Community 44`, `Community 45`, `Community 46`, `Community 50`, `Student Feedback Screen`, `Community 55`, `Community 58`, `Community 59`, `Community 60`, `Student Attendance Screen`, `Community 62`, `Student Anamnese Screen`, `Student Finance Screen`, `Community 120`?**
-  _High betweenness centrality (0.055) - this node is a cross-community bridge._
-- **Why does `Colors` connect `Community 9` to `Community 0`, `Community 2`, `Community 7`, `Community 8`, `Community 10`, `Community 11`, `Community 12`, `Community 13`, `Community 15`, `Community 16`, `Community 18`, `Community 19`, `Student Header Component & Related Screens`, `Community 23`, `Community 24`, `Student Physical Assessment Screen`, `Student Ranking Screen`, `Community 29`, `Student Agenda Screen`, `Community 33`, `Community 34`, `Community 35`, `Student Meal Plans Screen`, `Community 37`, `Community 38`, `Student Files Screen`, `Community 43`, `Community 44`, `Community 45`, `Community 46`, `Community 50`, `Student Feedback Screen`, `Community 55`, `Community 58`, `Community 59`, `Community 60`, `Student Attendance Screen`, `Community 62`, `Student Anamnese Screen`, `Student Finance Screen`, `Community 120`, `Community 122`?**
-  _High betweenness centrality (0.029) - this node is a cross-community bridge._
-- **Why does `FontFamily` connect `Community 16` to `Community 0`, `Community 2`, `Community 7`, `Community 8`, `Community 9`, `Community 10`, `Community 11`, `Community 12`, `Community 13`, `Community 15`, `Community 18`, `Community 19`, `Student Header Component & Related Screens`, `Community 23`, `Community 24`, `Student Physical Assessment Screen`, `Student Ranking Screen`, `Community 29`, `Student Agenda Screen`, `Community 33`, `Community 34`, `Community 35`, `Student Meal Plans Screen`, `Community 37`, `Community 38`, `Student Files Screen`, `Community 43`, `Community 44`, `Community 45`, `Community 46`, `Community 50`, `Student Feedback Screen`, `Community 55`, `Community 58`, `Community 59`, `Community 60`, `Student Attendance Screen`, `Community 62`, `Student Anamnese Screen`, `Student Finance Screen`, `Community 120`, `Community 122`?**
-  _High betweenness centrality (0.029) - this node is a cross-community bridge._
+- **What is the exact relationship between `Supabase Edge Functions (Deno) backend` and `Integração com Supabase (Auth/RLS/Storage)`?**
+  _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._
+- **Why does `useThemeStore` connect `Community 7` to `Community 0`, `Community 2`, `Community 8`, `Community 10`, `Community 11`, `Community 13`, `Community 15`, `Community 16`, `Community 18`, `Community 19`, `Community 22`, `Community 23`, `Community 24`, `Community 25`, `Community 33`, `Community 34`, `Community 35`, `Community 37`, `Community 38`, `Community 43`, `Community 44`, `Community 45`, `Community 46`, `Community 50`, `Community 58`, `Community 59`, `Community 60`, `Community 62`?**
+  _High betweenness centrality (0.038) - this node is a cross-community bridge._
+- **Why does `expo` connect `Community 3` to `Community 0`?**
+  _High betweenness centrality (0.024) - this node is a cross-community bridge._
+- **Why does `Colors` connect `Community 24` to `Community 0`, `Community 2`, `Community 7`, `Community 8`, `Community 9`, `Community 10`, `Community 11`, `Community 12`, `Community 13`, `Community 15`, `Community 16`, `Community 18`, `Community 19`, `Community 22`, `Community 23`, `Community 25`, `Community 29`, `Community 33`, `Community 34`, `Community 35`, `Community 37`, `Community 38`, `Community 43`, `Community 44`, `Community 45`, `Community 46`, `Community 50`, `Community 58`, `Community 59`, `Community 60`, `Community 62`?**
+  _High betweenness centrality (0.022) - this node is a cross-community bridge._
 - **What connects `name`, `slug`, `version` to the rest of the system?**
-  _592 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _527 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.09359605911330049 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05576923076923077 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
   _Cohesion score 0.04081632653061224 - nodes in this community are weakly interconnected._
-- **Should `Community 2` be split into smaller, more focused modules?**
-  _Cohesion score 0.07781649245063879 - nodes in this community are weakly interconnected._
