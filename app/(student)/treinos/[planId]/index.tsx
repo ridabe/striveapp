@@ -86,15 +86,23 @@ export default function PlanDetailScreen() {
     const [planRes, routinesRes, sessionsRes] = await Promise.all([
       supabase.from('workout_plans').select('id, name, goal, description').eq('id', planId).single(),
       supabase.from('workout_routines').select('id, name, day_of_week, display_order').eq('workout_plan_id', planId).order('display_order'),
-      supabase.from('workout_sessions').select('workout_routine_id').eq('student_id', selectedStudent.id).eq('workout_plan_id', planId).not('workout_routine_id', 'is', null),
+      supabase.from('workout_sessions').select('workout_routine_id, finished_at').eq('student_id', selectedStudent.id).eq('workout_plan_id', planId).not('workout_routine_id', 'is', null).order('finished_at'),
     ]);
 
     setPlan(planRes.data as Plan);
 
-    // Mark completed routines
-    const completed = new Set<string>();
+    // Marca como concluído apenas dentro do ciclo atual: percorre as sessões em
+    // ordem cronológica e, assim que todos os agrupamentos do plano tiverem sido
+    // feitos uma vez, reinicia a contagem — assim, ao fechar o ciclo, a tela some
+    // com as marcações e sinaliza ao aluno que um novo ciclo pode começar.
+    const totalRoutines = (routinesRes.data ?? []).length;
+    let completed = new Set<string>();
     (sessionsRes.data ?? []).forEach((s: any) => {
-      if (s.workout_routine_id) completed.add(s.workout_routine_id);
+      if (!s.workout_routine_id) return;
+      completed.add(s.workout_routine_id);
+      if (totalRoutines > 0 && completed.size >= totalRoutines) {
+        completed = new Set();
+      }
     });
     setCompletedRoutines(completed);
 

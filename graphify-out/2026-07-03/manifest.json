@@ -295,9 +295,9 @@
     "semantic_hash": "0a5f024c0b66a9385da40eead143ce5d"
   },
   "app/(student)/treinos/[planId]/index.tsx": {
-    "mtime": 1783097386.602505,
-    "ast_hash": "5c1aa45e8a5d1b2573454033bac448e9",
-    "semantic_hash": ""
+    "mtime": 1783006713.7789998,
+    "ast_hash": "d436475d2e2db40ec6378084a6861d07",
+    "semantic_hash": "d436475d2e2db40ec6378084a6861d07"
   },
   "app/(student)/treinos/_layout.tsx": {
     "mtime": 1782156456.0522332,
@@ -913,10 +913,5 @@
     "mtime": 1783033292.7313113,
     "ast_hash": "b787cc1a644769720201c112973a17b3",
     "semantic_hash": "b787cc1a644769720201c112973a17b3"
-  },
-  "docs/MODULO_DESAFIOS.md": {
-    "mtime": 1783095751.3430984,
-    "ast_hash": "9e3cd2faeb0cec55e63c8c4dcb99912e",
-    "semantic_hash": ""
   }
 }
