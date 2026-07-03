@@ -99,6 +99,16 @@ const PERSONAL_LOOP: ModuleOnboardingItem[] = [
       'Veja quem está treinando consistentemente e quem está sumindo — útil para identificar risco de cancelamento.',
   },
   {
+    slug: MODULE.DESAFIOS,
+    title: 'Desafios',
+    category: 'Acompanhamento',
+    icon: 'flag-outline',
+    description:
+      'Desafios com duração definida, cronograma de dias e ranking por evolução de composição corporal.',
+    howTo:
+      'Crie um desafio, adicione participantes (alunos existentes ou convide novos), monte os dias com exercícios/dicas e publique conforme seu ritmo. Ao final, finalize para calcular o ranking e publique para os alunos.',
+  },
+  {
     slug: MODULE.FEEDBACKS,
     title: 'Feedbacks',
     category: 'Comunicação',
@@ -251,6 +261,16 @@ const STUDENT_LOOP: ModuleOnboardingItem[] = [
     description: 'Seu calendário de treinos e sequência de dias ativos.',
     howTo:
       'Veja quantos dias seguidos você está treinando e seu histórico de assiduidade no mês.',
+  },
+  {
+    slug: MODULE.DESAFIOS,
+    title: 'Desafios',
+    category: 'Acompanhamento',
+    icon: 'flag-outline',
+    description:
+      'Desafios com duração definida que seu personal criou — dias com exercícios, dicas e ranking final.',
+    howTo:
+      'Marque os itens de cada dia conforme for completando (não dá para desmarcar). Quando o desafio terminar, o resultado aparece aqui.',
   },
   {
     slug: MODULE.FEEDBACKS,

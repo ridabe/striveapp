@@ -60,6 +60,13 @@ export default function MaisScreen() {
           route: '/(admin)/ranking',
         },
         {
+          slug: MODULE.DESAFIOS,
+          icon: 'flag-outline',
+          label: 'Desafios',
+          description: 'Desafios com cronograma e ranking de evolução',
+          route: '/(admin)/desafios/',
+        },
+        {
           slug: MODULE.FREQUENCIA,
           icon: 'calendar-outline',
           label: 'Frequência',

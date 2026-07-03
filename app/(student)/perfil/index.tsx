@@ -25,6 +25,7 @@ interface TenantContact {
 }
 
 const ALL_MODULES = [
+  { label: 'Desafios',        icon: 'flag-outline',          route: '/(student)/mais/desafios',    desc: 'Cronograma, dicas e ranking',  slug: MODULE.DESAFIOS },
   { label: 'Frequência',      icon: 'calendar-outline',      route: '/(student)/mais/frequencia',  desc: 'Calendário de presenças',      slug: MODULE.FREQUENCIA },
   { label: 'Anamnese',        icon: 'document-text-outline', route: '/(student)/mais/anamnese',    desc: 'Histórico de saúde',           slug: MODULE.ANAMNESE },
   { label: 'Avaliação Física',icon: 'body-outline',          route: '/(student)/mais/avaliacao',   desc: 'Medidas e composição corporal',slug: MODULE.AVALIACOES },
@@ -57,7 +58,11 @@ export default function PerfilScreen() {
   const { primaryColor, tenantName, tenantLogoUrl } = useThemeStore();
   const { has: hasModule, isLoaded: modulesLoaded } = useModulesStore();
 
-  const visibleModules = ALL_MODULES.filter(m => !modulesLoaded || hasModule(m.slug as any));
+  const [hasVisibleChallenge, setHasVisibleChallenge] = useState(false);
+
+  const visibleModules = ALL_MODULES
+    .filter(m => !modulesLoaded || hasModule(m.slug as any))
+    .filter(m => m.slug !== MODULE.DESAFIOS || hasVisibleChallenge);
 
   const [tenantContact, setTenantContact] = useState<TenantContact | null>(null);
   const [loadingTenant, setLoadingTenant] = useState(true);
@@ -82,6 +87,21 @@ export default function PerfilScreen() {
         setLoadingTenant(false);
       });
   }, [selectedStudent?.tenant_id]);
+
+  // Item "Desafios" só aparece quando o aluno participa de pelo menos um desafio
+  // ativo ou já publicado — mesma regra da web (hasVisibleStudentChallenge).
+  useEffect(() => {
+    const studentId = selectedStudent?.id;
+    if (!studentId) { setHasVisibleChallenge(false); return; }
+    supabase
+      .from('challenge_participants')
+      .select('id, challenges(status)')
+      .eq('student_id', studentId)
+      .then(({ data }) => {
+        const visible = (data ?? []).some((p: any) => p.challenges?.status === 'active' || p.challenges?.status === 'published');
+        setHasVisibleChallenge(visible);
+      });
+  }, [selectedStudent?.id]);
 
   async function handleSignOut() {
     Alert.alert('Sair da conta', 'Deseja encerrar sua sessão?', [

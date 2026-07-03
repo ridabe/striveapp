@@ -81,6 +81,7 @@ export default function AdminLayout() {
       {/* Novos módulos */}
       <Tabs.Screen name="agenda" options={{ href: null }} />
       <Tabs.Screen name="ranking" options={{ href: null }} />
+      <Tabs.Screen name="desafios" options={{ href: null }} />
       <Tabs.Screen name="planos-alimentares" options={{ href: null }} />
       {/* Max Strive IA */}
       <Tabs.Screen name="assistente-ia" options={{ href: null }} />

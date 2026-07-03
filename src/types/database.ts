@@ -152,6 +152,192 @@ export type Database = {
           },
         ]
       }
+      ai_conversations: {
+        Row: {
+          created_at: string
+          feature_type: string
+          id: string
+          student_id: string
+          tenant_id: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          feature_type: string
+          id?: string
+          student_id: string
+          tenant_id: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          feature_type?: string
+          id?: string
+          student_id?: string
+          tenant_id?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_conversations_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_conversations_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "ai_conversations_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          metadata: Json
+          role: string
+        }
+        Insert: {
+          content: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          metadata?: Json
+          role: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          metadata?: Json
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_usage_events: {
+        Row: {
+          actor_profile_id: string | null
+          client_platform: string
+          conversation_id: string | null
+          created_at: string
+          error_message: string | null
+          feature_type: string
+          id: string
+          input_tokens: number
+          latency_ms: number | null
+          metadata: Json
+          model: string | null
+          output_tokens: number
+          provider: string
+          request_count: number
+          status: string
+          student_id: string | null
+          tenant_id: string
+          usage_kind: string
+        }
+        Insert: {
+          actor_profile_id?: string | null
+          client_platform?: string
+          conversation_id?: string | null
+          created_at?: string
+          error_message?: string | null
+          feature_type: string
+          id?: string
+          input_tokens?: number
+          latency_ms?: number | null
+          metadata?: Json
+          model?: string | null
+          output_tokens?: number
+          provider: string
+          request_count?: number
+          status?: string
+          student_id?: string | null
+          tenant_id: string
+          usage_kind: string
+        }
+        Update: {
+          actor_profile_id?: string | null
+          client_platform?: string
+          conversation_id?: string | null
+          created_at?: string
+          error_message?: string | null
+          feature_type?: string
+          id?: string
+          input_tokens?: number
+          latency_ms?: number | null
+          metadata?: Json
+          model?: string | null
+          output_tokens?: number
+          provider?: string
+          request_count?: number
+          status?: string
+          student_id?: string | null
+          tenant_id?: string
+          usage_kind?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_usage_events_actor_profile_id_fkey"
+            columns: ["actor_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_usage_events_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_usage_events_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_usage_events_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "ai_usage_events_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       anamnese_responses: {
         Row: {
           completed_at: string | null
@@ -356,6 +542,416 @@ export type Database = {
           },
         ]
       }
+      challenge_day_items: {
+        Row: {
+          challenge_day_id: string
+          content: string | null
+          created_at: string
+          exercise_id: string | null
+          file_url: string | null
+          id: string
+          item_type: string
+          sort_order: number
+          tenant_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          challenge_day_id: string
+          content?: string | null
+          created_at?: string
+          exercise_id?: string | null
+          file_url?: string | null
+          id?: string
+          item_type: string
+          sort_order?: number
+          tenant_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          challenge_day_id?: string
+          content?: string | null
+          created_at?: string
+          exercise_id?: string | null
+          file_url?: string | null
+          id?: string
+          item_type?: string
+          sort_order?: number
+          tenant_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_day_items_challenge_day_id_fkey"
+            columns: ["challenge_day_id"]
+            isOneToOne: false
+            referencedRelation: "challenge_days"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "challenge_day_items_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "challenge_day_items_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "challenge_day_items_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      challenge_days: {
+        Row: {
+          challenge_id: string
+          created_at: string
+          day_number: number
+          id: string
+          release_date: string | null
+          status: string
+          tenant_id: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          challenge_id: string
+          created_at?: string
+          day_number: number
+          id?: string
+          release_date?: string | null
+          status?: string
+          tenant_id: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          challenge_id?: string
+          created_at?: string
+          day_number?: number
+          id?: string
+          release_date?: string | null
+          status?: string
+          tenant_id?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_days_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "challenge_days_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "challenge_days_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      challenge_item_progress: {
+        Row: {
+          challenge_day_item_id: string
+          completed_at: string
+          id: string
+          participant_id: string
+          tenant_id: string
+        }
+        Insert: {
+          challenge_day_item_id: string
+          completed_at?: string
+          id?: string
+          participant_id: string
+          tenant_id: string
+        }
+        Update: {
+          challenge_day_item_id?: string
+          completed_at?: string
+          id?: string
+          participant_id?: string
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_item_progress_challenge_day_item_id_fkey"
+            columns: ["challenge_day_item_id"]
+            isOneToOne: false
+            referencedRelation: "challenge_day_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "challenge_item_progress_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "challenge_participants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "challenge_item_progress_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "challenge_item_progress_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      challenge_messages: {
+        Row: {
+          challenge_id: string
+          created_at: string
+          id: string
+          message: string
+          tenant_id: string
+        }
+        Insert: {
+          challenge_id: string
+          created_at?: string
+          id?: string
+          message: string
+          tenant_id: string
+        }
+        Update: {
+          challenge_id?: string
+          created_at?: string
+          id?: string
+          message?: string
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_messages_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "challenge_messages_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "challenge_messages_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      challenge_participants: {
+        Row: {
+          challenge_id: string
+          created_at: string
+          final_arm: number | null
+          final_body_fat: number | null
+          final_chest: number | null
+          final_hip: number | null
+          final_notes: string | null
+          final_thigh: number | null
+          final_waist: number | null
+          final_weight: number | null
+          id: string
+          initial_age: number | null
+          initial_arm: number | null
+          initial_body_fat: number | null
+          initial_chest: number | null
+          initial_hip: number | null
+          initial_thigh: number | null
+          initial_waist: number | null
+          initial_weight: number | null
+          result_delta_pp: number | null
+          result_rank: number | null
+          student_id: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          challenge_id: string
+          created_at?: string
+          final_arm?: number | null
+          final_body_fat?: number | null
+          final_chest?: number | null
+          final_hip?: number | null
+          final_notes?: string | null
+          final_thigh?: number | null
+          final_waist?: number | null
+          final_weight?: number | null
+          id?: string
+          initial_age?: number | null
+          initial_arm?: number | null
+          initial_body_fat?: number | null
+          initial_chest?: number | null
+          initial_hip?: number | null
+          initial_thigh?: number | null
+          initial_waist?: number | null
+          initial_weight?: number | null
+          result_delta_pp?: number | null
+          result_rank?: number | null
+          student_id: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          challenge_id?: string
+          created_at?: string
+          final_arm?: number | null
+          final_body_fat?: number | null
+          final_chest?: number | null
+          final_hip?: number | null
+          final_notes?: string | null
+          final_thigh?: number | null
+          final_waist?: number | null
+          final_weight?: number | null
+          id?: string
+          initial_age?: number | null
+          initial_arm?: number | null
+          initial_body_fat?: number | null
+          initial_chest?: number | null
+          initial_hip?: number | null
+          initial_thigh?: number | null
+          initial_waist?: number | null
+          initial_weight?: number | null
+          result_delta_pp?: number | null
+          result_rank?: number | null
+          student_id?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_participants_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "challenge_participants_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "challenge_participants_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "challenge_participants_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      challenges: {
+        Row: {
+          cover_image_url: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          duration_days: number
+          id: string
+          name: string
+          prizes: string | null
+          release_mode: string
+          results_published_at: string | null
+          rules: string | null
+          show_results_to_students: boolean
+          start_date: string | null
+          status: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          duration_days: number
+          id?: string
+          name: string
+          prizes?: string | null
+          release_mode?: string
+          results_published_at?: string | null
+          rules?: string | null
+          show_results_to_students?: boolean
+          start_date?: string | null
+          status?: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          duration_days?: number
+          id?: string
+          name?: string
+          prizes?: string | null
+          release_mode?: string
+          results_published_at?: string | null
+          rules?: string | null
+          show_results_to_students?: boolean
+          start_date?: string | null
+          status?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenges_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "challenges_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       exercise_combo_items: {
         Row: {
           combo_id: string
@@ -447,6 +1043,58 @@ export type Database = {
           },
         ]
       }
+      exercise_embeddings: {
+        Row: {
+          content: string
+          created_at: string
+          embedding: string
+          exercise_id: string
+          id: string
+          tenant_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          embedding: string
+          exercise_id: string
+          id?: string
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          embedding?: string
+          exercise_id?: string
+          id?: string
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exercise_embeddings_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exercise_embeddings_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "exercise_embeddings_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       exercises: {
         Row: {
           count_type: string
@@ -455,6 +1103,7 @@ export type Database = {
           default_duration_secs: number | null
           default_reps: string | null
           default_sets: number | null
+          external_id: string | null
           id: string
           instructions: string | null
           is_global: boolean
@@ -462,6 +1111,7 @@ export type Database = {
           muscle_group: string
           name: string
           secondary_muscles: string[]
+          source: string
           tenant_id: string | null
           updated_at: string
           video_path: string | null
@@ -474,6 +1124,7 @@ export type Database = {
           default_duration_secs?: number | null
           default_reps?: string | null
           default_sets?: number | null
+          external_id?: string | null
           id?: string
           instructions?: string | null
           is_global?: boolean
@@ -481,6 +1132,7 @@ export type Database = {
           muscle_group: string
           name: string
           secondary_muscles?: string[]
+          source?: string
           tenant_id?: string | null
           updated_at?: string
           video_path?: string | null
@@ -493,6 +1145,7 @@ export type Database = {
           default_duration_secs?: number | null
           default_reps?: string | null
           default_sets?: number | null
+          external_id?: string | null
           id?: string
           instructions?: string | null
           is_global?: boolean
@@ -500,6 +1153,7 @@ export type Database = {
           muscle_group?: string
           name?: string
           secondary_muscles?: string[]
+          source?: string
           tenant_id?: string | null
           updated_at?: string
           video_path?: string | null
@@ -919,6 +1573,21 @@ export type Database = {
           },
         ]
       }
+      internal_config: {
+        Row: {
+          key: string
+          value: string
+        }
+        Insert: {
+          key: string
+          value: string
+        }
+        Update: {
+          key?: string
+          value?: string
+        }
+        Relationships: []
+      }
       meal_plan_foods: {
         Row: {
           calories: number
@@ -1134,6 +1803,7 @@ export type Database = {
           load_increases: number
           month: number
           student_id: string
+          tenant_id: string | null
           total_points: number
           weekly_bonuses: number
           workouts_completed: number
@@ -1148,6 +1818,7 @@ export type Database = {
           load_increases?: number
           month: number
           student_id: string
+          tenant_id?: string | null
           total_points?: number
           weekly_bonuses?: number
           workouts_completed?: number
@@ -1162,6 +1833,7 @@ export type Database = {
           load_increases?: number
           month?: number
           student_id?: string
+          tenant_id?: string | null
           total_points?: number
           weekly_bonuses?: number
           workouts_completed?: number
@@ -1173,6 +1845,20 @@ export type Database = {
             columns: ["student_id"]
             isOneToOne: false
             referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "monthly_points_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "monthly_points_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
         ]
@@ -1590,6 +2276,64 @@ export type Database = {
           },
         ]
       }
+      student_messages: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          message_type: string
+          read_at: string | null
+          student_id: string
+          tenant_id: string
+          title: string | null
+          trainer_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: string
+          message_type?: string
+          read_at?: string | null
+          student_id: string
+          tenant_id: string
+          title?: string | null
+          trainer_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          message_type?: string
+          read_at?: string | null
+          student_id?: string
+          tenant_id?: string
+          title?: string | null
+          trainer_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_messages_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_messages_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "student_messages_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       student_plan_assignments: {
         Row: {
           assigned_at: string
@@ -1934,6 +2678,7 @@ export type Database = {
           contact_email: string | null
           contact_phone: string | null
           created_at: string
+          cref: string | null
           id: string
           logo_url: string | null
           max_students: number
@@ -1951,6 +2696,7 @@ export type Database = {
           contact_email?: string | null
           contact_phone?: string | null
           created_at?: string
+          cref?: string | null
           id?: string
           logo_url?: string | null
           max_students?: number
@@ -1968,6 +2714,7 @@ export type Database = {
           contact_email?: string | null
           contact_phone?: string | null
           created_at?: string
+          cref?: string | null
           id?: string
           logo_url?: string | null
           max_students?: number
@@ -2394,6 +3141,7 @@ export type Database = {
         Row: {
           calories_active: number | null
           created_at: string
+          distance_meters: number | null
           duration_seconds: number | null
           finished_at: string | null
           heart_rate_avg: number | null
@@ -2415,6 +3163,7 @@ export type Database = {
         Insert: {
           calories_active?: number | null
           created_at?: string
+          distance_meters?: number | null
           duration_seconds?: number | null
           finished_at?: string | null
           heart_rate_avg?: number | null
@@ -2436,6 +3185,7 @@ export type Database = {
         Update: {
           calories_active?: number | null
           created_at?: string
+          distance_meters?: number | null
           duration_seconds?: number | null
           finished_at?: string | null
           heart_rate_avg?: number | null
@@ -2524,6 +3274,15 @@ export type Database = {
       }
     }
     Functions: {
+      award_workout_points: {
+        Args: {
+          p_all_done: boolean
+          p_duration_secs: number
+          p_exercises_count: number
+          p_student_id: string
+        }
+        Returns: Json
+      }
       generate_tenant_slug: { Args: { p_name: string }; Returns: string }
       get_admin_last_sign_in: { Args: { p_user_id: string }; Returns: string }
       get_my_role: {
@@ -2541,6 +3300,24 @@ export type Database = {
           plan_name: string
         }[]
       }
+      mark_challenge_item_complete: {
+        Args: { p_item_id: string }
+        Returns: Json
+      }
+      match_exercises: {
+        Args: {
+          match_count?: number
+          match_threshold?: number
+          p_tenant_id: string
+          query_embedding: string
+        }
+        Returns: {
+          content: string
+          exercise_id: string
+          similarity: number
+        }[]
+      }
+      notify_sales_set_secret: { Args: { secret: string }; Returns: undefined }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
     }

@@ -380,7 +380,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_admin_layout",
-      "community": 6,
+      "community": 60,
       "norm_label": "_layout.tsx"
     },
     {
@@ -510,7 +510,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "app_admin_agenda_adminagendascreen",
-      "community": 15,
+      "community": 24,
       "norm_label": "adminagendascreen()"
     },
     {
@@ -1454,6 +1454,246 @@
       "norm_label": "s"
     },
     {
+      "label": "[id].tsx",
+      "file_type": "code",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "app_admin_desafios_id",
+      "community": 34,
+      "norm_label": "[id].tsx"
+    },
+    {
+      "label": "Challenge",
+      "file_type": "code",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L19",
+      "_origin": "ast",
+      "id": "app_admin_desafios_id_challenge",
+      "community": 34,
+      "norm_label": "challenge"
+    },
+    {
+      "label": "Participant",
+      "file_type": "code",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L24",
+      "_origin": "ast",
+      "id": "app_admin_desafios_id_participant",
+      "community": 34,
+      "norm_label": "participant"
+    },
+    {
+      "label": "DayItem",
+      "file_type": "code",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L32",
+      "_origin": "ast",
+      "id": "app_admin_desafios_id_dayitem",
+      "community": 34,
+      "norm_label": "dayitem"
+    },
+    {
+      "label": "Day",
+      "file_type": "code",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L36",
+      "_origin": "ast",
+      "id": "app_admin_desafios_id_day",
+      "community": 34,
+      "norm_label": "day"
+    },
+    {
+      "label": "StudentOption",
+      "file_type": "code",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L39",
+      "_origin": "ast",
+      "id": "app_admin_desafios_id_studentoption",
+      "community": 34,
+      "norm_label": "studentoption"
+    },
+    {
+      "label": "ITEM_TYPES",
+      "file_type": "code",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L41",
+      "_origin": "ast",
+      "id": "app_admin_desafios_id_item_types",
+      "community": 34,
+      "norm_label": "item_types"
+    },
+    {
+      "label": "itemIcon()",
+      "file_type": "code",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L48",
+      "_origin": "ast",
+      "id": "app_admin_desafios_id_itemicon",
+      "community": 34,
+      "norm_label": "itemicon()"
+    },
+    {
+      "label": "ChallengeDetailScreen()",
+      "file_type": "code",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L53",
+      "_origin": "ast",
+      "id": "app_admin_desafios_id_challengedetailscreen",
+      "community": 34,
+      "norm_label": "challengedetailscreen()"
+    },
+    {
+      "label": "STATUS_LABEL",
+      "file_type": "code",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L953",
+      "_origin": "ast",
+      "id": "app_admin_desafios_id_status_label",
+      "community": 34,
+      "norm_label": "status_label"
+    },
+    {
+      "label": "InfoBlock()",
+      "file_type": "code",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L960",
+      "_origin": "ast",
+      "id": "app_admin_desafios_id_infoblock",
+      "community": 34,
+      "norm_label": "infoblock()"
+    },
+    {
+      "label": "SectionHeader()",
+      "file_type": "code",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L969",
+      "_origin": "ast",
+      "id": "app_admin_desafios_id_sectionheader",
+      "community": 34,
+      "norm_label": "sectionheader()"
+    },
+    {
+      "label": "ModalHeader()",
+      "file_type": "code",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L982",
+      "_origin": "ast",
+      "id": "app_admin_desafios_id_modalheader",
+      "community": 34,
+      "norm_label": "modalheader()"
+    },
+    {
+      "label": "Field()",
+      "file_type": "code",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L994",
+      "_origin": "ast",
+      "id": "app_admin_desafios_id_field",
+      "community": 34,
+      "norm_label": "field()"
+    },
+    {
+      "label": "s",
+      "file_type": "code",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L1004",
+      "_origin": "ast",
+      "id": "app_admin_desafios_id_s",
+      "community": 34,
+      "norm_label": "s"
+    },
+    {
+      "label": "_layout.tsx",
+      "file_type": "code",
+      "source_file": "app/(admin)/desafios/_layout.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "app_admin_desafios_layout",
+      "community": 293,
+      "norm_label": "_layout.tsx"
+    },
+    {
+      "label": "DesafiosLayout()",
+      "file_type": "code",
+      "source_file": "app/(admin)/desafios/_layout.tsx",
+      "source_location": "L2",
+      "_origin": "ast",
+      "id": "app_admin_desafios_layout_desafioslayout",
+      "community": 293,
+      "norm_label": "desafioslayout()"
+    },
+    {
+      "label": "index.tsx",
+      "file_type": "code",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "app_admin_desafios_index",
+      "community": 291,
+      "norm_label": "index.tsx"
+    },
+    {
+      "label": "ChallengeRow",
+      "file_type": "code",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L18",
+      "_origin": "ast",
+      "id": "app_admin_desafios_index_challengerow",
+      "community": 291,
+      "norm_label": "challengerow"
+    },
+    {
+      "label": "STATUS_LABEL",
+      "file_type": "code",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L27",
+      "_origin": "ast",
+      "id": "app_admin_desafios_index_status_label",
+      "community": 291,
+      "norm_label": "status_label"
+    },
+    {
+      "label": "RELEASE_MODES",
+      "file_type": "code",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L34",
+      "_origin": "ast",
+      "id": "app_admin_desafios_index_release_modes",
+      "community": 291,
+      "norm_label": "release_modes"
+    },
+    {
+      "label": "ChallengesListScreen()",
+      "file_type": "code",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L39",
+      "_origin": "ast",
+      "id": "app_admin_desafios_index_challengeslistscreen",
+      "community": 291,
+      "norm_label": "challengeslistscreen()"
+    },
+    {
+      "label": "DesafiosScreen()",
+      "file_type": "code",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L280",
+      "_origin": "ast",
+      "id": "app_admin_desafios_index_desafiosscreen",
+      "community": 291,
+      "norm_label": "desafiosscreen()"
+    },
+    {
+      "label": "s",
+      "file_type": "code",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L288",
+      "_origin": "ast",
+      "id": "app_admin_desafios_index_s",
+      "community": 291,
+      "norm_label": "s"
+    },
+    {
       "label": "execucao.tsx",
       "file_type": "code",
       "source_file": "app/(admin)/execucao.tsx",
@@ -1550,7 +1790,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_admin_feedbacks",
-      "community": 24,
+      "community": 50,
       "norm_label": "feedbacks.tsx"
     },
     {
@@ -1560,7 +1800,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "app_admin_feedbacks_feedbackitem",
-      "community": 24,
+      "community": 50,
       "norm_label": "feedbackitem"
     },
     {
@@ -1570,7 +1810,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "app_admin_feedbacks_stars",
-      "community": 24,
+      "community": 50,
       "norm_label": "stars()"
     },
     {
@@ -1580,7 +1820,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "app_admin_feedbacks_fmtdate",
-      "community": 24,
+      "community": 50,
       "norm_label": "fmtdate()"
     },
     {
@@ -1590,7 +1830,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "app_admin_feedbacks_feedbacksscreen",
-      "community": 24,
+      "community": 50,
       "norm_label": "feedbacksscreen()"
     },
     {
@@ -1600,7 +1840,7 @@
       "source_location": "L197",
       "_origin": "ast",
       "id": "app_admin_feedbacks_s",
-      "community": 24,
+      "community": 50,
       "norm_label": "s"
     },
     {
@@ -1750,7 +1990,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_admin_index",
-      "community": 30,
+      "community": 56,
       "norm_label": "index.tsx"
     },
     {
@@ -1760,7 +2000,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "app_admin_index_dashboardstats",
-      "community": 30,
+      "community": 56,
       "norm_label": "dashboardstats"
     },
     {
@@ -1770,7 +2010,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "app_admin_index_recentstudent",
-      "community": 30,
+      "community": 56,
       "norm_label": "recentstudent"
     },
     {
@@ -1780,7 +2020,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "app_admin_index_admindashboard",
-      "community": 30,
+      "community": 56,
       "norm_label": "admindashboard()"
     },
     {
@@ -1790,7 +2030,7 @@
       "source_location": "L271",
       "_origin": "ast",
       "id": "app_admin_index_ministat",
-      "community": 30,
+      "community": 56,
       "norm_label": "ministat()"
     },
     {
@@ -1800,7 +2040,7 @@
       "source_location": "L286",
       "_origin": "ast",
       "id": "app_admin_index_actionpill",
-      "community": 30,
+      "community": 56,
       "norm_label": "actionpill()"
     },
     {
@@ -1810,7 +2050,7 @@
       "source_location": "L302",
       "_origin": "ast",
       "id": "app_admin_index_s",
-      "community": 30,
+      "community": 56,
       "norm_label": "s"
     },
     {
@@ -1820,7 +2060,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_admin_mais",
-      "community": 6,
+      "community": 54,
       "norm_label": "mais.tsx"
     },
     {
@@ -1830,7 +2070,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "app_admin_mais_moduleitem",
-      "community": 6,
+      "community": 54,
       "norm_label": "moduleitem"
     },
     {
@@ -1840,7 +2080,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "app_admin_mais_modulegroup",
-      "community": 6,
+      "community": 54,
       "norm_label": "modulegroup"
     },
     {
@@ -1850,17 +2090,17 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "app_admin_mais_maisscreen",
-      "community": 6,
+      "community": 54,
       "norm_label": "maisscreen()"
     },
     {
       "label": "styles",
       "file_type": "code",
       "source_file": "app/(admin)/mais.tsx",
-      "source_location": "L249",
+      "source_location": "L256",
       "_origin": "ast",
       "id": "app_admin_mais_styles",
-      "community": 6,
+      "community": 54,
       "norm_label": "styles"
     },
     {
@@ -2140,7 +2380,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_admin_planos_id",
-      "community": 17,
+      "community": 11,
       "norm_label": "[id].tsx"
     },
     {
@@ -2150,7 +2390,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "app_admin_planos_id_workoutitem",
-      "community": 17,
+      "community": 11,
       "norm_label": "workoutitem"
     },
     {
@@ -2160,7 +2400,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "app_admin_planos_id_routine",
-      "community": 17,
+      "community": 11,
       "norm_label": "routine"
     },
     {
@@ -2170,7 +2410,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "app_admin_planos_id_plan",
-      "community": 17,
+      "community": 11,
       "norm_label": "plan"
     },
     {
@@ -2180,7 +2420,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "app_admin_planos_id_assignedstudent",
-      "community": 17,
+      "community": 11,
       "norm_label": "assignedstudent"
     },
     {
@@ -2190,7 +2430,7 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "app_admin_planos_id_student",
-      "community": 17,
+      "community": 11,
       "norm_label": "student"
     },
     {
@@ -2200,7 +2440,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "app_admin_planos_id_plandetailscreen",
-      "community": 17,
+      "community": 11,
       "norm_label": "plandetailscreen()"
     },
     {
@@ -2210,7 +2450,7 @@
       "source_location": "L593",
       "_origin": "ast",
       "id": "app_admin_planos_id_s",
-      "community": 17,
+      "community": 11,
       "norm_label": "s"
     },
     {
@@ -2240,7 +2480,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_admin_planos_index",
-      "community": 36,
+      "community": 11,
       "norm_label": "index.tsx"
     },
     {
@@ -2250,7 +2490,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "app_admin_planos_index_studentplan",
-      "community": 36,
+      "community": 11,
       "norm_label": "studentplan"
     },
     {
@@ -2260,7 +2500,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "app_admin_planos_index_studentextra",
-      "community": 36,
+      "community": 11,
       "norm_label": "studentextra"
     },
     {
@@ -2270,7 +2510,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "app_admin_planos_index_extra_category_colors",
-      "community": 36,
+      "community": 11,
       "norm_label": "extra_category_colors"
     },
     {
@@ -2280,7 +2520,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "app_admin_planos_index_studentplansview",
-      "community": 36,
+      "community": 11,
       "norm_label": "studentplansview()"
     },
     {
@@ -2290,7 +2530,7 @@
       "source_location": "L139",
       "_origin": "ast",
       "id": "app_admin_planos_index_workoutplan",
-      "community": 36,
+      "community": 11,
       "norm_label": "workoutplan"
     },
     {
@@ -2300,7 +2540,7 @@
       "source_location": "L149",
       "_origin": "ast",
       "id": "app_admin_planos_index_fmtdate",
-      "community": 36,
+      "community": 11,
       "norm_label": "fmtdate()"
     },
     {
@@ -2310,7 +2550,7 @@
       "source_location": "L155",
       "_origin": "ast",
       "id": "app_admin_planos_index_planosscreen",
-      "community": 36,
+      "community": 11,
       "norm_label": "planosscreen()"
     },
     {
@@ -2320,7 +2560,7 @@
       "source_location": "L413",
       "_origin": "ast",
       "id": "app_admin_planos_index_s",
-      "community": 36,
+      "community": 11,
       "norm_label": "s"
     },
     {
@@ -2330,7 +2570,7 @@
       "source_location": "L452",
       "_origin": "ast",
       "id": "app_admin_planos_index_sp",
-      "community": 36,
+      "community": 11,
       "norm_label": "sp"
     },
     {
@@ -2710,7 +2950,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "app_admin_treinos_extras_id_extraworkoutdetailscreen",
-      "community": 17,
+      "community": 26,
       "norm_label": "extraworkoutdetailscreen()"
     },
     {
@@ -2980,7 +3220,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_auth_welcome",
-      "community": 34,
+      "community": 292,
       "norm_label": "welcome.tsx"
     },
     {
@@ -2990,7 +3230,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "app_auth_welcome_benefits",
-      "community": 34,
+      "community": 292,
       "norm_label": "benefits"
     },
     {
@@ -3000,7 +3240,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "app_auth_welcome_welcomescreen",
-      "community": 34,
+      "community": 292,
       "norm_label": "welcomescreen()"
     },
     {
@@ -3010,7 +3250,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "app_auth_welcome_styles",
-      "community": 34,
+      "community": 292,
       "norm_label": "styles"
     },
     {
@@ -3020,7 +3260,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_student_layout",
-      "community": 6,
+      "community": 60,
       "norm_label": "_layout.tsx"
     },
     {
@@ -3240,7 +3480,7 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "app_student_mais_agenda_studentagendascreen",
-      "community": 7,
+      "community": 25,
       "norm_label": "studentagendascreen()"
     },
     {
@@ -3280,7 +3520,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_student_mais_anamnese",
-      "community": 58,
+      "community": 51,
       "norm_label": "anamnese.tsx"
     },
     {
@@ -3290,7 +3530,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "app_student_mais_anamnese_anamnesetemplate",
-      "community": 58,
+      "community": 51,
       "norm_label": "anamnesetemplate"
     },
     {
@@ -3300,7 +3540,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "app_student_mais_anamnese_mode",
-      "community": 58,
+      "community": 51,
       "norm_label": "mode"
     },
     {
@@ -3310,7 +3550,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "app_student_mais_anamnese_fmtdate",
-      "community": 58,
+      "community": 51,
       "norm_label": "fmtdate()"
     },
     {
@@ -3320,7 +3560,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "app_student_mais_anamnese_anamnesescreen",
-      "community": 58,
+      "community": 51,
       "norm_label": "anamnesescreen()"
     },
     {
@@ -3330,7 +3570,7 @@
       "source_location": "L367",
       "_origin": "ast",
       "id": "app_student_mais_anamnese_s",
-      "community": 58,
+      "community": 51,
       "norm_label": "s"
     },
     {
@@ -3574,6 +3814,106 @@
       "norm_label": "m"
     },
     {
+      "label": "desafios.tsx",
+      "file_type": "code",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "app_student_mais_desafios",
+      "community": 36,
+      "norm_label": "desafios.tsx"
+    },
+    {
+      "label": "Challenge",
+      "file_type": "code",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L17",
+      "_origin": "ast",
+      "id": "app_student_mais_desafios_challenge",
+      "community": 36,
+      "norm_label": "challenge"
+    },
+    {
+      "label": "DayItem",
+      "file_type": "code",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L21",
+      "_origin": "ast",
+      "id": "app_student_mais_desafios_dayitem",
+      "community": 36,
+      "norm_label": "dayitem"
+    },
+    {
+      "label": "Day",
+      "file_type": "code",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L24",
+      "_origin": "ast",
+      "id": "app_student_mais_desafios_day",
+      "community": 36,
+      "norm_label": "day"
+    },
+    {
+      "label": "Message",
+      "file_type": "code",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L25",
+      "_origin": "ast",
+      "id": "app_student_mais_desafios_message",
+      "community": 36,
+      "norm_label": "message"
+    },
+    {
+      "label": "RankingRow",
+      "file_type": "code",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "app_student_mais_desafios_rankingrow",
+      "community": 36,
+      "norm_label": "rankingrow"
+    },
+    {
+      "label": "ITEM_ICON",
+      "file_type": "code",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L32",
+      "_origin": "ast",
+      "id": "app_student_mais_desafios_item_icon",
+      "community": 36,
+      "norm_label": "item_icon"
+    },
+    {
+      "label": "StudentDesafiosScreen()",
+      "file_type": "code",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L36",
+      "_origin": "ast",
+      "id": "app_student_mais_desafios_studentdesafiosscreen",
+      "community": 36,
+      "norm_label": "studentdesafiosscreen()"
+    },
+    {
+      "label": "InfoBlock()",
+      "file_type": "code",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L297",
+      "_origin": "ast",
+      "id": "app_student_mais_desafios_infoblock",
+      "community": 36,
+      "norm_label": "infoblock()"
+    },
+    {
+      "label": "s",
+      "file_type": "code",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L306",
+      "_origin": "ast",
+      "id": "app_student_mais_desafios_s",
+      "community": 36,
+      "norm_label": "s"
+    },
+    {
       "label": "feedback.tsx",
       "file_type": "code",
       "source_file": "app/(student)/mais/feedback.tsx",
@@ -3660,7 +4000,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_student_mais_financeiro",
-      "community": 54,
+      "community": 58,
       "norm_label": "financeiro.tsx"
     },
     {
@@ -3670,7 +4010,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "app_student_mais_financeiro_status_config",
-      "community": 54,
+      "community": 58,
       "norm_label": "status_config"
     },
     {
@@ -3680,7 +4020,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "app_student_mais_financeiro_fmtdate",
-      "community": 54,
+      "community": 58,
       "norm_label": "fmtdate()"
     },
     {
@@ -3690,7 +4030,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "app_student_mais_financeiro_fmtcurrency",
-      "community": 54,
+      "community": 58,
       "norm_label": "fmtcurrency()"
     },
     {
@@ -3700,7 +4040,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "app_student_mais_financeiro_financeiroscreen",
-      "community": 54,
+      "community": 58,
       "norm_label": "financeiroscreen()"
     },
     {
@@ -3710,7 +4050,7 @@
       "source_location": "L120",
       "_origin": "ast",
       "id": "app_student_mais_financeiro_s",
-      "community": 54,
+      "community": 58,
       "norm_label": "s"
     },
     {
@@ -3860,7 +4200,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_student_mais_mensagens",
-      "community": 58,
+      "community": 55,
       "norm_label": "mensagens.tsx"
     },
     {
@@ -3870,7 +4210,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "app_student_mais_mensagens_studentmessage",
-      "community": 58,
+      "community": 55,
       "norm_label": "studentmessage"
     },
     {
@@ -3880,7 +4220,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "app_student_mais_mensagens_studentmessages",
-      "community": 58,
+      "community": 6,
       "norm_label": "studentmessages()"
     },
     {
@@ -3890,7 +4230,7 @@
       "source_location": "L275",
       "_origin": "ast",
       "id": "app_student_mais_mensagens_s",
-      "community": 58,
+      "community": 55,
       "norm_label": "s"
     },
     {
@@ -4030,7 +4370,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "app_student_mais_planos_alimentares_studentplanosalimentaresscreen",
-      "community": 7,
+      "community": 35,
       "norm_label": "studentplanosalimentaresscreen()"
     },
     {
@@ -4210,7 +4550,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_student_perfil_index",
-      "community": 56,
+      "community": 30,
       "norm_label": "index.tsx"
     },
     {
@@ -4220,7 +4560,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "app_student_perfil_index_tenantcontact",
-      "community": 56,
+      "community": 30,
       "norm_label": "tenantcontact"
     },
     {
@@ -4230,47 +4570,47 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "app_student_perfil_index_all_modules",
-      "community": 56,
+      "community": 30,
       "norm_label": "all_modules"
     },
     {
       "label": "fmtPhone()",
       "file_type": "code",
       "source_file": "app/(student)/perfil/index.tsx",
-      "source_location": "L37",
+      "source_location": "L38",
       "_origin": "ast",
       "id": "app_student_perfil_index_fmtphone",
-      "community": 56,
+      "community": 30,
       "norm_label": "fmtphone()"
     },
     {
       "label": "openWhatsApp()",
       "file_type": "code",
       "source_file": "app/(student)/perfil/index.tsx",
-      "source_location": "L44",
+      "source_location": "L45",
       "_origin": "ast",
       "id": "app_student_perfil_index_openwhatsapp",
-      "community": 56,
+      "community": 30,
       "norm_label": "openwhatsapp()"
     },
     {
       "label": "PerfilScreen()",
       "file_type": "code",
       "source_file": "app/(student)/perfil/index.tsx",
-      "source_location": "L54",
+      "source_location": "L55",
       "_origin": "ast",
       "id": "app_student_perfil_index_perfilscreen",
-      "community": 56,
+      "community": 30,
       "norm_label": "perfilscreen()"
     },
     {
       "label": "s",
       "file_type": "code",
       "source_file": "app/(student)/perfil/index.tsx",
-      "source_location": "L300",
+      "source_location": "L320",
       "_origin": "ast",
       "id": "app_student_perfil_index_s",
-      "community": 56,
+      "community": 30,
       "norm_label": "s"
     },
     {
@@ -4470,7 +4810,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_student_select_tenant",
-      "community": 34,
+      "community": 42,
       "norm_label": "select-tenant.tsx"
     },
     {
@@ -4480,7 +4820,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "app_student_select_tenant_selecttenantscreen",
-      "community": 34,
+      "community": 42,
       "norm_label": "selecttenantscreen()"
     },
     {
@@ -4490,7 +4830,7 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "app_student_select_tenant_styles",
-      "community": 34,
+      "community": 42,
       "norm_label": "styles"
     },
     {
@@ -4507,7 +4847,7 @@
       "label": "Phase",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L30",
+      "source_location": "L31",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_phase",
       "community": 2,
@@ -4517,7 +4857,7 @@
       "label": "ExItem",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L32",
+      "source_location": "L33",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_exitem",
       "community": 2,
@@ -4527,7 +4867,7 @@
       "label": "Section",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L49",
+      "source_location": "L50",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_section",
       "community": 2,
@@ -4537,7 +4877,7 @@
       "label": "INTENSITIES",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L55",
+      "source_location": "L56",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_intensities",
       "community": 2,
@@ -4547,7 +4887,7 @@
       "label": "STAR_LABELS",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L63",
+      "source_location": "L64",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_star_labels",
       "community": 2,
@@ -4557,7 +4897,7 @@
       "label": "STAR_COLORS",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L64",
+      "source_location": "L65",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_star_colors",
       "community": 2,
@@ -4567,7 +4907,7 @@
       "label": "{ width: W }",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L66",
+      "source_location": "L67",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_width_w",
       "community": 2,
@@ -4577,7 +4917,7 @@
       "label": "fmtTime()",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L70",
+      "source_location": "L71",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_fmttime",
       "community": 2,
@@ -4587,7 +4927,7 @@
       "label": "RestRing()",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L77",
+      "source_location": "L78",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_restring",
       "community": 2,
@@ -4597,7 +4937,7 @@
       "label": "StarRow()",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L143",
+      "source_location": "L144",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_starrow",
       "community": 2,
@@ -4607,7 +4947,7 @@
       "label": "RoutineExecutionScreen()",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L156",
+      "source_location": "L157",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_routineexecutionscreen",
       "community": 2,
@@ -4617,7 +4957,7 @@
       "label": "rt",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L1149",
+      "source_location": "L1151",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_rt",
       "community": 2,
@@ -4627,7 +4967,7 @@
       "label": "s",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L1154",
+      "source_location": "L1156",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_s",
       "community": 2,
@@ -4780,7 +5120,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_student_treinos_planid_index",
-      "community": 46,
+      "community": 11,
       "norm_label": "index.tsx"
     },
     {
@@ -4790,7 +5130,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "app_student_treinos_planid_index_day_short",
-      "community": 46,
+      "community": 11,
       "norm_label": "day_short"
     },
     {
@@ -4800,7 +5140,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "app_student_treinos_planid_index_exercise",
-      "community": 46,
+      "community": 11,
       "norm_label": "exercise"
     },
     {
@@ -4810,7 +5150,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "app_student_treinos_planid_index_section",
-      "community": 46,
+      "community": 11,
       "norm_label": "section"
     },
     {
@@ -4820,7 +5160,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "app_student_treinos_planid_index_plan",
-      "community": 46,
+      "community": 11,
       "norm_label": "plan"
     },
     {
@@ -4830,7 +5170,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "app_student_treinos_planid_index_plandetailscreen",
-      "community": 46,
+      "community": 11,
       "norm_label": "plandetailscreen()"
     },
     {
@@ -4840,7 +5180,7 @@
       "source_location": "L355",
       "_origin": "ast",
       "id": "app_student_treinos_planid_index_s",
-      "community": 46,
+      "community": 11,
       "norm_label": "s"
     },
     {
@@ -4877,7 +5217,7 @@
       "label": "Phase",
       "file_type": "code",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L19",
+      "source_location": "L20",
       "_origin": "ast",
       "id": "app_student_treinos_extras_extraid_executar_index_phase",
       "community": 43,
@@ -4887,7 +5227,7 @@
       "label": "ExItem",
       "file_type": "code",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L21",
+      "source_location": "L22",
       "_origin": "ast",
       "id": "app_student_treinos_extras_extraid_executar_index_exitem",
       "community": 43,
@@ -4897,7 +5237,7 @@
       "label": "ExGroup",
       "file_type": "code",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L37",
+      "source_location": "L38",
       "_origin": "ast",
       "id": "app_student_treinos_extras_extraid_executar_index_exgroup",
       "community": 43,
@@ -4907,7 +5247,7 @@
       "label": "INTENSITIES",
       "file_type": "code",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L43",
+      "source_location": "L44",
       "_origin": "ast",
       "id": "app_student_treinos_extras_extraid_executar_index_intensities",
       "community": 43,
@@ -4917,7 +5257,7 @@
       "label": "fmtTime()",
       "file_type": "code",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L51",
+      "source_location": "L52",
       "_origin": "ast",
       "id": "app_student_treinos_extras_extraid_executar_index_fmttime",
       "community": 43,
@@ -4927,7 +5267,7 @@
       "label": "groupByCombo()",
       "file_type": "code",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L57",
+      "source_location": "L58",
       "_origin": "ast",
       "id": "app_student_treinos_extras_extraid_executar_index_groupbycombo",
       "community": 43,
@@ -4937,7 +5277,7 @@
       "label": "ExtraExecutionScreen()",
       "file_type": "code",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L79",
+      "source_location": "L80",
       "_origin": "ast",
       "id": "app_student_treinos_extras_extraid_executar_index_extraexecutionscreen",
       "community": 43,
@@ -4947,7 +5287,7 @@
       "label": "s",
       "file_type": "code",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L498",
+      "source_location": "L500",
       "_origin": "ast",
       "id": "app_student_treinos_extras_extraid_executar_index_s",
       "community": 43,
@@ -5190,7 +5530,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_index",
-      "community": 42,
+      "community": 24,
       "norm_label": "index.tsx"
     },
     {
@@ -5200,7 +5540,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "app_index_index",
-      "community": 42,
+      "community": 24,
       "norm_label": "index()"
     },
     {
@@ -6290,7 +6630,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_mediaviewermodal",
-      "community": 26,
+      "community": 46,
       "norm_label": "mediaviewermodal.tsx"
     },
     {
@@ -6300,7 +6640,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_components_mediaviewermodal_width_w_height_h",
-      "community": 26,
+      "community": 46,
       "norm_label": "{ width: w, height: h }"
     },
     {
@@ -6310,7 +6650,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_components_mediaviewermodal_mediatype",
-      "community": 23,
+      "community": 46,
       "norm_label": "mediatype"
     },
     {
@@ -6320,7 +6660,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_components_mediaviewermodal_props",
-      "community": 26,
+      "community": 46,
       "norm_label": "props"
     },
     {
@@ -6340,7 +6680,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "src_components_mediaviewermodal_s",
-      "community": 26,
+      "community": 46,
       "norm_label": "s"
     },
     {
@@ -6350,7 +6690,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_moduleguard",
-      "community": 54,
+      "community": 51,
       "norm_label": "moduleguard.tsx"
     },
     {
@@ -6360,7 +6700,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_components_moduleguard_props",
-      "community": 54,
+      "community": 60,
       "norm_label": "props"
     },
     {
@@ -6370,7 +6710,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_components_moduleguard_moduleguard",
-      "community": 54,
+      "community": 51,
       "norm_label": "moduleguard()"
     },
     {
@@ -6380,7 +6720,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "src_components_moduleguard_s",
-      "community": 54,
+      "community": 51,
       "norm_label": "s"
     },
     {
@@ -6500,7 +6840,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_striveloader",
-      "community": 29,
+      "community": 56,
       "norm_label": "striveloader.tsx"
     },
     {
@@ -6510,7 +6850,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_components_striveloader_striveloaderprops",
-      "community": 29,
+      "community": 56,
       "norm_label": "striveloaderprops"
     },
     {
@@ -6520,7 +6860,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_components_striveloader_striveloader",
-      "community": 29,
+      "community": 56,
       "norm_label": "striveloader()"
     },
     {
@@ -6530,7 +6870,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_strivelogo",
-      "community": 34,
+      "community": 292,
       "norm_label": "strivelogo.tsx"
     },
     {
@@ -6540,7 +6880,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_components_strivelogo_strivelogoprops",
-      "community": 34,
+      "community": 292,
       "norm_label": "strivelogoprops"
     },
     {
@@ -6550,7 +6890,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "src_components_strivelogo_strivelogo",
-      "community": 34,
+      "community": 292,
       "norm_label": "strivelogo()"
     },
     {
@@ -6560,7 +6900,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "src_components_strivelogo_styles",
-      "community": 34,
+      "community": 292,
       "norm_label": "styles"
     },
     {
@@ -6570,7 +6910,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_studentheader",
-      "community": 58,
+      "community": 55,
       "norm_label": "studentheader.tsx"
     },
     {
@@ -6580,7 +6920,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_components_studentheader_studentheaderprops",
-      "community": 58,
+      "community": 55,
       "norm_label": "studentheaderprops"
     },
     {
@@ -6590,7 +6930,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_components_studentheader_studentheader",
-      "community": 58,
+      "community": 55,
       "norm_label": "studentheader()"
     },
     {
@@ -6600,7 +6940,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "src_components_studentheader_s",
-      "community": 58,
+      "community": 55,
       "norm_label": "s"
     },
     {
@@ -6720,7 +7060,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ai_maxchatmessage",
-      "community": 3,
+      "community": 292,
       "norm_label": "maxchatmessage.tsx"
     },
     {
@@ -6730,7 +7070,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_components_ai_maxchatmessage_small_avatar",
-      "community": 3,
+      "community": 292,
       "norm_label": "small_avatar"
     },
     {
@@ -6740,7 +7080,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_components_ai_maxchatmessage_maxchatmessageprops",
-      "community": 3,
+      "community": 292,
       "norm_label": "maxchatmessageprops"
     },
     {
@@ -6750,7 +7090,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_components_ai_maxchatmessage_maxchatmessage",
-      "community": 3,
+      "community": 292,
       "norm_label": "maxchatmessage()"
     },
     {
@@ -6760,7 +7100,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "src_components_ai_maxchatmessage_styles",
-      "community": 3,
+      "community": 292,
       "norm_label": "styles"
     },
     {
@@ -6770,7 +7110,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ai_maxonboardingmodal",
-      "community": 34,
+      "community": 42,
       "norm_label": "maxonboardingmodal.tsx"
     },
     {
@@ -6780,7 +7120,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "src_components_ai_maxonboardingmodal_steps",
-      "community": 34,
+      "community": 42,
       "norm_label": "steps"
     },
     {
@@ -6790,7 +7130,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "src_components_ai_maxonboardingmodal_props",
-      "community": 34,
+      "community": 42,
       "norm_label": "props"
     },
     {
@@ -6800,7 +7140,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "src_components_ai_maxonboardingmodal_maxonboardingmodal",
-      "community": 34,
+      "community": 42,
       "norm_label": "maxonboardingmodal()"
     },
     {
@@ -6810,7 +7150,7 @@
       "source_location": "L250",
       "_origin": "ast",
       "id": "src_components_ai_maxonboardingmodal_s",
-      "community": 34,
+      "community": 42,
       "norm_label": "s"
     },
     {
@@ -6880,7 +7220,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ai_maxstreamingtext",
-      "community": 3,
+      "community": 292,
       "norm_label": "maxstreamingtext.tsx"
     },
     {
@@ -6890,7 +7230,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_components_ai_maxstreamingtext_maxstreamingtextprops",
-      "community": 3,
+      "community": 292,
       "norm_label": "maxstreamingtextprops"
     },
     {
@@ -6900,7 +7240,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "src_components_ai_maxstreamingtext_maxstreamingtext",
-      "community": 3,
+      "community": 292,
       "norm_label": "maxstreamingtext()"
     },
     {
@@ -6910,7 +7250,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "src_components_ai_maxstreamingtext_styles",
-      "community": 3,
+      "community": 292,
       "norm_label": "styles"
     },
     {
@@ -6950,7 +7290,7 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "src_components_onboarding_moduleonboardingpopup_moduleonboardingpopup",
-      "community": 60,
+      "community": 29,
       "norm_label": "moduleonboardingpopup()"
     },
     {
@@ -6960,7 +7300,7 @@
       "source_location": "L228",
       "_origin": "ast",
       "id": "src_components_onboarding_moduleonboardingpopup_btntextcolor",
-      "community": 60,
+      "community": 29,
       "norm_label": "btntextcolor()"
     },
     {
@@ -7240,7 +7580,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "src_hooks_usestudent_usestudent",
-      "community": 7,
+      "community": 24,
       "norm_label": "usestudent()"
     },
     {
@@ -7282,6 +7622,26 @@
       "id": "src_lib_appversion_appjson",
       "community": 1,
       "norm_label": "appjson"
+    },
+    {
+      "label": "attendance.ts",
+      "file_type": "code",
+      "source_file": "src/lib/attendance.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_lib_attendance",
+      "community": 43,
+      "norm_label": "attendance.ts"
+    },
+    {
+      "label": "registerAttendanceToday()",
+      "file_type": "code",
+      "source_file": "src/lib/attendance.ts",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "src_lib_attendance_registerattendancetoday",
+      "community": 43,
+      "norm_label": "registerattendancetoday()"
     },
     {
       "label": "exerciseConfig.ts",
@@ -7360,7 +7720,7 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "src_lib_exerciseconfig_plan_goals",
-      "community": 36,
+      "community": 11,
       "norm_label": "plan_goals"
     },
     {
@@ -7380,7 +7740,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "src_lib_exerciseconfig_goal_colors",
-      "community": 46,
+      "community": 11,
       "norm_label": "goal_colors"
     },
     {
@@ -7390,7 +7750,7 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "src_lib_exerciseconfig_days_of_week",
-      "community": 17,
+      "community": 11,
       "norm_label": "days_of_week"
     },
     {
@@ -7420,7 +7780,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "src_lib_exerciseconfig_extracategorylabel",
-      "community": 17,
+      "community": 26,
       "norm_label": "extracategorylabel()"
     },
     {
@@ -7467,7 +7827,7 @@
       "label": "STUDENT_LOOP",
       "file_type": "code",
       "source_file": "src/lib/moduleOnboarding.ts",
-      "source_location": "L186",
+      "source_location": "L196",
       "_origin": "ast",
       "id": "src_lib_moduleonboarding_student_loop",
       "community": 60,
@@ -7477,7 +7837,7 @@
       "label": "getOnboardingLoop()",
       "file_type": "code",
       "source_file": "src/lib/moduleOnboarding.ts",
-      "source_location": "L304",
+      "source_location": "L324",
       "_origin": "ast",
       "id": "src_lib_moduleonboarding_getonboardingloop",
       "community": 60,
@@ -7490,7 +7850,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_modules",
-      "community": 6,
+      "community": 60,
       "norm_label": "modules.ts"
     },
     {
@@ -7500,17 +7860,17 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_modules_module",
-      "community": 6,
+      "community": 60,
       "norm_label": "module"
     },
     {
       "label": "ModuleSlug",
       "file_type": "code",
       "source_file": "src/lib/modules.ts",
-      "source_location": "L21",
+      "source_location": "L22",
       "_origin": "ast",
       "id": "src_lib_modules_moduleslug",
-      "community": 54,
+      "community": 60,
       "norm_label": "moduleslug"
     },
     {
@@ -7520,7 +7880,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_supabase",
-      "community": 31,
+      "community": 43,
       "norm_label": "supabase.ts"
     },
     {
@@ -7530,7 +7890,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_lib_supabase_exposecurestoreadapter",
-      "community": 31,
+      "community": 43,
       "norm_label": "exposecurestoreadapter"
     },
     {
@@ -7540,7 +7900,7 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "src_lib_supabase_supabase",
-      "community": 39,
+      "community": 43,
       "norm_label": "supabase"
     },
     {
@@ -7660,7 +8020,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_services_auth",
-      "community": 12,
+      "community": 54,
       "norm_label": "auth.ts"
     },
     {
@@ -7670,7 +8030,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "src_services_auth_signin",
-      "community": 12,
+      "community": 54,
       "norm_label": "signin()"
     },
     {
@@ -7680,7 +8040,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_services_auth_signout",
-      "community": 12,
+      "community": 54,
       "norm_label": "signout()"
     },
     {
@@ -7690,7 +8050,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_services_auth_resetpassword",
-      "community": 12,
+      "community": 54,
       "norm_label": "resetpassword()"
     },
     {
@@ -7740,7 +8100,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_stores_modulesstore",
-      "community": 6,
+      "community": 60,
       "norm_label": "modulesstore.ts"
     },
     {
@@ -7750,7 +8110,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_stores_modulesstore_modulesstate",
-      "community": 54,
+      "community": 60,
       "norm_label": "modulesstate"
     },
     {
@@ -7800,7 +8160,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_stores_themestore",
-      "community": 63,
+      "community": 30,
       "norm_label": "themestore.ts"
     },
     {
@@ -7810,7 +8170,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_stores_themestore_themestate",
-      "community": 63,
+      "community": 30,
       "norm_label": "themestate"
     },
     {
@@ -7830,7 +8190,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_theme_colors",
-      "community": 58,
+      "community": 292,
       "norm_label": "colors.ts"
     },
     {
@@ -7840,7 +8200,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_theme_colors_colors",
-      "community": 42,
+      "community": 292,
       "norm_label": "colors"
     },
     {
@@ -7850,7 +8210,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_theme_colors_colorkey",
-      "community": 58,
+      "community": 292,
       "norm_label": "colorkey"
     },
     {
@@ -7900,7 +8260,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_theme_typography",
-      "community": 34,
+      "community": 42,
       "norm_label": "typography.ts"
     },
     {
@@ -7910,7 +8270,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_theme_typography_fontfamily",
-      "community": 34,
+      "community": 42,
       "norm_label": "fontfamily"
     },
     {
@@ -7920,7 +8280,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_theme_typography_fontsize",
-      "community": 34,
+      "community": 42,
       "norm_label": "fontsize"
     },
     {
@@ -7930,7 +8290,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "src_theme_typography_lineheight",
-      "community": 34,
+      "community": 42,
       "norm_label": "lineheight"
     },
     {
@@ -7960,14 +8320,14 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_types_database_database",
-      "community": 31,
+      "community": 43,
       "norm_label": "database"
     },
     {
       "label": "DatabaseWithoutInternals",
       "file_type": "code",
       "source_file": "src/types/database.ts",
-      "source_location": "L2581",
+      "source_location": "L3358",
       "_origin": "ast",
       "id": "src_types_database_databasewithoutinternals",
       "community": 31,
@@ -7977,7 +8337,7 @@
       "label": "DefaultSchema",
       "file_type": "code",
       "source_file": "src/types/database.ts",
-      "source_location": "L2583",
+      "source_location": "L3360",
       "_origin": "ast",
       "id": "src_types_database_defaultschema",
       "community": 31,
@@ -7987,7 +8347,7 @@
       "label": "Tables",
       "file_type": "code",
       "source_file": "src/types/database.ts",
-      "source_location": "L2585",
+      "source_location": "L3362",
       "_origin": "ast",
       "id": "src_types_database_tables",
       "community": 31,
@@ -7997,7 +8357,7 @@
       "label": "TablesInsert",
       "file_type": "code",
       "source_file": "src/types/database.ts",
-      "source_location": "L2614",
+      "source_location": "L3391",
       "_origin": "ast",
       "id": "src_types_database_tablesinsert",
       "community": 31,
@@ -8007,7 +8367,7 @@
       "label": "TablesUpdate",
       "file_type": "code",
       "source_file": "src/types/database.ts",
-      "source_location": "L2639",
+      "source_location": "L3416",
       "_origin": "ast",
       "id": "src_types_database_tablesupdate",
       "community": 31,
@@ -8017,7 +8377,7 @@
       "label": "Enums",
       "file_type": "code",
       "source_file": "src/types/database.ts",
-      "source_location": "L2664",
+      "source_location": "L3441",
       "_origin": "ast",
       "id": "src_types_database_enums",
       "community": 31,
@@ -8027,7 +8387,7 @@
       "label": "CompositeTypes",
       "file_type": "code",
       "source_file": "src/types/database.ts",
-      "source_location": "L2681",
+      "source_location": "L3458",
       "_origin": "ast",
       "id": "src_types_database_compositetypes",
       "community": 31,
@@ -8037,7 +8397,7 @@
       "label": "Constants",
       "file_type": "code",
       "source_file": "src/types/database.ts",
-      "source_location": "L2698",
+      "source_location": "L3475",
       "_origin": "ast",
       "id": "src_types_database_constants",
       "community": 31,
@@ -16479,6 +16839,579 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "app_admin_desafios_id_challenge",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L53",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "app_admin_desafios_id_challengedetailscreen",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "app_admin_desafios_id_day",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "app_admin_desafios_id_dayitem",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L994",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "app_admin_desafios_id_field",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L960",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "app_admin_desafios_id_infoblock",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "app_admin_desafios_id_item_types",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "app_admin_desafios_id_itemicon",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L982",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "app_admin_desafios_id_modalheader",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "app_admin_desafios_id_participant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L1004",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "app_admin_desafios_id_s",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L969",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "app_admin_desafios_id_sectionheader",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L953",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "app_admin_desafios_id_status_label",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "app_admin_desafios_id_studentoption",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "src_components_exercisepickermodal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "src_components_exercisepickermodal_exercisepickermodal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "src_components_exercisepickermodal_exercisesummary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "src_lib_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "src_lib_supabase_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "src_stores_authstore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "src_stores_authstore_useauthstore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "src_stores_themestore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "src_stores_themestore_usethemestore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "src_theme_colors",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "src_theme_colors_colors",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "src_theme_typography",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "src_theme_typography_fontfamily",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id",
+      "target": "src_theme_typography_fontsize",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id_challengedetailscreen",
+      "target": "src_stores_authstore_useauthstore"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/(admin)/desafios/[id].tsx",
+      "source_location": "L56",
+      "weight": 1.0,
+      "source": "app_admin_desafios_id_challengedetailscreen",
+      "target": "src_stores_themestore_usethemestore"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/_layout.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "app_admin_desafios_layout",
+      "target": "app_admin_desafios_layout_desafioslayout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "app_admin_desafios_index",
+      "target": "app_admin_desafios_index_challengerow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "app_admin_desafios_index",
+      "target": "app_admin_desafios_index_challengeslistscreen",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L280",
+      "weight": 1.0,
+      "source": "app_admin_desafios_index",
+      "target": "app_admin_desafios_index_desafiosscreen",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "app_admin_desafios_index",
+      "target": "app_admin_desafios_index_release_modes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L288",
+      "weight": 1.0,
+      "source": "app_admin_desafios_index",
+      "target": "app_admin_desafios_index_s",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "app_admin_desafios_index",
+      "target": "app_admin_desafios_index_status_label",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "app_admin_desafios_index",
+      "target": "src_components_moduleguard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "app_admin_desafios_index",
+      "target": "src_components_moduleguard_moduleguard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "app_admin_desafios_index",
+      "target": "src_lib_modules",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "app_admin_desafios_index",
+      "target": "src_lib_modules_module",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "app_admin_desafios_index",
+      "target": "src_lib_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "app_admin_desafios_index",
+      "target": "src_lib_supabase_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "app_admin_desafios_index",
+      "target": "src_stores_authstore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "app_admin_desafios_index",
+      "target": "src_stores_authstore_useauthstore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "app_admin_desafios_index",
+      "target": "src_stores_themestore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "app_admin_desafios_index",
+      "target": "src_stores_themestore_usethemestore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "app_admin_desafios_index",
+      "target": "src_theme_colors",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "app_admin_desafios_index",
+      "target": "src_theme_colors_colors",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "app_admin_desafios_index",
+      "target": "src_theme_typography",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "app_admin_desafios_index",
+      "target": "src_theme_typography_fontfamily",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "app_admin_desafios_index",
+      "target": "src_theme_typography_fontsize",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L40",
+      "weight": 1.0,
+      "source": "app_admin_desafios_index_challengeslistscreen",
+      "target": "src_stores_authstore_useauthstore"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/(admin)/desafios/index.tsx",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "app_admin_desafios_index_challengeslistscreen",
+      "target": "src_stores_themestore_usethemestore"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "app/(admin)/execucao.tsx",
       "source_location": "L57",
       "weight": 1.0,
@@ -17567,7 +18500,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(admin)/mais.tsx",
-      "source_location": "L249",
+      "source_location": "L256",
       "weight": 1.0,
       "source": "app_admin_mais",
       "target": "app_admin_mais_styles",
@@ -22819,6 +23752,261 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "app_student_mais_desafios",
+      "target": "app_student_mais_desafios_challenge",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "app_student_mais_desafios",
+      "target": "app_student_mais_desafios_day",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "app_student_mais_desafios",
+      "target": "app_student_mais_desafios_dayitem",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L297",
+      "weight": 1.0,
+      "source": "app_student_mais_desafios",
+      "target": "app_student_mais_desafios_infoblock",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "app_student_mais_desafios",
+      "target": "app_student_mais_desafios_item_icon",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "app_student_mais_desafios",
+      "target": "app_student_mais_desafios_message",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "app_student_mais_desafios",
+      "target": "app_student_mais_desafios_rankingrow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L306",
+      "weight": 1.0,
+      "source": "app_student_mais_desafios",
+      "target": "app_student_mais_desafios_s",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "app_student_mais_desafios",
+      "target": "app_student_mais_desafios_studentdesafiosscreen",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "app_student_mais_desafios",
+      "target": "src_components_studentheader",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "app_student_mais_desafios",
+      "target": "src_components_studentheader_studentheader",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "app_student_mais_desafios",
+      "target": "src_hooks_usestudent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "app_student_mais_desafios",
+      "target": "src_hooks_usestudent_usestudent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "app_student_mais_desafios",
+      "target": "src_lib_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "app_student_mais_desafios",
+      "target": "src_lib_supabase_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "app_student_mais_desafios",
+      "target": "src_stores_themestore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "app_student_mais_desafios",
+      "target": "src_stores_themestore_usethemestore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "app_student_mais_desafios",
+      "target": "src_theme_colors",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "app_student_mais_desafios",
+      "target": "src_theme_colors_colors",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "app_student_mais_desafios",
+      "target": "src_theme_typography",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "app_student_mais_desafios",
+      "target": "src_theme_typography_fontfamily",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "app_student_mais_desafios",
+      "target": "src_theme_typography_fontsize",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "app_student_mais_desafios_studentdesafiosscreen",
+      "target": "src_hooks_usestudent_usestudent"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/(student)/mais/desafios.tsx",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "app_student_mais_desafios_studentdesafiosscreen",
+      "target": "src_stores_themestore_usethemestore"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "app/(student)/mais/feedback.tsx",
       "source_location": "L70",
       "weight": 1.0,
@@ -24866,7 +26054,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/perfil/index.tsx",
-      "source_location": "L37",
+      "source_location": "L38",
       "weight": 1.0,
       "source": "app_student_perfil_index",
       "target": "app_student_perfil_index_fmtphone",
@@ -24876,7 +26064,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/perfil/index.tsx",
-      "source_location": "L44",
+      "source_location": "L45",
       "weight": 1.0,
       "source": "app_student_perfil_index",
       "target": "app_student_perfil_index_openwhatsapp",
@@ -24886,7 +26074,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/perfil/index.tsx",
-      "source_location": "L54",
+      "source_location": "L55",
       "weight": 1.0,
       "source": "app_student_perfil_index",
       "target": "app_student_perfil_index_perfilscreen",
@@ -24896,7 +26084,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/perfil/index.tsx",
-      "source_location": "L300",
+      "source_location": "L320",
       "weight": 1.0,
       "source": "app_student_perfil_index",
       "target": "app_student_perfil_index_s",
@@ -25159,7 +26347,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/perfil/index.tsx",
-      "source_location": "L134",
+      "source_location": "L154",
       "weight": 1.0,
       "source": "app_student_perfil_index_perfilscreen",
       "target": "app_student_perfil_index_fmtphone",
@@ -25171,7 +26359,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/(student)/perfil/index.tsx",
-      "source_location": "L55",
+      "source_location": "L56",
       "weight": 1.0,
       "source": "app_student_perfil_index_perfilscreen",
       "target": "src_hooks_usestudent_usestudent"
@@ -25182,7 +26370,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/(student)/perfil/index.tsx",
-      "source_location": "L56",
+      "source_location": "L57",
       "weight": 1.0,
       "source": "app_student_perfil_index_perfilscreen",
       "target": "src_stores_authstore_useauthstore"
@@ -25193,7 +26381,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/(student)/perfil/index.tsx",
-      "source_location": "L58",
+      "source_location": "L59",
       "weight": 1.0,
       "source": "app_student_perfil_index_perfilscreen",
       "target": "src_stores_modulesstore_usemodulesstore"
@@ -25204,7 +26392,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/(student)/perfil/index.tsx",
-      "source_location": "L57",
+      "source_location": "L58",
       "weight": 1.0,
       "source": "app_student_perfil_index_perfilscreen",
       "target": "src_stores_themestore_usethemestore"
@@ -25722,7 +26910,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L32",
+      "source_location": "L33",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_exitem",
@@ -25732,7 +26920,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L70",
+      "source_location": "L71",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_fmttime",
@@ -25742,7 +26930,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L55",
+      "source_location": "L56",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_intensities",
@@ -25752,7 +26940,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L30",
+      "source_location": "L31",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_phase",
@@ -25762,7 +26950,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L77",
+      "source_location": "L78",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_restring",
@@ -25772,7 +26960,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L156",
+      "source_location": "L157",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_routineexecutionscreen",
@@ -25782,7 +26970,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L1149",
+      "source_location": "L1151",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_rt",
@@ -25792,7 +26980,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L1154",
+      "source_location": "L1156",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_s",
@@ -25802,7 +26990,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L49",
+      "source_location": "L50",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_section",
@@ -25812,7 +27000,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L64",
+      "source_location": "L65",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_star_colors",
@@ -25822,7 +27010,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L63",
+      "source_location": "L64",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_star_labels",
@@ -25832,7 +27020,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L143",
+      "source_location": "L144",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_starrow",
@@ -25842,7 +27030,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L66",
+      "source_location": "L67",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_width_w",
@@ -25853,7 +27041,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L19",
+      "source_location": "L20",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "src_components_mediaviewermodal",
@@ -25864,7 +27052,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L19",
+      "source_location": "L20",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "src_components_mediaviewermodal_mediaviewermodal",
@@ -25930,6 +27118,28 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "app_student_treinos_planid_executar_routineid",
+      "target": "src_lib_attendance",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "app_student_treinos_planid_executar_routineid",
+      "target": "src_lib_attendance_registerattendancetoday",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
       "source_location": "L18",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
@@ -25974,7 +27184,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "src_lib_workoutaudio",
@@ -25985,7 +27195,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "src_lib_workoutaudio_cancelrestnotification",
@@ -25996,7 +27206,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "src_lib_workoutaudio_playrestendalert",
@@ -26007,7 +27217,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "src_lib_workoutaudio_preloadrestbeep",
@@ -26018,7 +27228,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "src_lib_workoutaudio_releaserestbeep",
@@ -26029,7 +27239,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "src_lib_workoutaudio_requestnotificationpermission",
@@ -26040,7 +27250,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "src_lib_workoutaudio_schedulerestendnotification",
@@ -26128,7 +27338,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L135",
+      "source_location": "L136",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid_restring",
       "target": "app_student_treinos_planid_executar_routineid_fmttime",
@@ -26139,7 +27349,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L716",
+      "source_location": "L718",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid_routineexecutionscreen",
       "target": "app_student_treinos_planid_executar_routineid_fmttime",
@@ -26151,7 +27361,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L219",
+      "source_location": "L220",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid_routineexecutionscreen",
       "target": "src_hooks_usehealthconnect_usehealthconnect"
@@ -26162,7 +27372,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L158",
+      "source_location": "L159",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid_routineexecutionscreen",
       "target": "src_hooks_usestudent_usestudent"
@@ -26173,7 +27383,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L699",
+      "source_location": "L701",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid_routineexecutionscreen",
       "target": "src_lib_exerciseconfig_musclecolor"
@@ -26184,7 +27394,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L159",
+      "source_location": "L160",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid_routineexecutionscreen",
       "target": "src_stores_themestore_usethemestore"
@@ -26932,7 +28142,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L37",
+      "source_location": "L38",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index",
       "target": "app_student_treinos_extras_extraid_executar_index_exgroup",
@@ -26942,7 +28152,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L21",
+      "source_location": "L22",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index",
       "target": "app_student_treinos_extras_extraid_executar_index_exitem",
@@ -26952,7 +28162,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L79",
+      "source_location": "L80",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index",
       "target": "app_student_treinos_extras_extraid_executar_index_extraexecutionscreen",
@@ -26962,7 +28172,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L51",
+      "source_location": "L52",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index",
       "target": "app_student_treinos_extras_extraid_executar_index_fmttime",
@@ -26972,7 +28182,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L57",
+      "source_location": "L58",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index",
       "target": "app_student_treinos_extras_extraid_executar_index_groupbycombo",
@@ -26982,7 +28192,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L43",
+      "source_location": "L44",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index",
       "target": "app_student_treinos_extras_extraid_executar_index_intensities",
@@ -26992,7 +28202,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L19",
+      "source_location": "L20",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index",
       "target": "app_student_treinos_extras_extraid_executar_index_phase",
@@ -27002,7 +28212,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L498",
+      "source_location": "L500",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index",
       "target": "app_student_treinos_extras_extraid_executar_index_s",
@@ -27013,7 +28223,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L17",
+      "source_location": "L18",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index",
       "target": "src_components_mediaviewermodal",
@@ -27024,7 +28234,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L17",
+      "source_location": "L18",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index",
       "target": "src_components_mediaviewermodal_mediaviewermodal",
@@ -27050,6 +28260,28 @@
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index",
       "target": "src_hooks_usestudent_usestudent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "app_student_treinos_extras_extraid_executar_index",
+      "target": "src_lib_attendance",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "app_student_treinos_extras_extraid_executar_index",
+      "target": "src_lib_attendance_registerattendancetoday",
       "confidence_score": 1.0
     },
     {
@@ -27178,7 +28410,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L265",
+      "source_location": "L267",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index_extraexecutionscreen",
       "target": "app_student_treinos_extras_extraid_executar_index_fmttime",
@@ -27189,7 +28421,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L219",
+      "source_location": "L221",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index_extraexecutionscreen",
       "target": "app_student_treinos_extras_extraid_executar_index_groupbycombo",
@@ -27201,7 +28433,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L81",
+      "source_location": "L82",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index_extraexecutionscreen",
       "target": "src_hooks_usestudent_usestudent"
@@ -27212,7 +28444,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L82",
+      "source_location": "L83",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index_extraexecutionscreen",
       "target": "src_stores_themestore_usethemestore"
@@ -31690,6 +32922,38 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "src/lib/attendance.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "src_lib_attendance",
+      "target": "src_lib_attendance_registerattendancetoday",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/attendance.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_lib_attendance",
+      "target": "src_lib_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/attendance.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_lib_attendance",
+      "target": "src_lib_supabase_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "src/lib/exerciseConfig.ts",
       "source_location": "L39",
       "weight": 1.0,
@@ -31821,7 +33085,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/moduleOnboarding.ts",
-      "source_location": "L304",
+      "source_location": "L324",
       "weight": 1.0,
       "source": "src_lib_moduleonboarding",
       "target": "src_lib_moduleonboarding_getonboardingloop",
@@ -31861,7 +33125,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/moduleOnboarding.ts",
-      "source_location": "L186",
+      "source_location": "L196",
       "weight": 1.0,
       "source": "src_lib_moduleonboarding",
       "target": "src_lib_moduleonboarding_student_loop",
@@ -31925,7 +33189,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/modules.ts",
-      "source_location": "L21",
+      "source_location": "L22",
       "weight": 1.0,
       "source": "src_lib_modules",
       "target": "src_lib_modules_moduleslug",
@@ -32597,7 +33861,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/types/database.ts",
-      "source_location": "L2681",
+      "source_location": "L3458",
       "weight": 1.0,
       "source": "src_types_database",
       "target": "src_types_database_compositetypes",
@@ -32607,7 +33871,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/types/database.ts",
-      "source_location": "L2698",
+      "source_location": "L3475",
       "weight": 1.0,
       "source": "src_types_database",
       "target": "src_types_database_constants",
@@ -32627,7 +33891,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/types/database.ts",
-      "source_location": "L2581",
+      "source_location": "L3358",
       "weight": 1.0,
       "source": "src_types_database",
       "target": "src_types_database_databasewithoutinternals",
@@ -32637,7 +33901,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/types/database.ts",
-      "source_location": "L2583",
+      "source_location": "L3360",
       "weight": 1.0,
       "source": "src_types_database",
       "target": "src_types_database_defaultschema",
@@ -32647,7 +33911,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/types/database.ts",
-      "source_location": "L2664",
+      "source_location": "L3441",
       "weight": 1.0,
       "source": "src_types_database",
       "target": "src_types_database_enums",
@@ -32667,7 +33931,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/types/database.ts",
-      "source_location": "L2585",
+      "source_location": "L3362",
       "weight": 1.0,
       "source": "src_types_database",
       "target": "src_types_database_tables",
@@ -32677,7 +33941,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/types/database.ts",
-      "source_location": "L2614",
+      "source_location": "L3391",
       "weight": 1.0,
       "source": "src_types_database",
       "target": "src_types_database_tablesinsert",
@@ -32687,7 +33951,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/types/database.ts",
-      "source_location": "L2639",
+      "source_location": "L3416",
       "weight": 1.0,
       "source": "src_types_database",
       "target": "src_types_database_tablesupdate",
@@ -35480,5 +36744,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "4903c4147c8dd855b8986a48c03213441099bf8c"
+  "built_at_commit": "88b3fe135e218429c82b2117470c7a20027b8d0d"
 }
