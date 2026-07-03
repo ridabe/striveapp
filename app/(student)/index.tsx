@@ -15,6 +15,7 @@ import { useThemeStore } from '@/stores/themeStore';
 import { useModulesStore } from '@/stores/modulesStore';
 import { MODULE } from '@/lib/modules';
 import { TenantLogo } from '@/components/TenantLogo';
+import { ModuleOnboardingPopup } from '@/components/onboarding/ModuleOnboardingPopup';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 
@@ -57,7 +58,7 @@ export default function StudentHome() {
   const { selectedStudent, loading: studentLoading } = useStudent();
   const { profile } = useAuthStore();
   const { primaryColor, tenantName, tenantCref } = useThemeStore();
-  const { has: hasModule, isLoaded: modulesLoaded } = useModulesStore();
+  const { has: hasModule, isLoaded: modulesLoaded, enabledSlugs } = useModulesStore();
 
   const [todayPlan, setTodayPlan]       = useState<any>(null);
   const [todaySession, setTodaySession] = useState<any>(null);
@@ -407,6 +408,13 @@ export default function StudentHome() {
 
   return (
     <SafeAreaView style={s.safe} edges={['top']}>
+      {/* Loop de onboarding por módulo — um módulo por login */}
+      <ModuleOnboardingPopup
+        userId={profile?.id ?? null}
+        role="student"
+        enabledSlugs={enabledSlugs}
+        modulesLoaded={modulesLoaded}
+      />
       <ScrollView contentContainerStyle={s.scroll} showsVerticalScrollIndicator={false}>
 
         {/* Header */}

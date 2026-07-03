@@ -17,6 +17,7 @@ import { useModulesStore } from '@/stores/modulesStore';
 import { MODULE } from '@/lib/modules';
 import { TenantLogo } from '@/components/TenantLogo';
 import { MaxOnboardingModal } from '@/components/ai/MaxOnboardingModal';
+import { ModuleOnboardingPopup } from '@/components/onboarding/ModuleOnboardingPopup';
 
 interface DashboardStats {
   totalStudents: number;
@@ -42,7 +43,7 @@ export default function AdminDashboard() {
 
   const tenantId = profile?.tenant_id;
   const displayName = profile?.full_name?.split(' ')[0] ?? 'Personal';
-  const { has } = useModulesStore();
+  const { has, enabledSlugs, isLoaded: modulesLoaded } = useModulesStore();
 
   const lightText = ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(primaryColor);
 
@@ -84,6 +85,14 @@ export default function AdminDashboard() {
       {has(MODULE.ASSISTENTE_IA) && (
         <MaxOnboardingModal userId={profile?.id ?? null} />
       )}
+      {/* Loop de onboarding por módulo — um módulo por login (adia enquanto o Max pendente) */}
+      <ModuleOnboardingPopup
+        userId={profile?.id ?? null}
+        role="personal"
+        enabledSlugs={enabledSlugs}
+        modulesLoaded={modulesLoaded}
+        deferUntilMaxSeen={has(MODULE.ASSISTENTE_IA)}
+      />
       <ScrollView
         style={s.scroll}
         contentContainerStyle={s.content}
