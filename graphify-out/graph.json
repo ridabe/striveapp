@@ -700,7 +700,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_admin_alunos_index",
-      "community": 39,
+      "community": 51,
       "norm_label": "index.tsx"
     },
     {
@@ -710,7 +710,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "app_admin_alunos_index_student",
-      "community": 39,
+      "community": 51,
       "norm_label": "student"
     },
     {
@@ -720,7 +720,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "app_admin_alunos_index_alunosscreen",
-      "community": 39,
+      "community": 51,
       "norm_label": "alunosscreen()"
     },
     {
@@ -730,7 +730,7 @@
       "source_location": "L188",
       "_origin": "ast",
       "id": "app_admin_alunos_index_styles",
-      "community": 39,
+      "community": 51,
       "norm_label": "styles"
     },
     {
@@ -1070,7 +1070,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_admin_assistente_ia_chat",
-      "community": 3,
+      "community": 54,
       "norm_label": "assistente-ia-chat.tsx"
     },
     {
@@ -1080,7 +1080,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "app_admin_assistente_ia_chat_storedmessage",
-      "community": 3,
+      "community": 54,
       "norm_label": "storedmessage"
     },
     {
@@ -1090,7 +1090,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "app_admin_assistente_ia_chat_studentmini",
-      "community": 3,
+      "community": 54,
       "norm_label": "studentmini"
     },
     {
@@ -1100,7 +1100,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "app_admin_assistente_ia_chat_assistenteiachatscreen",
-      "community": 3,
+      "community": 54,
       "norm_label": "assistenteiachatscreen()"
     },
     {
@@ -1110,7 +1110,7 @@
       "source_location": "L222",
       "_origin": "ast",
       "id": "app_admin_assistente_ia_chat_s",
-      "community": 3,
+      "community": 54,
       "norm_label": "s"
     },
     {
@@ -1160,7 +1160,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "app_admin_assistente_ia_assistenteiascreen",
-      "community": 3,
+      "community": 54,
       "norm_label": "assistenteiascreen()"
     },
     {
@@ -1537,7 +1537,7 @@
       "label": "s",
       "file_type": "code",
       "source_file": "app/(admin)/execucao.tsx",
-      "source_location": "L258",
+      "source_location": "L261",
       "_origin": "ast",
       "id": "app_admin_execucao_s",
       "community": 40,
@@ -1550,7 +1550,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_admin_feedbacks",
-      "community": 24,
+      "community": 291,
       "norm_label": "feedbacks.tsx"
     },
     {
@@ -1560,7 +1560,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "app_admin_feedbacks_feedbackitem",
-      "community": 24,
+      "community": 291,
       "norm_label": "feedbackitem"
     },
     {
@@ -1570,7 +1570,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "app_admin_feedbacks_stars",
-      "community": 24,
+      "community": 291,
       "norm_label": "stars()"
     },
     {
@@ -1580,7 +1580,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "app_admin_feedbacks_fmtdate",
-      "community": 24,
+      "community": 291,
       "norm_label": "fmtdate()"
     },
     {
@@ -1590,7 +1590,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "app_admin_feedbacks_feedbacksscreen",
-      "community": 24,
+      "community": 291,
       "norm_label": "feedbacksscreen()"
     },
     {
@@ -1600,7 +1600,7 @@
       "source_location": "L197",
       "_origin": "ast",
       "id": "app_admin_feedbacks_s",
-      "community": 24,
+      "community": 291,
       "norm_label": "s"
     },
     {
@@ -1717,7 +1717,7 @@
       "label": "s",
       "file_type": "code",
       "source_file": "app/(admin)/frequencia.tsx",
-      "source_location": "L357",
+      "source_location": "L360",
       "_origin": "ast",
       "id": "app_admin_frequencia_s",
       "community": 16,
@@ -1727,7 +1727,7 @@
       "label": "sl",
       "file_type": "code",
       "source_file": "app/(admin)/frequencia.tsx",
-      "source_location": "L368",
+      "source_location": "L371",
       "_origin": "ast",
       "id": "app_admin_frequencia_sl",
       "community": 16,
@@ -1737,7 +1737,7 @@
       "label": "det",
       "file_type": "code",
       "source_file": "app/(admin)/frequencia.tsx",
-      "source_location": "L394",
+      "source_location": "L397",
       "_origin": "ast",
       "id": "app_admin_frequencia_det",
       "community": 16,
@@ -1750,7 +1750,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_admin_index",
-      "community": 30,
+      "community": 56,
       "norm_label": "index.tsx"
     },
     {
@@ -1760,7 +1760,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "app_admin_index_dashboardstats",
-      "community": 30,
+      "community": 56,
       "norm_label": "dashboardstats"
     },
     {
@@ -1770,7 +1770,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "app_admin_index_recentstudent",
-      "community": 30,
+      "community": 56,
       "norm_label": "recentstudent"
     },
     {
@@ -1780,7 +1780,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "app_admin_index_admindashboard",
-      "community": 30,
+      "community": 56,
       "norm_label": "admindashboard()"
     },
     {
@@ -1790,7 +1790,7 @@
       "source_location": "L271",
       "_origin": "ast",
       "id": "app_admin_index_ministat",
-      "community": 30,
+      "community": 56,
       "norm_label": "ministat()"
     },
     {
@@ -1800,7 +1800,7 @@
       "source_location": "L286",
       "_origin": "ast",
       "id": "app_admin_index_actionpill",
-      "community": 30,
+      "community": 56,
       "norm_label": "actionpill()"
     },
     {
@@ -1810,7 +1810,7 @@
       "source_location": "L302",
       "_origin": "ast",
       "id": "app_admin_index_s",
-      "community": 30,
+      "community": 56,
       "norm_label": "s"
     },
     {
@@ -2597,7 +2597,7 @@
       "label": "s",
       "file_type": "code",
       "source_file": "app/(admin)/ranking.tsx",
-      "source_location": "L265",
+      "source_location": "L268",
       "_origin": "ast",
       "id": "app_admin_ranking_s",
       "community": 52,
@@ -2710,7 +2710,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "app_admin_treinos_extras_id_extraworkoutdetailscreen",
-      "community": 17,
+      "community": 26,
       "norm_label": "extraworkoutdetailscreen()"
     },
     {
@@ -2980,7 +2980,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_auth_welcome",
-      "community": 34,
+      "community": 12,
       "norm_label": "welcome.tsx"
     },
     {
@@ -2990,7 +2990,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "app_auth_welcome_benefits",
-      "community": 34,
+      "community": 12,
       "norm_label": "benefits"
     },
     {
@@ -3000,7 +3000,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "app_auth_welcome_welcomescreen",
-      "community": 34,
+      "community": 12,
       "norm_label": "welcomescreen()"
     },
     {
@@ -3010,7 +3010,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "app_auth_welcome_styles",
-      "community": 34,
+      "community": 12,
       "norm_label": "styles"
     },
     {
@@ -3240,7 +3240,7 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "app_student_mais_agenda_studentagendascreen",
-      "community": 7,
+      "community": 25,
       "norm_label": "studentagendascreen()"
     },
     {
@@ -3660,7 +3660,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_student_mais_financeiro",
-      "community": 54,
+      "community": 58,
       "norm_label": "financeiro.tsx"
     },
     {
@@ -3670,7 +3670,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "app_student_mais_financeiro_status_config",
-      "community": 54,
+      "community": 58,
       "norm_label": "status_config"
     },
     {
@@ -3680,7 +3680,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "app_student_mais_financeiro_fmtdate",
-      "community": 54,
+      "community": 58,
       "norm_label": "fmtdate()"
     },
     {
@@ -3690,7 +3690,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "app_student_mais_financeiro_fmtcurrency",
-      "community": 54,
+      "community": 58,
       "norm_label": "fmtcurrency()"
     },
     {
@@ -3700,7 +3700,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "app_student_mais_financeiro_financeiroscreen",
-      "community": 54,
+      "community": 58,
       "norm_label": "financeiroscreen()"
     },
     {
@@ -3710,7 +3710,7 @@
       "source_location": "L120",
       "_origin": "ast",
       "id": "app_student_mais_financeiro_s",
-      "community": 54,
+      "community": 58,
       "norm_label": "s"
     },
     {
@@ -4030,7 +4030,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "app_student_mais_planos_alimentares_studentplanosalimentaresscreen",
-      "community": 7,
+      "community": 35,
       "norm_label": "studentplanosalimentaresscreen()"
     },
     {
@@ -4210,7 +4210,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_student_perfil_index",
-      "community": 56,
+      "community": 7,
       "norm_label": "index.tsx"
     },
     {
@@ -4220,7 +4220,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "app_student_perfil_index_tenantcontact",
-      "community": 56,
+      "community": 7,
       "norm_label": "tenantcontact"
     },
     {
@@ -4230,7 +4230,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "app_student_perfil_index_all_modules",
-      "community": 56,
+      "community": 7,
       "norm_label": "all_modules"
     },
     {
@@ -4240,7 +4240,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "app_student_perfil_index_fmtphone",
-      "community": 56,
+      "community": 7,
       "norm_label": "fmtphone()"
     },
     {
@@ -4250,7 +4250,7 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "app_student_perfil_index_openwhatsapp",
-      "community": 56,
+      "community": 7,
       "norm_label": "openwhatsapp()"
     },
     {
@@ -4260,7 +4260,7 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "app_student_perfil_index_perfilscreen",
-      "community": 56,
+      "community": 7,
       "norm_label": "perfilscreen()"
     },
     {
@@ -4270,7 +4270,7 @@
       "source_location": "L300",
       "_origin": "ast",
       "id": "app_student_perfil_index_s",
-      "community": 56,
+      "community": 7,
       "norm_label": "s"
     },
     {
@@ -4470,7 +4470,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_student_select_tenant",
-      "community": 34,
+      "community": 7,
       "norm_label": "select-tenant.tsx"
     },
     {
@@ -4480,7 +4480,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "app_student_select_tenant_selecttenantscreen",
-      "community": 34,
+      "community": 7,
       "norm_label": "selecttenantscreen()"
     },
     {
@@ -4490,7 +4490,7 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "app_student_select_tenant_styles",
-      "community": 34,
+      "community": 7,
       "norm_label": "styles"
     },
     {
@@ -4507,7 +4507,7 @@
       "label": "Phase",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L30",
+      "source_location": "L31",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_phase",
       "community": 2,
@@ -4517,7 +4517,7 @@
       "label": "ExItem",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L32",
+      "source_location": "L33",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_exitem",
       "community": 2,
@@ -4527,7 +4527,7 @@
       "label": "Section",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L49",
+      "source_location": "L50",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_section",
       "community": 2,
@@ -4537,7 +4537,7 @@
       "label": "INTENSITIES",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L55",
+      "source_location": "L56",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_intensities",
       "community": 2,
@@ -4547,7 +4547,7 @@
       "label": "STAR_LABELS",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L63",
+      "source_location": "L64",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_star_labels",
       "community": 2,
@@ -4557,7 +4557,7 @@
       "label": "STAR_COLORS",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L64",
+      "source_location": "L65",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_star_colors",
       "community": 2,
@@ -4567,7 +4567,7 @@
       "label": "{ width: W }",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L66",
+      "source_location": "L67",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_width_w",
       "community": 2,
@@ -4577,7 +4577,7 @@
       "label": "fmtTime()",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L70",
+      "source_location": "L71",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_fmttime",
       "community": 2,
@@ -4587,7 +4587,7 @@
       "label": "RestRing()",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L77",
+      "source_location": "L78",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_restring",
       "community": 2,
@@ -4597,7 +4597,7 @@
       "label": "StarRow()",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L143",
+      "source_location": "L144",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_starrow",
       "community": 2,
@@ -4607,7 +4607,7 @@
       "label": "RoutineExecutionScreen()",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L156",
+      "source_location": "L157",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_routineexecutionscreen",
       "community": 2,
@@ -4617,7 +4617,7 @@
       "label": "rt",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L1149",
+      "source_location": "L1151",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_rt",
       "community": 2,
@@ -4627,7 +4627,7 @@
       "label": "s",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L1154",
+      "source_location": "L1156",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_s",
       "community": 2,
@@ -4877,7 +4877,7 @@
       "label": "Phase",
       "file_type": "code",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L19",
+      "source_location": "L20",
       "_origin": "ast",
       "id": "app_student_treinos_extras_extraid_executar_index_phase",
       "community": 43,
@@ -4887,7 +4887,7 @@
       "label": "ExItem",
       "file_type": "code",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L21",
+      "source_location": "L22",
       "_origin": "ast",
       "id": "app_student_treinos_extras_extraid_executar_index_exitem",
       "community": 43,
@@ -4897,7 +4897,7 @@
       "label": "ExGroup",
       "file_type": "code",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L37",
+      "source_location": "L38",
       "_origin": "ast",
       "id": "app_student_treinos_extras_extraid_executar_index_exgroup",
       "community": 43,
@@ -4907,7 +4907,7 @@
       "label": "INTENSITIES",
       "file_type": "code",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L43",
+      "source_location": "L44",
       "_origin": "ast",
       "id": "app_student_treinos_extras_extraid_executar_index_intensities",
       "community": 43,
@@ -4917,7 +4917,7 @@
       "label": "fmtTime()",
       "file_type": "code",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L51",
+      "source_location": "L52",
       "_origin": "ast",
       "id": "app_student_treinos_extras_extraid_executar_index_fmttime",
       "community": 43,
@@ -4927,7 +4927,7 @@
       "label": "groupByCombo()",
       "file_type": "code",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L57",
+      "source_location": "L58",
       "_origin": "ast",
       "id": "app_student_treinos_extras_extraid_executar_index_groupbycombo",
       "community": 43,
@@ -4937,7 +4937,7 @@
       "label": "ExtraExecutionScreen()",
       "file_type": "code",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L79",
+      "source_location": "L80",
       "_origin": "ast",
       "id": "app_student_treinos_extras_extraid_executar_index_extraexecutionscreen",
       "community": 43,
@@ -4947,7 +4947,7 @@
       "label": "s",
       "file_type": "code",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L498",
+      "source_location": "L500",
       "_origin": "ast",
       "id": "app_student_treinos_extras_extraid_executar_index_s",
       "community": 43,
@@ -5190,7 +5190,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_index",
-      "community": 42,
+      "community": 24,
       "norm_label": "index.tsx"
     },
     {
@@ -5200,7 +5200,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "app_index_index",
-      "community": 42,
+      "community": 24,
       "norm_label": "index()"
     },
     {
@@ -6290,7 +6290,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_mediaviewermodal",
-      "community": 26,
+      "community": 46,
       "norm_label": "mediaviewermodal.tsx"
     },
     {
@@ -6300,7 +6300,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_components_mediaviewermodal_width_w_height_h",
-      "community": 26,
+      "community": 46,
       "norm_label": "{ width: w, height: h }"
     },
     {
@@ -6310,7 +6310,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_components_mediaviewermodal_mediatype",
-      "community": 23,
+      "community": 46,
       "norm_label": "mediatype"
     },
     {
@@ -6320,7 +6320,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_components_mediaviewermodal_props",
-      "community": 26,
+      "community": 46,
       "norm_label": "props"
     },
     {
@@ -6330,7 +6330,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "src_components_mediaviewermodal_mediaviewermodal",
-      "community": 26,
+      "community": 46,
       "norm_label": "mediaviewermodal()"
     },
     {
@@ -6340,7 +6340,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "src_components_mediaviewermodal_s",
-      "community": 26,
+      "community": 46,
       "norm_label": "s"
     },
     {
@@ -6350,7 +6350,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_moduleguard",
-      "community": 54,
+      "community": 6,
       "norm_label": "moduleguard.tsx"
     },
     {
@@ -6360,7 +6360,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_components_moduleguard_props",
-      "community": 54,
+      "community": 6,
       "norm_label": "props"
     },
     {
@@ -6370,7 +6370,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_components_moduleguard_moduleguard",
-      "community": 54,
+      "community": 55,
       "norm_label": "moduleguard()"
     },
     {
@@ -6380,7 +6380,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "src_components_moduleguard_s",
-      "community": 54,
+      "community": 6,
       "norm_label": "s"
     },
     {
@@ -6470,7 +6470,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "src_components_novoalunomodal_novoalunomodal",
-      "community": 39,
+      "community": 51,
       "norm_label": "novoalunomodal()"
     },
     {
@@ -6500,7 +6500,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_striveloader",
-      "community": 29,
+      "community": 56,
       "norm_label": "striveloader.tsx"
     },
     {
@@ -6510,7 +6510,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_components_striveloader_striveloaderprops",
-      "community": 29,
+      "community": 56,
       "norm_label": "striveloaderprops"
     },
     {
@@ -6520,7 +6520,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_components_striveloader_striveloader",
-      "community": 29,
+      "community": 56,
       "norm_label": "striveloader()"
     },
     {
@@ -6530,7 +6530,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_strivelogo",
-      "community": 34,
+      "community": 12,
       "norm_label": "strivelogo.tsx"
     },
     {
@@ -6540,7 +6540,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_components_strivelogo_strivelogoprops",
-      "community": 34,
+      "community": 12,
       "norm_label": "strivelogoprops"
     },
     {
@@ -6550,7 +6550,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "src_components_strivelogo_strivelogo",
-      "community": 34,
+      "community": 12,
       "norm_label": "strivelogo()"
     },
     {
@@ -6560,7 +6560,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "src_components_strivelogo_styles",
-      "community": 34,
+      "community": 12,
       "norm_label": "styles"
     },
     {
@@ -6720,7 +6720,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ai_maxchatmessage",
-      "community": 3,
+      "community": 292,
       "norm_label": "maxchatmessage.tsx"
     },
     {
@@ -6730,7 +6730,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_components_ai_maxchatmessage_small_avatar",
-      "community": 3,
+      "community": 292,
       "norm_label": "small_avatar"
     },
     {
@@ -6740,7 +6740,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_components_ai_maxchatmessage_maxchatmessageprops",
-      "community": 3,
+      "community": 292,
       "norm_label": "maxchatmessageprops"
     },
     {
@@ -6750,7 +6750,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_components_ai_maxchatmessage_maxchatmessage",
-      "community": 3,
+      "community": 292,
       "norm_label": "maxchatmessage()"
     },
     {
@@ -6760,7 +6760,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "src_components_ai_maxchatmessage_styles",
-      "community": 3,
+      "community": 292,
       "norm_label": "styles"
     },
     {
@@ -6820,7 +6820,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ai_maxquickactions",
-      "community": 3,
+      "community": 293,
       "norm_label": "maxquickactions.tsx"
     },
     {
@@ -6830,7 +6830,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_components_ai_maxquickactions_action",
-      "community": 3,
+      "community": 293,
       "norm_label": "action"
     },
     {
@@ -6840,7 +6840,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_components_ai_maxquickactions_actions",
-      "community": 3,
+      "community": 293,
       "norm_label": "actions"
     },
     {
@@ -6850,7 +6850,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "src_components_ai_maxquickactions_maxquickactionsprops",
-      "community": 3,
+      "community": 293,
       "norm_label": "maxquickactionsprops"
     },
     {
@@ -6860,7 +6860,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "src_components_ai_maxquickactions_maxquickactions",
-      "community": 3,
+      "community": 293,
       "norm_label": "maxquickactions()"
     },
     {
@@ -6870,7 +6870,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "src_components_ai_maxquickactions_styles",
-      "community": 3,
+      "community": 293,
       "norm_label": "styles"
     },
     {
@@ -6880,7 +6880,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ai_maxstreamingtext",
-      "community": 3,
+      "community": 292,
       "norm_label": "maxstreamingtext.tsx"
     },
     {
@@ -6890,7 +6890,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_components_ai_maxstreamingtext_maxstreamingtextprops",
-      "community": 3,
+      "community": 292,
       "norm_label": "maxstreamingtextprops"
     },
     {
@@ -6900,7 +6900,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "src_components_ai_maxstreamingtext_maxstreamingtext",
-      "community": 3,
+      "community": 292,
       "norm_label": "maxstreamingtext()"
     },
     {
@@ -6910,7 +6910,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "src_components_ai_maxstreamingtext_styles",
-      "community": 3,
+      "community": 292,
       "norm_label": "styles"
     },
     {
@@ -7150,7 +7150,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_hooks_usemaxstream",
-      "community": 3,
+      "community": 54,
       "norm_label": "usemaxstream.ts"
     },
     {
@@ -7160,7 +7160,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_hooks_usemaxstream_maxfeature",
-      "community": 3,
+      "community": 293,
       "norm_label": "maxfeature"
     },
     {
@@ -7170,7 +7170,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_hooks_usemaxstream_maxstreamparams",
-      "community": 3,
+      "community": 54,
       "norm_label": "maxstreamparams"
     },
     {
@@ -7180,7 +7180,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_hooks_usemaxstream_usemaxstreamresult",
-      "community": 3,
+      "community": 54,
       "norm_label": "usemaxstreamresult"
     },
     {
@@ -7190,7 +7190,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "src_hooks_usemaxstream_usemaxstream",
-      "community": 3,
+      "community": 54,
       "norm_label": "usemaxstream()"
     },
     {
@@ -7282,6 +7282,26 @@
       "id": "src_lib_appversion_appjson",
       "community": 1,
       "norm_label": "appjson"
+    },
+    {
+      "label": "attendance.ts",
+      "file_type": "code",
+      "source_file": "src/lib/attendance.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_lib_attendance",
+      "community": 43,
+      "norm_label": "attendance.ts"
+    },
+    {
+      "label": "registerAttendanceToday()",
+      "file_type": "code",
+      "source_file": "src/lib/attendance.ts",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "src_lib_attendance_registerattendancetoday",
+      "community": 43,
+      "norm_label": "registerattendancetoday()"
     },
     {
       "label": "exerciseConfig.ts",
@@ -7390,7 +7410,7 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "src_lib_exerciseconfig_days_of_week",
-      "community": 17,
+      "community": 11,
       "norm_label": "days_of_week"
     },
     {
@@ -7420,7 +7440,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "src_lib_exerciseconfig_extracategorylabel",
-      "community": 17,
+      "community": 26,
       "norm_label": "extracategorylabel()"
     },
     {
@@ -7510,7 +7530,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "src_lib_modules_moduleslug",
-      "community": 54,
+      "community": 6,
       "norm_label": "moduleslug"
     },
     {
@@ -7520,7 +7540,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_supabase",
-      "community": 31,
+      "community": 291,
       "norm_label": "supabase.ts"
     },
     {
@@ -7530,7 +7550,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_lib_supabase_exposecurestoreadapter",
-      "community": 31,
+      "community": 291,
       "norm_label": "exposecurestoreadapter"
     },
     {
@@ -7540,7 +7560,7 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "src_lib_supabase_supabase",
-      "community": 39,
+      "community": 43,
       "norm_label": "supabase"
     },
     {
@@ -7750,7 +7770,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_stores_modulesstore_modulesstate",
-      "community": 54,
+      "community": 6,
       "norm_label": "modulesstate"
     },
     {
@@ -7800,7 +7820,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_stores_themestore",
-      "community": 63,
+      "community": 51,
       "norm_label": "themestore.ts"
     },
     {
@@ -7810,7 +7830,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_stores_themestore_themestate",
-      "community": 63,
+      "community": 51,
       "norm_label": "themestate"
     },
     {
@@ -7820,7 +7840,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_stores_themestore_usethemestore",
-      "community": 6,
+      "community": 51,
       "norm_label": "usethemestore"
     },
     {
@@ -7840,7 +7860,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_theme_colors_colors",
-      "community": 42,
+      "community": 58,
       "norm_label": "colors"
     },
     {
@@ -7900,7 +7920,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_theme_typography",
-      "community": 34,
+      "community": 42,
       "norm_label": "typography.ts"
     },
     {
@@ -7910,7 +7930,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_theme_typography_fontfamily",
-      "community": 34,
+      "community": 17,
       "norm_label": "fontfamily"
     },
     {
@@ -7920,7 +7940,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_theme_typography_fontsize",
-      "community": 34,
+      "community": 42,
       "norm_label": "fontsize"
     },
     {
@@ -7930,7 +7950,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "src_theme_typography_lineheight",
-      "community": 34,
+      "community": 42,
       "norm_label": "lineheight"
     },
     {
@@ -7960,7 +7980,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_types_database_database",
-      "community": 31,
+      "community": 291,
       "norm_label": "database"
     },
     {
@@ -16530,7 +16550,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(admin)/execucao.tsx",
-      "source_location": "L258",
+      "source_location": "L261",
       "weight": 1.0,
       "source": "app_admin_execucao",
       "target": "app_admin_execucao_s",
@@ -16916,7 +16936,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(admin)/frequencia.tsx",
-      "source_location": "L394",
+      "source_location": "L397",
       "weight": 1.0,
       "source": "app_admin_frequencia",
       "target": "app_admin_frequencia_det",
@@ -16946,7 +16966,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(admin)/frequencia.tsx",
-      "source_location": "L357",
+      "source_location": "L360",
       "weight": 1.0,
       "source": "app_admin_frequencia",
       "target": "app_admin_frequencia_s",
@@ -16956,7 +16976,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(admin)/frequencia.tsx",
-      "source_location": "L368",
+      "source_location": "L371",
       "weight": 1.0,
       "source": "app_admin_frequencia",
       "target": "app_admin_frequencia_sl",
@@ -19505,7 +19525,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(admin)/ranking.tsx",
-      "source_location": "L265",
+      "source_location": "L268",
       "weight": 1.0,
       "source": "app_admin_ranking",
       "target": "app_admin_ranking_s",
@@ -25722,7 +25742,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L32",
+      "source_location": "L33",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_exitem",
@@ -25732,7 +25752,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L70",
+      "source_location": "L71",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_fmttime",
@@ -25742,7 +25762,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L55",
+      "source_location": "L56",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_intensities",
@@ -25752,7 +25772,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L30",
+      "source_location": "L31",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_phase",
@@ -25762,7 +25782,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L77",
+      "source_location": "L78",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_restring",
@@ -25772,7 +25792,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L156",
+      "source_location": "L157",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_routineexecutionscreen",
@@ -25782,7 +25802,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L1149",
+      "source_location": "L1151",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_rt",
@@ -25792,7 +25812,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L1154",
+      "source_location": "L1156",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_s",
@@ -25802,7 +25822,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L49",
+      "source_location": "L50",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_section",
@@ -25812,7 +25832,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L64",
+      "source_location": "L65",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_star_colors",
@@ -25822,7 +25842,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L63",
+      "source_location": "L64",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_star_labels",
@@ -25832,7 +25852,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L143",
+      "source_location": "L144",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_starrow",
@@ -25842,7 +25862,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L66",
+      "source_location": "L67",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_width_w",
@@ -25853,7 +25873,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L19",
+      "source_location": "L20",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "src_components_mediaviewermodal",
@@ -25864,7 +25884,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L19",
+      "source_location": "L20",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "src_components_mediaviewermodal_mediaviewermodal",
@@ -25930,6 +25950,28 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "app_student_treinos_planid_executar_routineid",
+      "target": "src_lib_attendance",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "app_student_treinos_planid_executar_routineid",
+      "target": "src_lib_attendance_registerattendancetoday",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
       "source_location": "L18",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
@@ -25974,7 +26016,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "src_lib_workoutaudio",
@@ -25985,7 +26027,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "src_lib_workoutaudio_cancelrestnotification",
@@ -25996,7 +26038,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "src_lib_workoutaudio_playrestendalert",
@@ -26007,7 +26049,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "src_lib_workoutaudio_preloadrestbeep",
@@ -26018,7 +26060,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "src_lib_workoutaudio_releaserestbeep",
@@ -26029,7 +26071,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "src_lib_workoutaudio_requestnotificationpermission",
@@ -26040,7 +26082,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "src_lib_workoutaudio_schedulerestendnotification",
@@ -26128,7 +26170,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L135",
+      "source_location": "L136",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid_restring",
       "target": "app_student_treinos_planid_executar_routineid_fmttime",
@@ -26139,7 +26181,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L716",
+      "source_location": "L718",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid_routineexecutionscreen",
       "target": "app_student_treinos_planid_executar_routineid_fmttime",
@@ -26151,7 +26193,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L219",
+      "source_location": "L220",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid_routineexecutionscreen",
       "target": "src_hooks_usehealthconnect_usehealthconnect"
@@ -26162,7 +26204,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L158",
+      "source_location": "L159",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid_routineexecutionscreen",
       "target": "src_hooks_usestudent_usestudent"
@@ -26173,7 +26215,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L699",
+      "source_location": "L701",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid_routineexecutionscreen",
       "target": "src_lib_exerciseconfig_musclecolor"
@@ -26184,7 +26226,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L159",
+      "source_location": "L160",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid_routineexecutionscreen",
       "target": "src_stores_themestore_usethemestore"
@@ -26932,7 +26974,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L37",
+      "source_location": "L38",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index",
       "target": "app_student_treinos_extras_extraid_executar_index_exgroup",
@@ -26942,7 +26984,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L21",
+      "source_location": "L22",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index",
       "target": "app_student_treinos_extras_extraid_executar_index_exitem",
@@ -26952,7 +26994,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L79",
+      "source_location": "L80",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index",
       "target": "app_student_treinos_extras_extraid_executar_index_extraexecutionscreen",
@@ -26962,7 +27004,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L51",
+      "source_location": "L52",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index",
       "target": "app_student_treinos_extras_extraid_executar_index_fmttime",
@@ -26972,7 +27014,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L57",
+      "source_location": "L58",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index",
       "target": "app_student_treinos_extras_extraid_executar_index_groupbycombo",
@@ -26982,7 +27024,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L43",
+      "source_location": "L44",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index",
       "target": "app_student_treinos_extras_extraid_executar_index_intensities",
@@ -26992,7 +27034,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L19",
+      "source_location": "L20",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index",
       "target": "app_student_treinos_extras_extraid_executar_index_phase",
@@ -27002,7 +27044,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L498",
+      "source_location": "L500",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index",
       "target": "app_student_treinos_extras_extraid_executar_index_s",
@@ -27013,7 +27055,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L17",
+      "source_location": "L18",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index",
       "target": "src_components_mediaviewermodal",
@@ -27024,7 +27066,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L17",
+      "source_location": "L18",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index",
       "target": "src_components_mediaviewermodal_mediaviewermodal",
@@ -27050,6 +27092,28 @@
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index",
       "target": "src_hooks_usestudent_usestudent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "app_student_treinos_extras_extraid_executar_index",
+      "target": "src_lib_attendance",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "app_student_treinos_extras_extraid_executar_index",
+      "target": "src_lib_attendance_registerattendancetoday",
       "confidence_score": 1.0
     },
     {
@@ -27178,7 +27242,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L265",
+      "source_location": "L267",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index_extraexecutionscreen",
       "target": "app_student_treinos_extras_extraid_executar_index_fmttime",
@@ -27189,7 +27253,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L219",
+      "source_location": "L221",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index_extraexecutionscreen",
       "target": "app_student_treinos_extras_extraid_executar_index_groupbycombo",
@@ -27201,7 +27265,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L81",
+      "source_location": "L82",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index_extraexecutionscreen",
       "target": "src_hooks_usestudent_usestudent"
@@ -27212,7 +27276,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/(student)/treinos/extras/[extraId]/executar/index.tsx",
-      "source_location": "L82",
+      "source_location": "L83",
       "weight": 1.0,
       "source": "app_student_treinos_extras_extraid_executar_index_extraexecutionscreen",
       "target": "src_stores_themestore_usethemestore"
@@ -31690,6 +31754,38 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "src/lib/attendance.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "src_lib_attendance",
+      "target": "src_lib_attendance_registerattendancetoday",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/attendance.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_lib_attendance",
+      "target": "src_lib_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/attendance.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_lib_attendance",
+      "target": "src_lib_supabase_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "src/lib/exerciseConfig.ts",
       "source_location": "L39",
       "weight": 1.0,
@@ -35480,5 +35576,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "0356fe53f0210cfa39d8c8175c7d2849d840c83f"
+  "built_at_commit": "4903c4147c8dd855b8986a48c03213441099bf8c"
 }

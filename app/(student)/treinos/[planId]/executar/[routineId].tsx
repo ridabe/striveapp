@@ -16,6 +16,7 @@ import { useThemeStore } from '@/stores/themeStore';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 import { muscleColor } from '@/lib/exerciseConfig';
+import { registerAttendanceToday } from '@/lib/attendance';
 import { MediaViewerModal } from '@/components/MediaViewerModal';
 import {
   preloadRestBeep,
@@ -519,6 +520,7 @@ export default function RoutineExecutionScreen() {
       } catch {
         // falha silenciosa — não bloqueia o salvamento do treino
       }
+      await registerAttendanceToday(selectedStudent.id, selectedStudent.tenant_id).catch(() => {});
     }
 
     if (finishRating > 0) {

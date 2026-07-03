@@ -14,6 +14,7 @@ import { useThemeStore } from '@/stores/themeStore';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 import { muscleColor } from '@/lib/exerciseConfig';
+import { registerAttendanceToday } from '@/lib/attendance';
 import { MediaViewerModal } from '@/components/MediaViewerModal';
 
 type Phase = 'ready' | 'active' | 'finishing' | 'saving';
@@ -208,6 +209,7 @@ export default function ExtraExecutionScreen() {
           })) as any
         );
       }
+      await registerAttendanceToday(selectedStudent.id, selectedStudent.tenant_id).catch(() => {});
     }
 
     router.back();

@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import {
   View, Text, FlatList, TouchableOpacity, StyleSheet,
   ActivityIndicator, ScrollView,
 } from 'react-native';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
@@ -87,7 +87,10 @@ export default function ExecucaoScreen() {
     setStudentList(summary);
   }, [tenantId]);
 
-  useEffect(() => { load().finally(() => setLoading(false)); }, [load]);
+  // Tela vive dentro de um Tabs navigator — fica montada em segundo plano após a
+  // primeira visita, então useEffect sozinho não recarregaria sessões concluídas
+  // depois que o admin já tinha aberto o histórico.
+  useFocusEffect(useCallback(() => { load().finally(() => setLoading(false)); }, [load]));
 
   async function handleSelectStudent(student: StudentSummary) {
     setSelected(student);

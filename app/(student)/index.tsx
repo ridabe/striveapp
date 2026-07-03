@@ -372,7 +372,7 @@ export default function StudentHome() {
             style={[s.startBtn, { backgroundColor: primaryColor }]}
             onPress={() => {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-              router.push(`/(student)/treinos/${todayPlan.plan.id}/executar` as any);
+              router.push(`/(student)/treinos/${todayPlan.plan.id}/executar/${todayPlan.routine.id}` as any);
             }}
             activeOpacity={0.85}
           >

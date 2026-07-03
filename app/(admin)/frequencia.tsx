@@ -3,7 +3,7 @@ import {
   View, Text, TouchableOpacity, StyleSheet,
   ActivityIndicator, ScrollView, Animated, FlatList,
 } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
@@ -309,7 +309,10 @@ export default function FrequenciaScreen() {
     }
   }, [tenantId, studentId]);
 
-  useEffect(() => { load().finally(() => setLoading(false)); }, [load]);
+  // Tela vive dentro de um Tabs navigator — fica montada em segundo plano após a
+  // primeira visita, então useEffect sozinho não recarregaria a frequência de
+  // treinos feitos depois que o admin já tinha aberto essa tela.
+  useFocusEffect(useCallback(() => { load().finally(() => setLoading(false)); }, [load]));
 
   async function handleSelect(s: StudentSummary) {
     setSelected(s);

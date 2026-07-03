@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import {
   View, Text, FlatList, TouchableOpacity, StyleSheet,
   ActivityIndicator, Switch,
 } from 'react-native';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
@@ -116,7 +116,10 @@ export default function AdminRankingScreen() {
     setLoading(false);
   }, [tenantId, month, year]);
 
-  useEffect(() => { load(); }, [load]);
+  // Tela vive dentro de um Tabs navigator — fica montada em segundo plano após a
+  // primeira visita, então useEffect sozinho não recarregaria dados novos (ex.:
+  // pontos de um treino feito depois que o admin já tinha aberto o ranking).
+  useFocusEffect(useCallback(() => { load(); }, [load]));
 
   const displayedRanking = myStudentsOnly
     ? ranking.filter(r => myStudentIds.includes(r.student_id))

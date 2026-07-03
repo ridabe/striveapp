@@ -1,8 +1,8 @@
 {
   ".claude/settings.local.json": {
-    "mtime": 1783035629.0721972,
-    "ast_hash": "d772ace2e5359ec84d12fec918fd9ebf",
-    "semantic_hash": "d772ace2e5359ec84d12fec918fd9ebf"
+    "mtime": 1783107995.8809884,
+    "ast_hash": "76d9c7edf5ae20bd7a5d22a11b4ba07f",
+    "semantic_hash": ""
   },
   "app.json": {
     "mtime": 1783035662.713822,
@@ -75,9 +75,9 @@
     "semantic_hash": "c8810aecae5d34cf3b835715c5e60fde"
   },
   "app/(admin)/execucao.tsx": {
-    "mtime": 1782154055.933259,
-    "ast_hash": "e90b5969dab14a65959549c70842ffe0",
-    "semantic_hash": "e90b5969dab14a65959549c70842ffe0"
+    "mtime": 1783107942.0545833,
+    "ast_hash": "8442f156650bab05c722065c9a93493c",
+    "semantic_hash": ""
   },
   "app/(admin)/feedbacks.tsx": {
     "mtime": 1782142055.5087402,
@@ -85,9 +85,9 @@
     "semantic_hash": "c95effc2a59673e33eca5266319746e8"
   },
   "app/(admin)/frequencia.tsx": {
-    "mtime": 1782152908.7633514,
-    "ast_hash": "35dc7eff129a5492f27d9ca8cc6fe4d8",
-    "semantic_hash": "35dc7eff129a5492f27d9ca8cc6fe4d8"
+    "mtime": 1783107942.058301,
+    "ast_hash": "e17ee05ef0bfc4d901b1f770c51fdc09",
+    "semantic_hash": ""
   },
   "app/(admin)/index.tsx": {
     "mtime": 1783035397.691369,
@@ -140,9 +140,9 @@
     "semantic_hash": "3e965d2b0957df3c175452f2ffd99eb0"
   },
   "app/(admin)/ranking.tsx": {
-    "mtime": 1782404733.4921772,
-    "ast_hash": "a7731e07362c2d4432d93037206ab4f2",
-    "semantic_hash": "a7731e07362c2d4432d93037206ab4f2"
+    "mtime": 1783107942.0608642,
+    "ast_hash": "cc61a98c9d925835ba4a5c89e0b4d253",
+    "semantic_hash": ""
   },
   "app/(admin)/studio.tsx": {
     "mtime": 1782139171.116198,
@@ -190,9 +190,9 @@
     "semantic_hash": "44bd16fd2056ff51830e2365a7a422e9"
   },
   "app/(student)/index.tsx": {
-    "mtime": 1783035407.048133,
-    "ast_hash": "9fce989c6709537be67dfb0b0d77bae1",
-    "semantic_hash": "9fce989c6709537be67dfb0b0d77bae1"
+    "mtime": 1783108450.1637743,
+    "ast_hash": "b61b370a086953335fa699c792a3f989",
+    "semantic_hash": ""
   },
   "app/(student)/mais/_layout.tsx": {
     "mtime": 1782156456.9494646,
@@ -285,9 +285,9 @@
     "semantic_hash": "989cc30e6ea538841d57eb8e451e8cdb"
   },
   "app/(student)/treinos/[planId]/executar/[routineId].tsx": {
-    "mtime": 1783006713.7759697,
-    "ast_hash": "599dab5ed3b4c6888ed64496b7a91647",
-    "semantic_hash": "599dab5ed3b4c6888ed64496b7a91647"
+    "mtime": 1783107942.063498,
+    "ast_hash": "a518029f2d7f3f9d4edbfcf139dfa09b",
+    "semantic_hash": ""
   },
   "app/(student)/treinos/[planId]/executar/index.tsx": {
     "mtime": 1783006713.7779713,
@@ -305,9 +305,9 @@
     "semantic_hash": "7b5fcce5b5fc82f5823b7422bd5fd6d8"
   },
   "app/(student)/treinos/extras/[extraId]/executar/index.tsx": {
-    "mtime": 1783006713.7802799,
-    "ast_hash": "58432c5d3c641dd174d12d363ae9921a",
-    "semantic_hash": "58432c5d3c641dd174d12d363ae9921a"
+    "mtime": 1783107942.0654984,
+    "ast_hash": "8dbea1fc0b4958efd6c5caa5fe080c76",
+    "semantic_hash": ""
   },
   "app/(student)/treinos/extras/[extraId]/index.tsx": {
     "mtime": 1782326701.0959008,
@@ -917,6 +917,11 @@
   "docs/MODULO_DESAFIOS.md": {
     "mtime": 1783095751.3430984,
     "ast_hash": "9e3cd2faeb0cec55e63c8c4dcb99912e",
+    "semantic_hash": ""
+  },
+  "src/lib/attendance.ts": {
+    "mtime": 1783107865.3950691,
+    "ast_hash": "bb5973f66be513f224118b28d716786f",
     "semantic_hash": ""
   }
 }
