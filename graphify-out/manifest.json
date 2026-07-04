@@ -190,9 +190,9 @@
     "semantic_hash": "44bd16fd2056ff51830e2365a7a422e9"
   },
   "app/(student)/index.tsx": {
-    "mtime": 1783108450.1637743,
-    "ast_hash": "b61b370a086953335fa699c792a3f989",
-    "semantic_hash": "b61b370a086953335fa699c792a3f989"
+    "mtime": 1783179006.6585166,
+    "ast_hash": "f989d7a671cfe328d3ce43ec5cf9750e",
+    "semantic_hash": "f989d7a671cfe328d3ce43ec5cf9750e"
   },
   "app/(student)/mais/_layout.tsx": {
     "mtime": 1782156456.9494646,

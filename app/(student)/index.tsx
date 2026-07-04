@@ -16,6 +16,7 @@ import { useModulesStore } from '@/stores/modulesStore';
 import { MODULE } from '@/lib/modules';
 import { TenantLogo } from '@/components/TenantLogo';
 import { ModuleOnboardingPopup } from '@/components/onboarding/ModuleOnboardingPopup';
+import { MaxAvatar, MAX_COLOR } from '@/components/ai/MaxAvatar';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 
@@ -465,11 +466,12 @@ export default function StudentHome() {
             onPress={() => router.push('/(student)/mais/anamnese' as any)}
             activeOpacity={0.85}
           >
-            <View style={s.bannerIconWrap}>
-              <Ionicons name="document-text-outline" size={18} color="#F59E0B" />
-            </View>
+            <MaxAvatar variant="default" size="sm" />
             <View style={{ flex: 1 }}>
-              <Text style={s.bannerTitle}>Anamnese pendente</Text>
+              <Text style={s.bannerTitle}>
+                <Text style={{ color: MAX_COLOR }}>Max: </Text>
+                Anamnese pendente
+              </Text>
               <Text style={s.bannerDesc}>Preencha seu histórico de saúde para que seu personal personalize seu treino.</Text>
             </View>
             <Ionicons name="chevron-forward" size={16} color="#F59E0B" />
@@ -646,10 +648,6 @@ const s = StyleSheet.create({
   bannerInfo: {
     flexDirection: 'row', alignItems: 'center', gap: 12,
     borderWidth: 1, borderRadius: 16, padding: 14, marginBottom: 12,
-  },
-  bannerIconWrap: {
-    width: 36, height: 36, borderRadius: 10,
-    backgroundColor: '#F59E0B18', alignItems: 'center', justifyContent: 'center',
   },
   bannerIconWrapBlue: {
     width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center',
