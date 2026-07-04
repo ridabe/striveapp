@@ -2727,6 +2727,58 @@ export type Database = {
         }
         Relationships: []
       }
+      trainer_notifications: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          student_id: string | null
+          tenant_id: string
+          title: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: string
+          student_id?: string | null
+          tenant_id: string
+          title: string
+          type?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          student_id?: string | null
+          tenant_id?: string
+          title?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trainer_notifications_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trainer_notifications_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "trainer_notifications_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       webhook_events: {
         Row: {
           event: string
@@ -3471,6 +3523,13 @@ export type CompositeTypes<
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
+
+// ─── Aliases de conveniência (compatibilidade com código existente) ───────────
+export type AppRole            = Database["public"]["Enums"]["app_role"]
+export type ProfileStatus      = Database["public"]["Enums"]["profile_status"]
+export type ExtraWorkoutCategory = Database["public"]["Enums"]["extra_workout_category"]
+export type audit_category     = Database["public"]["Enums"]["audit_category"]
+export type MealType           = Database["public"]["Enums"]["meal_type"]
 
 export const Constants = {
   public: {

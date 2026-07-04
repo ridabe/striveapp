@@ -18,6 +18,7 @@ import { MODULE } from '@/lib/modules';
 import { TenantLogo } from '@/components/TenantLogo';
 import { MaxOnboardingModal } from '@/components/ai/MaxOnboardingModal';
 import { ModuleOnboardingPopup } from '@/components/onboarding/ModuleOnboardingPopup';
+import { TrainerNotificationBell } from '@/components/notifications/TrainerNotificationBell';
 
 interface DashboardStats {
   totalStudents: number;
@@ -106,6 +107,7 @@ export default function AdminDashboard() {
             <Text style={s.greeting}>Olá, {displayName} 👋</Text>
             <Text style={s.tenantName}>{tenantName}</Text>
           </View>
+          <TrainerNotificationBell tenantId={tenantId} />
         </View>
 
         {loading ? (
