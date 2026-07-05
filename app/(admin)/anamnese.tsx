@@ -29,12 +29,13 @@ interface AnamneseField {
 interface AnamneseResponse {
   id: string;
   student_id: string;
+  user_id: string | null;
   responses: Record<string, any>;
   completed_at: string | null;
   updated_at: string;
 }
 
-interface Student { id: string; full_name: string; status: string }
+interface Student { id: string; full_name: string; status: string; user_id: string | null }
 
 interface StudentWithResponse extends Student {
   response: AnamneseResponse | null;
@@ -332,19 +333,16 @@ export default function AnamneseScreen() {
 
   const load = useCallback(async () => {
     if (!tenantId) return;
-    const [fieldsRes, studentsRes, responsesRes] = await Promise.all([
+    const [fieldsRes, studentsRes] = await Promise.all([
       supabase.from('anamnese_templates')
         .select('id, field_key, label, category, field_type, required, options, sort_order, tenant_id')
         .or(`tenant_id.eq.${tenantId},tenant_id.is.null`)
         .eq('is_active', true)
         .order('sort_order'),
       supabase.from('students')
-        .select('id, full_name, status')
+        .select('id, full_name, status, user_id')
         .eq('tenant_id', tenantId)
         .order('full_name'),
-      supabase.from('anamnese_responses')
-        .select('id, student_id, responses, completed_at, updated_at')
-        .eq('tenant_id', tenantId),
     ]);
 
     const rawFields: AnamneseField[] = (fieldsRes.data ?? []).map((f: any) => ({
@@ -353,11 +351,37 @@ export default function AnamneseScreen() {
     }));
     setFields(rawFields);
 
-    const responseMap: Record<string, AnamneseResponse> = {};
-    (responsesRes.data ?? []).forEach((r: any) => { responseMap[r.student_id] = r; });
+    const studentsData = (studentsRes.data ?? []) as Student[];
+    const userIds = studentsData.filter(st => st.user_id).map(st => st.user_id as string);
+    const noAccountIds = studentsData.filter(st => !st.user_id).map(st => st.id);
 
-    const studentList: StudentWithResponse[] = (studentsRes.data ?? []).map(
-      (st: any) => ({ ...st, response: responseMap[st.id] ?? null }),
+    // Anamnese é compartilhada por pessoa (user_id): busca pelos user_ids dos
+    // alunos com conta. Alunos sem conta não têm como compartilhar entre
+    // tenants, então continuam identificados por student_id.
+    const [byUserRes, byStudentRes] = await Promise.all([
+      userIds.length > 0
+        ? supabase.from('anamnese_responses')
+            .select('id, student_id, user_id, responses, completed_at, updated_at')
+            .in('user_id', userIds)
+        : Promise.resolve({ data: [] as AnamneseResponse[] }),
+      noAccountIds.length > 0
+        ? supabase.from('anamnese_responses')
+            .select('id, student_id, user_id, responses, completed_at, updated_at')
+            .is('user_id', null)
+            .in('student_id', noAccountIds)
+        : Promise.resolve({ data: [] as AnamneseResponse[] }),
+    ]);
+
+    const responseByUser: Record<string, AnamneseResponse> = {};
+    (byUserRes.data ?? []).forEach((r: any) => { if (r.user_id) responseByUser[r.user_id] = r; });
+    const responseByStudent: Record<string, AnamneseResponse> = {};
+    (byStudentRes.data ?? []).forEach((r: any) => { responseByStudent[r.student_id] = r; });
+
+    const studentList: StudentWithResponse[] = studentsData.map(
+      (st) => ({
+        ...st,
+        response: (st.user_id ? responseByUser[st.user_id] : responseByStudent[st.id]) ?? null,
+      }),
     );
     setStudents(studentList);
 

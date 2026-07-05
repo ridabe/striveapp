@@ -57,7 +57,7 @@ export default function AnamneseScreen() {
       supabase
         .from('anamnese_responses')
         .select('responses, updated_at')
-        .eq('student_id', selectedStudent.id)
+        .eq('user_id', selectedStudent.user_id as string)
         .maybeSingle(),
     ]);
 
@@ -101,11 +101,19 @@ export default function AnamneseScreen() {
 
     setSaving(true);
     const now = new Date().toISOString();
+    // Anamnese pertence à pessoa (user_id) — compartilhada entre todos os
+    // personals que o aluno já teve/tem, não só o vínculo atual.
     const { error } = await supabase
       .from('anamnese_responses')
       .upsert(
-        { student_id: selectedStudent.id, tenant_id: tenantId, responses: answers, completed_at: now },
-        { onConflict: 'student_id,tenant_id' }
+        {
+          user_id: selectedStudent.user_id as string,
+          student_id: selectedStudent.id,
+          tenant_id: tenantId,
+          responses: answers,
+          completed_at: now,
+        },
+        { onConflict: 'user_id' }
       );
 
     setSaving(false);

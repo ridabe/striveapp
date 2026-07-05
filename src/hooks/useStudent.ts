@@ -41,7 +41,9 @@ export function useStudent() {
           return
         }
 
-        const students = (data ?? []) as unknown as Student[]
+        // Só vínculos ativos contam — um aluno excluído por um personal continua
+        // existindo no sistema, mas não deve aparecer como opção de acesso.
+        const students = ((data ?? []) as unknown as Student[]).filter((s) => s.status === 'active')
         setAllStudents(students)
 
         if (students.length === 1 && !selectedStudent) {

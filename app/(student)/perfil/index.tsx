@@ -231,7 +231,7 @@ export default function PerfilScreen() {
           {allStudents.length > 1 && (
             <TouchableOpacity
               style={[s.menuItem, s.menuItemBorder]}
-              onPress={() => router.push('/(student)/select-tenant' as any)}
+              onPress={() => router.push('/select-tenant' as any)}
               activeOpacity={0.75}
             >
               <View style={[s.menuIcon, { backgroundColor: `${primaryColor}12` }]}>

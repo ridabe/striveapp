@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: FontFamily.display,
-    fontSize: FontSize.xxl,
+    fontSize: FontSize['2xl'],
     color: Colors.textPrimary,
     marginBottom: 8,
   },

@@ -164,6 +164,7 @@ export default function StudentDetailScreen() {
   const [loading, setLoading] = useState(true);
   const [actionsVisible, setActionsVisible] = useState(false);
   const [resetting, setResetting] = useState(false);
+  const [togglingStatus, setTogglingStatus] = useState(false);
 
   const now   = new Date();
   const month = now.getMonth() + 1;
@@ -306,6 +307,38 @@ export default function StudentDetailScreen() {
     );
   }
 
+  async function handleToggleStatus() {
+    setActionsVisible(false);
+    const isActive = student?.status === 'active';
+    const newStatus = isActive ? 'inactive' : 'active';
+
+    Alert.alert(
+      isActive ? 'Excluir aluno' : 'Reativar aluno',
+      isActive
+        ? `Excluir ${student?.full_name ?? 'este aluno'} da sua mentoria? Ele deixará de ter acesso aos treinos e dados deste estúdio, mas nada é apagado — o histórico fica guardado e pode ser reativado depois.`
+        : `Reativar ${student?.full_name ?? 'este aluno'}? Ele volta a ter acesso normal ao seu estúdio.`,
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: isActive ? 'Excluir' : 'Reativar',
+          style: isActive ? 'destructive' : 'default',
+          onPress: async () => {
+            setTogglingStatus(true);
+            try {
+              const { error } = await supabase.from('students').update({ status: newStatus }).eq('id', id);
+              if (error) throw error;
+              setStudent(prev => prev ? { ...prev, status: newStatus } : prev);
+            } catch (err: any) {
+              Alert.alert('Erro', err.message ?? 'Não foi possível atualizar o status do aluno.');
+            } finally {
+              setTogglingStatus(false);
+            }
+          },
+        },
+      ],
+    );
+  }
+
   if (loading) {
     return (
       <SafeAreaView style={s.safe} edges={['top']}>
@@ -394,6 +427,34 @@ export default function StudentDetailScreen() {
                 <Text style={s.actionItemLabel}>Enviar nova senha provisória</Text>
                 <Text style={s.actionItemDesc}>
                   Gera uma nova senha e envia por e-mail para {student?.full_name?.split(' ')[0]}
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward" size={16} color={Colors.border} />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={s.actionItem}
+              onPress={handleToggleStatus}
+              activeOpacity={0.75}
+              disabled={togglingStatus}
+            >
+              <View style={[s.actionIconWrap, {
+                backgroundColor: student?.status === 'active' ? `${Colors.error}18` : `${Colors.success}18`,
+              }]}>
+                <Ionicons
+                  name={student?.status === 'active' ? 'person-remove-outline' : 'person-add-outline'}
+                  size={20}
+                  color={student?.status === 'active' ? Colors.error : Colors.success}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={s.actionItemLabel}>
+                  {student?.status === 'active' ? 'Excluir aluno' : 'Reativar aluno'}
+                </Text>
+                <Text style={s.actionItemDesc}>
+                  {student?.status === 'active'
+                    ? 'Remove o acesso dele ao seu estúdio (nada é apagado)'
+                    : 'Devolve o acesso normal ao seu estúdio'}
                 </Text>
               </View>
               <Ionicons name="chevron-forward" size={16} color={Colors.border} />
