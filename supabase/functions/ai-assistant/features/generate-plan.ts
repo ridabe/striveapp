@@ -17,7 +17,7 @@ interface PlanItem {
 
 interface PlanRoutine {
   name: string;
-  day_of_week?: number;
+  days_of_week?: number[];
   items: PlanItem[];
 }
 
@@ -151,7 +151,11 @@ function buildPlanTool(): Anthropic.Tool {
             type: 'object' as const,
             properties: {
               name:        { type: 'string' },
-              day_of_week: { type: 'number', description: '0=Dom, 1=Seg ... 6=Sab' },
+              days_of_week: {
+                type: 'array',
+                items: { type: 'number' },
+                description: '0=Dom, 1=Seg ... 6=Sab. Pode ter mais de um dia. Omita ou deixe vazio para rotina de dia livre (sem dia fixo).',
+              },
               items: {
                 type: 'array',
                 items: {
@@ -212,7 +216,7 @@ async function insertPlan(
         workout_plan_id: planId,
         tenant_id:       tenantId,
         name:            routine.name,
-        day_of_week:     routine.day_of_week ?? null,
+        days_of_week:    routine.days_of_week?.length ? routine.days_of_week : null,
         display_order:   ri,
       })
       .select('id')
@@ -252,7 +256,7 @@ function buildPlanSummary(plan: GeneratedPlan, planId: string): string {
   ];
 
   for (const r of plan.routines) {
-    const day = r.day_of_week != null ? `(dia ${r.day_of_week})` : '';
+    const day = r.days_of_week?.length ? `(dias ${r.days_of_week.join(', ')})` : '(dia livre)';
     lines.push(`• ${r.name} ${day} — ${r.items.length} exercícios`);
   }
 

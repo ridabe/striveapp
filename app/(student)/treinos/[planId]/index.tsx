@@ -29,7 +29,7 @@ interface Exercise {
 interface Section {
   routineId: string;
   name: string;
-  dayOfWeek: number | null;
+  daysOfWeek: number[] | null;
   exercises: Exercise[];
 }
 
@@ -85,7 +85,7 @@ export default function PlanDetailScreen() {
   async function load() {
     const [planRes, routinesRes, sessionsRes] = await Promise.all([
       supabase.from('workout_plans').select('id, name, goal, description').eq('id', planId).single(),
-      supabase.from('workout_routines').select('id, name, day_of_week, display_order').eq('workout_plan_id', planId).order('display_order'),
+      supabase.from('workout_routines').select('id, name, days_of_week, display_order').eq('workout_plan_id', planId).order('display_order'),
       supabase.from('workout_sessions').select('workout_routine_id, finished_at').eq('student_id', selectedStudent.id).eq('workout_plan_id', planId).not('workout_routine_id', 'is', null).order('finished_at'),
     ]);
 
@@ -120,7 +120,7 @@ export default function PlanDetailScreen() {
     const mapped: Section[] = (routinesRes.data ?? []).map((r: any) => ({
       routineId: r.id,
       name: r.name,
-      dayOfWeek: r.day_of_week,
+      daysOfWeek: r.days_of_week,
       exercises: allItems
         .filter(i => i.routine_id === r.id)
         .map(i => {

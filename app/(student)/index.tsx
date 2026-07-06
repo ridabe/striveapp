@@ -197,7 +197,7 @@ export default function StudentHome() {
     const [assignRes, sessionsRes, anamneseRes, templateCountRes, messagesRes] = await Promise.all([
       supabase
         .from('student_plan_assignments')
-        .select('plan_id, workout_plans(id, name, goal, status, workout_routines(id, name, day_of_week, display_order))')
+        .select('plan_id, workout_plans(id, name, goal, status, workout_routines(id, name, days_of_week, display_order))')
         .eq('student_id', studentId)
         .eq('status', 'active'),
       supabase
@@ -234,15 +234,20 @@ export default function StudentHome() {
     const sessions: any[]    = sessionsRes.data ?? [];
     const assignments: any[] = assignRes.data ?? [];
 
-    // Today's plan (scheduled by day-of-week)
+    // Today's plan (scheduled by day-of-week, com fallback para rotina de dia livre)
     let found: any = null;
+    let freeFallback: any = null;
     for (const a of assignments) {
       const plan = a.workout_plans;
       if (!plan || plan.status !== 'active') continue;
-      const routine = (plan.workout_routines ?? []).find((r: any) => r.day_of_week === today);
+      const routine = (plan.workout_routines ?? []).find((r: any) => r.days_of_week?.includes(today));
       if (routine) { found = { plan, routine }; break; }
+      if (!freeFallback) {
+        const freeRoutine = (plan.workout_routines ?? []).find((r: any) => !r.days_of_week?.length);
+        if (freeRoutine) freeFallback = { plan, routine: freeRoutine };
+      }
     }
-    setTodayPlan(found);
+    setTodayPlan(found ?? freeFallback);
 
     // Most recent session completed today
     const latestToday = sessions.find(s => new Date(s.started_at) >= todayStart) ?? null;

@@ -25,7 +25,7 @@ interface WorkoutPlanContext {
 interface RoutineContext {
   id: string;
   name: string;
-  dayOfWeek: number | null;
+  daysOfWeek: number[] | null;
   items: WorkoutItemContext[];
 }
 
@@ -129,7 +129,7 @@ async function fetchActivePlan(
     .select(`
       id, name, goal,
       workout_routines (
-        id, name, day_of_week, display_order,
+        id, name, days_of_week, display_order,
         workout_items (
           sets, reps, load, rest_seconds, display_order,
           exercise:exercises ( name, muscle_group )
@@ -149,7 +149,7 @@ async function fetchActivePlan(
     .map((r: any) => ({
       id: r.id,
       name: r.name,
-      dayOfWeek: r.day_of_week ?? null,
+      daysOfWeek: r.days_of_week ?? null,
       items: (r.workout_items ?? [])
         .sort((a: any, b: any) => a.display_order - b.display_order)
         .map((i: any) => ({

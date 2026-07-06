@@ -12,8 +12,27 @@ import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
-import { GOAL_COLORS, muscleColor, DAYS_OF_WEEK } from '@/lib/exerciseConfig';
+import { GOAL_COLORS, PLAN_GOALS, muscleColor, DAYS_OF_WEEK } from '@/lib/exerciseConfig';
 import { ExercisePickerModal, ExerciseSummary } from '@/components/ExercisePickerModal';
+
+function maskDate(value: string): string {
+  const d = value.replace(/\D/g, '').slice(0, 8);
+  if (d.length <= 2) return d;
+  if (d.length <= 4) return `${d.slice(0, 2)}/${d.slice(2)}`;
+  return `${d.slice(0, 2)}/${d.slice(2, 4)}/${d.slice(4)}`;
+}
+
+function dateToISO(masked: string): string | null {
+  const d = masked.replace(/\D/g, '');
+  if (d.length !== 8) return null;
+  return `${d.slice(4)}-${d.slice(2, 4)}-${d.slice(0, 2)}`;
+}
+
+function isoToMasked(iso: string | null): string {
+  if (!iso) return '';
+  const [y, m, d] = iso.split('-');
+  return `${d}/${m}/${y}`;
+}
 
 interface WorkoutItem {
   id: string;
@@ -32,7 +51,7 @@ interface WorkoutItem {
 interface Routine {
   id: string;
   name: string;
-  day_of_week: number | null;
+  days_of_week: number[] | null;
   display_order: number;
   notes: string | null;
   items: WorkoutItem[];
@@ -69,11 +88,21 @@ export default function PlanDetailScreen() {
 
   // Expanded routine
   const [expandedRoutine, setExpandedRoutine] = useState<string | null>(null);
+  const [editingDaysId, setEditingDaysId] = useState<string | null>(null);
 
   // Add routine modal
   const [routineModal, setRoutineModal] = useState(false);
   const [fRoutineName, setFRoutineName] = useState('');
-  const [fRoutineDay, setFRoutineDay] = useState<number | null>(null);
+  const [fRoutineDays, setFRoutineDays] = useState<number[]>([]);
+
+  // Edit plan modal
+  const [editPlanModal, setEditPlanModal] = useState(false);
+  const [fEditName, setFEditName] = useState('');
+  const [fEditGoal, setFEditGoal] = useState('');
+  const [fEditDescription, setFEditDescription] = useState('');
+  const [fEditStartDate, setFEditStartDate] = useState('');
+  const [fEditEndDate, setFEditEndDate] = useState('');
+  const [savingPlan, setSavingPlan] = useState(false);
 
   // Exercise picker
   const [pickerVisible, setPickerVisible] = useState(false);
@@ -99,7 +128,7 @@ export default function PlanDetailScreen() {
     if (!id || !tenantId) return;
     const [planRes, routinesRes] = await Promise.all([
       supabase.from('workout_plans').select('id,name,goal,status,description,start_date,end_date').eq('id', id).single(),
-      supabase.from('workout_routines').select('id,name,day_of_week,display_order,notes').eq('workout_plan_id', id).order('display_order'),
+      supabase.from('workout_routines').select('id,name,days_of_week,display_order,notes').eq('workout_plan_id', id).order('display_order'),
     ]);
     const routineIds: string[] = (routinesRes.data ?? []).map((r: any) => r.id);
     const itemsRes = routineIds.length > 0
@@ -135,6 +164,33 @@ export default function PlanDetailScreen() {
       ...r,
       items: allItems.filter(i => i.routine_id === r.id).map(i => ({ ...i, exercise: i.exercises })),
     })));
+  }
+
+  function openEditPlan() {
+    if (!plan) return;
+    setFEditName(plan.name);
+    setFEditGoal(plan.goal ?? '');
+    setFEditDescription(plan.description ?? '');
+    setFEditStartDate(isoToMasked(plan.start_date));
+    setFEditEndDate(isoToMasked(plan.end_date));
+    setEditPlanModal(true);
+  }
+
+  async function handleSaveEditPlan() {
+    if (!plan || !fEditName.trim()) { Alert.alert('Atenção', 'Informe o nome do plano.'); return; }
+    setSavingPlan(true);
+    const updates = {
+      name: fEditName.trim(),
+      goal: fEditGoal || null,
+      description: fEditDescription.trim() || null,
+      start_date: dateToISO(fEditStartDate),
+      end_date: dateToISO(fEditEndDate),
+    };
+    const { error } = await supabase.from('workout_plans').update(updates).eq('id', id);
+    setSavingPlan(false);
+    if (error) { Alert.alert('Erro', error.message); return; }
+    setPlan(p => p ? { ...p, ...updates } : p);
+    setEditPlanModal(false);
   }
 
   async function handleToggleStatus() {
@@ -181,14 +237,20 @@ export default function PlanDetailScreen() {
       workout_plan_id: id,
       tenant_id: tenantId,
       name: fRoutineName.trim(),
-      day_of_week: fRoutineDay,
+      days_of_week: fRoutineDays.length ? fRoutineDays : null,
       display_order: routines.length,
     });
     setSaving(false);
     if (error) { Alert.alert('Erro', error.message); return; }
     setRoutineModal(false);
-    setFRoutineName(''); setFRoutineDay(null);
+    setFRoutineName(''); setFRoutineDays([]);
     await load();
+  }
+
+  async function handleUpdateRoutineDays(routineId: string, days: number[]) {
+    const daysOfWeek = days.length ? days : null;
+    setRoutines(prev => prev.map(r => r.id === routineId ? { ...r, days_of_week: daysOfWeek } : r));
+    await supabase.from('workout_routines').update({ days_of_week: daysOfWeek }).eq('id', routineId);
   }
 
   async function handleDeleteRoutine(routineId: string) {
@@ -335,6 +397,17 @@ export default function PlanDetailScreen() {
           )}
           {plan.description && <Text style={s.descText}>{plan.description}</Text>}
 
+          {(plan.start_date || plan.end_date) && (
+            <Text style={s.descText}>
+              {plan.start_date ? isoToMasked(plan.start_date) : '—'} → {plan.end_date ? isoToMasked(plan.end_date) : '—'}
+            </Text>
+          )}
+
+          <TouchableOpacity onPress={openEditPlan} activeOpacity={0.7} style={s.editPlanLink}>
+            <Ionicons name="pencil-outline" size={12} color={Colors.textSecondary} />
+            <Text style={s.editPlanLinkText}>Editar informações</Text>
+          </TouchableOpacity>
+
           {/* Botão de ativar/desativar — visível e explícito */}
           <TouchableOpacity
             style={[
@@ -394,9 +467,14 @@ export default function PlanDetailScreen() {
                 </View>
                 <View style={{ flex: 1 }}>
                   <Text style={s.routineName}>{routine.name}</Text>
-                  <Text style={s.routineMeta}>
-                    {routine.day_of_week != null ? DAYS_OF_WEEK[routine.day_of_week] : 'Sem dia fixo'} · {routine.items.length} exercício{routine.items.length !== 1 ? 's' : ''}
-                  </Text>
+                  <TouchableOpacity
+                    onPress={() => setEditingDaysId(editingDaysId === routine.id ? null : routine.id)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={s.routineMeta}>
+                      {routine.days_of_week?.length ? routine.days_of_week.map(d => DAYS_OF_WEEK[d]).join(', ') : 'Dia livre'} · {routine.items.length} exercício{routine.items.length !== 1 ? 's' : ''}
+                    </Text>
+                  </TouchableOpacity>
                 </View>
                 <TouchableOpacity onPress={() => {
                   setPickerRoutineId(routine.id);
@@ -409,6 +487,35 @@ export default function PlanDetailScreen() {
                 </TouchableOpacity>
                 <Ionicons name={isExpanded ? 'chevron-up' : 'chevron-down'} size={16} color={Colors.textSecondary} />
               </TouchableOpacity>
+
+              {/* Editor inline de dias da semana */}
+              {editingDaysId === routine.id && (
+                <View style={s.inlineDaysEditor}>
+                  <View style={s.daysRow}>
+                    {DAYS_OF_WEEK.map((d, i) => {
+                      const active = routine.days_of_week?.includes(i) ?? false;
+                      return (
+                        <TouchableOpacity key={i}
+                          style={[s.dayBtnSmall, active && { backgroundColor: primaryColor, borderColor: primaryColor }]}
+                          onPress={() => {
+                            const current = routine.days_of_week ?? [];
+                            const next = active ? current.filter(x => x !== i) : [...current, i].sort();
+                            handleUpdateRoutineDays(routine.id, next);
+                          }}
+                          activeOpacity={0.75}>
+                          <Text style={[s.dayBtnText, active && { color: primaryTextColor }]}>{d}</Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                    <TouchableOpacity
+                      style={[s.freeDayBtn, !routine.days_of_week?.length && { backgroundColor: `${primaryColor}18`, borderColor: primaryColor }]}
+                      onPress={() => handleUpdateRoutineDays(routine.id, [])}
+                      activeOpacity={0.75}>
+                      <Text style={[s.freeDayBtnText, !routine.days_of_week?.length && { color: primaryColor }]}>Dia livre</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              )}
 
               {/* Items */}
               {isExpanded && (
@@ -471,15 +578,26 @@ export default function PlanDetailScreen() {
               <Text style={s.label}>NOME DA ROTINA</Text>
               <TextInput value={fRoutineName} onChangeText={setFRoutineName} style={s.input}
                 placeholder="Ex: Treino A — Peito e Tríceps" placeholderTextColor={Colors.textSecondary} />
-              <Text style={[s.label, { marginTop: 18 }]}>DIA DA SEMANA (opcional)</Text>
+              <Text style={[s.label, { marginTop: 18 }]}>DIA(S) DA SEMANA (opcional)</Text>
+              <Text style={s.helperText}>Selecione um ou mais dias, ou deixe como &quot;Dia livre&quot; para o aluno executar quando quiser.</Text>
               <View style={s.daysRow}>
-                {DAYS_OF_WEEK.map((d, i) => (
-                  <TouchableOpacity key={i}
-                    style={[s.dayBtn, fRoutineDay === i && { backgroundColor: primaryColor, borderColor: primaryColor }]}
-                    onPress={() => setFRoutineDay(fRoutineDay === i ? null : i)} activeOpacity={0.75}>
-                    <Text style={[s.dayBtnText, fRoutineDay === i && { color: primaryTextColor }]}>{d}</Text>
-                  </TouchableOpacity>
-                ))}
+                {DAYS_OF_WEEK.map((d, i) => {
+                  const active = fRoutineDays.includes(i);
+                  return (
+                    <TouchableOpacity key={i}
+                      style={[s.dayBtn, active && { backgroundColor: primaryColor, borderColor: primaryColor }]}
+                      onPress={() => setFRoutineDays(prev => active ? prev.filter(x => x !== i) : [...prev, i].sort())}
+                      activeOpacity={0.75}>
+                      <Text style={[s.dayBtnText, active && { color: primaryTextColor }]}>{d}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+                <TouchableOpacity
+                  style={[s.freeDayBtn, !fRoutineDays.length && { backgroundColor: `${primaryColor}18`, borderColor: primaryColor }]}
+                  onPress={() => setFRoutineDays([])}
+                  activeOpacity={0.75}>
+                  <Text style={[s.freeDayBtnText, !fRoutineDays.length && { color: primaryColor }]}>Dia livre</Text>
+                </TouchableOpacity>
               </View>
               <TouchableOpacity
                 style={[s.saveBtn, { backgroundColor: primaryColor }, saving && { opacity: 0.6 }]}
@@ -487,6 +605,68 @@ export default function PlanDetailScreen() {
                 {saving
                   ? <ActivityIndicator color={primaryTextColor} />
                   : <Text style={[s.saveBtnText, { color: primaryTextColor }]}>Criar Rotina</Text>}
+              </TouchableOpacity>
+            </ScrollView>
+          </SafeAreaView>
+        </KeyboardAvoidingView>
+      </Modal>
+
+      {/* Edit plan modal */}
+      <Modal visible={editPlanModal} animationType="slide" presentationStyle="pageSheet"
+        onRequestClose={() => !savingPlan && setEditPlanModal(false)}>
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+          <SafeAreaView style={s.safe} edges={['top']}>
+            <View style={s.header}>
+              <TouchableOpacity onPress={() => !savingPlan && setEditPlanModal(false)} style={s.iconBtn}>
+                <Ionicons name="close" size={22} color={Colors.textPrimary} />
+              </TouchableOpacity>
+              <Text style={s.title}>Editar Plano</Text>
+              <View style={{ width: 38 }} />
+            </View>
+            <ScrollView contentContainerStyle={s.modalContent} keyboardShouldPersistTaps="handled">
+              <Text style={s.label}>NOME DO PLANO</Text>
+              <TextInput value={fEditName} onChangeText={setFEditName} style={s.input}
+                placeholder="Ex: Plano Hipertrofia A" placeholderTextColor={Colors.textSecondary} />
+
+              <Text style={[s.label, { marginTop: 18 }]}>OBJETIVO</Text>
+              <View style={s.goalGrid}>
+                {PLAN_GOALS.map(g => {
+                  const goalColor = GOAL_COLORS[g];
+                  return (
+                    <TouchableOpacity key={g}
+                      style={[s.goalBtn, fEditGoal === g && { borderColor: goalColor, backgroundColor: `${goalColor}15` }]}
+                      onPress={() => setFEditGoal(g === fEditGoal ? '' : g)} activeOpacity={0.75}>
+                      <Text style={[s.goalBtnText, fEditGoal === g && { color: goalColor }]}>{g}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+
+              <Text style={[s.label, { marginTop: 18 }]}>DESCRIÇÃO / OBSERVAÇÕES</Text>
+              <TextInput value={fEditDescription} onChangeText={setFEditDescription} style={[s.input, s.textArea]}
+                multiline placeholder="Frequência semanal, restrições, observações..." placeholderTextColor={Colors.textSecondary} />
+
+              <View style={s.row4}>
+                <View style={{ flex: 1 }}>
+                  <Text style={[s.label, { marginTop: 18 }]}>INÍCIO</Text>
+                  <TextInput value={fEditStartDate} onChangeText={t => setFEditStartDate(maskDate(t))} style={s.input}
+                    keyboardType="numeric" placeholder="DD/MM/AAAA" placeholderTextColor={Colors.textSecondary} maxLength={10} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={[s.label, { marginTop: 18 }]}>TÉRMINO</Text>
+                  <TextInput value={fEditEndDate} onChangeText={t => setFEditEndDate(maskDate(t))} style={s.input}
+                    keyboardType="numeric" placeholder="DD/MM/AAAA" placeholderTextColor={Colors.textSecondary} maxLength={10} />
+                </View>
+              </View>
+              <Text style={s.helperText}>Início e término são opcionais — deixe em branco se o plano não tem duração definida.</Text>
+
+              <TouchableOpacity
+                style={[s.saveBtn, { backgroundColor: primaryColor }, savingPlan && { opacity: 0.6 }]}
+                onPress={handleSaveEditPlan} disabled={savingPlan} activeOpacity={0.85}>
+                {savingPlan
+                  ? <ActivityIndicator color={primaryTextColor} />
+                  : <Text style={[s.saveBtnText, { color: primaryTextColor }]}>Salvar</Text>
+                }
               </TouchableOpacity>
             </ScrollView>
           </SafeAreaView>
@@ -606,6 +786,11 @@ const s = StyleSheet.create({
   goalBadge: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 20, borderWidth: 1, alignSelf: 'flex-start' },
   goalText: { fontFamily: FontFamily.bodyMedium, fontSize: 13 },
   descText: { fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textSecondary, lineHeight: 20 },
+  editPlanLink: { flexDirection: 'row', alignItems: 'center', gap: 5, alignSelf: 'flex-start' },
+  editPlanLinkText: { fontFamily: FontFamily.body, fontSize: 12, color: Colors.textSecondary },
+  goalGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  goalBtn: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20, borderWidth: 1.5, borderColor: Colors.border, backgroundColor: Colors.surface },
+  goalBtnText: { fontFamily: FontFamily.bodyMedium, fontSize: 13, color: Colors.textSecondary },
   activateBtn: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
     gap: 8, borderRadius: 12, paddingVertical: 12, paddingHorizontal: 14,
@@ -645,9 +830,14 @@ const s = StyleSheet.create({
   label: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.xs, color: Colors.textSecondary, letterSpacing: 1, marginBottom: 8 },
   input: { backgroundColor: Colors.surface, borderWidth: 1, borderColor: Colors.border, borderRadius: 12, paddingHorizontal: 14, paddingVertical: 12, fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textPrimary },
   textArea: { minHeight: 80, textAlignVertical: 'top', paddingTop: 12 },
-  daysRow: { flexDirection: 'row', gap: 6, flexWrap: 'wrap' },
+  daysRow: { flexDirection: 'row', gap: 6, flexWrap: 'wrap', alignItems: 'center' },
   dayBtn: { width: 42, height: 42, borderRadius: 21, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: Colors.border, backgroundColor: Colors.surface },
+  dayBtnSmall: { width: 34, height: 34, borderRadius: 17, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: Colors.border, backgroundColor: Colors.bg },
   dayBtnText: { fontFamily: FontFamily.bodyMedium, fontSize: 12, color: Colors.textSecondary },
+  freeDayBtn: { paddingHorizontal: 12, height: 34, borderRadius: 17, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: Colors.border, backgroundColor: Colors.bg },
+  freeDayBtnText: { fontFamily: FontFamily.bodyMedium, fontSize: 12, color: Colors.textSecondary },
+  helperText: { fontFamily: FontFamily.body, fontSize: 11, color: Colors.textSecondary, marginBottom: 10 },
+  inlineDaysEditor: { paddingHorizontal: 14, paddingBottom: 12, borderTopWidth: 1, borderTopColor: Colors.border, paddingTop: 10 },
   row4: { flexDirection: 'row', gap: 10 },
   saveBtn: { borderRadius: 14, paddingVertical: 16, alignItems: 'center', justifyContent: 'center', marginTop: 24 },
   saveBtnText: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.md },

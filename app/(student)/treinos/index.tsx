@@ -35,7 +35,7 @@ interface Plan {
   name: string;
   goal: string | null;
   status: string;
-  routines: { id: string; name: string; day_of_week: number | null }[];
+  routines: { id: string; name: string; days_of_week: number[] | null }[];
   totalExercises?: number;
 }
 
@@ -146,7 +146,7 @@ export default function TreinosScreen() {
     const [assignRes, extraRes, sessionsRes] = await Promise.all([
       supabase
         .from('student_plan_assignments')
-        .select('plan_id, status, workout_plans(id, name, goal, status, workout_routines(id, name, day_of_week, display_order, workout_items(id)))')
+        .select('plan_id, status, workout_plans(id, name, goal, status, workout_routines(id, name, days_of_week, display_order, workout_items(id)))')
         .eq('student_id', selectedStudent.id)
         .order('assigned_at', { ascending: false }),
       supabase
@@ -194,10 +194,11 @@ export default function TreinosScreen() {
 
   // Scheduled days display for a plan: e.g. "Seg · Qua · Sex"
   function scheduledDaysText(routines: Plan['routines']): string {
-    const scheduled = routines
-      .filter(r => r.day_of_week != null)
-      .map(r => DAY_LABELS[r.day_of_week!])
-      .filter(Boolean);
+    const daySet = new Set<number>();
+    for (const r of routines) {
+      for (const d of r.days_of_week ?? []) daySet.add(d);
+    }
+    const scheduled = [...daySet].sort((a, b) => a - b).map(d => DAY_LABELS[d]);
     return scheduled.length > 0 ? scheduled.join(' · ') : '';
   }
 
