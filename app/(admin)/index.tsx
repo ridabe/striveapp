@@ -25,7 +25,11 @@ interface DashboardStats {
   activeStudents: number;
   pendingPayments: number;
   activePlans: number;
+  maxStudents: number;
 }
+
+// Convenção do plano "Elite": max_students >= UNLIMITED_THRESHOLD significa ilimitado
+const UNLIMITED_THRESHOLD = 9999;
 
 interface RecentStudent {
   id: string;
@@ -51,11 +55,12 @@ export default function AdminDashboard() {
   async function loadDashboard() {
     if (!tenantId) return;
 
-    const [studentsRes, pendingRes, plansRes, recentRes] = await Promise.all([
+    const [studentsRes, pendingRes, plansRes, recentRes, tenantRes] = await Promise.all([
       supabase.from('students').select('id, status', { count: 'exact' }).eq('tenant_id', tenantId),
       supabase.from('financial_plans').select('id', { count: 'exact' }).eq('tenant_id', tenantId).eq('status', 'pending'),
       supabase.from('workout_plans').select('id', { count: 'exact' }).eq('tenant_id', tenantId).eq('status', 'active'),
       supabase.from('students').select('id, full_name, status, created_at').eq('tenant_id', tenantId).order('created_at', { ascending: false }).limit(5),
+      supabase.from('tenants').select('max_students').eq('id', tenantId).single(),
     ]);
 
     const allStudents = studentsRes.data ?? [];
@@ -64,6 +69,7 @@ export default function AdminDashboard() {
       activeStudents: allStudents.filter(s => s.status === 'active').length,
       pendingPayments: pendingRes.count ?? 0,
       activePlans: plansRes.count ?? 0,
+      maxStudents: tenantRes.data?.max_students ?? 0,
     });
     setRecentStudents(recentRes.data ?? []);
   }
@@ -76,8 +82,10 @@ export default function AdminDashboard() {
     setRefreshing(false);
   }
 
-  const activeRate = stats && stats.totalStudents > 0
-    ? Math.round((stats.activeStudents / stats.totalStudents) * 100)
+  // Plano "Elite" (ilimitado) não tem um denominador útil para a barra de capacidade
+  const isUnlimitedPlan = (stats?.maxStudents ?? 0) >= UNLIMITED_THRESHOLD;
+  const capacityRate = stats && !isUnlimitedPlan && stats.maxStudents > 0
+    ? Math.min(100, Math.round((stats.activeStudents / stats.maxStudents) * 100))
     : 0;
 
   return (
@@ -129,17 +137,19 @@ export default function AdminDashboard() {
                 <Text style={[s.heroValue, { color: primaryTextColor }]}>
                   {stats?.activeStudents ?? 0}
                   <Text style={[s.heroTotal, { color: isLightText ? 'rgba(0,0,0,0.45)' : 'rgba(255,255,255,0.55)' }]}>
-                    {' '}/ {stats?.totalStudents ?? 0}
+                    {' '}/ {isUnlimitedPlan ? '∞' : (stats?.maxStudents ?? 0)}
                   </Text>
                 </Text>
-                <View style={s.progressTrack}>
-                  <View style={[s.progressFill, {
-                    width: `${activeRate}%` as any,
-                    backgroundColor: isLightText ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.85)',
-                  }]} />
-                </View>
+                {!isUnlimitedPlan && (
+                  <View style={s.progressTrack}>
+                    <View style={[s.progressFill, {
+                      width: `${capacityRate}%` as any,
+                      backgroundColor: isLightText ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.85)',
+                    }]} />
+                  </View>
+                )}
                 <Text style={[s.progressLabel, { color: isLightText ? 'rgba(0,0,0,0.45)' : 'rgba(255,255,255,0.6)' }]}>
-                  {activeRate}% ativos
+                  {isUnlimitedPlan ? 'Plano com alunos ilimitados' : `${capacityRate}% da capacidade do plano`}
                 </Text>
               </View>
               <View style={[s.heroIconWrap, { backgroundColor: isLightText ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.15)' }]}>

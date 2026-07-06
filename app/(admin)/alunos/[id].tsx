@@ -502,6 +502,12 @@ export default function StudentDetailScreen() {
                 {student.status === 'active' ? 'Ativo' : 'Inativo'}
               </Text>
             </View>
+            {mustChangePassword && (
+              <View style={s.passwordWarningBadge}>
+                <Ionicons name="key-outline" size={11} color={Colors.warning} />
+                <Text style={s.passwordWarningText}>Deve alterar senha provisória</Text>
+              </View>
+            )}
           </View>
         </View>
 
@@ -646,6 +652,12 @@ const s = StyleSheet.create({
   statusBadge: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 20, alignSelf: 'flex-start' },
   statusDot: { width: 7, height: 7, borderRadius: 4 },
   statusText: { fontFamily: FontFamily.bodyMedium, fontSize: 12 },
+  passwordWarningBadge: {
+    flexDirection: 'row', alignItems: 'center', gap: 5,
+    backgroundColor: `${Colors.warning}18`, paddingHorizontal: 10, paddingVertical: 5,
+    borderRadius: 20, alignSelf: 'flex-start',
+  },
+  passwordWarningText: { fontFamily: FontFamily.bodyMedium, fontSize: 11, color: Colors.warning },
 
   // Ranking card
   rankCard: {
