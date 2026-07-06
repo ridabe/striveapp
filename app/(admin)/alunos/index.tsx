@@ -21,6 +21,7 @@ interface Student {
   status: string;
   goal: string | null;
   created_at: string;
+  user_id: string | null;
 }
 
 export default function AlunosScreen() {
@@ -33,6 +34,7 @@ export default function AlunosScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [filter, setFilter] = useState<'all' | 'active' | 'inactive'>('all');
   const [showNovoAluno, setShowNovoAluno] = useState(false);
+  const [mustChangePasswordIds, setMustChangePasswordIds] = useState<Set<string>>(new Set());
 
   const tenantId = profile?.tenant_id;
 
@@ -40,10 +42,23 @@ export default function AlunosScreen() {
     if (!tenantId) return;
     const { data } = await supabase
       .from('students')
-      .select('id, full_name, email, phone, status, goal, created_at')
+      .select('id, full_name, email, phone, status, goal, created_at, user_id')
       .eq('tenant_id', tenantId)
       .order('full_name');
     setStudents(data ?? []);
+
+    // Alunos com conta que ainda precisam trocar a senha provisória
+    const userIds = (data ?? []).map(s => s.user_id).filter(Boolean) as string[];
+    if (userIds.length > 0) {
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, must_change_password')
+        .in('id', userIds)
+        .eq('must_change_password', true);
+      setMustChangePasswordIds(new Set((profiles ?? []).map(p => p.id)));
+    } else {
+      setMustChangePasswordIds(new Set());
+    }
   }
 
   useEffect(() => {
@@ -154,6 +169,12 @@ export default function AlunosScreen() {
                 {item.email && (
                   <Text style={styles.studentEmail} numberOfLines={1}>{item.email}</Text>
                 )}
+                {item.user_id && mustChangePasswordIds.has(item.user_id) && (
+                  <View style={styles.passwordWarningRow}>
+                    <Ionicons name="key-outline" size={11} color={Colors.warning} />
+                    <Text style={styles.passwordWarningText}>Deve alterar senha provisória</Text>
+                  </View>
+                )}
               </View>
               <View style={styles.cardRight}>
                 <View style={[
@@ -217,6 +238,8 @@ const styles = StyleSheet.create({
   studentName: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm, color: Colors.textPrimary },
   studentGoal: { fontFamily: FontFamily.body, fontSize: FontSize.xs, color: Colors.textSecondary, marginTop: 2 },
   studentEmail: { fontFamily: FontFamily.body, fontSize: FontSize.xs, color: Colors.textSecondary, marginTop: 1 },
+  passwordWarningRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 3 },
+  passwordWarningText: { fontFamily: FontFamily.body, fontSize: 11, color: Colors.warning },
   cardRight: { alignItems: 'flex-end' },
   statusBadge: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8 },
   statusText: { fontFamily: FontFamily.bodyMedium, fontSize: 11 },

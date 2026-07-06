@@ -8,6 +8,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
+import { backToStudentHub } from '@/lib/studentNav';
 import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
 import { Colors } from '@/theme/colors';
@@ -354,7 +355,7 @@ export default function PlanDetailScreen() {
     return (
       <SafeAreaView style={s.safe} edges={['top']}>
         <View style={s.header}>
-          <TouchableOpacity onPress={() => router.back()} style={s.iconBtn}>
+          <TouchableOpacity onPress={() => backToStudentHub(fromStudentId)} style={s.iconBtn}>
             <Ionicons name="arrow-back" size={22} color={Colors.textPrimary} />
           </TouchableOpacity>
         </View>
@@ -368,7 +369,7 @@ export default function PlanDetailScreen() {
   return (
     <SafeAreaView style={s.safe} edges={['top']}>
       <View style={s.header}>
-        <TouchableOpacity onPress={() => router.back()} style={s.iconBtn}>
+        <TouchableOpacity onPress={() => backToStudentHub(fromStudentId)} style={s.iconBtn}>
           <Ionicons name="arrow-back" size={22} color={Colors.textPrimary} />
         </TouchableOpacity>
         <Text style={s.title} numberOfLines={1}>{plan.name}</Text>

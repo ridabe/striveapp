@@ -10,6 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import { supabase } from '@/lib/supabase';
+import { backToStudentHub } from '@/lib/studentNav';
 import { MediaViewerModal } from '@/components/MediaViewerModal';
 import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
@@ -543,7 +544,7 @@ export default function ProgressoScreen() {
   return (
     <SafeAreaView style={st.safe} edges={['top']}>
       <View style={st.header}>
-        <TouchableOpacity onPress={() => { if (studentId) { router.back(); return; } selected ? setSelected(null) : router.back(); }} style={st.backBtn}>
+        <TouchableOpacity onPress={() => { if (studentId) { backToStudentHub(studentId); return; } selected ? setSelected(null) : router.back(); }} style={st.backBtn}>
           <Ionicons name="arrow-back" size={22} color={Colors.textPrimary} />
         </TouchableOpacity>
         <Text style={st.title} numberOfLines={1}>

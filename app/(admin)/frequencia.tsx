@@ -7,6 +7,7 @@ import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
+import { backToStudentHub } from '@/lib/studentNav';
 import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
 import { Colors } from '@/theme/colors';
@@ -330,7 +331,7 @@ export default function FrequenciaScreen() {
       <View style={s.header}>
         <TouchableOpacity
           onPress={() => {
-            if (studentId) { router.back(); return; }
+            if (studentId) { backToStudentHub(studentId); return; }
             selected ? setSelected(null) : router.back();
           }}
           style={s.backBtn}>

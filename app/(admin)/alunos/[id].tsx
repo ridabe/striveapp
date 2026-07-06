@@ -29,6 +29,7 @@ interface StudentDetail {
   birth_date: string | null;
   notes: string | null;
   created_at: string;
+  user_id: string | null;
 }
 
 interface ModuleCounts {
@@ -120,7 +121,7 @@ function getModuleLabel(counts: ModuleCounts) {
       iconBg: '#14B8A6',
       badge: `${counts.historico} ${counts.historico === 1 ? 'sessão' : 'sessões'}`,
       badgeColor: counts.historico > 0 ? Colors.success : Colors.textSecondary,
-      onPress: (sid: string) => router.push({ pathname: '/(admin)/frequencia' as any, params: { studentId: sid } }),
+      onPress: (sid: string) => router.push({ pathname: '/(admin)/historico-treinos' as any, params: { studentId: sid } }),
     },
   ];
 }
@@ -165,6 +166,7 @@ export default function StudentDetailScreen() {
   const [actionsVisible, setActionsVisible] = useState(false);
   const [resetting, setResetting] = useState(false);
   const [togglingStatus, setTogglingStatus] = useState(false);
+  const [mustChangePassword, setMustChangePassword] = useState(false);
 
   const now   = new Date();
   const month = now.getMonth() + 1;
@@ -178,7 +180,7 @@ export default function StudentDetailScreen() {
   async function loadAll() {
     const [studentRes, anamneseRes, avaliacoesRes, frequenciaRes, gamSettingsRes] = await Promise.all([
       supabase.from('students')
-        .select('id, full_name, email, phone, status, goal, birth_date, notes, created_at')
+        .select('id, full_name, email, phone, status, goal, birth_date, notes, created_at, user_id')
         .eq('id', id)
         .single(),
       supabase.from('anamnese_responses')
@@ -207,6 +209,17 @@ export default function StudentDetailScreen() {
     ]);
 
     setStudent(studentRes.data ?? null);
+
+    if (studentRes.data?.user_id) {
+      const { data: studentProfile } = await supabase
+        .from('profiles')
+        .select('must_change_password')
+        .eq('id', studentRes.data.user_id)
+        .single();
+      setMustChangePassword(studentProfile?.must_change_password ?? false);
+    } else {
+      setMustChangePassword(false);
+    }
 
     const anamData = anamneseRes.data;
     const anamStatus: ModuleCounts['anamnese'] =

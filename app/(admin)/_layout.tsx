@@ -7,7 +7,7 @@ import { MODULE } from '@/lib/modules';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function AdminLayout() {
-  const { accentTextColor } = useThemeStore();
+  const { primaryColor } = useThemeStore();
   const insets = useSafeAreaInsets();
   const { has } = useModulesStore();
 
@@ -25,7 +25,7 @@ export default function AdminLayout() {
           paddingBottom: insets.bottom,
           paddingTop: 8,
         },
-        tabBarActiveTintColor: accentTextColor,
+        tabBarActiveTintColor: primaryColor,
         tabBarInactiveTintColor: Colors.textSecondary,
         tabBarLabelStyle: {
           fontSize: 11,
@@ -47,6 +47,17 @@ export default function AdminLayout() {
           title: 'Alunos',
           tabBarIcon: ({ color, size }) => <Ionicons name="people" size={size} color={color} />,
         }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            // O Stack aninhado de "alunos" preserva o aluno selecionado
+            // anteriormente (comportamento padrão de Tabs — só reseta sozinho
+            // quando a tab já está em foco). Tocar no botão "Alunos" deve
+            // sempre levar para a lista de alunos, nunca retomar o hub do
+            // último aluno visto (mesmo vindo de outra tab ou de um módulo).
+            e.preventDefault();
+            navigation.navigate('alunos', { screen: 'index' });
+          },
+        })}
       />
       <Tabs.Screen
         name="treinos"
@@ -69,6 +80,7 @@ export default function AdminLayout() {
       <Tabs.Screen name="arquivos" options={{ href: null }} />
       <Tabs.Screen name="feedbacks" options={{ href: null }} />
       <Tabs.Screen name="frequencia" options={{ href: null }} />
+      <Tabs.Screen name="historico-treinos" options={{ href: null }} />
       <Tabs.Screen name="progresso" options={{ href: null }} />
       <Tabs.Screen name="avaliacao" options={{ href: null }} />
       <Tabs.Screen name="anamnese" options={{ href: null }} />

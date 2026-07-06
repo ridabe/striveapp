@@ -7,6 +7,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
+import { backToStudentHub } from '@/lib/studentNav';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 import { MaxAvatar, MAX_COLOR } from '@/components/ai/MaxAvatar';
@@ -118,7 +119,7 @@ export default function AssistenteIAChatScreen() {
     <SafeAreaView style={s.safe} edges={['top']}>
       {/* Header */}
       <View style={s.header}>
-        <TouchableOpacity onPress={() => router.back()} style={s.iconBtn}>
+        <TouchableOpacity onPress={() => backToStudentHub(studentId)} style={s.iconBtn}>
           <Ionicons name="arrow-back" size={22} color={Colors.textPrimary} />
         </TouchableOpacity>
         <View style={s.headerCenter}>
