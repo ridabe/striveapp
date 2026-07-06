@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+﻿import { useState, useCallback } from 'react';
 import {
   View, Text, FlatList, TouchableOpacity, StyleSheet,
   ActivityIndicator, Modal, TextInput, Alert, Image,
@@ -38,9 +38,8 @@ const RELEASE_MODES = [
 
 function ChallengesListScreen() {
   const { profile } = useAuthStore();
-  const { primaryColor } = useThemeStore();
+  const { primaryColor, primaryTextColor } = useThemeStore();
   const tenantId = profile?.tenant_id ?? '';
-  const lightText = ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(primaryColor);
 
   const [planBlocked, setPlanBlocked] = useState<boolean | null>(null);
   const [challenges, setChallenges] = useState<ChallengeRow[]>([]);
@@ -151,7 +150,7 @@ function ChallengesListScreen() {
         <TouchableOpacity
           style={[s.addBtn, { backgroundColor: primaryColor }]}
           onPress={() => setModalVisible(true)} activeOpacity={0.85}>
-          <Ionicons name="add" size={20} color={lightText ? '#000' : '#fff'} />
+          <Ionicons name="add" size={20} color={primaryTextColor} />
         </TouchableOpacity>
       </View>
 
@@ -265,8 +264,8 @@ function ChallengesListScreen() {
                 style={[s.saveBtn, { backgroundColor: primaryColor }, saving && { opacity: 0.6 }]}
                 onPress={handleCreate} disabled={saving} activeOpacity={0.85}>
                 {saving
-                  ? <ActivityIndicator color={lightText ? '#000' : '#fff'} />
-                  : <Text style={[s.saveBtnText, { color: lightText ? '#000' : '#fff' }]}>Criar Desafio</Text>
+                  ? <ActivityIndicator color={primaryTextColor} />
+                  : <Text style={[s.saveBtnText, { color: primaryTextColor }]}>Criar Desafio</Text>
                 }
               </TouchableOpacity>
             </ScrollView>

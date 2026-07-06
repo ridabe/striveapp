@@ -54,7 +54,7 @@ export function ModuleOnboardingPopup({
   modulesLoaded,
   deferUntilMaxSeen = false,
 }: Props) {
-  const { primaryColor } = useThemeStore();
+  const { primaryColor, primaryTextColor } = useThemeStore();
   const accent = primaryColor || Colors.primary;
 
   const [visible, setVisible] = useState(false);
@@ -213,8 +213,8 @@ export function ModuleOnboardingPopup({
                 onPress={advanceAndClose}
                 activeOpacity={0.85}
               >
-                <Text style={[s.btnOkText, { color: btnTextColor(accent) }]}>Entendi</Text>
-                <Ionicons name="arrow-forward" size={15} color={btnTextColor(accent)} />
+                <Text style={[s.btnOkText, { color: primaryTextColor }]}>Entendi</Text>
+                <Ionicons name="arrow-forward" size={15} color={primaryTextColor} />
               </TouchableOpacity>
             </View>
           </Pressable>
@@ -222,11 +222,6 @@ export function ModuleOnboardingPopup({
       </Pressable>
     </Modal>
   );
-}
-
-// Cores claras de accent (ex.: lima) pedem texto escuro para contraste no botão.
-function btnTextColor(accent: string): string {
-  return ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(accent.toUpperCase()) ? '#000' : '#fff';
 }
 
 // ─── Styles ───────────────────────────────────────────────────────────────────

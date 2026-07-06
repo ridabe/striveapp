@@ -8,7 +8,7 @@ interface TenantLogoProps {
 }
 
 export function TenantLogo({ size = 44, radius }: TenantLogoProps) {
-  const { tenantLogoUrl, tenantName, primaryColor } = useThemeStore();
+  const { tenantLogoUrl, tenantName, primaryColor, primaryTextColor } = useThemeStore();
   const br = radius ?? Math.round(size * 0.2);
   const fontSize = Math.round(size * 0.38);
 
@@ -29,7 +29,7 @@ export function TenantLogo({ size = 44, radius }: TenantLogoProps) {
         { width: size, height: size, borderRadius: br, backgroundColor: primaryColor },
       ]}
     >
-      <Text style={[styles.initial, { fontSize, color: '#000' }]}>
+      <Text style={[styles.initial, { fontSize, color: primaryTextColor }]}>
         {tenantName.charAt(0).toUpperCase()}
       </Text>
     </View>

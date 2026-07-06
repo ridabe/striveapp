@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+﻿import { useState, useCallback, useEffect } from 'react';
 import {
   View, Text, TouchableOpacity, StyleSheet, ScrollView,
   ActivityIndicator, Modal, TextInput, Alert, Image, FlatList,
@@ -53,9 +53,8 @@ function itemIcon(type: string) {
 export default function ChallengeDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { profile } = useAuthStore();
-  const { primaryColor } = useThemeStore();
+  const { primaryColor, primaryTextColor } = useThemeStore();
   const tenantId = profile?.tenant_id ?? '';
-  const lightText = ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(primaryColor);
 
   const [challenge, setChallenge] = useState<Challenge | null>(null);
   const [participants, setParticipants] = useState<Participant[]>([]);
@@ -587,8 +586,8 @@ export default function ChallengeDetailScreen() {
           </View>
           {challenge.status === 'draft' && (
             <TouchableOpacity style={[s.actionBtn, { backgroundColor: primaryColor }]} onPress={handleStart} disabled={busy}>
-              <Ionicons name="play" size={14} color={lightText ? '#000' : '#fff'} />
-              <Text style={[s.actionBtnText, { color: lightText ? '#000' : '#fff' }]}>Iniciar Desafio</Text>
+              <Ionicons name="play" size={14} color={primaryTextColor} />
+              <Text style={[s.actionBtnText, { color: primaryTextColor }]}>Iniciar Desafio</Text>
             </TouchableOpacity>
           )}
           {challenge.status === 'active' && (
@@ -755,7 +754,7 @@ export default function ChallengeDetailScreen() {
             multiline
           />
           <TouchableOpacity style={[s.sendBtn, { backgroundColor: primaryColor }]} onPress={handleSendMessage} disabled={busy || !newMessage.trim()}>
-            <Ionicons name="send" size={16} color={lightText ? '#000' : '#fff'} />
+            <Ionicons name="send" size={16} color={primaryTextColor} />
           </TouchableOpacity>
         </View>
         {messages.map(m => (
@@ -780,7 +779,7 @@ export default function ChallengeDetailScreen() {
               <Field label="REGRAS"><TextInput value={eRules} onChangeText={setERules} style={[s.input, s.textArea]} multiline placeholderTextColor={Colors.textSecondary} /></Field>
               <Field label="PREMIAÇÕES"><TextInput value={ePrizes} onChangeText={setEPrizes} style={[s.input, s.textArea]} multiline placeholderTextColor={Colors.textSecondary} /></Field>
               <TouchableOpacity style={[s.saveBtn, { backgroundColor: primaryColor }, busy && { opacity: 0.6 }]} onPress={handleSaveEdit} disabled={busy}>
-                {busy ? <ActivityIndicator color={lightText ? '#000' : '#fff'} /> : <Text style={[s.saveBtnText, { color: lightText ? '#000' : '#fff' }]}>Salvar</Text>}
+                {busy ? <ActivityIndicator color={primaryTextColor} /> : <Text style={[s.saveBtnText, { color: primaryTextColor }]}>Salvar</Text>}
               </TouchableOpacity>
             </ScrollView>
           </SafeAreaView>
@@ -834,7 +833,7 @@ export default function ChallengeDetailScreen() {
               </View>
 
               <TouchableOpacity style={[s.saveBtn, { backgroundColor: primaryColor }, busy && { opacity: 0.6 }]} onPress={handleAddParticipant} disabled={busy}>
-                {busy ? <ActivityIndicator color={lightText ? '#000' : '#fff'} /> : <Text style={[s.saveBtnText, { color: lightText ? '#000' : '#fff' }]}>Adicionar</Text>}
+                {busy ? <ActivityIndicator color={primaryTextColor} /> : <Text style={[s.saveBtnText, { color: primaryTextColor }]}>Adicionar</Text>}
               </TouchableOpacity>
             </ScrollView>
           </SafeAreaView>
@@ -853,7 +852,7 @@ export default function ChallengeDetailScreen() {
               </View>
               <Field label="OBSERVAÇÕES FINAIS"><TextInput value={fNotes} onChangeText={setFNotes} style={[s.input, s.textArea]} multiline placeholderTextColor={Colors.textSecondary} /></Field>
               <TouchableOpacity style={[s.saveBtn, { backgroundColor: primaryColor }, busy && { opacity: 0.6 }]} onPress={handleSaveFinalData} disabled={busy}>
-                {busy ? <ActivityIndicator color={lightText ? '#000' : '#fff'} /> : <Text style={[s.saveBtnText, { color: lightText ? '#000' : '#fff' }]}>Salvar</Text>}
+                {busy ? <ActivityIndicator color={primaryTextColor} /> : <Text style={[s.saveBtnText, { color: primaryTextColor }]}>Salvar</Text>}
               </TouchableOpacity>
             </ScrollView>
           </SafeAreaView>
@@ -868,7 +867,7 @@ export default function ChallengeDetailScreen() {
             <ScrollView contentContainerStyle={s.modalContent} keyboardShouldPersistTaps="handled">
               <Field label="TÍTULO (OPCIONAL)"><TextInput value={dTitle} onChangeText={setDTitle} style={s.input} placeholder={`Dia ${days.length + 1}`} placeholderTextColor={Colors.textSecondary} /></Field>
               <TouchableOpacity style={[s.saveBtn, { backgroundColor: primaryColor }, busy && { opacity: 0.6 }]} onPress={handleCreateDay} disabled={busy}>
-                {busy ? <ActivityIndicator color={lightText ? '#000' : '#fff'} /> : <Text style={[s.saveBtnText, { color: lightText ? '#000' : '#fff' }]}>Criar Dia</Text>}
+                {busy ? <ActivityIndicator color={primaryTextColor} /> : <Text style={[s.saveBtnText, { color: primaryTextColor }]}>Criar Dia</Text>}
               </TouchableOpacity>
             </ScrollView>
           </SafeAreaView>
@@ -913,7 +912,7 @@ export default function ChallengeDetailScreen() {
               </Field>
 
               <TouchableOpacity style={[s.saveBtn, { backgroundColor: primaryColor }, busy && { opacity: 0.6 }]} onPress={handleAddItem} disabled={busy}>
-                {busy ? <ActivityIndicator color={lightText ? '#000' : '#fff'} /> : <Text style={[s.saveBtnText, { color: lightText ? '#000' : '#fff' }]}>Adicionar Item</Text>}
+                {busy ? <ActivityIndicator color={primaryTextColor} /> : <Text style={[s.saveBtnText, { color: primaryTextColor }]}>Adicionar Item</Text>}
               </TouchableOpacity>
             </ScrollView>
           </SafeAreaView>
@@ -940,7 +939,7 @@ export default function ChallengeDetailScreen() {
                 trackColor={{ false: Colors.border, true: primaryColor }} thumbColor="#fff" />
             </View>
             <TouchableOpacity style={[s.saveBtn, { backgroundColor: primaryColor }, busy && { opacity: 0.6 }]} onPress={handlePublishResults} disabled={busy}>
-              {busy ? <ActivityIndicator color={lightText ? '#000' : '#fff'} /> : <Text style={[s.saveBtnText, { color: lightText ? '#000' : '#fff' }]}>Publicar</Text>}
+              {busy ? <ActivityIndicator color={primaryTextColor} /> : <Text style={[s.saveBtnText, { color: primaryTextColor }]}>Publicar</Text>}
             </TouchableOpacity>
           </View>
         </SafeAreaView>

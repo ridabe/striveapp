@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,
   TextInput, ActivityIndicator, Alert,
@@ -44,7 +44,7 @@ const IS_NEW = 'novo';
 export default function ExerciseDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { profile } = useAuthStore();
-  const { primaryColor } = useThemeStore();
+  const { primaryColor, primaryTextColor } = useThemeStore();
   const tenantId = profile?.tenant_id ?? '';
   const isNew = id === IS_NEW;
 
@@ -69,7 +69,6 @@ export default function ExerciseDetailScreen() {
   const [uploadingVideo, setUploadingVideo] = useState(false);
   const [videoModalVisible, setVideoModalVisible] = useState(false);
 
-  const lightText = ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(primaryColor);
   const isOwned = isNew || exercise?.tenant_id === tenantId;
 
   useEffect(() => {
@@ -416,8 +415,8 @@ export default function ExerciseDetailScreen() {
             style={[s.saveBtn, { backgroundColor: primaryColor }, isBusy && { opacity: 0.6 }]}
             onPress={handleSave} disabled={isBusy} activeOpacity={0.85}>
             {isBusy
-              ? <ActivityIndicator color={lightText ? '#000' : '#fff'} />
-              : <Text style={[s.saveBtnText, { color: lightText ? '#000' : '#fff' }]}>
+              ? <ActivityIndicator color={primaryTextColor} />
+              : <Text style={[s.saveBtnText, { color: primaryTextColor }]}>
                   {isNew ? 'Criar Exercício' : 'Salvar Alterações'}
                 </Text>
             }

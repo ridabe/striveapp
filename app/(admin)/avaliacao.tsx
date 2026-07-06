@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+﻿import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   View, Text, FlatList, TouchableOpacity, StyleSheet,
   ActivityIndicator, ScrollView, Animated, Modal,
@@ -314,7 +314,7 @@ function StudentDetailView({
 // ─── Main screen ──────────────────────────────────────────────────────────────
 export default function AvaliacaoScreen() {
   const { profile } = useAuthStore();
-  const { primaryColor } = useThemeStore();
+  const { primaryColor, primaryTextColor } = useThemeStore();
   const { studentId } = useLocalSearchParams<{ studentId?: string }>();
   const tenantId = profile?.tenant_id;
 
@@ -338,7 +338,6 @@ export default function AvaliacaoScreen() {
   const [fThigh, setFThigh] = useState('');
   const [fNotes, setFNotes] = useState('');
 
-  const lightText = ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(primaryColor);
 
   const load = useCallback(async () => {
     if (!tenantId) return;
@@ -457,7 +456,7 @@ export default function AvaliacaoScreen() {
           <TouchableOpacity
             style={[st.addBtn, { backgroundColor: primaryColor }]}
             onPress={() => openAdd(selected)} activeOpacity={0.85}>
-            <Ionicons name="add" size={20} color={lightText ? '#000' : '#fff'} />
+            <Ionicons name="add" size={20} color={primaryTextColor} />
           </TouchableOpacity>
         ) : <View style={{ width: 38 }} />}
       </View>
@@ -561,8 +560,8 @@ export default function AvaliacaoScreen() {
             <TouchableOpacity
               style={[st.saveBtn, { backgroundColor: primaryColor }, saving && { opacity: 0.6 }]}
               onPress={handleSave} disabled={saving} activeOpacity={0.85}>
-              {saving ? <ActivityIndicator color={lightText ? '#000' : '#fff'} /> : (
-                <Text style={[st.saveBtnText, { color: lightText ? '#000' : '#fff' }]}>Salvar Avaliação</Text>
+              {saving ? <ActivityIndicator color={primaryTextColor} /> : (
+                <Text style={[st.saveBtnText, { color: primaryTextColor }]}>Salvar Avaliação</Text>
               )}
             </TouchableOpacity>
           </ScrollView>

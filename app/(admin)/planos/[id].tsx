@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,
   ActivityIndicator, Modal, TextInput, Alert,
@@ -58,9 +58,8 @@ interface Student { id: string; full_name: string }
 export default function PlanDetailScreen() {
   const { id, studentId: fromStudentId } = useLocalSearchParams<{ id: string; studentId?: string }>();
   const { profile } = useAuthStore();
-  const { primaryColor } = useThemeStore();
+  const { primaryColor, primaryTextColor } = useThemeStore();
   const tenantId = profile?.tenant_id ?? '';
-  const lightText = ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(primaryColor);
 
   const [plan, setPlan] = useState<Plan | null>(null);
   const [routines, setRoutines] = useState<Routine[]>([]);
@@ -478,7 +477,7 @@ export default function PlanDetailScreen() {
                   <TouchableOpacity key={i}
                     style={[s.dayBtn, fRoutineDay === i && { backgroundColor: primaryColor, borderColor: primaryColor }]}
                     onPress={() => setFRoutineDay(fRoutineDay === i ? null : i)} activeOpacity={0.75}>
-                    <Text style={[s.dayBtnText, fRoutineDay === i && { color: lightText ? '#000' : '#fff' }]}>{d}</Text>
+                    <Text style={[s.dayBtnText, fRoutineDay === i && { color: primaryTextColor }]}>{d}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -486,8 +485,8 @@ export default function PlanDetailScreen() {
                 style={[s.saveBtn, { backgroundColor: primaryColor }, saving && { opacity: 0.6 }]}
                 onPress={handleAddRoutine} disabled={saving} activeOpacity={0.85}>
                 {saving
-                  ? <ActivityIndicator color={lightText ? '#000' : '#fff'} />
-                  : <Text style={[s.saveBtnText, { color: lightText ? '#000' : '#fff' }]}>Criar Rotina</Text>}
+                  ? <ActivityIndicator color={primaryTextColor} />
+                  : <Text style={[s.saveBtnText, { color: primaryTextColor }]}>Criar Rotina</Text>}
               </TouchableOpacity>
             </ScrollView>
           </SafeAreaView>
@@ -533,8 +532,8 @@ export default function PlanDetailScreen() {
                 style={[s.saveBtn, { backgroundColor: primaryColor }, saving && { opacity: 0.6 }]}
                 onPress={handleSaveItem} disabled={saving} activeOpacity={0.85}>
                 {saving
-                  ? <ActivityIndicator color={lightText ? '#000' : '#fff'} />
-                  : <Text style={[s.saveBtnText, { color: lightText ? '#000' : '#fff' }]}>Salvar</Text>}
+                  ? <ActivityIndicator color={primaryTextColor} />
+                  : <Text style={[s.saveBtnText, { color: primaryTextColor }]}>Salvar</Text>}
               </TouchableOpacity>
             </ScrollView>
           </SafeAreaView>
@@ -570,7 +569,7 @@ export default function PlanDetailScreen() {
                     activeOpacity={0.75}>
                     <Text style={s.studentName}>{item.full_name}</Text>
                     <View style={[s.checkCircle, isAssigned && { backgroundColor: primaryColor, borderColor: primaryColor }]}>
-                      {isAssigned && <Ionicons name="checkmark" size={14} color={lightText ? '#000' : '#fff'} />}
+                      {isAssigned && <Ionicons name="checkmark" size={14} color={primaryTextColor} />}
                     </View>
                   </TouchableOpacity>
                 );

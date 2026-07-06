@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,
   ActivityIndicator, Modal, TextInput, Alert,
@@ -49,9 +49,8 @@ const CATEGORY_COLORS: Record<string, string> = {
 export default function ExtraWorkoutDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { profile } = useAuthStore();
-  const { primaryColor } = useThemeStore();
+  const { primaryColor, primaryTextColor } = useThemeStore();
   const tenantId = profile?.tenant_id ?? '';
-  const lightText = ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(primaryColor);
 
   const [extra, setExtra] = useState<ExtraWorkout | null>(null);
   const [items, setItems] = useState<ExtraItem[]>([]);
@@ -337,7 +336,7 @@ export default function ExtraWorkoutDetailScreen() {
               <TouchableOpacity
                 style={[s.saveBtn, { backgroundColor: primaryColor }, saving && { opacity: 0.6 }]}
                 onPress={handleSaveItem} disabled={saving} activeOpacity={0.85}>
-                {saving ? <ActivityIndicator color={lightText ? '#000' : '#fff'} /> : <Text style={[s.saveBtnText, { color: lightText ? '#000' : '#fff' }]}>Salvar</Text>}
+                {saving ? <ActivityIndicator color={primaryTextColor} /> : <Text style={[s.saveBtnText, { color: primaryTextColor }]}>Salvar</Text>}
               </TouchableOpacity>
             </ScrollView>
           </SafeAreaView>
@@ -374,7 +373,7 @@ export default function ExtraWorkoutDetailScreen() {
                 <TouchableOpacity
                   style={[s.saveBtn, { backgroundColor: primaryColor }, savingAssign && { opacity: 0.6 }]}
                   onPress={handleAssign} disabled={savingAssign} activeOpacity={0.85}>
-                  {savingAssign ? <ActivityIndicator color={lightText ? '#000' : '#fff'} /> : <Text style={[s.saveBtnText, { color: lightText ? '#000' : '#fff' }]}>Atribuir</Text>}
+                  {savingAssign ? <ActivityIndicator color={primaryTextColor} /> : <Text style={[s.saveBtnText, { color: primaryTextColor }]}>Atribuir</Text>}
                 </TouchableOpacity>
               </View>
             </>

@@ -170,8 +170,6 @@ export default function StudentDetailScreen() {
   const month = now.getMonth() + 1;
   const year  = now.getFullYear();
 
-  const lightText = ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(primaryColor);
-
   useEffect(() => {
     if (!id) return;
     loadAll();

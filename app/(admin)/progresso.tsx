@@ -402,7 +402,7 @@ function StudentDetailView({ student, entries, workoutData, loading, primaryColo
 // ─── Main screen ──────────────────────────────────────────────────────────────
 export default function ProgressoScreen() {
   const { profile }    = useAuthStore();
-  const { primaryColor } = useThemeStore();
+  const { primaryColor, primaryTextColor } = useThemeStore();
   const { studentId }  = useLocalSearchParams<{ studentId?: string }>();
   const tenantId = profile?.tenant_id;
 
@@ -426,8 +426,6 @@ export default function ProgressoScreen() {
   const [inputNotes, setInputNotes]       = useState('');
   const [pickedPhotos, setPickedPhotos]   = useState<ImagePicker.ImagePickerAsset[]>([]);
   const [saving, setSaving]               = useState(false);
-
-  const lightText = ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(primaryColor);
 
   const load = useCallback(async () => {
     if (!tenantId) return;
@@ -553,7 +551,7 @@ export default function ProgressoScreen() {
         </Text>
         {selected ? (
           <TouchableOpacity style={[st.addBtn, { backgroundColor: primaryColor }]} onPress={() => { setModalStudent(selected); setInputWeight(''); setInputNotes(''); setPickedPhotos([]); setModalVisible(true); }} activeOpacity={0.85}>
-            <Ionicons name="add" size={20} color={lightText ? '#000' : '#fff'} />
+            <Ionicons name="add" size={20} color={primaryTextColor} />
           </TouchableOpacity>
         ) : <View style={{ width: 38 }} />}
       </View>
@@ -620,8 +618,8 @@ export default function ProgressoScreen() {
 
             <TouchableOpacity style={[st.saveBtn, { backgroundColor: primaryColor }, saving && { opacity: 0.6 }]}
               onPress={handleSave} disabled={saving} activeOpacity={0.85}>
-              {saving ? <ActivityIndicator color={lightText ? '#000' : '#fff'} />
-                : <Text style={[st.saveBtnText, { color: lightText ? '#000' : '#fff' }]}>Salvar Registro</Text>}
+              {saving ? <ActivityIndicator color={primaryTextColor} />
+                : <Text style={[st.saveBtnText, { color: primaryTextColor }]}>Salvar Registro</Text>}
             </TouchableOpacity>
           </ScrollView>
         </KeyboardAvoidingView>

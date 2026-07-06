@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import {
   View, Text, FlatList, TouchableOpacity, TextInput,
   StyleSheet, ActivityIndicator, Alert, Modal, ScrollView,
@@ -101,7 +101,7 @@ function formatDate(iso: string): string {
 // ─── Main Screen ─────────────────────────────────────────────────────────────
 export default function ArquivosScreen() {
   const { profile } = useAuthStore();
-  const { primaryColor } = useThemeStore();
+  const { primaryColor, primaryTextColor } = useThemeStore();
   const tenantId = profile?.tenant_id;
 
   const [files, setFiles] = useState<SharedFile[]>([]);
@@ -142,7 +142,6 @@ export default function ArquivosScreen() {
   const [pickedFile, setPickedFile] = useState<DocumentPicker.DocumentPickerAsset | null>(null);
   const [uploading, setUploading] = useState(false);
 
-  const lightText = ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(primaryColor);
 
   // ─── Load ─────────────────────────────────────────────────────────────────
   const loadAll = useCallback(async () => {
@@ -376,7 +375,7 @@ export default function ArquivosScreen() {
           onPress={() => { resetModal(); setModalVisible(true); }}
           activeOpacity={0.85}
         >
-          <Ionicons name="cloud-upload-outline" size={18} color={lightText ? '#000' : '#fff'} />
+          <Ionicons name="cloud-upload-outline" size={18} color={primaryTextColor} />
         </TouchableOpacity>
       </View>
 
@@ -601,11 +600,11 @@ export default function ArquivosScreen() {
               activeOpacity={0.85}
             >
               {uploading ? (
-                <ActivityIndicator color={lightText ? '#000' : '#fff'} />
+                <ActivityIndicator color={primaryTextColor} />
               ) : (
                 <>
-                  <Ionicons name="cloud-upload-outline" size={18} color={lightText ? '#000' : '#fff'} />
-                  <Text style={[styles.uploadActionText, { color: lightText ? '#000' : '#fff' }]}>
+                  <Ionicons name="cloud-upload-outline" size={18} color={primaryTextColor} />
+                  <Text style={[styles.uploadActionText, { color: primaryTextColor }]}>
                     Enviar arquivo
                   </Text>
                 </>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+﻿import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,
   ActivityIndicator, Modal, TextInput, Alert, Dimensions,
@@ -190,8 +190,7 @@ function Counter({ value, suffix = '' }: { value: number; suffix?: string }) {
 // ─── Main screen ──────────────────────────────────────────────────────────────
 export default function ProgressoScreen() {
   const { selectedStudent } = useStudent();
-  const { primaryColor } = useThemeStore();
-  const lightText = ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(primaryColor);
+  const { primaryColor, primaryTextColor } = useThemeStore();
 
   const [tab, setTab] = useState<'evolucao' | 'corpo'>('evolucao');
   const [loading, setLoading] = useState(true);
@@ -438,7 +437,7 @@ export default function ProgressoScreen() {
               onPress={() => setAddVisible(true)}
               activeOpacity={0.85}
             >
-              <Ionicons name="add" size={20} color={lightText ? '#000' : '#fff'} />
+              <Ionicons name="add" size={20} color={primaryTextColor} />
             </TouchableOpacity>
           </View>
         </View>
@@ -589,7 +588,7 @@ export default function ProgressoScreen() {
                     style={[s.emptyBodyBtn, { backgroundColor: primaryColor }]}
                     onPress={() => setAddVisible(true)} activeOpacity={0.85}
                   >
-                    <Text style={[s.emptyBodyBtnText, { color: lightText ? '#000' : '#fff' }]}>Adicionar registro</Text>
+                    <Text style={[s.emptyBodyBtnText, { color: primaryTextColor }]}>Adicionar registro</Text>
                   </TouchableOpacity>
                 </View>
               )}
@@ -681,8 +680,8 @@ export default function ProgressoScreen() {
               <TouchableOpacity
                 style={[s.saveBtn, { backgroundColor: primaryColor }, saving && { opacity: 0.6 }]}
                 onPress={handleAdd} disabled={saving} activeOpacity={0.85}>
-                {saving ? <ActivityIndicator color={lightText ? '#000' : '#fff'} />
-                  : <Text style={[s.saveBtnText, { color: lightText ? '#000' : '#fff' }]}>Salvar</Text>}
+                {saving ? <ActivityIndicator color={primaryTextColor} />
+                  : <Text style={[s.saveBtnText, { color: primaryTextColor }]}>Salvar</Text>}
               </TouchableOpacity>
             </ScrollView>
           </View>
@@ -727,8 +726,8 @@ export default function ProgressoScreen() {
             <TouchableOpacity
               style={[s.saveBtn, { backgroundColor: primaryColor }, editSaving && { opacity: 0.6 }]}
               onPress={saveEdit} disabled={editSaving} activeOpacity={0.85}>
-              {editSaving ? <ActivityIndicator color={lightText ? '#000' : '#fff'} />
-                : <Text style={[s.saveBtnText, { color: lightText ? '#000' : '#fff' }]}>Salvar alterações</Text>}
+              {editSaving ? <ActivityIndicator color={primaryTextColor} />
+                : <Text style={[s.saveBtnText, { color: primaryTextColor }]}>Salvar alterações</Text>}
             </TouchableOpacity>
           </ScrollView>
         </View>

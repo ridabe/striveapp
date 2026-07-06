@@ -2686,6 +2686,7 @@ export type Database = {
       tenants: {
         Row: {
           abacatepay_customer_id: string | null
+          accent_text_color: string | null
           app_name: string | null
           business_name: string
           contact_email: string | null
@@ -2696,6 +2697,7 @@ export type Database = {
           logo_url: string | null
           max_students: number
           notes: string | null
+          on_primary_text_color: string | null
           plan: Database["public"]["Enums"]["tenant_plan"]
           primary_color: string | null
           slug: string | null
@@ -2704,6 +2706,7 @@ export type Database = {
         }
         Insert: {
           abacatepay_customer_id?: string | null
+          accent_text_color?: string | null
           app_name?: string | null
           business_name: string
           contact_email?: string | null
@@ -2714,6 +2717,7 @@ export type Database = {
           logo_url?: string | null
           max_students?: number
           notes?: string | null
+          on_primary_text_color?: string | null
           plan?: Database["public"]["Enums"]["tenant_plan"]
           primary_color?: string | null
           slug?: string | null
@@ -2722,6 +2726,7 @@ export type Database = {
         }
         Update: {
           abacatepay_customer_id?: string | null
+          accent_text_color?: string | null
           app_name?: string | null
           business_name?: string
           contact_email?: string | null
@@ -2732,6 +2737,7 @@ export type Database = {
           logo_url?: string | null
           max_students?: number
           notes?: string | null
+          on_primary_text_color?: string | null
           plan?: Database["public"]["Enums"]["tenant_plan"]
           primary_color?: string | null
           slug?: string | null

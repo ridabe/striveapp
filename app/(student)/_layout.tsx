@@ -11,7 +11,7 @@ import { View, ActivityIndicator, Text, TouchableOpacity } from 'react-native';
 import { signOut } from '@/services/auth';
 
 export default function StudentLayout() {
-  const { primaryColor } = useThemeStore();
+  const { primaryColor, accentTextColor } = useThemeStore();
   const { selectedStudent, allStudents, loading } = useStudent();
   const insets = useSafeAreaInsets();
   const { has, isLoaded } = useModulesStore();
@@ -70,7 +70,7 @@ export default function StudentLayout() {
           paddingBottom: insets.bottom,
           paddingTop: 8,
         },
-        tabBarActiveTintColor: primaryColor,
+        tabBarActiveTintColor: accentTextColor,
         tabBarInactiveTintColor: Colors.textSecondary,
         tabBarLabelStyle: {
           fontSize: 11,

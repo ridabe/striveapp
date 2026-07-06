@@ -36,7 +36,7 @@ interface RecentStudent {
 
 export default function AdminDashboard() {
   const { profile } = useAuthStore();
-  const { tenantName, primaryColor } = useThemeStore();
+  const { tenantName, primaryColor, primaryTextColor } = useThemeStore();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [recentStudents, setRecentStudents] = useState<RecentStudent[]>([]);
   const [loading, setLoading] = useState(true);
@@ -46,7 +46,7 @@ export default function AdminDashboard() {
   const displayName = profile?.full_name?.split(' ')[0] ?? 'Personal';
   const { has, enabledSlugs, isLoaded: modulesLoaded } = useModulesStore();
 
-  const lightText = ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(primaryColor);
+  const isLightText = primaryTextColor === '#000' || primaryTextColor === '#000000';
 
   async function loadDashboard() {
     if (!tenantId) return;
@@ -123,27 +123,27 @@ export default function AdminDashboard() {
               activeOpacity={0.88}
             >
               <View style={s.heroLeft}>
-                <Text style={[s.heroLabel, { color: lightText ? 'rgba(0,0,0,0.55)' : 'rgba(255,255,255,0.7)' }]}>
+                <Text style={[s.heroLabel, { color: isLightText ? 'rgba(0,0,0,0.55)' : 'rgba(255,255,255,0.7)' }]}>
                   ALUNOS ATIVOS
                 </Text>
-                <Text style={[s.heroValue, { color: lightText ? '#000' : '#fff' }]}>
+                <Text style={[s.heroValue, { color: primaryTextColor }]}>
                   {stats?.activeStudents ?? 0}
-                  <Text style={[s.heroTotal, { color: lightText ? 'rgba(0,0,0,0.45)' : 'rgba(255,255,255,0.55)' }]}>
+                  <Text style={[s.heroTotal, { color: isLightText ? 'rgba(0,0,0,0.45)' : 'rgba(255,255,255,0.55)' }]}>
                     {' '}/ {stats?.totalStudents ?? 0}
                   </Text>
                 </Text>
                 <View style={s.progressTrack}>
                   <View style={[s.progressFill, {
                     width: `${activeRate}%` as any,
-                    backgroundColor: lightText ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.85)',
+                    backgroundColor: isLightText ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.85)',
                   }]} />
                 </View>
-                <Text style={[s.progressLabel, { color: lightText ? 'rgba(0,0,0,0.45)' : 'rgba(255,255,255,0.6)' }]}>
+                <Text style={[s.progressLabel, { color: isLightText ? 'rgba(0,0,0,0.45)' : 'rgba(255,255,255,0.6)' }]}>
                   {activeRate}% ativos
                 </Text>
               </View>
-              <View style={[s.heroIconWrap, { backgroundColor: lightText ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.15)' }]}>
-                <Ionicons name="people" size={28} color={lightText ? '#000' : '#fff'} />
+              <View style={[s.heroIconWrap, { backgroundColor: isLightText ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.15)' }]}>
+                <Ionicons name="people" size={28} color={primaryTextColor} />
               </View>
             </TouchableOpacity>
 
@@ -184,8 +184,8 @@ export default function AdminDashboard() {
               }}
               activeOpacity={0.85}
             >
-              <Ionicons name="person-add-outline" size={22} color={lightText ? '#000' : '#fff'} />
-              <Text style={[s.primaryCTAText, { color: lightText ? '#000' : '#fff' }]}>Novo Aluno</Text>
+              <Ionicons name="person-add-outline" size={22} color={primaryTextColor} />
+              <Text style={[s.primaryCTAText, { color: primaryTextColor }]}>Novo Aluno</Text>
             </TouchableOpacity>
 
             {/* Secondary 2-column grid */}

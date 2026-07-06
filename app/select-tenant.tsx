@@ -7,10 +7,11 @@ import { useStudent } from '@/hooks/useStudent'
 import { useThemeStore } from '@/stores/themeStore'
 import { Colors } from '@/theme/colors'
 import { FontFamily, FontSize } from '@/theme/typography'
+import { resolveTextColor } from '@/lib/colorContrast'
 
 export default function SelectTenantScreen() {
   const { allStudents, loading, setSelectedStudent } = useStudent()
-  const { setTenant, setPrimaryColor } = useThemeStore()
+  const { setTenant, setPrimaryColor, setAccentTextColor, setPrimaryTextColor } = useThemeStore()
 
   const handleSelect = async (student: any) => {
     setSelectedStudent(student)
@@ -21,6 +22,8 @@ export default function SelectTenantScreen() {
       const displayApp = tenant.app_name ?? displayName
       setTenant(displayName, displayApp, tenant.logo_url ?? null, (tenant as any).cref ?? null)
       if (tenant.primary_color) setPrimaryColor(tenant.primary_color)
+      setAccentTextColor((tenant as any).accent_text_color ?? '#FFFFFF')
+      setPrimaryTextColor(resolveTextColor(tenant.primary_color ?? '#E8FF47', (tenant as any).on_primary_text_color ?? null))
     }
     // Navigate to home
     router.replace('/(student)')

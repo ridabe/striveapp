@@ -58,13 +58,11 @@ function dateToISO(masked: string): string | null {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 export function NovoAlunoModal({ visible, onClose, onSuccess }: Props) {
-  const { primaryColor } = useThemeStore();
+  const { primaryColor, primaryTextColor } = useThemeStore();
   const [form, setForm] = useState<FormState>(EMPTY);
   const [goalOption, setGoalOption] = useState('');
   const [goalCustom, setGoalCustom] = useState('');
   const [saving, setSaving] = useState(false);
-
-  const lightText = ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(primaryColor);
 
   function set(field: keyof FormState, value: string) {
     setForm(prev => ({ ...prev, [field]: value }));
@@ -289,11 +287,11 @@ export function NovoAlunoModal({ visible, onClose, onSuccess }: Props) {
                 activeOpacity={0.85}
               >
                 {saving ? (
-                  <ActivityIndicator color={lightText ? '#000' : '#fff'} />
+                  <ActivityIndicator color={primaryTextColor} />
                 ) : (
                   <>
-                    <Ionicons name="person-add-outline" size={18} color={lightText ? '#000' : '#fff'} />
-                    <Text style={[s.submitText, { color: lightText ? '#000' : '#fff' }]}>Criar aluno e enviar convite</Text>
+                    <Ionicons name="person-add-outline" size={18} color={primaryTextColor} />
+                    <Text style={[s.submitText, { color: primaryTextColor }]}>Criar aluno e enviar convite</Text>
                   </>
                 )}
               </TouchableOpacity>

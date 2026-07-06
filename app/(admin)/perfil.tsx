@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+﻿import { useState, useEffect, useRef } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, TextInput,
   StyleSheet, ActivityIndicator, Alert, Linking,
@@ -44,7 +44,7 @@ function FieldHint({ children }: { children: string }) {
 // ─── Main Screen ─────────────────────────────────────────────────────────────
 export default function PerfilScreen() {
   const { profile, setProfile } = useAuthStore();
-  const { primaryColor } = useThemeStore();
+  const { primaryColor, primaryTextColor } = useThemeStore();
 
   const tenantId = profile?.tenant_id;
 
@@ -198,7 +198,6 @@ export default function PerfilScreen() {
 
   const currentPlan = plans.find(p => p.slug === currentPlanSlug);
   const upgradePlans = plans.filter(p => p.slug !== 'free' && p.slug !== currentPlanSlug);
-  const lightText = ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(primaryColor);
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -259,8 +258,8 @@ export default function PerfilScreen() {
           activeOpacity={0.85}
         >
           {savingProfile
-            ? <ActivityIndicator color={lightText ? '#000' : '#fff'} />
-            : <Text style={[styles.saveBtnText, { color: lightText ? '#000' : '#fff' }]}>Salvar dados pessoais</Text>
+            ? <ActivityIndicator color={primaryTextColor} />
+            : <Text style={[styles.saveBtnText, { color: primaryTextColor }]}>Salvar dados pessoais</Text>
           }
         </TouchableOpacity>
 
@@ -307,8 +306,8 @@ export default function PerfilScreen() {
           activeOpacity={0.85}
         >
           {savingPass
-            ? <ActivityIndicator color={lightText ? '#000' : '#fff'} />
-            : <Text style={[styles.saveBtnText, { color: lightText ? '#000' : '#fff' }]}>Alterar senha</Text>
+            ? <ActivityIndicator color={primaryTextColor} />
+            : <Text style={[styles.saveBtnText, { color: primaryTextColor }]}>Alterar senha</Text>
           }
         </TouchableOpacity>
 
@@ -361,8 +360,8 @@ export default function PerfilScreen() {
           activeOpacity={0.85}
         >
           {savingBusiness
-            ? <ActivityIndicator color={lightText ? '#000' : '#fff'} />
-            : <Text style={[styles.saveBtnText, { color: lightText ? '#000' : '#fff' }]}>Salvar dados do negócio</Text>
+            ? <ActivityIndicator color={primaryTextColor} />
+            : <Text style={[styles.saveBtnText, { color: primaryTextColor }]}>Salvar dados do negócio</Text>
           }
         </TouchableOpacity>
 
@@ -446,11 +445,11 @@ export default function PerfilScreen() {
                   activeOpacity={0.85}
                 >
                   {checkingOut === plan.slug ? (
-                    <ActivityIndicator color={lightText ? '#000' : '#fff'} size="small" />
+                    <ActivityIndicator color={primaryTextColor} size="small" />
                   ) : (
                     <>
-                      <Ionicons name="rocket-outline" size={16} color={lightText ? '#000' : '#fff'} />
-                      <Text style={[styles.upgradeBtnText, { color: lightText ? '#000' : '#fff' }]}>
+                      <Ionicons name="rocket-outline" size={16} color={primaryTextColor} />
+                      <Text style={[styles.upgradeBtnText, { color: primaryTextColor }]}>
                         Assinar plano {plan.name}
                       </Text>
                     </>

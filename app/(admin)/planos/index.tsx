@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import {
   View, Text, FlatList, TouchableOpacity, StyleSheet,
   ActivityIndicator, Modal, TextInput, Alert,
@@ -154,10 +154,9 @@ function fmtDate(iso: string | null) {
 
 export default function PlanosScreen() {
   const { profile } = useAuthStore();
-  const { primaryColor } = useThemeStore();
+  const { primaryColor, primaryTextColor } = useThemeStore();
   const { studentId } = useLocalSearchParams<{ studentId?: string }>();
   const tenantId = profile?.tenant_id ?? '';
-  const lightText = ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(primaryColor);
 
   // Generic mode state
   const [plans, setPlans] = useState<WorkoutPlan[]>([]);
@@ -297,7 +296,7 @@ export default function PlanosScreen() {
         <TouchableOpacity
           style={[s.addBtn, { backgroundColor: primaryColor }]}
           onPress={() => setModalVisible(true)} activeOpacity={0.85}>
-          <Ionicons name="add" size={20} color={lightText ? '#000' : '#fff'} />
+          <Ionicons name="add" size={20} color={primaryTextColor} />
         </TouchableOpacity>
       </View>
 
@@ -307,7 +306,7 @@ export default function PlanosScreen() {
           <TouchableOpacity key={f}
             style={[s.chip, filter === f && { backgroundColor: primaryColor, borderColor: primaryColor }]}
             onPress={() => setFilter(f)} activeOpacity={0.75}>
-            <Text style={[s.chipText, filter === f && { color: lightText ? '#000' : '#fff' }]}>
+            <Text style={[s.chipText, filter === f && { color: primaryTextColor }]}>
               {f === 'all' ? `Todos (${plans.length})` : f === 'active' ? `Ativos (${plans.filter(p=>p.status==='active').length})` : `Inativos (${plans.filter(p=>p.status==='inactive').length})`}
             </Text>
           </TouchableOpacity>
@@ -398,8 +397,8 @@ export default function PlanosScreen() {
                 style={[s.saveBtn, { backgroundColor: primaryColor }, saving && { opacity: 0.6 }]}
                 onPress={handleCreate} disabled={saving} activeOpacity={0.85}>
                 {saving
-                  ? <ActivityIndicator color={lightText ? '#000' : '#fff'} />
-                  : <Text style={[s.saveBtnText, { color: lightText ? '#000' : '#fff' }]}>Criar Plano</Text>
+                  ? <ActivityIndicator color={primaryTextColor} />
+                  : <Text style={[s.saveBtnText, { color: primaryTextColor }]}>Criar Plano</Text>
                 }
               </TouchableOpacity>
             </ScrollView>

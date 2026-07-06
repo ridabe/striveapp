@@ -29,7 +29,7 @@ const PAGE_SIZE = 30;
 
 export default function BancoExerciciosScreen() {
   const { profile } = useAuthStore();
-  const { primaryColor } = useThemeStore();
+  const { primaryColor, primaryTextColor } = useThemeStore();
   const tenantId = profile?.tenant_id ?? '';
 
   const [exercises, setExercises]   = useState<Exercise[]>([]);
@@ -39,8 +39,6 @@ export default function BancoExerciciosScreen() {
   const [page, setPage]             = useState(0);
   const [search, setSearch]         = useState('');
   const [muscle, setMuscle]         = useState('');
-
-  const lightText = ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(primaryColor);
 
   const fetchPage = useCallback(async (pageIndex: number, reset: boolean) => {
     if (!tenantId) return;
@@ -91,7 +89,7 @@ export default function BancoExerciciosScreen() {
           style={[s.addBtn, { backgroundColor: primaryColor }]}
           onPress={() => router.push('/(admin)/banco-exercicios/novo' as any)}
           activeOpacity={0.85}>
-          <Ionicons name="add" size={20} color={lightText ? '#000' : '#fff'} />
+          <Ionicons name="add" size={20} color={primaryTextColor} />
         </TouchableOpacity>
       </View>
 

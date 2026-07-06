@@ -7,7 +7,7 @@ import { MODULE } from '@/lib/modules';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function AdminLayout() {
-  const { primaryColor } = useThemeStore();
+  const { accentTextColor } = useThemeStore();
   const insets = useSafeAreaInsets();
   const { has } = useModulesStore();
 
@@ -25,7 +25,7 @@ export default function AdminLayout() {
           paddingBottom: insets.bottom,
           paddingTop: 8,
         },
-        tabBarActiveTintColor: primaryColor,
+        tabBarActiveTintColor: accentTextColor,
         tabBarInactiveTintColor: Colors.textSecondary,
         tabBarLabelStyle: {
           fontSize: 11,

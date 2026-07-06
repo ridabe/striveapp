@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import {
   View, Text, FlatList, TouchableOpacity, StyleSheet,
   ActivityIndicator, Modal, TextInput, Alert,
@@ -47,9 +47,8 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 export default function TreinosExtrasScreen() {
   const { profile } = useAuthStore();
-  const { primaryColor } = useThemeStore();
+  const { primaryColor, primaryTextColor } = useThemeStore();
   const tenantId = profile?.tenant_id ?? '';
-  const lightText = ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(primaryColor);
 
   const [extras, setExtras] = useState<ExtraWorkout[]>([]);
   const [loading, setLoading] = useState(true);
@@ -116,7 +115,7 @@ export default function TreinosExtrasScreen() {
         <TouchableOpacity
           style={[s.addBtn, { backgroundColor: primaryColor }]}
           onPress={() => setModalVisible(true)} activeOpacity={0.85}>
-          <Ionicons name="add" size={20} color={lightText ? '#000' : '#fff'} />
+          <Ionicons name="add" size={20} color={primaryTextColor} />
         </TouchableOpacity>
       </View>
 
@@ -233,8 +232,8 @@ export default function TreinosExtrasScreen() {
                 style={[s.saveBtn, { backgroundColor: primaryColor }, saving && { opacity: 0.6 }]}
                 onPress={handleCreate} disabled={saving} activeOpacity={0.85}>
                 {saving
-                  ? <ActivityIndicator color={lightText ? '#000' : '#fff'} />
-                  : <Text style={[s.saveBtnText, { color: lightText ? '#000' : '#fff' }]}>Criar Treino Extra</Text>
+                  ? <ActivityIndicator color={primaryTextColor} />
+                  : <Text style={[s.saveBtnText, { color: primaryTextColor }]}>Criar Treino Extra</Text>
                 }
               </TouchableOpacity>
             </ScrollView>

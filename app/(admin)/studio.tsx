@@ -13,6 +13,9 @@ import { useThemeStore } from '@/stores/themeStore';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 import { TenantLogo } from '@/components/TenantLogo';
+import { resolveTextColor } from '@/lib/colorContrast';
+
+type PrimaryTextMode = 'auto' | '#000000' | '#FFFFFF';
 
 const PRESET_COLORS = [
   '#06B6D4', '#E8FF47', '#F59E0B', '#EF4444',
@@ -27,7 +30,7 @@ function isValidHex(value: string) {
 
 export default function StudioScreen() {
   const { profile } = useAuthStore();
-  const { tenantName, tenantLogoUrl, primaryColor, setTenant, setPrimaryColor } = useThemeStore();
+  const { tenantName, tenantLogoUrl, primaryColor, setTenant, setPrimaryColor, setPrimaryTextColor } = useThemeStore();
 
   const tenantId = profile?.tenant_id;
 
@@ -35,15 +38,21 @@ export default function StudioScreen() {
   const [appName, setAppName] = useState('');
   const [selectedColor, setSelectedColor] = useState(primaryColor);
   const [hexInput, setHexInput] = useState(primaryColor);
+  const [primaryTextMode, setPrimaryTextMode] = useState<PrimaryTextMode>('auto');
   const [pendingLogoUri, setPendingLogoUri] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+
+  const previewTextColor = resolveTextColor(
+    isValidHex(selectedColor) ? selectedColor : primaryColor,
+    primaryTextMode === 'auto' ? null : primaryTextMode,
+  );
 
   useEffect(() => {
     if (!tenantId) return;
     supabase
       .from('tenants')
-      .select('business_name, app_name, primary_color')
+      .select('business_name, app_name, primary_color, on_primary_text_color')
       .eq('id', tenantId)
       .single()
       .then(({ data }) => {
@@ -52,6 +61,7 @@ export default function StudioScreen() {
           setAppName(data.app_name ?? '');
           setSelectedColor(data.primary_color ?? primaryColor);
           setHexInput(data.primary_color ?? primaryColor);
+          setPrimaryTextMode(((data as any).on_primary_text_color as PrimaryTextMode) ?? 'auto');
         }
       });
   }, [tenantId]);
@@ -128,6 +138,7 @@ export default function StudioScreen() {
       const finalColor = isValidHex(selectedColor) ? selectedColor : primaryColor;
       const finalAppName = appName.trim() || null;
       const finalBusinessName = businessName.trim();
+      const finalOnPrimaryTextColor = primaryTextMode === 'auto' ? null : primaryTextMode;
 
       const { error } = await supabase
         .from('tenants')
@@ -135,6 +146,7 @@ export default function StudioScreen() {
           business_name: finalBusinessName,
           app_name: finalAppName,
           primary_color: finalColor,
+          on_primary_text_color: finalOnPrimaryTextColor,
           logo_url: logoUrl,
         })
         .eq('id', tenantId);
@@ -144,6 +156,7 @@ export default function StudioScreen() {
       // Atualiza store local imediatamente (realtime também dispara)
       setTenant(finalBusinessName, finalAppName ?? finalBusinessName, logoUrl);
       setPrimaryColor(finalColor);
+      setPrimaryTextColor(resolveTextColor(finalColor, finalOnPrimaryTextColor));
       setPendingLogoUri(null);
 
       Alert.alert('Salvo!', 'As configurações do studio foram atualizadas.', [
@@ -240,7 +253,7 @@ export default function StudioScreen() {
                 <Ionicons
                   name="checkmark"
                   size={16}
-                  color={color === '#FFFFFF' || color === '#E8FF47' || color === '#84CC16' ? '#000' : '#fff'}
+                  color={resolveTextColor(color)}
                 />
               )}
             </TouchableOpacity>
@@ -261,13 +274,32 @@ export default function StudioScreen() {
           <Text style={styles.hexLabel}>Cor personalizada (hex)</Text>
         </View>
 
+        {/* Texto sobre a cor primária */}
+        <Text style={[styles.sectionLabel, { marginTop: 28 }]}>TEXTO SOBRE A COR PRIMÁRIA</Text>
+        <Text style={styles.fieldHint}>Iniciais, topo e botões coloridos com a cor primária</Text>
+        <View style={styles.textModeRow}>
+          {([
+            { value: 'auto', label: 'Automático' },
+            { value: '#000000', label: 'Preto' },
+            { value: '#FFFFFF', label: 'Branco' },
+          ] as { value: PrimaryTextMode; label: string }[]).map((opt) => (
+            <TouchableOpacity
+              key={opt.value}
+              style={[styles.textModeBtn, primaryTextMode === opt.value && styles.textModeBtnSelected]}
+              onPress={() => setPrimaryTextMode(opt.value)}
+            >
+              <Text style={[styles.textModeBtnText, primaryTextMode === opt.value && styles.textModeBtnTextSelected]}>
+                {opt.label}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
         {/* Preview */}
         <Text style={[styles.sectionLabel, { marginTop: 28 }]}>PRÉVIA</Text>
         <View style={styles.preview}>
           <View style={[styles.previewBtn, { backgroundColor: selectedColor }]}>
-            <Text style={[styles.previewBtnText, {
-              color: ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(selectedColor) ? '#000' : '#fff'
-            }]}>
+            <Text style={[styles.previewBtnText, { color: previewTextColor }]}>
               Botão de ação
             </Text>
           </View>
@@ -292,12 +324,8 @@ export default function StudioScreen() {
             <ActivityIndicator color={Colors.bg} />
           ) : (
             <>
-              <Ionicons name="checkmark-circle" size={18}
-                color={['#FFFFFF', '#E8FF47', '#84CC16'].includes(selectedColor) ? '#000' : '#fff'}
-              />
-              <Text style={[styles.saveBtnText, {
-                color: ['#FFFFFF', '#E8FF47', '#84CC16'].includes(selectedColor) ? '#000' : '#fff'
-              }]}>
+              <Ionicons name="checkmark-circle" size={18} color={previewTextColor} />
+              <Text style={[styles.saveBtnText, { color: previewTextColor }]}>
                 Salvar configurações
               </Text>
             </>
@@ -465,6 +493,30 @@ const styles = StyleSheet.create({
     fontSize: FontSize.xs,
     color: Colors.textSecondary,
     flex: 1,
+  },
+  textModeRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 8,
+  },
+  textModeBtn: {
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  textModeBtnSelected: {
+    borderColor: '#E8FF47',
+    backgroundColor: 'rgba(232, 255, 71, 0.1)',
+  },
+  textModeBtnText: {
+    fontFamily: FontFamily.bodyMedium,
+    fontSize: FontSize.xs,
+    color: Colors.textSecondary,
+  },
+  textModeBtnTextSelected: {
+    color: '#E8FF47',
   },
   preview: {
     backgroundColor: Colors.surface,

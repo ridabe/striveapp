@@ -135,7 +135,7 @@ function FieldEditorModal({
   const [options, setOptions] = useState<string[]>(['']);
   const [saving, setSaving] = useState(false);
 
-  const lightText = ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(primaryColor);
+  const { primaryTextColor } = useThemeStore();
   const isNew = field === null;
 
   useEffect(() => {
@@ -297,8 +297,8 @@ function FieldEditorModal({
             style={[fe.saveBtn, { backgroundColor: primaryColor }, saving && { opacity: 0.6 }]}
             onPress={handleSave} disabled={saving} activeOpacity={0.85}>
             {saving
-              ? <ActivityIndicator color={lightText ? '#000' : '#fff'} />
-              : <Text style={[fe.saveBtnText, { color: lightText ? '#000' : '#fff' }]}>
+              ? <ActivityIndicator color={primaryTextColor} />
+              : <Text style={[fe.saveBtnText, { color: primaryTextColor }]}>
                   {isNew ? 'Criar Campo' : 'Salvar Alterações'}
                 </Text>
             }
@@ -312,7 +312,7 @@ function FieldEditorModal({
 // ─── Main Screen ──────────────────────────────────────────────────────────────
 export default function AnamneseScreen() {
   const { profile } = useAuthStore();
-  const { primaryColor } = useThemeStore();
+  const { primaryColor, primaryTextColor } = useThemeStore();
   const { studentId } = useLocalSearchParams<{ studentId?: string }>();
   const tenantId = profile?.tenant_id ?? '';
 
@@ -328,8 +328,6 @@ export default function AnamneseScreen() {
   // Field editor
   const [editorField, setEditorField] = useState<AnamneseField | null>(null);
   const [editorVisible, setEditorVisible] = useState(false);
-
-  const lightText = ['#FFFFFF', '#E8FF47', '#84CC16', '#F59E0B'].includes(primaryColor);
 
   const load = useCallback(async () => {
     if (!tenantId) return;
@@ -441,7 +439,7 @@ export default function AnamneseScreen() {
             style={[s.addBtn, { backgroundColor: primaryColor }]}
             onPress={() => { setEditorField(null); setEditorVisible(true); }}
             activeOpacity={0.85}>
-            <Ionicons name="add" size={20} color={lightText ? '#000' : '#fff'} />
+            <Ionicons name="add" size={20} color={primaryTextColor} />
           </TouchableOpacity>
         ) : <View style={{ width: 38 }} />}
       </View>
