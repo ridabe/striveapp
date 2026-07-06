@@ -248,10 +248,27 @@ export default function PlanosScreen() {
         status: 'inactive',
       }).select('id').single();
       if (error) throw error;
+
+      // Criado a partir da ficha do aluno — já atribui o plano automaticamente,
+      // sem precisar do passo manual de atribuição.
+      if (studentId) {
+        await supabase.from('student_plan_assignments').insert({
+          tenant_id: tenantId,
+          plan_id: data.id,
+          student_id: studentId,
+          status: 'active',
+        });
+      }
+
       setModalVisible(false);
       resetForm();
-      await load();
-      router.push(`/(admin)/planos/${data.id}` as any);
+      if (studentId) {
+        await loadStudent();
+        router.push({ pathname: '/(admin)/planos/[id]', params: { id: data.id, studentId } } as any);
+      } else {
+        await load();
+        router.push(`/(admin)/planos/${data.id}` as any);
+      }
     } catch (e: any) {
       Alert.alert('Erro', e.message);
     } finally {
@@ -263,6 +280,55 @@ export default function PlanosScreen() {
     setFName(''); setFGoal(''); setFDescription('');
   }
 
+  const newPlanModal = (
+    <Modal visible={modalVisible} animationType="slide" presentationStyle="pageSheet"
+      onRequestClose={() => !saving && setModalVisible(false)}>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <SafeAreaView style={s.safe} edges={['top']}>
+          <View style={s.header}>
+            <TouchableOpacity onPress={() => !saving && setModalVisible(false)} style={s.iconBtn}>
+              <Ionicons name="close" size={22} color={Colors.textPrimary} />
+            </TouchableOpacity>
+            <Text style={s.title}>Novo Plano</Text>
+            <View style={{ width: 38 }} />
+          </View>
+          <ScrollView contentContainerStyle={s.modalContent} keyboardShouldPersistTaps="handled">
+            <Text style={s.label}>NOME DO PLANO</Text>
+            <TextInput value={fName} onChangeText={setFName} style={s.input}
+              placeholder="Ex: Plano Hipertrofia A" placeholderTextColor={Colors.textSecondary} />
+
+            <Text style={[s.label, { marginTop: 18 }]}>OBJETIVO</Text>
+            <View style={s.goalGrid}>
+              {PLAN_GOALS.map(g => {
+                const gc = GOAL_COLORS[g];
+                return (
+                  <TouchableOpacity key={g}
+                    style={[s.goalBtn, fGoal === g && { borderColor: gc, backgroundColor: `${gc}15` }]}
+                    onPress={() => setFGoal(g === fGoal ? '' : g)} activeOpacity={0.75}>
+                    <Text style={[s.goalBtnText, fGoal === g && { color: gc }]}>{g}</Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+
+            <Text style={[s.label, { marginTop: 18 }]}>DESCRIÇÃO / OBSERVAÇÕES</Text>
+            <TextInput value={fDescription} onChangeText={setFDescription} style={[s.input, s.textArea]}
+              multiline placeholder="Frequência semanal, restrições, observações..." placeholderTextColor={Colors.textSecondary} />
+
+            <TouchableOpacity
+              style={[s.saveBtn, { backgroundColor: primaryColor }, saving && { opacity: 0.6 }]}
+              onPress={handleCreate} disabled={saving} activeOpacity={0.85}>
+              {saving
+                ? <ActivityIndicator color={primaryTextColor} />
+                : <Text style={[s.saveBtnText, { color: primaryTextColor }]}>Criar Plano</Text>
+              }
+            </TouchableOpacity>
+          </ScrollView>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
+    </Modal>
+  );
+
   if (studentId) {
     return (
       <SafeAreaView style={s.safe} edges={['top']}>
@@ -273,7 +339,11 @@ export default function PlanosScreen() {
           <Text style={s.title} numberOfLines={1}>
             {studentName ? studentName.split(' ')[0] : 'Aluno'}
           </Text>
-          <View style={{ width: 38 }} />
+          <TouchableOpacity
+            style={[s.addBtn, { backgroundColor: primaryColor }]}
+            onPress={() => setModalVisible(true)} activeOpacity={0.85}>
+            <Ionicons name="add" size={20} color={primaryTextColor} />
+          </TouchableOpacity>
         </View>
         <StudentPlansView
           studentName={studentName}
@@ -282,6 +352,7 @@ export default function PlanosScreen() {
           loading={loading}
           primaryColor={primaryColor}
         />
+        {newPlanModal}
       </SafeAreaView>
     );
   }
@@ -358,53 +429,7 @@ export default function PlanosScreen() {
         />
       )}
 
-      {/* New plan modal */}
-      <Modal visible={modalVisible} animationType="slide" presentationStyle="pageSheet"
-        onRequestClose={() => !saving && setModalVisible(false)}>
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-          <SafeAreaView style={s.safe} edges={['top']}>
-            <View style={s.header}>
-              <TouchableOpacity onPress={() => !saving && setModalVisible(false)} style={s.iconBtn}>
-                <Ionicons name="close" size={22} color={Colors.textPrimary} />
-              </TouchableOpacity>
-              <Text style={s.title}>Novo Plano</Text>
-              <View style={{ width: 38 }} />
-            </View>
-            <ScrollView contentContainerStyle={s.modalContent} keyboardShouldPersistTaps="handled">
-              <Text style={s.label}>NOME DO PLANO</Text>
-              <TextInput value={fName} onChangeText={setFName} style={s.input}
-                placeholder="Ex: Plano Hipertrofia A" placeholderTextColor={Colors.textSecondary} />
-
-              <Text style={[s.label, { marginTop: 18 }]}>OBJETIVO</Text>
-              <View style={s.goalGrid}>
-                {PLAN_GOALS.map(g => {
-                  const gc = GOAL_COLORS[g];
-                  return (
-                    <TouchableOpacity key={g}
-                      style={[s.goalBtn, fGoal === g && { borderColor: gc, backgroundColor: `${gc}15` }]}
-                      onPress={() => setFGoal(g === fGoal ? '' : g)} activeOpacity={0.75}>
-                      <Text style={[s.goalBtnText, fGoal === g && { color: gc }]}>{g}</Text>
-                    </TouchableOpacity>
-                  );
-                })}
-              </View>
-
-              <Text style={[s.label, { marginTop: 18 }]}>DESCRIÇÃO / OBSERVAÇÕES</Text>
-              <TextInput value={fDescription} onChangeText={setFDescription} style={[s.input, s.textArea]}
-                multiline placeholder="Frequência semanal, restrições, observações..." placeholderTextColor={Colors.textSecondary} />
-
-              <TouchableOpacity
-                style={[s.saveBtn, { backgroundColor: primaryColor }, saving && { opacity: 0.6 }]}
-                onPress={handleCreate} disabled={saving} activeOpacity={0.85}>
-                {saving
-                  ? <ActivityIndicator color={primaryTextColor} />
-                  : <Text style={[s.saveBtnText, { color: primaryTextColor }]}>Criar Plano</Text>
-                }
-              </TouchableOpacity>
-            </ScrollView>
-          </SafeAreaView>
-        </KeyboardAvoidingView>
-      </Modal>
+      {newPlanModal}
     </SafeAreaView>
   );
 }

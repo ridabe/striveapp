@@ -1,7 +1,7 @@
 # Graph Report - strivePersonalApp  (2026-07-06)
 
 ## Corpus Check
-- 164 files · ~1,401,636 words
+- 164 files · ~1,401,706 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `6a98dc7c`
+- Built from commit: `629941f6`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
