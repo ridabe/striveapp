@@ -10,6 +10,7 @@ import * as WebBrowser from 'expo-web-browser';
 import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
+import { useActiveOrg } from '@/hooks/useActiveOrg';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 
@@ -45,6 +46,7 @@ function FieldHint({ children }: { children: string }) {
 export default function PerfilScreen() {
   const { profile, setProfile } = useAuthStore();
   const { primaryColor, primaryTextColor } = useThemeStore();
+  const { hasMultipleActiveOrgs } = useActiveOrg();
 
   const tenantId = profile?.tenant_id;
 
@@ -227,6 +229,27 @@ export default function PerfilScreen() {
             <Text style={styles.avatarEmail}>{profile?.email}</Text>
           </View>
         </View>
+
+        {/* ── Organização (só quando há mais de 1 vínculo ativo) ──── */}
+        {hasMultipleActiveOrgs && (
+          <>
+            <SectionLabel>ORGANIZAÇÃO</SectionLabel>
+            <TouchableOpacity
+              style={styles.orgSwitchRow}
+              onPress={() => router.push('/select-organization' as any)}
+              activeOpacity={0.8}
+            >
+              <View style={styles.orgSwitchIcon}>
+                <Ionicons name="business-outline" size={18} color={primaryColor} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.orgSwitchTitle}>Trocar de organização</Text>
+                <FieldHint>Você tem acesso a mais de uma organização</FieldHint>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={Colors.textSecondary} />
+            </TouchableOpacity>
+          </>
+        )}
 
         {/* ── Dados Pessoais ─────────────────────────────────────── */}
         <SectionLabel>DADOS PESSOAIS</SectionLabel>
@@ -536,6 +559,30 @@ const styles = StyleSheet.create({
     borderColor: Colors.border,
     overflow: 'hidden',
     marginBottom: 10,
+  },
+  orgSwitchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    backgroundColor: Colors.surface,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    padding: 14,
+    marginBottom: 28,
+  },
+  orgSwitchIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: Colors.bg,
+  },
+  orgSwitchTitle: {
+    fontFamily: FontFamily.bodyMedium,
+    fontSize: FontSize.sm,
+    color: Colors.textPrimary,
   },
   cardField: {
     padding: 14,

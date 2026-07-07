@@ -1,17 +1,36 @@
-import { Tabs } from 'expo-router';
+import { Tabs, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { View, ActivityIndicator } from 'react-native';
 import { useThemeStore } from '@/stores/themeStore';
 import { Colors } from '@/theme';
 import { useModulesStore } from '@/stores/modulesStore';
 import { MODULE } from '@/lib/modules';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useActiveOrg } from '@/hooks/useActiveOrg';
 
 export default function AdminLayout() {
   const { primaryColor } = useThemeStore();
   const insets = useSafeAreaInsets();
   const { has } = useModulesStore();
+  const { hasMultipleActiveOrgs, currentOrgIsActive, loading: orgLoading } = useActiveOrg();
 
   const hasTreinos = has(MODULE.PLANOS_TREINO) || has(MODULE.TREINOS_EXTRAS) || has(MODULE.BANCO_EXERCICIOS);
+
+  if (orgLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.bg }}>
+        <ActivityIndicator color={primaryColor} size="large" />
+      </View>
+    );
+  }
+
+  // Ambiguidade real: 2+ vínculos ativos em tenant_members e o tenant_id atual
+  // do profile não corresponde a nenhum deles (ex: primeiro acesso após ganhar
+  // um segundo vínculo). Espelha a checagem equivalente em (dashboard)/layout.tsx
+  // no web. Com 0 ou 1 vínculo, comportamento idêntico ao anterior.
+  if (hasMultipleActiveOrgs && !currentOrgIsActive) {
+    return <Redirect href="/select-organization" />;
+  }
 
   return (
     <Tabs

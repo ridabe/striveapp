@@ -1586,6 +1586,30 @@ export type Database = {
           },
         ]
       }
+      home_video_config: {
+        Row: {
+          id: boolean
+          title: string | null
+          updated_at: string
+          updated_by: string | null
+          youtube_url: string | null
+        }
+        Insert: {
+          id?: boolean
+          title?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          youtube_url?: string | null
+        }
+        Update: {
+          id?: boolean
+          title?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          youtube_url?: string | null
+        }
+        Relationships: []
+      }
       internal_config: {
         Row: {
           key: string
@@ -1600,6 +1624,134 @@ export type Database = {
           value?: string
         }
         Relationships: []
+      }
+      inventory_items: {
+        Row: {
+          category: string | null
+          created_at: string
+          id: string
+          is_active: boolean
+          min_quantity: number
+          name: string
+          notes: string | null
+          quantity_on_hand: number
+          sale_price: number | null
+          sku: string | null
+          tenant_id: string
+          unit: string
+          unit_cost: number | null
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          min_quantity?: number
+          name: string
+          notes?: string | null
+          quantity_on_hand?: number
+          sale_price?: number | null
+          sku?: string | null
+          tenant_id: string
+          unit?: string
+          unit_cost?: number | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          min_quantity?: number
+          name?: string
+          notes?: string | null
+          quantity_on_hand?: number
+          sale_price?: number | null
+          sku?: string | null
+          tenant_id?: string
+          unit?: string
+          unit_cost?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inventory_items_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "inventory_items_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      inventory_movements: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          item_id: string
+          quantity: number
+          reason: string | null
+          tenant_id: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          item_id: string
+          quantity: number
+          reason?: string | null
+          tenant_id: string
+          type: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          item_id?: string
+          quantity?: number
+          reason?: string | null
+          tenant_id?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inventory_movements_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inventory_movements_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "inventory_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inventory_movements_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "inventory_movements_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       meal_plan_foods: {
         Row: {
@@ -2460,6 +2612,7 @@ export type Database = {
       }
       students: {
         Row: {
+          assigned_personal_id: string | null
           avatar_url: string | null
           birth_date: string | null
           created_at: string
@@ -2475,6 +2628,7 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          assigned_personal_id?: string | null
           avatar_url?: string | null
           birth_date?: string | null
           created_at?: string
@@ -2490,6 +2644,7 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          assigned_personal_id?: string | null
           avatar_url?: string | null
           birth_date?: string | null
           created_at?: string
@@ -2505,6 +2660,13 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "students_assigned_personal_id_fkey"
+            columns: ["assigned_personal_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_members"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "students_tenant_id_fkey"
             columns: ["tenant_id"]
@@ -2637,6 +2799,64 @@ export type Database = {
         }
         Relationships: []
       }
+      tenant_members: {
+        Row: {
+          created_at: string
+          id: string
+          invited_at: string | null
+          joined_at: string | null
+          role: string
+          status: string
+          tenant_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          invited_at?: string | null
+          joined_at?: string | null
+          role: string
+          status?: string
+          tenant_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          invited_at?: string | null
+          joined_at?: string | null
+          role?: string
+          status?: string
+          tenant_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_members_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "tenant_members_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tenant_modules: {
         Row: {
           enabled: boolean
@@ -2695,13 +2915,16 @@ export type Database = {
           cref: string | null
           id: string
           logo_url: string | null
+          max_personals: number
           max_students: number
           notes: string | null
           on_primary_text_color: string | null
           plan: Database["public"]["Enums"]["tenant_plan"]
           primary_color: string | null
+          self_assign_enabled: boolean
           slug: string | null
           status: Database["public"]["Enums"]["tenant_status"]
+          tenant_type: string
           updated_at: string
         }
         Insert: {
@@ -2715,13 +2938,16 @@ export type Database = {
           cref?: string | null
           id?: string
           logo_url?: string | null
+          max_personals?: number
           max_students?: number
           notes?: string | null
           on_primary_text_color?: string | null
           plan?: Database["public"]["Enums"]["tenant_plan"]
           primary_color?: string | null
+          self_assign_enabled?: boolean
           slug?: string | null
           status?: Database["public"]["Enums"]["tenant_status"]
+          tenant_type?: string
           updated_at?: string
         }
         Update: {
@@ -2735,13 +2961,16 @@ export type Database = {
           cref?: string | null
           id?: string
           logo_url?: string | null
+          max_personals?: number
           max_students?: number
           notes?: string | null
           on_primary_text_color?: string | null
           plan?: Database["public"]["Enums"]["tenant_plan"]
           primary_color?: string | null
+          self_assign_enabled?: boolean
           slug?: string | null
           status?: Database["public"]["Enums"]["tenant_status"]
+          tenant_type?: string
           updated_at?: string
         }
         Relationships: []
@@ -3389,6 +3618,24 @@ export type Database = {
         }[]
       }
       notify_sales_set_secret: { Args: { secret: string }; Returns: undefined }
+      register_inventory_movement: {
+        Args: {
+          p_item_id: string
+          p_quantity: number
+          p_reason?: string
+          p_type: string
+        }
+        Returns: {
+          created_at: string
+          created_by: string | null
+          id: string
+          item_id: string
+          quantity: number
+          reason: string | null
+          tenant_id: string
+          type: string
+        }
+      }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
     }
@@ -3542,13 +3789,6 @@ export type CompositeTypes<
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
-
-// ─── Aliases de conveniência (compatibilidade com código existente) ───────────
-export type AppRole            = Database["public"]["Enums"]["app_role"]
-export type ProfileStatus      = Database["public"]["Enums"]["profile_status"]
-export type ExtraWorkoutCategory = Database["public"]["Enums"]["extra_workout_category"]
-export type audit_category     = Database["public"]["Enums"]["audit_category"]
-export type MealType           = Database["public"]["Enums"]["meal_type"]
 
 export const Constants = {
   public: {

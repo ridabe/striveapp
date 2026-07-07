@@ -10,7 +10,9 @@ export function useTenant() {
   const { profile } = useAuthStore();
   const {
     primaryColor, accentTextColor, primaryTextColor, tenantName, appName, tenantLogoUrl,
+    tenantType, effectiveRole,
     setTenant, setPrimaryColor, setAccentTextColor, setPrimaryTextColor,
+    setTenantType, setEffectiveRole,
   } = useThemeStore();
 
   // Aluno: usa o tenant do registro de aluno selecionado.
@@ -20,7 +22,7 @@ export function useTenant() {
   async function loadTenant(tid: string) {
     const { data: tenant } = await supabase
       .from('tenants')
-      .select('business_name, app_name, logo_url, primary_color, accent_text_color, on_primary_text_color, cref')
+      .select('business_name, app_name, logo_url, primary_color, accent_text_color, on_primary_text_color, cref, tenant_type')
       .eq('id', tid)
       .single();
 
@@ -34,6 +36,23 @@ export function useTenant() {
         tenant.primary_color ?? '#E8FF47',
         (tenant as any).on_primary_text_color ?? null,
       ));
+      setTenantType(tenant.tenant_type ?? 'autonomo');
+    }
+
+    // Papel efetivo dentro da academia (owner/admin/personal) — só relevante
+    // para quem tem profile.tenant_id (personal/admin), nunca para aluno.
+    // Espelha a resolução feita por getCtx() no web (src/lib/supabase/context.ts).
+    if (tenant?.tenant_type === 'academia' && profile?.id) {
+      const { data: membership } = await supabase
+        .from('tenant_members')
+        .select('role')
+        .eq('tenant_id', tid)
+        .eq('user_id', profile.id)
+        .eq('status', 'active')
+        .maybeSingle();
+      setEffectiveRole((membership?.role as any) ?? null);
+    } else {
+      setEffectiveRole(null);
     }
   }
 
@@ -64,5 +83,5 @@ export function useTenant() {
     };
   }, [tenantId]);
 
-  return { primaryColor, accentTextColor, primaryTextColor, tenantName, appName, tenantLogoUrl };
+  return { primaryColor, accentTextColor, primaryTextColor, tenantName, appName, tenantLogoUrl, tenantType, effectiveRole };
 }

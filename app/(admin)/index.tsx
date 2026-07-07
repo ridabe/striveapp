@@ -40,7 +40,7 @@ interface RecentStudent {
 
 export default function AdminDashboard() {
   const { profile } = useAuthStore();
-  const { tenantName, primaryColor, primaryTextColor } = useThemeStore();
+  const { tenantName, primaryColor, primaryTextColor, tenantType, effectiveRole } = useThemeStore();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [recentStudents, setRecentStudents] = useState<RecentStudent[]>([]);
   const [loading, setLoading] = useState(true);
@@ -51,6 +51,16 @@ export default function AdminDashboard() {
   const { has, enabledSlugs, isLoaded: modulesLoaded } = useModulesStore();
 
   const isLightText = primaryTextColor === '#000' || primaryTextColor === '#000000';
+
+  // Numa academia, um personal comum (não owner/admin) só vê, via RLS, os
+  // alunos atribuídos a ele — o texto deixa isso explícito para não parecer
+  // que faltam alunos da equipe. Owner/admin veem a academia toda, mantém o
+  // texto genérico. Espelha a distinção equivalente feita no web.
+  const isTeamMemberView = tenantType === 'academia' && effectiveRole === 'personal';
+  const studentsHeroLabel = isTeamMemberView ? 'SEUS ALUNOS ATIVOS' : 'ALUNOS ATIVOS';
+  const totalStudentsLabel = isTeamMemberView ? 'Sua carteira' : 'Total alunos';
+  const ROLE_LABEL: Record<string, string> = { owner: 'Dono(a) da academia', admin: 'Administrador(a)', personal: 'Personal da equipe' };
+  const roleSubtitle = tenantType === 'academia' && effectiveRole ? ROLE_LABEL[effectiveRole] : null;
 
   async function loadDashboard() {
     if (!tenantId) return;
@@ -114,6 +124,7 @@ export default function AdminDashboard() {
           <View style={{ flex: 1 }}>
             <Text style={s.greeting}>Olá, {displayName} 👋</Text>
             <Text style={s.tenantName}>{tenantName}</Text>
+            {roleSubtitle && <Text style={s.roleSubtitle}>{roleSubtitle}</Text>}
           </View>
           <TrainerNotificationBell tenantId={tenantId} />
         </View>
@@ -132,7 +143,7 @@ export default function AdminDashboard() {
             >
               <View style={s.heroLeft}>
                 <Text style={[s.heroLabel, { color: isLightText ? 'rgba(0,0,0,0.55)' : 'rgba(255,255,255,0.7)' }]}>
-                  ALUNOS ATIVOS
+                  {studentsHeroLabel}
                 </Text>
                 <Text style={[s.heroValue, { color: primaryTextColor }]}>
                   {stats?.activeStudents ?? 0}
@@ -174,7 +185,7 @@ export default function AdminDashboard() {
                 onPress={() => router.push('/(admin)/mais')}
               />
               <MiniStat
-                label="Total alunos"
+                label={totalStudentsLabel}
                 value={stats?.totalStudents ?? 0}
                 icon="people-circle"
                 color={Colors.textSecondary}
@@ -330,6 +341,13 @@ const s = StyleSheet.create({
     fontFamily: FontFamily.body,
     fontSize: FontSize.xs,
     color: Colors.textSecondary,
+    marginTop: 1,
+  },
+  roleSubtitle: {
+    fontFamily: FontFamily.body,
+    fontSize: FontSize.xs,
+    color: Colors.textSecondary,
+    opacity: 0.6,
     marginTop: 1,
   },
 
