@@ -45,8 +45,8 @@
     "semantic_hash": "00d7a2e00749285f79f99f239c193b64"
   },
   "app/(admin)/assistente-ia-chat.tsx": {
-    "mtime": 1783611150.968093,
-    "ast_hash": "1765f321cb88b8f16e82b281d1b345b5",
+    "mtime": 1783609549.0175543,
+    "ast_hash": "b4c3bfad4227d2bb4470e926935e61dd",
     "semantic_hash": ""
   },
   "app/(admin)/assistente-ia.tsx": {
@@ -480,8 +480,8 @@
     "semantic_hash": "07fe6381dd3e7ed92706837ae0b905bc"
   },
   "src/hooks/useMaxStream.ts": {
-    "mtime": 1783611131.7624078,
-    "ast_hash": "34902cb397663bf3e4d7842af5581c21",
+    "mtime": 1783609458.9014251,
+    "ast_hash": "6817708fc16b583b6736bd8c170f63f6",
     "semantic_hash": ""
   },
   "src/hooks/useModules.ts": {
@@ -585,8 +585,8 @@
     "semantic_hash": ""
   },
   "supabase/functions/ai-assistant/features/generate-plan.ts": {
-    "mtime": 1783610240.603984,
-    "ast_hash": "0cc6f424d28bd1ac29de23c70439a280",
+    "mtime": 1783609664.4789982,
+    "ast_hash": "ad5619e1d8208cc6b9cb42b1fcda85ce",
     "semantic_hash": ""
   },
   "supabase/functions/ai-assistant/features/motivation.ts": {
@@ -1010,8 +1010,8 @@
     "semantic_hash": "598eb294b52702596ca2334e09af9f5a"
   },
   "src/components/ai/CriarTreinoWizardModal.tsx": {
-    "mtime": 1783610210.312111,
-    "ast_hash": "15ccee492db07c13e7d5416ae3508772",
+    "mtime": 1783609440.9748943,
+    "ast_hash": "69f574fad5fa4e94e47aa2609e288a41",
     "semantic_hash": ""
   },
   "supabase/functions/ai-assistant/models.ts": {

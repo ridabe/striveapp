@@ -4,6 +4,13 @@ import { supabase } from '@/lib/supabase';
 
 export type MaxFeature = 'chat' | 'generate_plan' | 'analyze_progress' | 'suggest_load' | 'motivation';
 
+export interface PlanPreferencesParams {
+  workoutType?: string;
+  goal?: string;
+  daysCount?: number;
+  notes?: string;
+}
+
 export interface MaxStreamParams {
   feature: MaxFeature;
   studentId: string;
@@ -11,6 +18,7 @@ export interface MaxStreamParams {
   conversationId?: string;
   periodDays?: number;
   exerciseId?: string;
+  planPreferences?: PlanPreferencesParams;
 }
 
 export interface UseMaxStreamResult {
@@ -21,6 +29,7 @@ export interface UseMaxStreamResult {
   planId: string | null;
   trigger: (params: MaxStreamParams) => Promise<void>;
   reset: () => void;
+  clearStream: () => void;
 }
 
 export function useMaxStream(): UseMaxStreamResult {
@@ -38,6 +47,15 @@ export function useMaxStream(): UseMaxStreamResult {
     setPlanId(null);
     setConversationId(null);
     setIsStreaming(false);
+  }, []);
+
+  // Limpa o texto/erro/planId da última resposta sem descartar a conversationId —
+  // usado após persistir e recarregar o histórico, para não forçar uma nova
+  // conversa a cada mensagem enviada no chat.
+  const clearStream = useCallback(() => {
+    setText('');
+    setError(null);
+    setPlanId(null);
   }, []);
 
   const trigger = useCallback(async (params: MaxStreamParams) => {
@@ -68,6 +86,12 @@ export function useMaxStream(): UseMaxStreamResult {
         period_days:     params.periodDays,
         exercise_id:     params.exerciseId,
         client_platform: Platform.OS,
+        plan_preferences: params.planPreferences ? {
+          workout_type: params.planPreferences.workoutType,
+          goal:         params.planPreferences.goal,
+          days_count:   params.planPreferences.daysCount,
+          notes:        params.planPreferences.notes,
+        } : undefined,
       });
 
       await new Promise<void>((resolve, reject) => {
@@ -182,5 +206,5 @@ export function useMaxStream(): UseMaxStreamResult {
     }
   }, [conversationId]);
 
-  return { text, isStreaming, error, conversationId, planId, trigger, reset };
+  return { text, isStreaming, error, conversationId, planId, trigger, reset, clearStream };
 }

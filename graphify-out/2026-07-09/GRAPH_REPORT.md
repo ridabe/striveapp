@@ -1,7 +1,7 @@
 # Graph Report - strivePersonalApp  (2026-07-09)
 
 ## Corpus Check
-- 173 files · ~1,409,870 words
+- 173 files · ~1,409,695 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary

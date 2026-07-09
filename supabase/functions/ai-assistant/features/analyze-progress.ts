@@ -1,10 +1,13 @@
 import { SupabaseClient }  from 'https://esm.sh/@supabase/supabase-js@2';
 import type { StudentContext } from '../retrieval/student-context.ts';
 import { fetchWorkoutLoadHistory, formatLoadHistoryForPrompt } from '../retrieval/workout-context.ts';
+import { recordAiUsage, type AiTrackingContext } from '../usage.ts';
+import { ANTHROPIC_EFFICIENT_MODEL } from '../models.ts';
 
-const MODEL         = 'claude-sonnet-4-6';
-const MAX_TOKENS    = 1024;
+const MODEL         = ANTHROPIC_EFFICIENT_MODEL;
+const MAX_TOKENS    = 640;
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
+const KEEPALIVE_MS  = 3000;
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -18,62 +21,84 @@ export async function handleAnalyzeProgress(
   studentId: string,
   conversationId: string,
   periodDays: number,
+  tracking: AiTrackingContext,
 ): Promise<Response> {
   const apiKey = Deno.env.get('ANTHROPIC_API_KEY')!;
+  const startedAt = Date.now();
 
-  const loadHistory = await fetchWorkoutLoadHistory(supabase, studentId);
-  const loadText    = formatLoadHistoryForPrompt(loadHistory);
-  const userPrompt  = buildAnalyzePrompt(periodDays, loadText);
+  try {
+    const loadHistory = await fetchWorkoutLoadHistory(supabase, studentId);
+    const loadText    = formatLoadHistoryForPrompt(loadHistory, {
+      maxExercises: 6,
+      maxEntriesPerExercise: 3,
+    });
+    const userPrompt  = buildAnalyzePrompt(periodDays, loadText);
 
-  await supabase.from('ai_messages').insert({
-    conversation_id: conversationId,
-    role: 'user',
-    content: userPrompt,
-    metadata: { period_days: periodDays },
-  });
+    await supabase.from('ai_messages').insert({
+      conversation_id: conversationId,
+      role: 'user',
+      content: userPrompt,
+      metadata: {
+        period_days: periodDays,
+        client_platform: tracking.clientPlatform,
+      },
+    });
 
-  // Raw fetch para streaming nativo Deno (anthropic.messages.stream() usa
-  // EventEmitter do Node.js que trava em async iteration no Deno)
-  const anthropicResp = await fetch(ANTHROPIC_URL, {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify({
+    // Raw fetch para streaming nativo Deno (anthropic.messages.stream() usa
+    // EventEmitter do Node.js que trava em async iteration no Deno)
+    const anthropicResp = await fetch(ANTHROPIC_URL, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: MAX_TOKENS,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: userPrompt }],
+        stream: true,
+      }),
+    });
+
+    if (!anthropicResp.ok) {
+      const errText = await anthropicResp.text();
+      throw new Error(`Anthropic API ${anthropicResp.status}: ${errText}`);
+    }
+
+    return buildSseResponse(anthropicResp.body!, supabase, conversationId, tracking, startedAt);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Erro ao analisar progresso';
+    await recordAiUsage(supabase, tracking, {
+      provider: 'anthropic',
+      usageKind: 'completion',
       model: MODEL,
-      max_tokens: MAX_TOKENS,
-      system: systemPrompt,
-      messages: [{ role: 'user', content: userPrompt }],
-      stream: true,
-    }),
-  });
-
-  if (!anthropicResp.ok) {
-    const errText = await anthropicResp.text();
-    throw new Error(`Anthropic API ${anthropicResp.status}: ${errText}`);
+      status: 'error',
+      latencyMs: Date.now() - startedAt,
+      errorMessage: message,
+      metadata: { period_days: periodDays },
+    });
+    throw err;
   }
-
-  return buildSseResponse(anthropicResp.body!, supabase, conversationId);
 }
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function buildAnalyzePrompt(periodDays: number, loadHistory: string): string {
   return `
-Analise a evolução do aluno nos últimos ${periodDays} dias. Use os dados do perfil (já no contexto) e o histórico de cargas abaixo.
+Analise a evolucao do aluno nos ultimos ${periodDays} dias usando o contexto do perfil e o historico abaixo.
 
 ${loadHistory}
 
-Sua análise deve cobrir:
-1. **Frequência**: quantos treinos/semana e se está dentro do esperado para o objetivo
-2. **Progressão de carga**: quais exercícios evoluíram, quais estagnaram
-3. **Tendência de peso**: interpretação da variação (se houver dados)
-4. **Pontos fortes**: o que merece destaque genuíno
-5. **Oportunidades**: 1 ou 2 ajustes práticos que fariam diferença
+Entregue no maximo 5 bullets:
+1. frequencia e aderencia
+2. progressao de carga
+3. tendencia de peso, se houver
+4. ponto forte real
+5. ate 2 ajustes praticos
 
-Seja específico — use números reais. Não use frases genéricas como "você está indo bem".
+Use numeros reais e seja especifico. Evite frases genericas.
 `.trim();
 }
 
@@ -81,15 +106,25 @@ function buildSseResponse(
   anthropicBody: ReadableStream<Uint8Array>,
   supabase: SupabaseClient,
   conversationId: string,
+  tracking: AiTrackingContext,
+  startedAt: number,
 ): Response {
   const encoder = new TextEncoder();
   let fullText  = '';
+  let inputTokens = 0;
+  let outputTokens = 0;
+  let modelName = MODEL;
+  let streamError: string | null = null;
 
   const body = new ReadableStream<Uint8Array>({
     async start(controller) {
       const reader  = anthropicBody.getReader();
       const decoder = new TextDecoder();
       let buffer    = '';
+
+      const keepAlive = setInterval(() => {
+        try { controller.enqueue(encoder.encode(': keep-alive\n\n')); } catch { /* stream já fechado */ }
+      }, KEEPALIVE_MS);
 
       try {
         while (true) {
@@ -104,8 +139,17 @@ function buildSseResponse(
             if (!line.startsWith('data: ')) continue;
             const raw = line.slice(6).trim();
             if (!raw || raw === '[DONE]') continue;
+
             try {
               const ev = JSON.parse(raw);
+              if (ev.type === 'message_start') {
+                modelName = ev.message?.model ?? modelName;
+                inputTokens = ev.message?.usage?.input_tokens ?? inputTokens;
+                outputTokens = ev.message?.usage?.output_tokens ?? outputTokens;
+              }
+              if (ev.type === 'message_delta' && typeof ev.usage?.output_tokens === 'number') {
+                outputTokens = ev.usage.output_tokens;
+              }
               if (ev.type === 'content_block_delta' && ev.delta?.type === 'text_delta') {
                 fullText += ev.delta.text;
                 controller.enqueue(
@@ -117,9 +161,12 @@ function buildSseResponse(
         }
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
+        streamError = msg;
         try {
           controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: msg })}\n\n`));
         } catch { /* ignore */ }
+      } finally {
+        clearInterval(keepAlive);
       }
 
       // Persiste resposta antes de fechar o stream
@@ -128,8 +175,37 @@ function buildSseResponse(
           conversation_id: conversationId,
           role: 'assistant',
           content: fullText,
-          metadata: { model: MODEL },
+          metadata: {
+            provider: 'anthropic',
+            model: modelName,
+            client_platform: tracking.clientPlatform,
+            tokens_input: inputTokens,
+            tokens_output: outputTokens,
+          },
         }).catch(console.error);
+
+        await recordAiUsage(supabase, tracking, {
+          provider: 'anthropic',
+          usageKind: 'completion',
+          model: modelName,
+          status: streamError ? 'error' : 'success',
+          inputTokens,
+          outputTokens,
+          latencyMs: Date.now() - startedAt,
+          errorMessage: streamError,
+          metadata: { stream_error: streamError },
+        });
+      } else if (streamError) {
+        await recordAiUsage(supabase, tracking, {
+          provider: 'anthropic',
+          usageKind: 'completion',
+          model: modelName,
+          status: 'error',
+          inputTokens,
+          outputTokens,
+          latencyMs: Date.now() - startedAt,
+          errorMessage: streamError,
+        });
       }
 
       try {

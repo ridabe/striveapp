@@ -3,11 +3,11 @@ import {
   View, Text, ScrollView, TextInput, TouchableOpacity,
   StyleSheet, KeyboardAvoidingView, Platform, ActivityIndicator,
 } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
-import { backToStudentHub } from '@/lib/studentNav';
+import { backToMaxHub } from '@/lib/studentNav';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 import { MaxAvatar, MAX_COLOR } from '@/components/ai/MaxAvatar';
@@ -37,7 +37,7 @@ export default function AssistenteIAChatScreen() {
   const [inputText, setInputText] = useState('');
   const scrollRef = useRef<ScrollView>(null);
 
-  const { text, isStreaming, error, conversationId, trigger, reset } = useMaxStream();
+  const { text, isStreaming, error, conversationId, trigger, clearStream } = useMaxStream();
 
   const activeConvId = conversationId ?? (initialConvId || null);
 
@@ -51,22 +51,30 @@ export default function AssistenteIAChatScreen() {
       .then(({ data }) => setStudent(data));
   }, [studentId]);
 
+  // Carrega o histórico persistido SOMENTE da conversa que veio pela navegação
+  // (initialConvId). Deliberadamente NÃO depende de activeConvId: quando o
+  // usuário envia a primeira mensagem de uma conversa nova, o backend cria a
+  // conversa e o useMaxStream expõe esse novo id — se recarregássemos por causa
+  // dele, a leitura do banco sobrescreveria o histórico local otimista (às vezes
+  // antes da resposta estar visível), fazendo a mensagem "aparecer e sumir".
+  // O estado local (append otimista + append pós-stream) é a fonte da verdade
+  // durante a sessão; o banco só é lido ao (re)abrir uma conversa existente.
   useEffect(() => {
-    if (!activeConvId) {
+    if (!initialConvId) {
       setLoadingHistory(false);
       return;
     }
     supabase
       .from('ai_messages')
       .select('id, role, content, created_at')
-      .eq('conversation_id', activeConvId)
+      .eq('conversation_id', initialConvId)
       .in('role', ['user', 'assistant'])
       .order('created_at', { ascending: true })
       .then(({ data }) => {
         setHistory((data ?? []) as StoredMessage[]);
         setLoadingHistory(false);
       });
-  }, [activeConvId]);
+  }, [initialConvId]);
 
   useEffect(() => {
     if ((text || isStreaming) && scrollRef.current) {
@@ -74,19 +82,22 @@ export default function AssistenteIAChatScreen() {
     }
   }, [text, isStreaming]);
 
-  // After streaming ends, reload history to include new messages
+  // Ao final do streaming, move o texto já exibido direto para o histórico local
+  // (sem round-trip ao Supabase) — a mensagem já foi persistida pelo backend,
+  // então só precisamos parar de mostrá-la via bolha "ao vivo" e passar a
+  // mostrá-la como item de histórico, sem gap entre as duas fontes de estado.
   useEffect(() => {
-    if (!isStreaming && text && activeConvId) {
-      supabase
-        .from('ai_messages')
-        .select('id, role, content, created_at')
-        .eq('conversation_id', activeConvId)
-        .in('role', ['user', 'assistant'])
-        .order('created_at', { ascending: true })
-        .then(({ data }) => {
-          setHistory((data ?? []) as StoredMessage[]);
-          reset();
-        });
+    if (!isStreaming && text) {
+      setHistory((prev) => [
+        ...prev,
+        {
+          id: `temp-assistant-${Date.now()}`,
+          role: 'assistant',
+          content: text,
+          created_at: new Date().toISOString(),
+        },
+      ]);
+      clearStream();
     }
   }, [isStreaming]);
 
@@ -119,7 +130,7 @@ export default function AssistenteIAChatScreen() {
     <SafeAreaView style={s.safe} edges={['top']}>
       {/* Header */}
       <View style={s.header}>
-        <TouchableOpacity onPress={() => backToStudentHub(studentId)} style={s.iconBtn}>
+        <TouchableOpacity onPress={() => backToMaxHub(studentId)} style={s.iconBtn}>
           <Ionicons name="arrow-back" size={22} color={Colors.textPrimary} />
         </TouchableOpacity>
         <View style={s.headerCenter}>
@@ -164,18 +175,10 @@ export default function AssistenteIAChatScreen() {
           ) : (
             <>
               {history.map((msg) => (
-                <MaxChatMessage
-                  key={msg.id}
-                  role={msg.role}
-                  content={msg.content}
-                />
+                <MaxChatMessage key={msg.id} role={msg.role} content={msg.content} />
               ))}
-              {isStreaming && (
-                <MaxChatMessage
-                  role="assistant"
-                  content={text}
-                  isStreaming
-                />
+              {(isStreaming || text) && (
+                <MaxChatMessage role="assistant" content={text} isStreaming={isStreaming} />
               )}
             </>
           )}

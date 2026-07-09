@@ -24,3 +24,20 @@ export function backToStudentHub(studentId?: string | null) {
     router.back();
   }
 }
+
+/**
+ * Volta para a tela de ações do Max (`assistente-ia`) no escopo de um aluno.
+ *
+ * Usada por telas que são abertas a partir do hub de ações do Max (ex: o chat
+ * em `assistente-ia-chat`). O botão voltar dessas telas deve retornar às ações
+ * do Max — e não pular direto para o hub do aluno. Pelo mesmo motivo descrito
+ * em `backToStudentHub` (rotas de módulo são de nível raiz no Tabs navigator),
+ * usamos `router.replace` com params explícitos em vez de `router.back()`.
+ */
+export function backToMaxHub(studentId?: string | null) {
+  if (studentId) {
+    router.replace({ pathname: '/(admin)/assistente-ia', params: { studentId } } as any);
+  } else {
+    router.back();
+  }
+}

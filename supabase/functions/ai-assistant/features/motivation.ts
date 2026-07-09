@@ -1,9 +1,11 @@
 import { SupabaseClient }  from 'https://esm.sh/@supabase/supabase-js@2';
 import Anthropic           from 'npm:@anthropic-ai/sdk';
 import type { StudentContext } from '../retrieval/student-context.ts';
+import { recordAiUsage, type AiTrackingContext } from '../usage.ts';
+import { ANTHROPIC_EFFICIENT_MODEL } from '../models.ts';
 
-const MODEL      = 'claude-sonnet-4-6';
-const MAX_TOKENS = 256;
+const MODEL      = ANTHROPIC_EFFICIENT_MODEL;
+const MAX_TOKENS = 120;
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -16,60 +18,87 @@ export async function handleMotivation(
   systemPrompt: string,
   studentId: string,
   conversationId: string,
+  tracking: AiTrackingContext,
 ): Promise<Response> {
   const anthropic = new Anthropic({ apiKey: Deno.env.get('ANTHROPIC_API_KEY')! });
+  const startedAt = Date.now();
 
-  // Busca dados de gamificação para enriquecer a mensagem
-  const gamification = await fetchGamificationContext(supabase, studentId);
+  try {
+    // Busca dados de gamificação para enriquecer a mensagem
+    const gamification = await fetchGamificationContext(supabase, studentId);
 
-  const userPrompt = buildMotivationPrompt(gamification);
+    const userPrompt = buildMotivationPrompt(gamification);
 
-  await supabase.from('ai_messages').insert({
-    conversation_id: conversationId,
-    role: 'user',
-    content: userPrompt,
-    metadata: {},
-  });
+    await supabase.from('ai_messages').insert({
+      conversation_id: conversationId,
+      role: 'user',
+      content: userPrompt,
+      metadata: { client_platform: tracking.clientPlatform },
+    });
 
-  // Motivação usa resposta não-streaming (é curta e enviada via push)
-  const response = await anthropic.messages.create({
-    model: MODEL,
-    max_tokens: MAX_TOKENS,
-    system: systemPrompt,
-    messages: [{ role: 'user', content: userPrompt }],
-  });
-
-  const text = response.content
-    .filter((b) => b.type === 'text')
-    .map((b) => (b as any).text)
-    .join('');
-
-  const cleanText = sanitizeDirectStudentMessage(text);
-
-  await supabase.from('ai_messages').insert({
-    conversation_id: conversationId,
-    role: 'assistant',
-    content: cleanText,
-    metadata: {
-      tokens_input:  response.usage.input_tokens,
-      tokens_output: response.usage.output_tokens,
+    // Motivação usa resposta não-streaming (é curta e enviada via push)
+    const response = await anthropic.messages.create({
       model: MODEL,
-    },
-  });
+      max_tokens: MAX_TOKENS,
+      system: systemPrompt,
+      messages: [{ role: 'user', content: userPrompt }],
+    });
 
-  // Retorna via SSE igual às outras features para manter interface consistente
-  const encoder = new TextEncoder();
-  const body = new ReadableStream({
-    start(controller) {
-      controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text: cleanText })}\n\n`));
-      controller.enqueue(encoder.encode('data: [DONE]\n\n'));
-      controller.close();
-    },
-  });
+    const text = response.content
+      .filter((b) => b.type === 'text')
+      .map((b) => (b as any).text)
+      .join('');
 
-  return new Response(body, {
-    headers: { ...CORS_HEADERS, 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache' },
-  });
+    const cleanText = sanitizeDirectStudentMessage(text);
+
+    await supabase.from('ai_messages').insert({
+      conversation_id: conversationId,
+      role: 'assistant',
+      content: cleanText,
+      metadata: {
+        provider: 'anthropic',
+        model: MODEL,
+        client_platform: tracking.clientPlatform,
+        tokens_input: response.usage.input_tokens,
+        tokens_output: response.usage.output_tokens,
+      },
+    });
+
+    await recordAiUsage(supabase, tracking, {
+      provider: 'anthropic',
+      usageKind: 'completion',
+      model: MODEL,
+      status: 'success',
+      inputTokens: response.usage.input_tokens,
+      outputTokens: response.usage.output_tokens,
+      latencyMs: Date.now() - startedAt,
+    });
+
+    // Retorna via SSE igual às outras features para manter interface consistente
+    const encoder = new TextEncoder();
+    const body = new ReadableStream({
+      start(controller) {
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text: cleanText })}\n\n`));
+        controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+        controller.close();
+      },
+    });
+
+    return new Response(body, {
+      headers: { ...CORS_HEADERS, 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache' },
+    });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Erro ao gerar mensagem motivacional';
+    await recordAiUsage(supabase, tracking, {
+      provider: 'anthropic',
+      usageKind: 'completion',
+      model: MODEL,
+      status: 'error',
+      latencyMs: Date.now() - startedAt,
+      errorMessage: message,
+    });
+    throw err;
+  }
 }
 
 // ── Dados de gamificação ─────────────────────────────────────────────────────
@@ -163,13 +192,12 @@ function buildMotivationPrompt(g: GamificationContext): string {
     'Escreva apenas a mensagem final que o aluno irá ler.',
     'A mensagem deve ser escrita em segunda pessoa (como se o Personal estivesse falando diretamente com o aluno).',
     'Baseie-se nos dados do perfil do aluno que já estão no contexto.',
+    'Seja especifico e curto.',
     'INSTRUÇÕES IMPORTANTES:',
     '- Esta resposta será diretamente enviada ao aluno!',
-    '- Não escreva qualquer introdução, explicação, observação, apresentação ou contexto para o Personal',
-    '- Não comece com "aqui está a mensagem", "pronto para enviar", "segue uma mensagem", "você pode enviar", "para o Ricardo", ou qualquer frase parecida',
-    '- Não use frases como "para você enviar ao aluno", "mensagem pronta", "feito pela IA", "copie e envie" ou similares',
-    '- Seja direto e comece imediatamente com a mensagem motivacional',
-    '- A primeira palavra da resposta já deve fazer parte da mensagem ao aluno',
+    '- Sem introducao, contexto para o personal ou frases de preparo',
+    '- Comece direto na mensagem final',
+    '- A primeira palavra ja deve fazer parte da mensagem ao aluno',
   ];
 
   if (g.workoutsThisMonth > 0)
@@ -187,7 +215,7 @@ function buildMotivationPrompt(g: GamificationContext): string {
   if (g.recentBadges.length > 0)
     parts.push(`Badges recentes: ${g.recentBadges.join(', ')}.`);
 
-  parts.push('Máximo 3 linhas. Tom: genuíno e específico — evite frases genéricas.');
+  parts.push('Maximo 3 linhas. Tom genuino, humano e objetivo. Evite frases genericas.');
 
   return parts.join('\n');
 }

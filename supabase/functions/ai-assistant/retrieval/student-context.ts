@@ -179,7 +179,7 @@ async function fetchRecentSessions(
     .eq('student_id', studentId)
     .not('finished_at', 'is', null)
     .order('started_at', { ascending: false })
-    .limit(10);
+    .limit(5);
 
   return (data ?? []).map((s: any) => ({
     date:            s.started_at?.slice(0, 10) ?? '',

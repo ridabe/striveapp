@@ -13,6 +13,7 @@ import { FontFamily, FontSize } from '@/theme/typography';
 import { MaxAvatar, MAX_COLOR } from '@/components/ai/MaxAvatar';
 import { MaxQuickActions } from '@/components/ai/MaxQuickActions';
 import { MaxStreamingText } from '@/components/ai/MaxStreamingText';
+import { CriarTreinoWizardModal, type PlanPreferences } from '@/components/ai/CriarTreinoWizardModal';
 import { useMaxStream, type MaxFeature } from '@/hooks/useMaxStream';
 
 interface StudentMini {
@@ -63,6 +64,7 @@ export default function AssistenteIAScreen() {
   const [loadingStudent, setLoadingStudent] = useState(true);
   const [activeFeature, setActiveFeature]   = useState<MaxFeature | null>(null);
   const [guideOpen, setGuideOpen]           = useState(false);
+  const [wizardVisible, setWizardVisible]   = useState(false);
   const scrollRef = useRef<ScrollView>(null);
 
   const { text, isStreaming, error, conversationId, planId, trigger, reset } = useMaxStream();
@@ -106,9 +108,28 @@ export default function AssistenteIAScreen() {
       return;
     }
 
+    if (feature === 'generate_plan') {
+      setWizardVisible(true);
+      return;
+    }
+
     reset();
     setActiveFeature(feature);
     await trigger({ feature, studentId });
+  }
+
+  async function handleWizardSkip() {
+    setWizardVisible(false);
+    reset();
+    setActiveFeature('generate_plan');
+    await trigger({ feature: 'generate_plan', studentId });
+  }
+
+  async function handleWizardSubmit(preferences: PlanPreferences) {
+    setWizardVisible(false);
+    reset();
+    setActiveFeature('generate_plan');
+    await trigger({ feature: 'generate_plan', studentId, planPreferences: preferences });
   }
 
   // Remove prefácios da IA para que o aluno receba apenas a mensagem final.
@@ -375,6 +396,13 @@ export default function AssistenteIAScreen() {
           <Ionicons name="chevron-forward" size={16} color={MAX_COLOR} />
         </TouchableOpacity>
       </ScrollView>
+
+      <CriarTreinoWizardModal
+        visible={wizardVisible}
+        onClose={() => setWizardVisible(false)}
+        onSkip={handleWizardSkip}
+        onSubmit={handleWizardSubmit}
+      />
     </SafeAreaView>
   );
 }

@@ -12,6 +12,7 @@ import { useModulesStore } from '@/stores/modulesStore';
 import { MODULE } from '@/lib/modules';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
+import { EditarAlunoModal } from '@/components/EditarAlunoModal';
 
 const MAX_COLOR = '#7C3AED';
 
@@ -167,6 +168,7 @@ export default function StudentDetailScreen() {
   const [resetting, setResetting] = useState(false);
   const [togglingStatus, setTogglingStatus] = useState(false);
   const [mustChangePassword, setMustChangePassword] = useState(false);
+  const [editVisible, setEditVisible] = useState(false);
 
   const now   = new Date();
   const month = now.getMonth() + 1;
@@ -428,6 +430,23 @@ export default function StudentDetailScreen() {
 
             <TouchableOpacity
               style={s.actionItem}
+              onPress={() => { setActionsVisible(false); setEditVisible(true); }}
+              activeOpacity={0.75}
+            >
+              <View style={[s.actionIconWrap, { backgroundColor: `${primaryColor}18` }]}>
+                <Ionicons name="create-outline" size={20} color={primaryColor} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={s.actionItemLabel}>Editar dados cadastrais</Text>
+                <Text style={s.actionItemDesc}>
+                  Altera nome, email, telefone, nascimento, objetivo e observações
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward" size={16} color={Colors.border} />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={s.actionItem}
               onPress={handleResetPassword}
               activeOpacity={0.75}
             >
@@ -627,6 +646,13 @@ export default function StudentDetailScreen() {
           {new Date(student.created_at).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}
         </Text>
       </ScrollView>
+
+      <EditarAlunoModal
+        visible={editVisible}
+        student={student}
+        onClose={() => setEditVisible(false)}
+        onSuccess={loadAll}
+      />
     </SafeAreaView>
   );
 }

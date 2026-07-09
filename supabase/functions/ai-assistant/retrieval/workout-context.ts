@@ -15,6 +15,11 @@ export interface ExerciseLoadHistory {
   }>;
 }
 
+interface FormatLoadHistoryOptions {
+  maxExercises?: number;
+  maxEntriesPerExercise?: number;
+}
+
 export async function fetchWorkoutLoadHistory(
   supabase: SupabaseClient,
   studentId: string,
@@ -63,7 +68,7 @@ export async function fetchWorkoutLoadHistory(
     .eq('session.student_id', studentId)
     .not('load_used', 'is', null)
     .order('session(started_at)', { ascending: false })
-    .limit(200);
+    .limit(120);
 
   if (exerciseId) query = query.eq('exercise_id', exerciseId);
 
@@ -116,27 +121,41 @@ export async function fetchWorkoutLoadHistory(
   return [...grouped.values()];
 }
 
-export function formatLoadHistoryForPrompt(history: ExerciseLoadHistory[]): string {
+/**
+ * Compacta o historico de cargas para caber melhor no prompt sem perder tendencia.
+ */
+export function formatLoadHistoryForPrompt(
+  history: ExerciseLoadHistory[],
+  options: FormatLoadHistoryOptions = {},
+): string {
   if (!history.length) return 'Nenhum histórico de carga disponível.';
 
-  const lines: string[] = ['HISTÓRICO DE CARGAS POR EXERCÍCIO:'];
+  const maxExercises = options.maxExercises ?? 6;
+  const maxEntriesPerExercise = options.maxEntriesPerExercise ?? 4;
+  const selectedHistory = history.slice(0, maxExercises);
+  const lines: string[] = ['HISTORICO DE CARGAS:'];
 
-  for (const ex of history) {
+  for (const ex of selectedHistory) {
     const prescribed = ex.prescribedLoad
-      ? `prescrito: ${ex.prescribedSets}x${ex.prescribedReps} @ ${ex.prescribedLoad}`
-      : `prescrito: ${ex.prescribedSets}x${ex.prescribedReps} (sem carga definida)`;
-    lines.push(`\n${ex.exerciseName} (${ex.muscleGroup}) — ${prescribed}`);
+      ? `${ex.prescribedSets}x${ex.prescribedReps} @ ${ex.prescribedLoad}`
+      : `${ex.prescribedSets}x${ex.prescribedReps} sem carga definida`;
+    lines.push(`- ${ex.exerciseName} (${ex.muscleGroup}) | prescrito: ${prescribed}`);
 
     if (ex.history.length === 0) {
-      lines.push('  Sem execuções registradas');
+      lines.push('  sem execucoes registradas');
     } else {
-      for (const h of ex.history) {
+      for (const h of ex.history.slice(0, maxEntriesPerExercise)) {
         const load = h.loadUsed ?? 'carga não registrada';
         const exec = h.setsDone ? `${h.setsDone}x${h.repsDone ?? '?'}` : 'séries não registradas';
         lines.push(`  ${h.date}: ${exec} @ ${load}`);
       }
+      const hiddenEntries = Math.max(0, ex.history.length - maxEntriesPerExercise);
+      if (hiddenEntries) lines.push(`  +${hiddenEntries} execucoes antigas omitidas`);
     }
   }
+
+  const hiddenExercises = Math.max(0, history.length - maxExercises);
+  if (hiddenExercises) lines.push(`- +${hiddenExercises} exercicios omitidos para reduzir tokens`);
 
   return lines.join('\n');
 }

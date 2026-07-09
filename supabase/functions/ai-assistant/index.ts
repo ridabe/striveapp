@@ -1,11 +1,15 @@
 import { createClient }         from 'https://esm.sh/@supabase/supabase-js@2';
 import { fetchStudentContext }   from './retrieval/student-context.ts';
 import { buildMaxSystemPrompt }  from './prompts/max-system-prompt.ts';
-import { handleGeneratePlan }    from './features/generate-plan.ts';
+import { handleGeneratePlan, type PlanPreferences } from './features/generate-plan.ts';
 import { handleAnalyzeProgress } from './features/analyze-progress.ts';
 import { handleSuggestLoad }     from './features/suggest-load.ts';
 import { handleMotivation }      from './features/motivation.ts';
 import { handleChat }            from './features/chat.ts';
+import {
+  normalizeClientPlatform,
+  type AiTrackingContext,
+} from './usage.ts';
 
 // ── Constantes ──────────────────────────────────────────────────────────────
 
@@ -25,6 +29,13 @@ interface RequestBody {
   conversation_id?: string;
   period_days?: number;
   exercise_id?: string;
+  client_platform?: string;
+  plan_preferences?: {
+    workout_type?: string;
+    goal?: string;
+    days_count?: number;
+    notes?: string;
+  };
 }
 
 // ── Entry point ─────────────────────────────────────────────────────────────
@@ -94,7 +105,16 @@ Deno.serve(async (req) => {
       return errorResponse('Invalid JSON body', 400);
     }
 
-    const { feature, student_id, message, conversation_id, period_days, exercise_id } = body;
+    const {
+      feature,
+      student_id,
+      message,
+      conversation_id,
+      period_days,
+      exercise_id,
+      client_platform,
+      plan_preferences,
+    } = body;
 
     if (!feature)    return errorResponse('Campo "feature" é obrigatório', 400);
     if (!student_id) return errorResponse('Campo "student_id" é obrigatório', 400);
@@ -117,24 +137,39 @@ Deno.serve(async (req) => {
 
     // 8. Garante que existe uma conversa para registrar as mensagens
     const convId = conversation_id ?? await createConversation(supabase, student_id, tenantId, feature);
+    const tracking: AiTrackingContext = {
+      tenantId,
+      studentId: student_id,
+      conversationId: convId,
+      actorProfileId: user.id,
+      featureType: feature,
+      clientPlatform: normalizeClientPlatform(client_platform),
+    };
 
     // 9. Rota para o handler dedicado de cada feature
     switch (feature) {
-      case 'generate_plan':
-        return await handleGeneratePlan(supabase, ctx, systemPrompt, student_id, tenantId, convId);
+      case 'generate_plan': {
+        const preferences: PlanPreferences | undefined = plan_preferences ? {
+          workoutType: plan_preferences.workout_type,
+          goal:        plan_preferences.goal,
+          daysCount:   plan_preferences.days_count,
+          notes:       plan_preferences.notes,
+        } : undefined;
+        return await handleGeneratePlan(supabase, ctx, systemPrompt, student_id, tenantId, convId, tracking, preferences);
+      }
 
       case 'analyze_progress':
-        return await handleAnalyzeProgress(supabase, ctx, systemPrompt, student_id, convId, period_days ?? 30);
+        return await handleAnalyzeProgress(supabase, ctx, systemPrompt, student_id, convId, period_days ?? 30, tracking);
 
       case 'suggest_load':
-        return await handleSuggestLoad(supabase, systemPrompt, student_id, convId, exercise_id);
+        return await handleSuggestLoad(supabase, systemPrompt, student_id, convId, exercise_id, tracking);
 
       case 'motivation':
-        return await handleMotivation(supabase, ctx, systemPrompt, student_id, convId);
+        return await handleMotivation(supabase, ctx, systemPrompt, student_id, convId, tracking);
 
       case 'chat':
         if (!message?.trim()) return errorResponse('Campo "message" é obrigatório para o chat', 400);
-        return await handleChat(supabase, systemPrompt, message, convId, tenantId);
+        return await handleChat(supabase, systemPrompt, message, convId, tenantId, tracking);
 
       default:
         return errorResponse(`Feature desconhecida: ${feature}`, 400);

@@ -1,9 +1,12 @@
 import { SupabaseClient }  from 'https://esm.sh/@supabase/supabase-js@2';
 import { fetchWorkoutLoadHistory, formatLoadHistoryForPrompt } from '../retrieval/workout-context.ts';
+import { recordAiUsage, type AiTrackingContext } from '../usage.ts';
+import { ANTHROPIC_EFFICIENT_MODEL } from '../models.ts';
 
-const MODEL         = 'claude-sonnet-4-6';
-const MAX_TOKENS    = 1024;
+const MODEL         = ANTHROPIC_EFFICIENT_MODEL;
+const MAX_TOKENS    = 420;
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
+const KEEPALIVE_MS  = 3000;
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -16,83 +19,105 @@ export async function handleSuggestLoad(
   studentId: string,
   conversationId: string,
   exerciseId?: string,
+  tracking?: AiTrackingContext,
 ): Promise<Response> {
   const apiKey = Deno.env.get('ANTHROPIC_API_KEY')!;
+  const startedAt = Date.now();
 
-  const loadHistory = await fetchWorkoutLoadHistory(supabase, studentId, exerciseId);
+  if (!tracking) throw new Error('Tracking context ausente');
 
-  if (!loadHistory.length) {
-    return streamText(
-      'Não encontrei histórico de execuções com carga registrada para este aluno. ' +
-      'Peça ao aluno que registre as cargas durante os treinos para que eu possa sugerir progressões precisas.',
-      supabase, conversationId,
-    );
-  }
+  try {
+    const loadHistory = await fetchWorkoutLoadHistory(supabase, studentId, exerciseId);
 
-  const loadText   = formatLoadHistoryForPrompt(loadHistory);
-  const userPrompt = buildSuggestLoadPrompt(loadText, !!exerciseId);
+    if (!loadHistory.length) {
+      return streamText(
+        'Não encontrei histórico de execuções com carga registrada para este aluno. ' +
+        'Peça ao aluno que registre as cargas durante os treinos para que eu possa sugerir progressões precisas.',
+        supabase,
+        conversationId,
+        tracking,
+      );
+    }
 
-  await supabase.from('ai_messages').insert({
-    conversation_id: conversationId,
-    role: 'user',
-    content: userPrompt,
-    metadata: { exercise_id: exerciseId ?? null },
-  });
+    const loadText   = formatLoadHistoryForPrompt(loadHistory, {
+      maxExercises: exerciseId ? 1 : 5,
+      maxEntriesPerExercise: 3,
+    });
+    const userPrompt = buildSuggestLoadPrompt(loadText, !!exerciseId);
 
-  // Raw fetch para streaming nativo Deno
-  const anthropicResp = await fetch(ANTHROPIC_URL, {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify({
+    await supabase.from('ai_messages').insert({
+      conversation_id: conversationId,
+      role: 'user',
+      content: userPrompt,
+      metadata: {
+        exercise_id: exerciseId ?? null,
+        client_platform: tracking.clientPlatform,
+      },
+    });
+
+    // Raw fetch para streaming nativo Deno
+    const anthropicResp = await fetch(ANTHROPIC_URL, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: MAX_TOKENS,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: userPrompt }],
+        stream: true,
+      }),
+    });
+
+    if (!anthropicResp.ok) {
+      const errText = await anthropicResp.text();
+      throw new Error(`Anthropic API ${anthropicResp.status}: ${errText}`);
+    }
+
+    return buildSseResponse(anthropicResp.body!, supabase, conversationId, tracking, startedAt);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Erro ao sugerir cargas';
+    await recordAiUsage(supabase, tracking, {
+      provider: 'anthropic',
+      usageKind: 'completion',
       model: MODEL,
-      max_tokens: MAX_TOKENS,
-      system: systemPrompt,
-      messages: [{ role: 'user', content: userPrompt }],
-      stream: true,
-    }),
-  });
-
-  if (!anthropicResp.ok) {
-    const errText = await anthropicResp.text();
-    throw new Error(`Anthropic API ${anthropicResp.status}: ${errText}`);
+      status: 'error',
+      latencyMs: Date.now() - startedAt,
+      errorMessage: message,
+      metadata: { exercise_id: exerciseId ?? null },
+    });
+    throw err;
   }
-
-  return buildSseResponse(anthropicResp.body!, supabase, conversationId);
 }
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function buildSuggestLoadPrompt(loadHistory: string, singleExercise: boolean): string {
   const scope = singleExercise
-    ? 'para o exercício solicitado'
-    : 'para os exercícios do plano ativo';
+    ? 'para o exercicio solicitado'
+    : 'para os exercicios do plano ativo';
 
   return `
-Com base no histórico de cargas abaixo, sugira o ajuste ideal ${scope}.
+Analise o historico abaixo e sugira a progressao ideal ${scope}.
 
 ${loadHistory}
 
-Para cada exercício, aplique os princípios de sobrecarga progressiva:
-- Se o aluno completou todas as séries/reps prescritas nas últimas 2-3 sessões com boa margem → aumente a carga
-- Se houve queda de rendimento ou carga inconsistente → mantenha ou reduza levemente
-- Sugestão de incremento: 2,5-5kg para membros superiores, 5-10kg para membros inferiores
+- Regras de decisao:
+  - aumente se houve boa execucao nas ultimas sessoes
+  - mantenha ou reduza se houve queda, falha ou inconsistencia
+  - use incrementos conservadores
 
-Formato da resposta:
-**Exercício** — carga atual → carga sugerida
-_(motivo em uma linha)_
+- Formato:
+  **Exercicio** - carga atual -> carga sugerida
+  Motivo curto em uma linha
 
-INSTRUÇÕES IMPORTANTES:
-- Esta resposta será diretamente enviada ao aluno!
-- Não escreva qualquer introdução, explicação, observação, apresentação ou contexto para o Personal
-- Não comece com "aqui está a sugestão", "prontinho", "segue abaixo", "mensagem pronta", "você pode enviar", "para o aluno" ou frases parecidas
-- Não use frases como "para você enviar ao aluno", "copie e envie", "feito pela IA" ou similares
-- Seja direto e comece imediatamente com a sugestão de carga
-- A primeira linha já deve ser a sugestão final para o aluno
-- Seja direto. Não repita os dados de histórico na resposta.
+- Restricoes:
+  - esta resposta vai direto para o aluno
+  - sem introducao, sem contexto para o personal, sem repetir o historico
+  - no maximo 1 ou 2 linhas por exercicio
 `.trim();
 }
 
@@ -100,15 +125,25 @@ function buildSseResponse(
   anthropicBody: ReadableStream<Uint8Array>,
   supabase: SupabaseClient,
   conversationId: string,
+  tracking: AiTrackingContext,
+  startedAt: number,
 ): Response {
   const encoder = new TextEncoder();
   let fullText  = '';
+  let inputTokens = 0;
+  let outputTokens = 0;
+  let modelName = MODEL;
+  let streamError: string | null = null;
 
   const body = new ReadableStream<Uint8Array>({
     async start(controller) {
       const reader  = anthropicBody.getReader();
       const decoder = new TextDecoder();
       let buffer    = '';
+
+      const keepAlive = setInterval(() => {
+        try { controller.enqueue(encoder.encode(': keep-alive\n\n')); } catch { /* stream já fechado */ }
+      }, KEEPALIVE_MS);
 
       try {
         while (true) {
@@ -123,8 +158,17 @@ function buildSseResponse(
             if (!line.startsWith('data: ')) continue;
             const raw = line.slice(6).trim();
             if (!raw || raw === '[DONE]') continue;
+
             try {
               const ev = JSON.parse(raw);
+              if (ev.type === 'message_start') {
+                modelName = ev.message?.model ?? modelName;
+                inputTokens = ev.message?.usage?.input_tokens ?? inputTokens;
+                outputTokens = ev.message?.usage?.output_tokens ?? outputTokens;
+              }
+              if (ev.type === 'message_delta' && typeof ev.usage?.output_tokens === 'number') {
+                outputTokens = ev.usage.output_tokens;
+              }
               if (ev.type === 'content_block_delta' && ev.delta?.type === 'text_delta') {
                 fullText += ev.delta.text;
                 controller.enqueue(
@@ -136,9 +180,12 @@ function buildSseResponse(
         }
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
+        streamError = msg;
         try {
           controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: msg })}\n\n`));
         } catch { /* ignore */ }
+      } finally {
+        clearInterval(keepAlive);
       }
 
       if (fullText) {
@@ -148,8 +195,36 @@ function buildSseResponse(
           conversation_id: conversationId,
           role: 'assistant',
           content: fullText,
-          metadata: { model: MODEL },
+          metadata: {
+            provider: 'anthropic',
+            model: modelName,
+            client_platform: tracking.clientPlatform,
+            tokens_input: inputTokens,
+            tokens_output: outputTokens,
+          },
         }).catch(console.error);
+
+        await recordAiUsage(supabase, tracking, {
+          provider: 'anthropic',
+          usageKind: 'completion',
+          model: modelName,
+          status: streamError ? 'error' : 'success',
+          inputTokens,
+          outputTokens,
+          latencyMs: Date.now() - startedAt,
+          errorMessage: streamError,
+        });
+      } else if (streamError) {
+        await recordAiUsage(supabase, tracking, {
+          provider: 'anthropic',
+          usageKind: 'completion',
+          model: modelName,
+          status: 'error',
+          inputTokens,
+          outputTokens,
+          latencyMs: Date.now() - startedAt,
+          errorMessage: streamError,
+        });
       }
 
       try {
@@ -160,7 +235,12 @@ function buildSseResponse(
   });
 
   return new Response(body, {
-    headers: { ...CORS_HEADERS, 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache' },
+    headers: {
+      ...CORS_HEADERS,
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      'X-Conversation-Id': conversationId,
+    },
   });
 }
 
@@ -176,12 +256,26 @@ async function streamText(
   text: string,
   supabase: SupabaseClient,
   conversationId: string,
+  tracking: AiTrackingContext,
 ): Promise<Response> {
   await supabase.from('ai_messages').insert({
     conversation_id: conversationId,
     role: 'assistant',
     content: text,
-    metadata: {},
+    metadata: {
+      provider: 'anthropic',
+      client_platform: tracking.clientPlatform,
+    },
+  });
+
+  await recordAiUsage(supabase, tracking, {
+    provider: 'anthropic',
+    usageKind: 'completion',
+    model: MODEL,
+    status: 'success',
+    inputTokens: 0,
+    outputTokens: 0,
+    metadata: { no_history: true },
   });
 
   const encoder = new TextEncoder();
