@@ -13,6 +13,7 @@ import { useStudent } from '@/hooks/useStudent';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 import { GOAL_COLORS, muscleColor } from '@/lib/exerciseConfig';
+import { groupByCombo, comboTypeLabel } from '@/lib/comboExercises';
 import { MediaViewerModal } from '@/components/MediaViewerModal';
 
 const DAY_SHORT = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
@@ -24,6 +25,7 @@ interface Exercise {
   prescription: string;
   videoUrl: string | null;
   instructions: string | null;
+  comboGroupId: string | null;
 }
 
 interface Section {
@@ -110,7 +112,7 @@ export default function PlanDetailScreen() {
     const itemsRes = rIds.length > 0
       ? await supabase
           .from('workout_items')
-          .select('id, routine_id, display_order, sets, reps, load, duration_secs, exercises(name, muscle_group, video_url, instructions)')
+          .select('id, routine_id, display_order, sets, reps, load, duration_secs, combo_group_id, exercises(name, muscle_group, video_url, instructions)')
           .in('routine_id', rIds)
           .order('display_order')
       : { data: [] };
@@ -137,6 +139,7 @@ export default function PlanDetailScreen() {
             prescription: parts.join(' · '),
             videoUrl: ex?.video_url ?? null,
             instructions: ex?.instructions ?? null,
+            comboGroupId: i.combo_group_id ?? null,
           };
         }),
     }));
@@ -236,100 +239,126 @@ export default function PlanDetailScreen() {
                   {section.exercises.length === 0 ? (
                     <Text style={s.emptySection}>Sem exercícios cadastrados.</Text>
                   ) : (
-                    section.exercises.map((ex, idx) => {
-                      const mc = muscleColor(ex.muscleGroup);
-                      const hasVideo = !!ex.videoUrl;
-                      const isGif = ex.videoUrl?.toLowerCase().includes('.gif');
-                      const isExpanded = expanded.has(ex.itemId);
-                      const hasInstructions = !!ex.instructions;
+                    (() => {
+                      const groups = groupByCombo(section.exercises);
+                      let globalIdx = 0;
 
-                      return (
-                        <View key={ex.itemId} style={[s.exCard, idx > 0 && s.exCardBorder]}>
-                          {/* ── Main row ── */}
-                          <View style={s.exRow}>
-                            {/* Thumbnail — clicável se tiver vídeo */}
-                            <TouchableOpacity
-                              style={[s.thumbWrap, { backgroundColor: `${mc}18` }]}
-                              onPress={() => { if (hasVideo) { setVideoTitle(ex.name); setVideoUri(ex.videoUrl!); } }}
-                              disabled={!hasVideo}
-                              activeOpacity={hasVideo ? 0.75 : 1}
-                            >
-                              {hasVideo && isGif ? (
-                                <Image source={{ uri: ex.videoUrl! }} style={s.thumbImg} resizeMode="cover" />
-                              ) : hasVideo ? (
-                                <>
-                                  <Video
-                                    source={{ uri: ex.videoUrl! }}
-                                    style={s.thumbImg}
-                                    shouldPlay={false}
-                                    isMuted
-                                    resizeMode={ResizeMode.COVER}
-                                  />
-                                  <View style={s.thumbPlayOverlay}>
-                                    <Ionicons name="play-circle" size={22} color="#fff" />
+                      function renderExercise(ex: Exercise, borderTop: boolean) {
+                        const mc = muscleColor(ex.muscleGroup);
+                        const hasVideo = !!ex.videoUrl;
+                        const isGif = ex.videoUrl?.toLowerCase().includes('.gif');
+                        const isExpanded = expanded.has(ex.itemId);
+                        const hasInstructions = !!ex.instructions;
+
+                        return (
+                          <View key={ex.itemId} style={[s.exCard, borderTop && s.exCardBorder]}>
+                            {/* ── Main row ── */}
+                            <View style={s.exRow}>
+                              {/* Thumbnail — clicável se tiver vídeo */}
+                              <TouchableOpacity
+                                style={[s.thumbWrap, { backgroundColor: `${mc}18` }]}
+                                onPress={() => { if (hasVideo) { setVideoTitle(ex.name); setVideoUri(ex.videoUrl!); } }}
+                                disabled={!hasVideo}
+                                activeOpacity={hasVideo ? 0.75 : 1}
+                              >
+                                {hasVideo && isGif ? (
+                                  <Image source={{ uri: ex.videoUrl! }} style={s.thumbImg} resizeMode="cover" />
+                                ) : hasVideo ? (
+                                  <>
+                                    <Video
+                                      source={{ uri: ex.videoUrl! }}
+                                      style={s.thumbImg}
+                                      shouldPlay={false}
+                                      isMuted
+                                      resizeMode={ResizeMode.COVER}
+                                    />
+                                    <View style={s.thumbPlayOverlay}>
+                                      <Ionicons name="play-circle" size={22} color="#fff" />
+                                    </View>
+                                  </>
+                                ) : (
+                                  <Ionicons name="barbell-outline" size={20} color={mc} />
+                                )}
+                              </TouchableOpacity>
+
+                              {/* Info */}
+                              <View style={s.exInfo}>
+                                <Text style={s.exName} numberOfLines={2}>{ex.name}</Text>
+                                <View style={s.exMeta}>
+                                  <View style={[s.musclePill, { backgroundColor: `${mc}20` }]}>
+                                    <View style={[s.muscleDot, { backgroundColor: mc }]} />
+                                    <Text style={[s.musclePillText, { color: mc }]}>
+                                      {ex.muscleGroup || 'Geral'}
+                                    </Text>
                                   </View>
-                                </>
-                              ) : (
-                                <Ionicons name="barbell-outline" size={20} color={mc} />
-                              )}
-                            </TouchableOpacity>
-
-                            {/* Info */}
-                            <View style={s.exInfo}>
-                              <Text style={s.exName} numberOfLines={2}>{ex.name}</Text>
-                              <View style={s.exMeta}>
-                                <View style={[s.musclePill, { backgroundColor: `${mc}20` }]}>
-                                  <View style={[s.muscleDot, { backgroundColor: mc }]} />
-                                  <Text style={[s.musclePillText, { color: mc }]}>
-                                    {ex.muscleGroup || 'Geral'}
-                                  </Text>
+                                  {ex.prescription ? (
+                                    <Text style={s.prescription}>{ex.prescription}</Text>
+                                  ) : null}
                                 </View>
-                                {ex.prescription ? (
-                                  <Text style={s.prescription}>{ex.prescription}</Text>
-                                ) : null}
                               </View>
+
+                              {/* Video pill button — visível sempre que tiver vídeo */}
+                              {hasVideo && (
+                                <TouchableOpacity
+                                  style={[s.videoPill, { backgroundColor: `${mc}18`, borderColor: `${mc}35` }]}
+                                  onPress={() => { setVideoTitle(ex.name); setVideoUri(ex.videoUrl!); }}
+                                  activeOpacity={0.75}
+                                >
+                                  <Ionicons name={isGif ? 'image-outline' : 'play-circle-outline'} size={15} color={mc} />
+                                  <Text style={[s.videoPillText, { color: mc }]}>{isGif ? 'GIF' : 'Vídeo'}</Text>
+                                </TouchableOpacity>
+                              )}
                             </View>
 
-                            {/* Video pill button — visível sempre que tiver vídeo */}
-                            {hasVideo && (
+                            {/* ── Accordion toggle ── */}
+                            {hasInstructions && (
                               <TouchableOpacity
-                                style={[s.videoPill, { backgroundColor: `${mc}18`, borderColor: `${mc}35` }]}
-                                onPress={() => { setVideoTitle(ex.name); setVideoUri(ex.videoUrl!); }}
-                                activeOpacity={0.75}
+                                style={s.accordionToggle}
+                                onPress={() => toggleExpand(ex.itemId)}
+                                activeOpacity={0.7}
                               >
-                                <Ionicons name={isGif ? 'image-outline' : 'play-circle-outline'} size={15} color={mc} />
-                                <Text style={[s.videoPillText, { color: mc }]}>{isGif ? 'GIF' : 'Vídeo'}</Text>
+                                <Ionicons
+                                  name={isExpanded ? 'chevron-up' : 'chevron-down'}
+                                  size={13}
+                                  color={Colors.textSecondary}
+                                />
+                                <Text style={s.accordionLabel}>
+                                  {isExpanded ? 'Fechar instruções' : 'Como executar'}
+                                </Text>
                               </TouchableOpacity>
                             )}
+
+                            {/* ── Accordion content ── */}
+                            {isExpanded && hasInstructions && (
+                              <View style={s.accordionBody}>
+                                <Text style={s.accordionText}>{ex.instructions}</Text>
+                              </View>
+                            )}
                           </View>
+                        );
+                      }
 
-                          {/* ── Accordion toggle ── */}
-                          {hasInstructions && (
-                            <TouchableOpacity
-                              style={s.accordionToggle}
-                              onPress={() => toggleExpand(ex.itemId)}
-                              activeOpacity={0.7}
-                            >
-                              <Ionicons
-                                name={isExpanded ? 'chevron-up' : 'chevron-down'}
-                                size={13}
-                                color={Colors.textSecondary}
-                              />
-                              <Text style={s.accordionLabel}>
-                                {isExpanded ? 'Fechar instruções' : 'Como executar'}
+                      return groups.map((group, gi) => {
+                        if (!group.isCombo) {
+                          const isFirst = globalIdx === 0;
+                          globalIdx++;
+                          return renderExercise(group.items[0], !isFirst);
+                        }
+                        const isFirst = globalIdx === 0;
+                        globalIdx += group.items.length;
+                        return (
+                          <View key={group.comboId ?? `combo-${gi}`} style={[s.comboGroup, !isFirst && s.exCardBorder]}>
+                            <View style={[s.comboGroupHeader, { backgroundColor: `${primaryColor}18` }]}>
+                              <Ionicons name="git-merge" size={13} color={primaryColor} />
+                              <Text style={[s.comboGroupLabel, { color: primaryColor }]}>
+                                {comboTypeLabel(group.items.length)} · exercícios combinados
                               </Text>
-                            </TouchableOpacity>
-                          )}
-
-                          {/* ── Accordion content ── */}
-                          {isExpanded && hasInstructions && (
-                            <View style={s.accordionBody}>
-                              <Text style={s.accordionText}>{ex.instructions}</Text>
                             </View>
-                          )}
-                        </View>
-                      );
-                    })
+                            {group.items.map(ex => renderExercise(ex, false))}
+                          </View>
+                        );
+                      });
+                    })()
                   )}
                 </>
               )}
@@ -378,6 +407,9 @@ const s = StyleSheet.create({
   // Exercise accordion card
   exCard: { paddingHorizontal: 14, paddingVertical: 0 },
   exCardBorder: { borderTopWidth: 1, borderTopColor: Colors.border },
+  comboGroup: { paddingBottom: 8 },
+  comboGroupHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 14, paddingVertical: 10 },
+  comboGroupLabel: { fontFamily: FontFamily.bodyBold, fontSize: 11, letterSpacing: 0.3, textTransform: 'uppercase' },
   exRow: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 12 },
   thumbWrap: { width: 52, height: 52, borderRadius: 14, alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden' },
   thumbImg: { width: 52, height: 52 },

@@ -9,6 +9,8 @@ export interface PlanPreferencesParams {
   goal?: string;
   daysCount?: number;
   notes?: string;
+  wantsCombos?: boolean;
+  comboNotes?: string;
 }
 
 export interface MaxStreamParams {
@@ -91,6 +93,8 @@ export function useMaxStream(): UseMaxStreamResult {
           goal:         params.planPreferences.goal,
           days_count:   params.planPreferences.daysCount,
           notes:        params.planPreferences.notes,
+          wants_combos: params.planPreferences.wantsCombos,
+          combo_notes:  params.planPreferences.comboNotes,
         } : undefined,
       });
 

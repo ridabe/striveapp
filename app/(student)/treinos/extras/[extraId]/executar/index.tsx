@@ -16,6 +16,7 @@ import { FontFamily, FontSize } from '@/theme/typography';
 import { muscleColor } from '@/lib/exerciseConfig';
 import { registerAttendanceToday } from '@/lib/attendance';
 import { MediaViewerModal } from '@/components/MediaViewerModal';
+import { groupByCombo } from '@/lib/comboExercises';
 
 type Phase = 'ready' | 'active' | 'finishing' | 'saving';
 
@@ -35,12 +36,6 @@ interface ExItem {
   exerciseInstructions: string | null;
 }
 
-interface ExGroup {
-  comboId: string | null;
-  isCombo: boolean;
-  items: ExItem[];
-}
-
 const INTENSITIES = [
   { key: 'muito_leve', label: 'Muito leve', emoji: '😴', color: '#94A3B8' },
   { key: 'leve',       label: 'Leve',       emoji: '🙂', color: '#60A5FA' },
@@ -53,28 +48,6 @@ function fmtTime(secs: number) {
   const m = Math.floor(secs / 60).toString().padStart(2, '0');
   const s = (secs % 60).toString().padStart(2, '0');
   return `${m}:${s}`;
-}
-
-function groupByCombo(items: ExItem[]): ExGroup[] {
-  const groups: ExGroup[] = [];
-  const seen = new Map<string, ExGroup>();
-
-  for (const item of items) {
-    if (!item.comboGroupId) {
-      groups.push({ comboId: null, isCombo: false, items: [item] });
-    } else {
-      const existing = seen.get(item.comboGroupId);
-      if (existing) {
-        existing.items.push(item);
-        existing.isCombo = true;
-      } else {
-        const g: ExGroup = { comboId: item.comboGroupId, isCombo: false, items: [item] };
-        seen.set(item.comboGroupId, g);
-        groups.push(g);
-      }
-    }
-  }
-  return groups;
 }
 
 export default function ExtraExecutionScreen() {

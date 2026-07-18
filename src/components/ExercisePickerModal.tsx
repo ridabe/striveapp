@@ -26,13 +26,17 @@ export interface ExerciseSummary {
 interface Props {
   visible: boolean;
   tenantId: string;
-  onSelect: (exercise: ExerciseSummary) => void;
+  /** Modo de seleção única (padrão): toca no exercício e fecha imediatamente. */
+  onSelect?: (exercise: ExerciseSummary) => void;
+  /** Modo de seleção múltipla: toca marca/desmarca, e o usuário confirma no rodapé. */
+  multiSelect?: boolean;
+  onConfirm?: (exercises: ExerciseSummary[]) => void;
   onClose: () => void;
 }
 
 const PAGE_SIZE = 30;
 
-export function ExercisePickerModal({ visible, tenantId, onSelect, onClose }: Props) {
+export function ExercisePickerModal({ visible, tenantId, onSelect, multiSelect = false, onConfirm, onClose }: Props) {
   const [exercises, setExercises]     = useState<ExerciseSummary[]>([]);
   const [loading, setLoading]         = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -40,6 +44,26 @@ export function ExercisePickerModal({ visible, tenantId, onSelect, onClose }: Pr
   const [page, setPage]               = useState(0);
   const [search, setSearch]           = useState('');
   const [muscle, setMuscle]           = useState('');
+  const [selected, setSelected]       = useState<Map<string, ExerciseSummary>>(new Map());
+
+  // Selection persists across filter changes; only reset when the modal opens/closes.
+  useEffect(() => {
+    if (!visible) setSelected(new Map());
+  }, [visible]);
+
+  const toggleSelected = useCallback((exercise: ExerciseSummary) => {
+    setSelected(prev => {
+      const next = new Map(prev);
+      if (next.has(exercise.id)) next.delete(exercise.id);
+      else next.set(exercise.id, exercise);
+      return next;
+    });
+  }, []);
+
+  const handleConfirm = useCallback(() => {
+    onConfirm?.(Array.from(selected.values()));
+    setSelected(new Map());
+  }, [onConfirm, selected]);
 
   const fetchPage = useCallback(async (pageIndex: number, reset: boolean) => {
     if (!tenantId || !visible) return;
@@ -83,7 +107,9 @@ export function ExercisePickerModal({ visible, tenantId, onSelect, onClose }: Pr
           <TouchableOpacity onPress={onClose} style={s.iconBtn}>
             <Ionicons name="close" size={22} color={Colors.textPrimary} />
           </TouchableOpacity>
-          <Text style={s.title}>Selecionar Exercício</Text>
+          <Text style={s.title}>
+            {multiSelect && selected.size > 0 ? `${selected.size} selecionado${selected.size > 1 ? 's' : ''}` : 'Selecionar Exercício'}
+          </Text>
           <View style={{ width: 38 }} />
         </View>
 
@@ -103,19 +129,31 @@ export function ExercisePickerModal({ visible, tenantId, onSelect, onClose }: Pr
         </View>
 
         {/* Muscle filter */}
-        <FlatList
-          data={[{ key: '', label: 'Todos' }, ...MUSCLE_GROUPS.map(m => ({ key: m, label: m }))]}
-          horizontal showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: 12, paddingVertical: 6, gap: 6 }}
-          keyExtractor={i => i.key}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={[s.chip, muscle === item.key && { backgroundColor: muscleColor(item.key), borderColor: muscleColor(item.key) }]}
-              onPress={() => setMuscle(item.key)} activeOpacity={0.75}>
-              <Text style={[s.chipText, muscle === item.key && { color: '#fff' }]}>{item.label}</Text>
-            </TouchableOpacity>
-          )}
-        />
+        <View style={s.filterSection}>
+          <View style={s.filterLabelRow}>
+            <Ionicons name="options-outline" size={13} color={Colors.textSecondary} />
+            <Text style={s.filterLabel}>Grupo muscular</Text>
+          </View>
+          <FlatList
+            data={[{ key: '', label: 'Todos' }, ...MUSCLE_GROUPS.map(m => ({ key: m, label: m }))]}
+            horizontal showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingHorizontal: 12, paddingBottom: 2, gap: 8 }}
+            keyExtractor={i => i.key}
+            renderItem={({ item }) => {
+              const active = muscle === item.key;
+              return (
+                <TouchableOpacity
+                  style={[s.chip, active && { backgroundColor: muscleColor(item.key), borderColor: muscleColor(item.key) }]}
+                  onPress={() => setMuscle(item.key)} activeOpacity={0.75}>
+                  {item.key !== '' && (
+                    <View style={[s.chipDot, { backgroundColor: active ? '#fff' : muscleColor(item.key) }]} />
+                  )}
+                  <Text style={[s.chipText, active && { color: '#fff', fontFamily: FontFamily.bodyBold }]}>{item.label}</Text>
+                </TouchableOpacity>
+              );
+            }}
+          />
+        </View>
 
         {/* List */}
         {loading ? <ActivityIndicator color={Colors.primary} style={{ marginTop: 40 }} /> : (
@@ -133,24 +171,44 @@ export function ExercisePickerModal({ visible, tenantId, onSelect, onClose }: Pr
                 <Text style={s.emptyText}>Nenhum exercício encontrado</Text>
               </View>
             }
-            renderItem={({ item }) => (
-              <TouchableOpacity style={s.exerciseRow} onPress={() => onSelect(item)} activeOpacity={0.75}>
-                {item.video_url ? (
-                  <Image source={{ uri: item.video_url }} style={s.thumb} resizeMode="cover" />
-                ) : (
-                  <View style={s.thumbPlaceholder}>
-                    <Ionicons name="barbell-outline" size={16} color={Colors.border} />
+            renderItem={({ item }) => {
+              const isSelected = multiSelect && selected.has(item.id);
+              return (
+                <TouchableOpacity
+                  style={[s.exerciseRow, isSelected && s.exerciseRowSelected]}
+                  onPress={() => multiSelect ? toggleSelected(item) : onSelect?.(item)}
+                  activeOpacity={0.75}>
+                  {item.video_url ? (
+                    <Image source={{ uri: item.video_url }} style={s.thumb} resizeMode="cover" />
+                  ) : (
+                    <View style={s.thumbPlaceholder}>
+                      <Ionicons name="barbell-outline" size={16} color={Colors.border} />
+                    </View>
+                  )}
+                  <View style={{ flex: 1 }}>
+                    <Text style={s.exName}>{item.name}</Text>
+                    <Text style={s.exMeta}>{item.load_type} · {item.count_type}</Text>
                   </View>
-                )}
-                <View style={{ flex: 1 }}>
-                  <Text style={s.exName}>{item.name}</Text>
-                  <Text style={s.exMeta}>{item.load_type} · {item.count_type}</Text>
-                </View>
-                {item.is_global && <Ionicons name="globe-outline" size={14} color={Colors.textSecondary} />}
-                <Ionicons name="add-circle-outline" size={20} color={Colors.primary} style={{ marginLeft: 4 }} />
-              </TouchableOpacity>
-            )}
+                  {item.is_global && <Ionicons name="globe-outline" size={14} color={Colors.textSecondary} />}
+                  <Ionicons
+                    name={isSelected ? 'checkmark-circle' : 'add-circle-outline'}
+                    size={20} color={Colors.primary} style={{ marginLeft: 4 }}
+                  />
+                </TouchableOpacity>
+              );
+            }}
           />
+        )}
+
+        {multiSelect && selected.size > 0 && (
+          <View style={s.confirmBar}>
+            <TouchableOpacity style={s.confirmBtn} onPress={handleConfirm} activeOpacity={0.85}>
+              <Ionicons name="checkmark" size={18} color={Colors.bg} />
+              <Text style={s.confirmBtnText}>
+                Adicionar {selected.size} exercício{selected.size > 1 ? 's' : ''}
+              </Text>
+            </TouchableOpacity>
+          </View>
         )}
       </SafeAreaView>
     </Modal>
@@ -172,17 +230,43 @@ const s = StyleSheet.create({
     borderRadius: 12, margin: 12, paddingHorizontal: 12, height: 42,
   },
   searchInput: { flex: 1, fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textPrimary },
+  filterSection: {
+    borderBottomWidth: 1, borderBottomColor: Colors.border,
+    paddingTop: 4, paddingBottom: 8,
+    backgroundColor: Colors.bg,
+    shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.15, shadowRadius: 4,
+    elevation: 3,
+  },
+  filterLabelRow: {
+    flexDirection: 'row', alignItems: 'center', gap: 5,
+    paddingHorizontal: 16, marginBottom: 6,
+  },
+  filterLabel: { fontFamily: FontFamily.bodyMedium, fontSize: 11, color: Colors.textSecondary, textTransform: 'uppercase', letterSpacing: 0.3 },
   chip: {
-    paddingHorizontal: 12, paddingVertical: 7, borderRadius: 20,
+    flexDirection: 'row', alignItems: 'center', gap: 6,
+    paddingHorizontal: 13, paddingVertical: 8, borderRadius: 20,
     borderWidth: 1, borderColor: Colors.border, backgroundColor: Colors.surface,
     alignSelf: 'flex-start',
   },
-  chipText: { fontFamily: FontFamily.bodyMedium, fontSize: 12, color: Colors.textSecondary },
+  chipDot: { width: 7, height: 7, borderRadius: 4 },
+  chipText: { fontFamily: FontFamily.bodyMedium, fontSize: 12.5, color: Colors.textSecondary },
   exerciseRow: {
     flexDirection: 'row', alignItems: 'center', gap: 10,
     backgroundColor: Colors.surface, borderRadius: 12, borderWidth: 1, borderColor: Colors.border,
     paddingVertical: 10, paddingHorizontal: 12,
   },
+  exerciseRowSelected: {
+    borderColor: Colors.primary, backgroundColor: '#232312',
+  },
+  confirmBar: {
+    padding: 12, paddingBottom: 20,
+    borderTopWidth: 1, borderTopColor: Colors.border, backgroundColor: Colors.bg,
+  },
+  confirmBtn: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
+    backgroundColor: Colors.primary, borderRadius: 12, paddingVertical: 14,
+  },
+  confirmBtnText: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.sm, color: Colors.bg },
   thumb: { width: 44, height: 44, borderRadius: 10 },
   thumbPlaceholder: {
     width: 44, height: 44, borderRadius: 10,

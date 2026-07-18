@@ -16,6 +16,7 @@ import { useThemeStore } from '@/stores/themeStore';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 import { muscleColor } from '@/lib/exerciseConfig';
+import { groupByCombo, comboTypeLabel } from '@/lib/comboExercises';
 import { registerAttendanceToday } from '@/lib/attendance';
 import { MediaViewerModal } from '@/components/MediaViewerModal';
 import {
@@ -229,6 +230,14 @@ export default function RoutineExecutionScreen() {
   const totalDoneItems = flatItems.filter(it => (seriesDone[it.itemId] ?? []).some(Boolean)).length;
   const isLastExercise = currentExIdx === flatItems.length - 1;
 
+  // Grupo de bi/tri-série do exercício atual (grupo de 1 = item solo, comportamento inalterado)
+  const comboGroups = groupByCombo(flatItems);
+  const comboMembers = currentItem
+    ? comboGroups.find(g => g.items.some(it => it.itemId === currentItem.itemId))?.items ?? [currentItem]
+    : [];
+  const comboMemberIdx = currentItem ? comboMembers.findIndex(m => m.itemId === currentItem.itemId) : -1;
+  const isCombo = comboMembers.length > 1;
+
   // Todos os exercícios com todas as séries concluídas
   const allWorkoutDone = phase === 'active' &&
     flatItems.length > 0 &&
@@ -419,10 +428,38 @@ export default function RoutineExecutionScreen() {
     const allDoneNow = updated.every(Boolean);
     const hasMoreSeries = currentSeriesIdx < currentSeries.length - 1;
 
-    if (!allDoneNow && hasMoreSeries && currentItem.restSeconds) {
-      startRest(currentItem.restSeconds);
-    } else if (allDoneNow && !isLastExercise) {
-      // Brief delay then advance
+    if (!isCombo) {
+      // Item solo: comportamento original — descansa entre séries do mesmo exercício.
+      if (!allDoneNow && hasMoreSeries && currentItem.restSeconds) {
+        startRest(currentItem.restSeconds);
+      } else if (allDoneNow && !isLastExercise) {
+        setTimeout(() => setCurrentExIdx(i => i + 1), 400);
+      }
+      return;
+    }
+
+    // Combo (bi/tri-série): avança membro a membro na mesma rodada, sem descanso entre eles.
+    const isLastMemberOfRound = comboMemberIdx === comboMembers.length - 1;
+
+    if (!isLastMemberOfRound) {
+      const nextMember = comboMembers[comboMemberIdx + 1];
+      const nextFlatIdx = flatItems.findIndex(it => it.itemId === nextMember.itemId);
+      setTimeout(() => setCurrentExIdx(nextFlatIdx), 300);
+      return;
+    }
+
+    // Último membro da rodada: só aqui pode entrar descanso — e só se ainda houver rodada seguinte.
+    const anyMoreRounds = comboMembers.some(m => {
+      const s = m.itemId === currentItem.itemId ? updated : (seriesDone[m.itemId] ?? []);
+      return s.some(d => !d);
+    });
+
+    if (anyMoreRounds) {
+      const firstMember = comboMembers[0];
+      const firstFlatIdx = flatItems.findIndex(it => it.itemId === firstMember.itemId);
+      setCurrentExIdx(firstFlatIdx);
+      if (currentItem.restSeconds) startRest(currentItem.restSeconds);
+    } else if (!isLastExercise) {
       setTimeout(() => setCurrentExIdx(i => i + 1), 400);
     }
   }
@@ -579,7 +616,19 @@ export default function RoutineExecutionScreen() {
             <Text style={s.readyTitle}>Pronto para{'\n'}começar?</Text>
             <View style={[s.readyDivider, { backgroundColor: primaryColor }]} />
 
-            {flatItems.map((item, idx) => {
+            {(() => {
+              const groups = groupByCombo(flatItems);
+              let globalIdx = 0;
+              return groups.map((group, gi) => (
+                <View key={group.comboId ?? `solo-${gi}`} style={group.isCombo ? [s.comboWrap, { borderColor: `${primaryColor}40` }] : undefined}>
+                  {group.isCombo && (
+                    <View style={s.comboHeader}>
+                      <Ionicons name="git-merge-outline" size={13} color={primaryColor} />
+                      <Text style={[s.comboLabel, { color: primaryColor }]}>{comboTypeLabel(group.items.length)}</Text>
+                    </View>
+                  )}
+                  {group.items.map(item => {
+              const idx = globalIdx++;
               const mc = muscleColor(item.muscleGroup);
               const hasVideo = !!item.videoUrl;
               const isGif = item.videoUrl?.toLowerCase().includes('.gif');
@@ -669,7 +718,10 @@ export default function RoutineExecutionScreen() {
                   )}
                 </View>
               );
-            })}
+                  })}
+                </View>
+              ));
+            })()}
           </ScrollView>
 
           <View style={s.readyFooter}>
@@ -736,6 +788,11 @@ export default function RoutineExecutionScreen() {
         {isResting ? (
           // ── Rest view ──
           <View style={s.restView}>
+            {isCombo && (
+              <Text style={[s.exNextLabel, { color: primaryColor, marginBottom: 4 }]}>
+                {comboTypeLabel(comboMembers.length)} concluída
+              </Text>
+            )}
             <Text style={s.exNameRest} numberOfLines={2}>{currentItem?.name}</Text>
             <Text style={s.exNextLabel}>Próxima série em...</Text>
             <RestRing remaining={restRemaining} total={restTotal} primaryColor={primaryColor} />
@@ -754,6 +811,15 @@ export default function RoutineExecutionScreen() {
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled"
           >
+            {isCombo && (
+              <View style={[s.comboBadge, { backgroundColor: `${primaryColor}18`, borderColor: `${primaryColor}40` }]}>
+                <Ionicons name="git-merge-outline" size={13} color={primaryColor} />
+                <Text style={[s.comboBadgeText, { color: primaryColor }]}>
+                  {comboTypeLabel(comboMembers.length)} · Exercício {comboMemberIdx + 1} de {comboMembers.length}
+                </Text>
+              </View>
+            )}
+
             {/* Exercise header */}
             <View style={s.exHeader}>
               {/* Thumbnail */}
@@ -1166,6 +1232,9 @@ const s = StyleSheet.create({
   },
   readyPlanName: { fontFamily: FontFamily.display, fontSize: FontSize.lg, color: '#fff' },
   readyRoutineName: { fontFamily: FontFamily.body, fontSize: FontSize.sm, color: 'rgba(255,255,255,0.6)' },
+  comboWrap: { borderWidth: 1, borderRadius: 16, marginBottom: 8, overflow: 'hidden' },
+  comboHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 14, paddingTop: 10, paddingBottom: 2 },
+  comboLabel: { fontFamily: FontFamily.bodyBold, fontSize: 11, letterSpacing: 0.3, textTransform: 'uppercase' },
 
   // ── Ready scroll ──
   readyScroll: {
@@ -1247,6 +1316,11 @@ const s = StyleSheet.create({
     paddingVertical: 16,
     paddingBottom: 140,
   },
+  comboBadge: {
+    flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-start',
+    borderWidth: 1, borderRadius: 20, paddingHorizontal: 12, paddingVertical: 6, marginBottom: 14,
+  },
+  comboBadgeText: { fontFamily: FontFamily.bodyBold, fontSize: 12 },
   exHeader: { flexDirection: 'row', alignItems: 'flex-start', gap: 16, marginBottom: 24 },
   thumbWrap: { width: 104, height: 104, borderRadius: 20, overflow: 'hidden' },
   thumb: { width: '100%', height: '100%' },

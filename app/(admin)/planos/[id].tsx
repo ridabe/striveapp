@@ -15,6 +15,10 @@ import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 import { GOAL_COLORS, PLAN_GOALS, muscleColor, DAYS_OF_WEEK } from '@/lib/exerciseConfig';
 import { ExercisePickerModal, ExerciseSummary } from '@/components/ExercisePickerModal';
+import { groupByCombo, comboTypeLabel, comboTypeKey } from '@/lib/comboExercises';
+import { GuideModal } from '@/components/guides/GuideModal';
+import { useGuide } from '@/hooks/useGuide';
+import { GUIDES } from '@/lib/guides';
 
 function maskDate(value: string): string {
   const d = value.replace(/\D/g, '').slice(0, 8);
@@ -46,6 +50,8 @@ interface WorkoutItem {
   count_type: string;
   display_order: number;
   notes: string | null;
+  combo_group_id: string | null;
+  combo_type: string | null;
   exercise: { name: string; muscle_group: string; video_url: string | null } | null;
 }
 
@@ -80,6 +86,7 @@ export default function PlanDetailScreen() {
   const { profile } = useAuthStore();
   const { primaryColor, primaryTextColor } = useThemeStore();
   const tenantId = profile?.tenant_id ?? '';
+  const routineGuide = useGuide('routine_builder', profile?.id);
 
   const [plan, setPlan] = useState<Plan | null>(null);
   const [routines, setRoutines] = useState<Routine[]>([]);
@@ -109,6 +116,10 @@ export default function PlanDetailScreen() {
   const [pickerVisible, setPickerVisible] = useState(false);
   const [pickerRoutineId, setPickerRoutineId] = useState('');
 
+  // Combine exercises into bi/tri-série
+  const [combiningRoutineId, setCombiningRoutineId] = useState<string | null>(null);
+  const [selectedForCombo, setSelectedForCombo] = useState<Set<string>>(new Set());
+
   // Edit item modal
   const [editItem, setEditItem] = useState<WorkoutItem | null>(null);
   const [editModal, setEditModal] = useState(false);
@@ -134,7 +145,7 @@ export default function PlanDetailScreen() {
     const routineIds: string[] = (routinesRes.data ?? []).map((r: any) => r.id);
     const itemsRes = routineIds.length > 0
       ? await supabase.from('workout_items')
-          .select('id,exercise_id,sets,reps,duration_secs,rest_seconds,load,count_type,display_order,notes,routine_id,exercises(name,muscle_group,video_url)')
+          .select('id,exercise_id,sets,reps,duration_secs,rest_seconds,load,count_type,display_order,notes,combo_group_id,combo_type,routine_id,exercises(name,muscle_group,video_url)')
           .eq('tenant_id', tenantId)
           .in('routine_id', routineIds)
           .order('display_order')
@@ -156,7 +167,7 @@ export default function PlanDetailScreen() {
 
   async function reloadItems() {
     const itemsRes = await supabase.from('workout_items')
-      .select('id,exercise_id,sets,reps,duration_secs,rest_seconds,load,count_type,display_order,notes,routine_id,exercises(name,muscle_group,video_url)')
+      .select('id,exercise_id,sets,reps,duration_secs,rest_seconds,load,count_type,display_order,notes,combo_group_id,combo_type,routine_id,exercises(name,muscle_group,video_url)')
       .eq('tenant_id', tenantId)
       .in('routine_id', routines.map(r => r.id))
       .order('display_order');
@@ -266,10 +277,11 @@ export default function PlanDetailScreen() {
     ]);
   }
 
-  async function handleAddExercise(exercise: ExerciseSummary) {
+  async function handleAddExercises(exercises: ExerciseSummary[]) {
     setPickerVisible(false);
+    if (!exercises.length) return;
     const currentItems = routines.find(r => r.id === pickerRoutineId)?.items ?? [];
-    const { error } = await supabase.from('workout_items').insert({
+    const rows = exercises.map((exercise, i) => ({
       routine_id: pickerRoutineId,
       tenant_id: tenantId,
       exercise_id: exercise.id,
@@ -277,14 +289,91 @@ export default function PlanDetailScreen() {
       sets: exercise.default_sets ?? 3,
       reps: exercise.default_reps ?? '10-12',
       duration_secs: exercise.duration_secs ?? null,
-      display_order: currentItems.length,
-    });
+      display_order: currentItems.length + i,
+    }));
+    const { error } = await supabase.from('workout_items').insert(rows);
     if (error) { Alert.alert('Erro', error.message); return; }
     await reloadItems();
   }
 
   async function handleDeleteItem(itemId: string) {
     await supabase.from('workout_items').delete().eq('id', itemId);
+    await reloadItems();
+  }
+
+  function toggleCombining(routineId: string) {
+    if (combiningRoutineId === routineId) {
+      setCombiningRoutineId(null);
+      setSelectedForCombo(new Set());
+    } else {
+      setCombiningRoutineId(routineId);
+      setSelectedForCombo(new Set());
+    }
+  }
+
+  /** Abre o modo de seleção já com os membros da combinação existente marcados, para adicionar/trocar exercícios. */
+  function handleEditCombo(routineId: string, comboGroupId: string) {
+    const routine = routines.find(r => r.id === routineId);
+    const memberIds = routine?.items.filter(it => it.combo_group_id === comboGroupId).map(it => it.id) ?? [];
+    setCombiningRoutineId(routineId);
+    setSelectedForCombo(new Set(memberIds));
+  }
+
+  function toggleComboItem(itemId: string) {
+    setSelectedForCombo(prev => {
+      const next = new Set(prev);
+      if (next.has(itemId)) next.delete(itemId); else next.add(itemId);
+      return next;
+    });
+  }
+
+  async function handleGroupItems(routineId: string, explicitIds?: string[]) {
+    const routine = routines.find(r => r.id === routineId);
+    const ids = new Set(explicitIds ?? Array.from(selectedForCombo));
+    if (!routine || ids.size < 2) return;
+    const items = routine.items;
+    const comboGroupId = items.find(it => ids.has(it.id))?.id;
+    if (!comboGroupId) return;
+    const comboType = comboTypeKey(ids.size);
+
+    // Libera membros de combinações antigas que não foram re-selecionados desta vez
+    // (permite recombinar/trocar exercícios de uma bi/tri-série já existente).
+    const oldGroupIdsInvolved = new Set(
+      items.filter(it => it.combo_group_id && ids.has(it.id)).map(it => it.combo_group_id!)
+    );
+    const toRelease = items.filter(it => it.combo_group_id && oldGroupIdsInvolved.has(it.combo_group_id) && !ids.has(it.id));
+
+    // Reorder so the selected items become contiguous, starting where the first one sits.
+    const newOrder: WorkoutItem[] = [];
+    let insertedCombo = false;
+    for (const it of items) {
+      if (ids.has(it.id)) {
+        if (!insertedCombo) {
+          newOrder.push(...items.filter(i => ids.has(i.id)));
+          insertedCombo = true;
+        }
+      } else {
+        newOrder.push(it);
+      }
+    }
+
+    const results = await Promise.all([
+      ...newOrder.map((it, idx) => supabase.from('workout_items').update({
+        display_order: idx,
+        ...(ids.has(it.id) ? { combo_group_id: comboGroupId, combo_type: comboType } : {}),
+      }).eq('id', it.id)),
+      ...toRelease.map(it => supabase.from('workout_items').update({ combo_group_id: null, combo_type: null }).eq('id', it.id)),
+    ]);
+    const firstError = results.find(r => r.error)?.error;
+    if (firstError) { Alert.alert('Erro ao combinar', firstError.message); return; }
+
+    setCombiningRoutineId(null);
+    setSelectedForCombo(new Set());
+    await reloadItems();
+  }
+
+  async function handleUngroupCombo(comboGroupId: string) {
+    await supabase.from('workout_items').update({ combo_group_id: null, combo_type: null }).eq('combo_group_id', comboGroupId);
     await reloadItems();
   }
 
@@ -445,7 +534,13 @@ export default function PlanDetailScreen() {
         </View>
 
         {/* Routines */}
-        <Text style={s.sectionLabel}>ROTINAS ({routines.length})</Text>
+        <View style={s.sectionLabelRow}>
+          <Text style={s.sectionLabel}>ROTINAS ({routines.length})</Text>
+          <TouchableOpacity onPress={routineGuide.open} style={s.guideLink} activeOpacity={0.7}>
+            <Ionicons name="help-circle-outline" size={14} color={primaryColor} />
+            <Text style={[s.guideLinkText, { color: primaryColor }]}>Como montar?</Text>
+          </TouchableOpacity>
+        </View>
 
         {routines.length === 0 && (
           <View style={s.emptyRoutine}>
@@ -483,10 +578,9 @@ export default function PlanDetailScreen() {
                 }} style={s.addExBtn} activeOpacity={0.75}>
                   <Ionicons name="add" size={18} color={primaryColor} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleDeleteRoutine(routine.id)} style={s.iconBtn} activeOpacity={0.75}>
-                  <Ionicons name="trash-outline" size={16} color={Colors.error} />
-                </TouchableOpacity>
-                <Ionicons name={isExpanded ? 'chevron-up' : 'chevron-down'} size={16} color={Colors.textSecondary} />
+                <View style={s.chevronHit}>
+                  <Ionicons name={isExpanded ? 'chevron-up' : 'chevron-down'} size={16} color={Colors.textSecondary} />
+                </View>
               </TouchableOpacity>
 
               {/* Editor inline de dias da semana */}
@@ -528,34 +622,132 @@ export default function PlanDetailScreen() {
                       <Text style={[s.addExPlaceholderText, { color: primaryColor }]}>Adicionar exercício</Text>
                     </TouchableOpacity>
                   )}
-                  {routine.items.map((item, idx) => {
-                    const mc = muscleColor(item.exercise?.muscle_group ?? '');
+
+                  {routine.items.length >= 2 && (
+                    <TouchableOpacity
+                      style={[s.combineToolbarBtn, combiningRoutineId === routine.id && { backgroundColor: `${primaryColor}18`, borderColor: primaryColor }]}
+                      onPress={() => toggleCombining(routine.id)} activeOpacity={0.75}>
+                      <Ionicons name="git-merge-outline" size={16} color={primaryColor} />
+                      <Text style={[s.combineToolbarBtnText, { color: primaryColor }]}>
+                        {combiningRoutineId === routine.id ? 'Cancelar combinação' : 'Combinar exercícios em Bi-Série/Tri-Série'}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                  {(() => {
+                    const isCombining = combiningRoutineId === routine.id;
+                    const soloItems = routine.items.filter(it => !it.combo_group_id);
+                    const comboReady = routine.items.map(it => ({ ...it, itemId: it.id, comboGroupId: it.combo_group_id }));
+                    const comboGroups = groupByCombo(comboReady).filter(g => g.isCombo);
+
+                    function renderRow(item: WorkoutItem, opts: { badgeIndex?: number; borderBottom: boolean }) {
+                      const isSelected = selectedForCombo.has(item.id);
+                      return (
+                        <TouchableOpacity
+                          key={item.id}
+                          disabled={!isCombining}
+                          activeOpacity={isCombining ? 0.7 : 1}
+                          onPress={() => toggleComboItem(item.id)}
+                          style={[s.itemRow, opts.borderBottom && s.itemBorder, isCombining && isSelected && { backgroundColor: `${primaryColor}1f` }]}>
+                          {isCombining && (
+                            <Ionicons name={isSelected ? 'checkbox' : 'square-outline'} size={18} color={isSelected ? primaryColor : Colors.textSecondary} />
+                          )}
+                          {opts.badgeIndex != null && !isCombining && (
+                            <View style={[s.comboIndexBadge, { borderColor: primaryColor }]}>
+                              <Text style={[s.comboIndexBadgeText, { color: primaryColor }]}>{opts.badgeIndex}</Text>
+                            </View>
+                          )}
+                          {item.exercise?.video_url ? (
+                            <Image source={{ uri: item.exercise.video_url }} style={s.itemThumb} resizeMode="cover" />
+                          ) : (
+                            <View style={s.itemThumbPlaceholder}>
+                              <Ionicons name="barbell-outline" size={14} color={Colors.border} />
+                            </View>
+                          )}
+                          <View style={{ flex: 1 }}>
+                            <Text style={s.itemName} numberOfLines={1}>{item.exercise?.name ?? '—'}</Text>
+                            <Text style={s.itemPrescription}>
+                              {item.sets ?? '—'}×{item.reps ?? (item.duration_secs ? `${item.duration_secs}s` : '—')}
+                              {item.load ? ` · ${item.load}kg` : ''}
+                              {item.rest_seconds ? ` · ${item.rest_seconds}s` : ''}
+                            </Text>
+                          </View>
+                          {!isCombining && (
+                            <>
+                              <TouchableOpacity onPress={() => openEditItem(item)} style={s.iconBtn} activeOpacity={0.75}>
+                                <Ionicons name="create-outline" size={16} color={primaryColor} />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => handleDeleteItem(item.id)} style={s.iconBtn} activeOpacity={0.75}>
+                                <Ionicons name="trash-outline" size={15} color={Colors.error} />
+                              </TouchableOpacity>
+                            </>
+                          )}
+                        </TouchableOpacity>
+                      );
+                    }
+
                     return (
-                      <View key={item.id} style={[s.itemRow, idx < routine.items.length - 1 && s.itemBorder]}>
-                        {item.exercise?.video_url ? (
-                          <Image source={{ uri: item.exercise.video_url }} style={s.itemThumb} resizeMode="cover" />
-                        ) : (
-                          <View style={s.itemThumbPlaceholder}>
-                            <Ionicons name="barbell-outline" size={14} color={Colors.border} />
+                      <>
+                        {/* Exercícios individuais */}
+                        {soloItems.map((item, idx) => renderRow(item, {
+                          borderBottom: idx < soloItems.length - 1,
+                        }))}
+
+                        {/* Exercícios Combinados — seção própria, "lista dentro da lista" */}
+                        {comboGroups.length > 0 && (
+                          <View style={s.combinedSection}>
+                            <View style={s.combinedSectionHeader}>
+                              <Ionicons name="link" size={12} color={Colors.textSecondary} />
+                              <Text style={s.combinedSectionTitle}>
+                                EXERCÍCIOS COMBINADOS · {comboGroups.length} {comboGroups.length > 1 ? 'GRUPOS' : 'GRUPO'}
+                              </Text>
+                            </View>
+                            {comboGroups.map((group, gi) => (
+                              <View key={group.comboId ?? `combo-${gi}`}
+                                style={[s.comboWrap, { borderColor: primaryColor, backgroundColor: `${primaryColor}0f` }]}>
+                                <View style={[s.comboHeader, { backgroundColor: `${primaryColor}22` }]}>
+                                  <Ionicons name="git-merge" size={14} color={primaryColor} />
+                                  <Text style={[s.comboLabel, { color: primaryColor }]}>{comboTypeLabel(group.items.length)} · {group.items.length} exercícios</Text>
+                                  {!isCombining && (
+                                    <View style={s.comboHeaderActions}>
+                                      <TouchableOpacity onPress={() => handleEditCombo(routine.id, group.comboId!)}
+                                        style={s.comboHeaderActionBtn} activeOpacity={0.75}>
+                                        <Ionicons name="swap-horizontal-outline" size={13} color={primaryColor} />
+                                        <Text style={[s.comboHeaderActionText, { color: primaryColor }]}>Recombinar</Text>
+                                      </TouchableOpacity>
+                                      <TouchableOpacity onPress={() => handleUngroupCombo(group.comboId!)}
+                                        style={s.comboHeaderActionBtn} activeOpacity={0.75}>
+                                        <Ionicons name="close-circle-outline" size={13} color={Colors.error} />
+                                        <Text style={[s.comboHeaderActionText, { color: Colors.error }]}>Desagrupar</Text>
+                                      </TouchableOpacity>
+                                    </View>
+                                  )}
+                                </View>
+                                {group.items.map((item, memberIdx) => renderRow(item, {
+                                  badgeIndex: memberIdx + 1,
+                                  borderBottom: memberIdx < group.items.length - 1,
+                                }))}
+                              </View>
+                            ))}
                           </View>
                         )}
-                        <View style={{ flex: 1 }}>
-                          <Text style={s.itemName} numberOfLines={1}>{item.exercise?.name ?? '—'}</Text>
-                          <Text style={s.itemPrescription}>
-                            {item.sets ?? '—'}×{item.reps ?? (item.duration_secs ? `${item.duration_secs}s` : '—')}
-                            {item.load ? ` · ${item.load}kg` : ''}
-                            {item.rest_seconds ? ` · ${item.rest_seconds}s` : ''}
-                          </Text>
-                        </View>
-                        <TouchableOpacity onPress={() => openEditItem(item)} style={s.iconBtn} activeOpacity={0.75}>
-                          <Ionicons name="create-outline" size={16} color={primaryColor} />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => handleDeleteItem(item.id)} style={s.iconBtn} activeOpacity={0.75}>
-                          <Ionicons name="trash-outline" size={15} color={Colors.error} />
-                        </TouchableOpacity>
-                      </View>
+                      </>
                     );
-                  })}
+                  })()}
+                  {combiningRoutineId === routine.id && selectedForCombo.size >= 2 && (
+                    <TouchableOpacity
+                      style={[s.groupConfirmBtn, { backgroundColor: primaryColor }]}
+                      onPress={() => handleGroupItems(routine.id)} activeOpacity={0.85}>
+                      <Ionicons name="checkmark" size={16} color={primaryTextColor} />
+                      <Text style={[s.groupConfirmBtnText, { color: primaryTextColor }]}>
+                        Agrupar em {comboTypeLabel(selectedForCombo.size)}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+
+                  <TouchableOpacity style={s.deleteRoutineBtn} onPress={() => handleDeleteRoutine(routine.id)} activeOpacity={0.75}>
+                    <Ionicons name="trash-outline" size={14} color={Colors.error} />
+                    <Text style={s.deleteRoutineBtnText}>Remover rotina</Text>
+                  </TouchableOpacity>
                 </View>
               )}
             </View>
@@ -763,8 +955,16 @@ export default function PlanDetailScreen() {
       {/* Exercise picker */}
       <ExercisePickerModal
         visible={pickerVisible} tenantId={tenantId}
-        onSelect={handleAddExercise}
+        multiSelect
+        onConfirm={handleAddExercises}
         onClose={() => setPickerVisible(false)}
+      />
+
+      <GuideModal
+        visible={routineGuide.visible}
+        content={GUIDES.routine_builder}
+        onClose={routineGuide.close}
+        onDismissForever={routineGuide.dismissForever}
       />
     </SafeAreaView>
   );
@@ -804,7 +1004,10 @@ const s = StyleSheet.create({
   actionRow: { flexDirection: 'row', gap: 8 },
   actionBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, borderRadius: 10, paddingVertical: 10 },
   actionBtnText: { fontFamily: FontFamily.bodyMedium, fontSize: 13, color: Colors.textPrimary },
-  sectionLabel: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.xs, color: Colors.textSecondary, letterSpacing: 1, marginBottom: 10 },
+  sectionLabel: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.xs, color: Colors.textSecondary, letterSpacing: 1 },
+  sectionLabelRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 },
+  guideLink: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  guideLinkText: { fontFamily: FontFamily.bodyMedium, fontSize: 11 },
   emptyRoutine: { alignItems: 'center', gap: 10, paddingVertical: 40 },
   emptyText: { fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textSecondary, textAlign: 'center' },
   routineCard: { backgroundColor: Colors.surface, borderRadius: 16, borderWidth: 1, borderColor: Colors.border, marginBottom: 10, overflow: 'hidden' },
@@ -816,6 +1019,9 @@ const s = StyleSheet.create({
   itemsList: { borderTopWidth: 1, borderTopColor: Colors.border },
   itemRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 10, paddingHorizontal: 14, gap: 10 },
   itemBorder: { borderBottomWidth: 1, borderBottomColor: Colors.border },
+  combinedSection: { marginTop: 14, paddingHorizontal: 12, paddingBottom: 4, gap: 8 },
+  combinedSectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 2 },
+  combinedSectionTitle: { fontFamily: FontFamily.bodyBold, fontSize: 10.5, letterSpacing: 1, color: Colors.textSecondary },
   itemThumb: { width: 40, height: 40, borderRadius: 8, marginRight: 4 },
   itemThumbPlaceholder: {
     width: 40, height: 40, borderRadius: 8, marginRight: 4,
@@ -825,6 +1031,35 @@ const s = StyleSheet.create({
   itemMuscleText: { fontFamily: FontFamily.bodyMedium, fontSize: 10 },
   itemName: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm, color: Colors.textPrimary },
   itemPrescription: { fontFamily: FontFamily.body, fontSize: 11, color: Colors.textSecondary, marginTop: 2 },
+  comboWrap: { borderWidth: 1.5, borderRadius: 12, overflow: 'hidden', marginVertical: 4 },
+  comboHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, paddingVertical: 8, flexWrap: 'wrap' },
+  comboLabel: { fontFamily: FontFamily.bodyBold, fontSize: 11.5, letterSpacing: 0.3, textTransform: 'uppercase', flex: 1 },
+  comboHeaderActions: { flexDirection: 'row', gap: 12 },
+  comboHeaderActionBtn: { flexDirection: 'row', alignItems: 'center', gap: 3 },
+  comboHeaderActionText: { fontFamily: FontFamily.bodyMedium, fontSize: 11 },
+  comboIndexBadge: {
+    width: 18, height: 18, borderRadius: 9, borderWidth: 1.5,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  comboIndexBadgeText: { fontFamily: FontFamily.bodyBold, fontSize: 10 },
+  groupConfirmBtn: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6,
+    borderRadius: 10, paddingVertical: 12, margin: 12,
+  },
+  groupConfirmBtnText: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.sm },
+  chevronHit: { paddingLeft: 10, paddingVertical: 4 },
+  combineToolbarBtn: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7,
+    borderWidth: 1, borderColor: Colors.border, borderRadius: 10,
+    paddingVertical: 11, marginHorizontal: 12, marginTop: 12,
+  },
+  combineToolbarBtnText: { fontFamily: FontFamily.bodyMedium, fontSize: 12.5, textAlign: 'center' },
+  deleteRoutineBtn: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6,
+    marginHorizontal: 12, marginTop: 16, marginBottom: 4, paddingVertical: 10,
+    borderTopWidth: 1, borderTopColor: Colors.border,
+  },
+  deleteRoutineBtnText: { fontFamily: FontFamily.bodyMedium, fontSize: 12.5, color: Colors.error },
   addExPlaceholder: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, padding: 16 },
   addExPlaceholderText: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm },
   modalContent: { paddingHorizontal: 20, paddingTop: 24, paddingBottom: 48 },

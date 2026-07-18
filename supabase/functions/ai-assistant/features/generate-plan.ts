@@ -16,6 +16,15 @@ export interface PlanItem {
   load?: string;
   rest_seconds?: number;
   count_type?: string;
+  /** Tag livre (ex: "A", "B") — itens com o mesmo valor na mesma rotina viram bi/tri-série. */
+  combo_group?: string;
+}
+
+/** Precisa bater com o CHECK constraint de combo_type em workout_items (espelha src/lib/comboExercises.ts). */
+function comboTypeKey(count: number): string {
+  if (count >= 4) return 'circuit';
+  if (count === 3) return 'triset';
+  return 'biset';
 }
 
 export interface PlanRoutine {
@@ -44,6 +53,8 @@ export interface PlanPreferences {
   goal?: string;
   daysCount?: number;
   notes?: string;
+  wantsCombos?: boolean;
+  comboNotes?: string;
 }
 
 const CORS_HEADERS = {
@@ -163,7 +174,10 @@ function buildUserPrompt(
   exerciseListText: string,
   preferences?: PlanPreferences,
 ): string {
-  const hasPreferences = !!(preferences?.workoutType || preferences?.goal || preferences?.daysCount || preferences?.notes);
+  const hasPreferences = !!(
+    preferences?.workoutType || preferences?.goal || preferences?.daysCount ||
+    preferences?.notes || preferences?.wantsCombos
+  );
 
   if (!hasPreferences) {
     return `
@@ -192,6 +206,7 @@ rigorosamente, IGNORANDO o objetivo geral do perfil quando ele conflitar com ela
 ${goal ? `- Objetivo deste treino (usar exatamente este valor no campo "goal" da resposta): ${goal}` : ''}
 ${daysCount ? `- Quantidade de rotinas: exatamente ${daysCount} — nem mais, nem menos` : ''}
 ${preferences?.notes ? `- Observacoes do Personal: ${preferences.notes}` : ''}
+${preferences?.wantsCombos ? buildComboInstructions(preferences.comboNotes) : ''}
 
 Monte um plano completo usando somente os exercicios listados abaixo.
 Inclua sempre o exercise_id exato.
@@ -203,7 +218,18 @@ ${daysCount ? `- o array "routines" da resposta deve ter exatamente ${daysCount}
 - cada rotina deve ter exercicios coerentes com o objetivo e observacoes do Personal
 - para cada exercicio inclua series, repeticoes, carga inicial sugerida e descanso em segundos
 - nao invente exercise_id
+${preferences?.wantsCombos ? '- respeite o pedido de exercicios combinados (bi-serie/tri-serie) usando o campo "combo_group" conforme instruido acima' : ''}
 `.trim();
+}
+
+function buildComboInstructions(comboNotes?: string): string {
+  return `
+- o Personal pediu para incluir EXERCICIOS COMBINADOS (bi-serie/tri-serie) neste treino${comboNotes ? `: ${comboNotes}` : ' — escolha voce mesmo quais exercicios combinar, com bom senso (ex: agonista/antagonista ou mesmo grupo muscular)'}
+- para formar uma combinacao, atribua o MESMO texto no campo "combo_group" (ex: "A", "B") a cada exercicio do grupo, dentro da MESMA rotina — eles serao executados em sequencia, sem descanso entre si
+- bi-serie = 2 exercicios com o mesmo combo_group; tri-serie = 3 exercicios com o mesmo combo_group
+- pode haver mais de um grupo combinado na mesma rotina (use letras diferentes: "A", "B", "C"...)
+- exercicios que NAO fazem parte de nenhuma combinacao devem deixar "combo_group" vazio/omitido
+- nao combine mais de 3 exercicios no mesmo grupo`.trim();
 }
 
 export async function fetchAvailableExercises(supabase: SupabaseClient, tenantId: string) {
@@ -283,6 +309,10 @@ export function buildPlanTool(exactRoutinesCount?: number): Anthropic.Tool {
                     load:          { type: 'string', description: 'Ex: "20kg", "40% RM"' },
                     rest_seconds:  { type: 'number' },
                     count_type:    { type: 'string', enum: ['reps', 'time'] },
+                    combo_group:   {
+                      type: 'string',
+                      description: 'Só preencha se o Personal pediu exercícios combinados. Exercícios com o mesmo valor (ex: "A") na mesma rotina formam uma bi-série/tri-série, executados em sequência sem descanso entre si. Deixe vazio se este exercício for solo.',
+                    },
                   },
                   required: ['exercise_id', 'exercise_name', 'sets', 'reps'],
                 },
@@ -353,8 +383,35 @@ export async function insertPlan(
       display_order: idx,
     }));
 
-    const { error: itemsErr } = await supabase.from('workout_items').insert(itemsToInsert);
+    const { data: insertedItems, error: itemsErr } = await supabase
+      .from('workout_items')
+      .insert(itemsToInsert)
+      .select('id');
     if (itemsErr) throw new Error(itemsErr.message);
+
+    // Agrupa em bi/tri-série os exercícios que o modelo marcou com o mesmo
+    // combo_group nesta rotina (assume que .insert().select() preserva a
+    // ordem de inserção — mesma premissa já usada em outros fluxos do app).
+    const comboBuckets = new Map<string, number[]>();
+    routine.items.forEach((item, idx) => {
+      if (!item.combo_group) return;
+      const bucket = comboBuckets.get(item.combo_group) ?? [];
+      bucket.push(idx);
+      comboBuckets.set(item.combo_group, bucket);
+    });
+
+    await Promise.all(
+      [...comboBuckets.values()]
+        .filter(indices => indices.length >= 2)
+        .map(async indices => {
+          const memberIds = indices.map(i => insertedItems![i].id);
+          const { error } = await supabase
+            .from('workout_items')
+            .update({ combo_group_id: memberIds[0], combo_type: comboTypeKey(memberIds.length) })
+            .in('id', memberIds);
+          if (error) throw new Error(error.message);
+        })
+    );
   }));
 
   return planId;
@@ -372,7 +429,9 @@ export function buildPlanSummary(plan: GeneratedPlan, planId: string): string {
 
   for (const r of plan.routines) {
     const day = r.days_of_week?.length ? `(dias ${r.days_of_week.join(', ')})` : '(dia livre)';
-    lines.push(`• ${r.name} ${day} — ${r.items.length} exercícios`);
+    const comboGroups = new Set(r.items.map(i => i.combo_group).filter(Boolean));
+    const comboNote = comboGroups.size > 0 ? ` · ${comboGroups.size} combinado${comboGroups.size > 1 ? 's' : ''} (bi/tri-série)` : '';
+    lines.push(`• ${r.name} ${day} — ${r.items.length} exercícios${comboNote}`);
   }
 
   lines.push(``, `O plano está **inativo** aguardando revisão. Ative-o no painel para liberar ao aluno.`);

@@ -14,6 +14,7 @@ import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 import { extraCategoryLabel, muscleColor } from '@/lib/exerciseConfig';
 import { ExercisePickerModal, ExerciseSummary } from '@/components/ExercisePickerModal';
+import { groupByCombo, comboTypeLabel, comboTypeKey } from '@/lib/comboExercises';
 
 interface ExtraItem {
   id: string;
@@ -26,6 +27,8 @@ interface ExtraItem {
   count_type: string;
   display_order: number;
   notes: string | null;
+  combo_group_id: string | null;
+  combo_type: string | null;
   exercise: { name: string; muscle_group: string } | null;
 }
 
@@ -59,6 +62,10 @@ export default function ExtraWorkoutDetailScreen() {
   const [pickerVisible, setPickerVisible] = useState(false);
   const [saving, setSaving] = useState(false);
 
+  // Combine exercises into bi/tri-série
+  const [combining, setCombining] = useState(false);
+  const [selectedForCombo, setSelectedForCombo] = useState<Set<string>>(new Set());
+
   // Edit item modal
   const [editItem, setEditItem] = useState<ExtraItem | null>(null);
   const [editModal, setEditModal] = useState(false);
@@ -82,7 +89,7 @@ export default function ExtraWorkoutDetailScreen() {
         .select('id,name,category,description,is_template,student_id,students(full_name)')
         .eq('id', id).single(),
       supabase.from('extra_workout_items')
-        .select('id,exercise_id,sets,reps,duration_secs,rest_seconds,load,count_type,display_order,notes,exercises(name,muscle_group)')
+        .select('id,exercise_id,sets,reps,duration_secs,rest_seconds,load,count_type,display_order,notes,combo_group_id,combo_type,exercises(name,muscle_group)')
         .eq('extra_workout_id', id).order('display_order'),
     ]);
     setExtra({ ...(extraRes.data as any), student: (extraRes.data as any)?.students });
@@ -91,9 +98,10 @@ export default function ExtraWorkoutDetailScreen() {
 
   useEffect(() => { load().finally(() => setLoading(false)); }, [load]);
 
-  async function handleAddExercise(exercise: ExerciseSummary) {
+  async function handleAddExercises(exercises: ExerciseSummary[]) {
     setPickerVisible(false);
-    const { error } = await supabase.from('extra_workout_items').insert({
+    if (!exercises.length) return;
+    const rows = exercises.map((exercise, i) => ({
       extra_workout_id: id,
       tenant_id: tenantId,
       exercise_id: exercise.id,
@@ -101,14 +109,82 @@ export default function ExtraWorkoutDetailScreen() {
       sets: exercise.default_sets ?? 3,
       reps: exercise.default_reps ?? '10-12',
       duration_secs: exercise.duration_secs ?? null,
-      display_order: items.length,
-    });
+      display_order: items.length + i,
+    }));
+    const { error } = await supabase.from('extra_workout_items').insert(rows);
     if (error) { Alert.alert('Erro', error.message); return; }
     await load();
   }
 
   async function handleDeleteItem(itemId: string) {
     await supabase.from('extra_workout_items').delete().eq('id', itemId);
+    await load();
+  }
+
+  function toggleCombining() {
+    setCombining(prev => !prev);
+    setSelectedForCombo(new Set());
+  }
+
+  function toggleComboItem(itemId: string) {
+    setSelectedForCombo(prev => {
+      const next = new Set(prev);
+      if (next.has(itemId)) next.delete(itemId); else next.add(itemId);
+      return next;
+    });
+  }
+
+  /** Abre o modo de seleção já com os membros da combinação existente marcados, para adicionar/trocar exercícios. */
+  function handleEditCombo(comboGroupId: string) {
+    const memberIds = items.filter(it => it.combo_group_id === comboGroupId).map(it => it.id);
+    setCombining(true);
+    setSelectedForCombo(new Set(memberIds));
+  }
+
+  async function handleGroupItems(explicitIds?: string[]) {
+    const ids = new Set(explicitIds ?? Array.from(selectedForCombo));
+    if (ids.size < 2) return;
+    const comboGroupId = items.find(it => ids.has(it.id))?.id;
+    if (!comboGroupId) return;
+    const comboType = comboTypeKey(ids.size);
+
+    // Libera membros de combinações antigas que não foram re-selecionados desta vez
+    // (permite recombinar/trocar exercícios de uma bi/tri-série já existente).
+    const oldGroupIdsInvolved = new Set(
+      items.filter(it => it.combo_group_id && ids.has(it.id)).map(it => it.combo_group_id!)
+    );
+    const toRelease = items.filter(it => it.combo_group_id && oldGroupIdsInvolved.has(it.combo_group_id) && !ids.has(it.id));
+
+    const newOrder: ExtraItem[] = [];
+    let insertedCombo = false;
+    for (const it of items) {
+      if (ids.has(it.id)) {
+        if (!insertedCombo) {
+          newOrder.push(...items.filter(i => ids.has(i.id)));
+          insertedCombo = true;
+        }
+      } else {
+        newOrder.push(it);
+      }
+    }
+
+    const results = await Promise.all([
+      ...newOrder.map((it, idx) => supabase.from('extra_workout_items').update({
+        display_order: idx,
+        ...(ids.has(it.id) ? { combo_group_id: comboGroupId, combo_type: comboType } : {}),
+      }).eq('id', it.id)),
+      ...toRelease.map(it => supabase.from('extra_workout_items').update({ combo_group_id: null, combo_type: null }).eq('id', it.id)),
+    ]);
+    const firstError = results.find(r => r.error)?.error;
+    if (firstError) { Alert.alert('Erro ao combinar', firstError.message); return; }
+
+    setCombining(false);
+    setSelectedForCombo(new Set());
+    await load();
+  }
+
+  async function handleUngroupCombo(comboGroupId: string) {
+    await supabase.from('extra_workout_items').update({ combo_group_id: null, combo_type: null }).eq('combo_group_id', comboGroupId);
     await load();
   }
 
@@ -164,7 +240,7 @@ export default function ExtraWorkoutDetailScreen() {
       if (error) throw error;
 
       if (items.length > 0) {
-        await supabase.from('extra_workout_items').insert(
+        const { data: insertedRows, error: insertError } = await supabase.from('extra_workout_items').insert(
           items.map(i => ({
             extra_workout_id: newExtra.id,
             tenant_id: tenantId,
@@ -178,7 +254,18 @@ export default function ExtraWorkoutDetailScreen() {
             notes: i.notes,
             display_order: i.display_order,
           }))
-        );
+        ).select('id');
+        if (insertError) throw insertError;
+
+        // Remap combo_group_id to the freshly copied items' ids so the grouping survives the assignment.
+        const oldToNewId = new Map(items.map((i, idx) => [i.id, insertedRows![idx].id]));
+        const comboUpdates = items
+          .filter(i => i.combo_group_id)
+          .map(i => supabase.from('extra_workout_items').update({
+            combo_group_id: oldToNewId.get(i.combo_group_id!),
+            combo_type: i.combo_type,
+          }).eq('id', oldToNewId.get(i.id)!));
+        if (comboUpdates.length) await Promise.all(comboUpdates);
       }
       setAssignModal(false);
       Alert.alert('Sucesso', 'Treino atribuído ao aluno com sucesso.');
@@ -250,6 +337,13 @@ export default function ExtraWorkoutDetailScreen() {
               <Ionicons name="add-circle-outline" size={16} color={primaryColor} />
               <Text style={[s.actionBtnText, { color: primaryColor }]}>Adicionar Exercício</Text>
             </TouchableOpacity>
+            {items.length >= 2 && (
+              <TouchableOpacity style={[s.actionBtn, { backgroundColor: combining ? `${primaryColor}25` : Colors.surface, borderWidth: 1, borderColor: Colors.border }]}
+                onPress={toggleCombining} activeOpacity={0.8}>
+                <Ionicons name="git-merge-outline" size={16} color={primaryColor} />
+                <Text style={[s.actionBtnText, { color: primaryColor }]}>{combining ? 'Cancelar' : 'Combinar'}</Text>
+              </TouchableOpacity>
+            )}
             {extra.is_template && (
               <TouchableOpacity style={[s.actionBtn, { backgroundColor: Colors.surface, borderWidth: 1, borderColor: Colors.border }]}
                 onPress={openAssignModal} activeOpacity={0.8}>
@@ -269,33 +363,115 @@ export default function ExtraWorkoutDetailScreen() {
           </TouchableOpacity>
         )}
         <View style={s.itemsCard}>
-          {items.map((item, idx) => {
-            const mc = muscleColor(item.exercise?.muscle_group ?? '');
+          {(() => {
+            const soloItems = items.filter(it => !it.combo_group_id);
+            const comboReady = items.map(it => ({ ...it, itemId: it.id, comboGroupId: it.combo_group_id }));
+            const comboGroups = groupByCombo(comboReady).filter(g => g.isCombo);
+
+            function renderRow(item: ExtraItem, opts: { badgeIndex?: number; borderBottom: boolean }) {
+              const mc = muscleColor(item.exercise?.muscle_group ?? '');
+              const isSelected = selectedForCombo.has(item.id);
+              return (
+                <TouchableOpacity
+                  key={item.id}
+                  disabled={!combining}
+                  activeOpacity={combining ? 0.7 : 1}
+                  onPress={() => toggleComboItem(item.id)}
+                  style={[s.itemRow, opts.borderBottom && s.itemBorder, combining && isSelected && { backgroundColor: `${primaryColor}1f` }]}>
+                  {combining && (
+                    <Ionicons name={isSelected ? 'checkbox' : 'square-outline'} size={18} color={isSelected ? primaryColor : Colors.textSecondary} />
+                  )}
+                  {opts.badgeIndex != null && !combining && (
+                    <View style={[s.comboIndexBadge, { borderColor: primaryColor }]}>
+                      <Text style={[s.comboIndexBadgeText, { color: primaryColor }]}>{opts.badgeIndex}</Text>
+                    </View>
+                  )}
+                  <View style={[s.muscleTag, { backgroundColor: `${mc}20` }]}>
+                    <Text style={[s.muscleTagText, { color: mc }]} numberOfLines={1}>
+                      {(item.exercise?.muscle_group ?? '').split(' ')[0]}
+                    </Text>
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={s.itemName} numberOfLines={1}>{item.exercise?.name ?? '—'}</Text>
+                    <Text style={s.itemMeta}>
+                      {item.sets ?? '—'}×{item.reps ?? (item.duration_secs ? `${item.duration_secs}s` : '—')}
+                      {item.load ? ` · ${item.load}` : ''}
+                      {item.rest_seconds ? ` · ${item.rest_seconds}s` : ''}
+                    </Text>
+                  </View>
+                  {!combining && (
+                    <>
+                      <TouchableOpacity onPress={() => openEditItem(item)} style={s.iconBtn} activeOpacity={0.75}>
+                        <Ionicons name="create-outline" size={16} color={primaryColor} />
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={() => handleDeleteItem(item.id)} style={s.iconBtn} activeOpacity={0.75}>
+                        <Ionicons name="trash-outline" size={15} color={Colors.error} />
+                      </TouchableOpacity>
+                    </>
+                  )}
+                </TouchableOpacity>
+              );
+            }
+
             return (
-              <View key={item.id} style={[s.itemRow, idx < items.length - 1 && s.itemBorder]}>
-                <View style={[s.muscleTag, { backgroundColor: `${mc}20` }]}>
-                  <Text style={[s.muscleTagText, { color: mc }]} numberOfLines={1}>
-                    {(item.exercise?.muscle_group ?? '').split(' ')[0]}
-                  </Text>
-                </View>
-                <View style={{ flex: 1 }}>
-                  <Text style={s.itemName} numberOfLines={1}>{item.exercise?.name ?? '—'}</Text>
-                  <Text style={s.itemMeta}>
-                    {item.sets ?? '—'}×{item.reps ?? (item.duration_secs ? `${item.duration_secs}s` : '—')}
-                    {item.load ? ` · ${item.load}` : ''}
-                    {item.rest_seconds ? ` · ${item.rest_seconds}s` : ''}
-                  </Text>
-                </View>
-                <TouchableOpacity onPress={() => openEditItem(item)} style={s.iconBtn} activeOpacity={0.75}>
-                  <Ionicons name="create-outline" size={16} color={primaryColor} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleDeleteItem(item.id)} style={s.iconBtn} activeOpacity={0.75}>
-                  <Ionicons name="trash-outline" size={15} color={Colors.error} />
-                </TouchableOpacity>
-              </View>
+              <>
+                {/* Exercícios individuais */}
+                {soloItems.map((item, idx) => renderRow(item, {
+                  borderBottom: idx < soloItems.length - 1,
+                }))}
+
+                {/* Exercícios Combinados — seção própria, "lista dentro da lista" */}
+                {comboGroups.length > 0 && (
+                  <View style={s.combinedSection}>
+                    <View style={s.combinedSectionHeader}>
+                      <Ionicons name="link" size={12} color={Colors.textSecondary} />
+                      <Text style={s.combinedSectionTitle}>
+                        EXERCÍCIOS COMBINADOS · {comboGroups.length} {comboGroups.length > 1 ? 'GRUPOS' : 'GRUPO'}
+                      </Text>
+                    </View>
+                    {comboGroups.map((group, gi) => (
+                      <View key={group.comboId ?? `combo-${gi}`}
+                        style={[s.comboWrap, { borderColor: primaryColor, backgroundColor: `${primaryColor}0f` }]}>
+                        <View style={[s.comboHeader, { backgroundColor: `${primaryColor}22` }]}>
+                          <Ionicons name="git-merge" size={14} color={primaryColor} />
+                          <Text style={[s.comboLabel, { color: primaryColor }]}>{comboTypeLabel(group.items.length)} · {group.items.length} exercícios</Text>
+                          {!combining && (
+                            <View style={s.comboHeaderActions}>
+                              <TouchableOpacity onPress={() => handleEditCombo(group.comboId!)}
+                                style={s.comboHeaderActionBtn} activeOpacity={0.75}>
+                                <Ionicons name="swap-horizontal-outline" size={13} color={primaryColor} />
+                                <Text style={[s.comboHeaderActionText, { color: primaryColor }]}>Recombinar</Text>
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => handleUngroupCombo(group.comboId!)}
+                                style={s.comboHeaderActionBtn} activeOpacity={0.75}>
+                                <Ionicons name="close-circle-outline" size={13} color={Colors.error} />
+                                <Text style={[s.comboHeaderActionText, { color: Colors.error }]}>Desagrupar</Text>
+                              </TouchableOpacity>
+                            </View>
+                          )}
+                        </View>
+                        {group.items.map((item, memberIdx) => renderRow(item, {
+                          badgeIndex: memberIdx + 1,
+                          borderBottom: memberIdx < group.items.length - 1,
+                        }))}
+                      </View>
+                    ))}
+                  </View>
+                )}
+              </>
             );
-          })}
+          })()}
         </View>
+        {combining && selectedForCombo.size >= 2 && (
+          <TouchableOpacity
+            style={[s.groupConfirmBtn, { backgroundColor: primaryColor }]}
+            onPress={() => handleGroupItems()} activeOpacity={0.85}>
+            <Ionicons name="checkmark" size={16} color={primaryTextColor} />
+            <Text style={[s.groupConfirmBtnText, { color: primaryTextColor }]}>
+              Agrupar em {comboTypeLabel(selectedForCombo.size)}
+            </Text>
+          </TouchableOpacity>
+        )}
       </ScrollView>
 
       {/* Edit item modal */}
@@ -382,7 +558,7 @@ export default function ExtraWorkoutDetailScreen() {
       </Modal>
 
       <ExercisePickerModal visible={pickerVisible} tenantId={tenantId}
-        onSelect={handleAddExercise} onClose={() => setPickerVisible(false)} />
+        multiSelect onConfirm={handleAddExercises} onClose={() => setPickerVisible(false)} />
     </SafeAreaView>
   );
 }
@@ -405,10 +581,29 @@ const s = StyleSheet.create({
   itemsCard: { backgroundColor: Colors.surface, borderRadius: 14, borderWidth: 1, borderColor: Colors.border, overflow: 'hidden' },
   itemRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 10, paddingHorizontal: 12, gap: 10 },
   itemBorder: { borderBottomWidth: 1, borderBottomColor: Colors.border },
+  combinedSection: { marginTop: 14, paddingHorizontal: 12, paddingBottom: 4, gap: 8 },
+  combinedSectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 2 },
+  combinedSectionTitle: { fontFamily: FontFamily.bodyBold, fontSize: 10.5, letterSpacing: 1, color: Colors.textSecondary },
   muscleTag: { paddingHorizontal: 7, paddingVertical: 3, borderRadius: 8, minWidth: 44, alignItems: 'center' },
   muscleTagText: { fontFamily: FontFamily.bodyMedium, fontSize: 10 },
   itemName: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm, color: Colors.textPrimary },
   itemMeta: { fontFamily: FontFamily.body, fontSize: 11, color: Colors.textSecondary, marginTop: 2 },
+  comboWrap: { borderWidth: 1.5, borderRadius: 12, overflow: 'hidden', marginVertical: 4 },
+  comboHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, paddingVertical: 8, flexWrap: 'wrap' },
+  comboLabel: { fontFamily: FontFamily.bodyBold, fontSize: 11.5, letterSpacing: 0.3, textTransform: 'uppercase', flex: 1 },
+  comboHeaderActions: { flexDirection: 'row', gap: 12 },
+  comboHeaderActionBtn: { flexDirection: 'row', alignItems: 'center', gap: 3 },
+  comboHeaderActionText: { fontFamily: FontFamily.bodyMedium, fontSize: 11 },
+  comboIndexBadge: {
+    width: 18, height: 18, borderRadius: 9, borderWidth: 1.5,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  comboIndexBadgeText: { fontFamily: FontFamily.bodyBold, fontSize: 10 },
+  groupConfirmBtn: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6,
+    borderRadius: 10, paddingVertical: 12, marginTop: 12,
+  },
+  groupConfirmBtnText: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.sm },
   emptyEx: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 24 },
   emptyExText: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm },
   modalContent: { paddingHorizontal: 20, paddingTop: 24, paddingBottom: 48 },

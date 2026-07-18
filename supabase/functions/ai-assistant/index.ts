@@ -35,6 +35,8 @@ interface RequestBody {
     goal?: string;
     days_count?: number;
     notes?: string;
+    wants_combos?: boolean;
+    combo_notes?: string;
   };
 }
 
@@ -154,6 +156,8 @@ Deno.serve(async (req) => {
           goal:        plan_preferences.goal,
           daysCount:   plan_preferences.days_count,
           notes:       plan_preferences.notes,
+          wantsCombos: plan_preferences.wants_combos,
+          comboNotes:  plan_preferences.combo_notes,
         } : undefined;
         return await handleGeneratePlan(supabase, ctx, systemPrompt, student_id, tenantId, convId, tracking, preferences);
       }

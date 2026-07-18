@@ -15,6 +15,8 @@ export interface PlanPreferences {
   goal?: string;
   daysCount?: number;
   notes?: string;
+  wantsCombos?: boolean;
+  comboNotes?: string;
 }
 
 interface Props {
@@ -33,16 +35,27 @@ const NOTES_TIPS = [
   'Evitar exercícios de impacto (joelho)',
 ];
 
+const COMBO_TIPS = [
+  'Peito com tríceps',
+  'Costas com bíceps',
+  'Bi-série de pernas',
+  'Ombro com trapézio',
+];
+
 export function CriarTreinoWizardModal({ visible, onClose, onSkip, onSubmit }: Props) {
   const { primaryColor, primaryTextColor } = useThemeStore();
   const [goal, setGoal] = useState('');
   const [daysCount, setDaysCount] = useState<number | null>(null);
   const [notes, setNotes] = useState('');
+  const [wantsCombos, setWantsCombos] = useState(false);
+  const [comboNotes, setComboNotes] = useState('');
 
   function reset() {
     setGoal('');
     setDaysCount(null);
     setNotes('');
+    setWantsCombos(false);
+    setComboNotes('');
   }
 
   function handleClose() {
@@ -57,9 +70,11 @@ export function CriarTreinoWizardModal({ visible, onClose, onSkip, onSubmit }: P
 
   function handleSubmit() {
     const preferences: PlanPreferences = {
-      goal:      goal || undefined,
-      daysCount: daysCount ?? undefined,
-      notes:     notes.trim() || undefined,
+      goal:        goal || undefined,
+      daysCount:   daysCount ?? undefined,
+      notes:       notes.trim() || undefined,
+      wantsCombos: wantsCombos || undefined,
+      comboNotes:  wantsCombos ? (comboNotes.trim() || undefined) : undefined,
     };
     reset();
     onSubmit(preferences);
@@ -144,6 +159,47 @@ export function CriarTreinoWizardModal({ visible, onClose, onSkip, onSubmit }: P
               </View>
 
               <TouchableOpacity
+                style={[s.comboToggle, wantsCombos && { borderColor: primaryColor, backgroundColor: `${primaryColor}12` }]}
+                onPress={() => setWantsCombos(v => !v)}
+                activeOpacity={0.8}
+              >
+                <Ionicons name="git-merge-outline" size={18} color={wantsCombos ? primaryColor : Colors.textSecondary} />
+                <View style={{ flex: 1 }}>
+                  <Text style={[s.comboToggleTitle, wantsCombos && { color: primaryColor }]}>Incluir bi-séries/tri-séries</Text>
+                  <Text style={s.comboToggleSubtitle}>O Max combina exercícios para serem feitos em sequência, sem descanso entre eles</Text>
+                </View>
+                <Ionicons name={wantsCombos ? 'checkbox' : 'square-outline'} size={20} color={wantsCombos ? primaryColor : Colors.textSecondary} />
+              </TouchableOpacity>
+
+              {wantsCombos && (
+                <>
+                  <Text style={[s.sectionLabel, { marginTop: 14 }]}>QUAIS EXERCÍCIOS COMBINAR? (OPCIONAL)</Text>
+                  <TextInput
+                    style={s.input}
+                    value={comboNotes}
+                    onChangeText={setComboNotes}
+                    placeholder="Ex: peito com tríceps, bi-série de pernas"
+                    placeholderTextColor={Colors.textSecondary}
+                    multiline
+                    numberOfLines={2}
+                    textAlignVertical="top"
+                  />
+                  <View style={s.tipsWrap}>
+                    {COMBO_TIPS.map((tip) => (
+                      <TouchableOpacity
+                        key={tip}
+                        style={s.tipChip}
+                        onPress={() => setComboNotes(tip)}
+                        activeOpacity={0.75}
+                      >
+                        <Text style={s.tipChipText}>{tip}</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </>
+              )}
+
+              <TouchableOpacity
                 style={[s.submitBtn, { backgroundColor: primaryColor }]}
                 onPress={handleSubmit}
                 activeOpacity={0.85}
@@ -196,6 +252,13 @@ const s = StyleSheet.create({
   tipsWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 8 },
   tipChip: { paddingHorizontal: 10, paddingVertical: 6, borderRadius: 14, backgroundColor: Colors.bg, borderWidth: 1, borderColor: Colors.border },
   tipChipText: { fontFamily: FontFamily.body, fontSize: 11, color: Colors.textSecondary },
+  comboToggle: {
+    flexDirection: 'row', alignItems: 'center', gap: 10,
+    borderWidth: 1.5, borderColor: Colors.border, backgroundColor: Colors.bg,
+    borderRadius: 14, padding: 12, marginTop: 20,
+  },
+  comboToggleTitle: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.sm, color: Colors.textPrimary },
+  comboToggleSubtitle: { fontFamily: FontFamily.body, fontSize: 11, color: Colors.textSecondary, marginTop: 2, lineHeight: 15 },
   submitBtn: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
     borderRadius: 14, paddingVertical: 16, marginTop: 24,
