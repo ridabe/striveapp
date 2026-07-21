@@ -31,18 +31,17 @@ interface DashboardStats {
 // Convenção do plano "Elite": max_students >= UNLIMITED_THRESHOLD significa ilimitado
 const UNLIMITED_THRESHOLD = 9999;
 
-interface RecentStudent {
-  id: string;
+interface TodayAttendance {
+  student_id: string;
   full_name: string;
-  status: string;
-  created_at: string;
+  attended_at: string;
 }
 
 export default function AdminDashboard() {
   const { profile } = useAuthStore();
   const { tenantName, primaryColor, primaryTextColor, tenantType, effectiveRole } = useThemeStore();
   const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [recentStudents, setRecentStudents] = useState<RecentStudent[]>([]);
+  const [todayAttendance, setTodayAttendance] = useState<TodayAttendance[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -65,11 +64,20 @@ export default function AdminDashboard() {
   async function loadDashboard() {
     if (!tenantId) return;
 
-    const [studentsRes, pendingRes, plansRes, recentRes, tenantRes] = await Promise.all([
+    const now = new Date();
+    const dayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+    const dayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).toISOString();
+
+    const [studentsRes, pendingRes, plansRes, todayRes, tenantRes] = await Promise.all([
       supabase.from('students').select('id, status', { count: 'exact' }).eq('tenant_id', tenantId),
       supabase.from('financial_plans').select('id', { count: 'exact' }).eq('tenant_id', tenantId).eq('status', 'pending'),
       supabase.from('workout_plans').select('id', { count: 'exact' }).eq('tenant_id', tenantId).eq('status', 'active'),
-      supabase.from('students').select('id, full_name, status, created_at').eq('tenant_id', tenantId).order('created_at', { ascending: false }).limit(5),
+      supabase.from('attendance')
+        .select('student_id, attended_at, students(full_name)')
+        .eq('tenant_id', tenantId)
+        .gte('attended_at', dayStart)
+        .lt('attended_at', dayEnd)
+        .order('attended_at', { ascending: false }),
       supabase.from('tenants').select('max_students').eq('id', tenantId).single(),
     ]);
 
@@ -81,7 +89,22 @@ export default function AdminDashboard() {
       activePlans: plansRes.count ?? 0,
       maxStudents: tenantRes.data?.max_students ?? 0,
     });
-    setRecentStudents(recentRes.data ?? []);
+
+    // Um aluno pode ter mais de um registro de presença no dia (ex: combos);
+    // mantém só o mais recente de cada um para a lista.
+    const seen = new Set<string>();
+    const todayRows: any[] = todayRes.data ?? [];
+    const today: TodayAttendance[] = [];
+    for (const row of todayRows) {
+      if (seen.has(row.student_id)) continue;
+      seen.add(row.student_id);
+      today.push({
+        student_id: row.student_id,
+        full_name: row.students?.full_name ?? '—',
+        attended_at: row.attended_at,
+      });
+    }
+    setTodayAttendance(today);
   }
 
   useEffect(() => { loadDashboard().finally(() => setLoading(false)); }, [tenantId]);
@@ -177,13 +200,15 @@ export default function AdminDashboard() {
                 color="#60A5FA"
                 onPress={() => router.push('/(admin)/treinos')}
               />
-              <MiniStat
-                label="Pag. pendentes"
-                value={stats?.pendingPayments ?? 0}
-                icon="alert-circle"
-                color={stats?.pendingPayments ? Colors.warning : Colors.success}
-                onPress={() => router.push('/(admin)/mais')}
-              />
+              {has(MODULE.FATURAS) && (
+                <MiniStat
+                  label="Pag. pendentes"
+                  value={stats?.pendingPayments ?? 0}
+                  icon="alert-circle"
+                  color={stats?.pendingPayments ? Colors.warning : Colors.success}
+                  onPress={() => router.push('/(admin)/mais')}
+                />
+              )}
               <MiniStat
                 label={totalStudentsLabel}
                 value={stats?.totalStudents ?? 0}
@@ -218,20 +243,6 @@ export default function AdminDashboard() {
                   onPress={() => router.push('/(admin)/treinos')}
                 />
               )}
-              {has(MODULE.FREQUENCIA) && (
-                <ActionPill
-                  icon="calendar-outline"
-                  label="Frequência"
-                  onPress={() => router.push('/(admin)/frequencia' as any)}
-                />
-              )}
-              {has(MODULE.AVALIACOES) && (
-                <ActionPill
-                  icon="stats-chart-outline"
-                  label="Avaliação"
-                  onPress={() => router.push('/(admin)/avaliacao' as any)}
-                />
-              )}
               <ActionPill
                 icon="trophy-outline"
                 label="Ranking"
@@ -239,49 +250,46 @@ export default function AdminDashboard() {
               />
             </View>
 
-            {/* ── Recent students ── */}
-            {recentStudents.length > 0 && (
-              <>
-                <View style={s.sectionHeader}>
-                  <Text style={s.sectionTitle}>Alunos recentes</Text>
-                  <TouchableOpacity onPress={() => router.push('/(admin)/alunos')}>
-                    <Text style={[s.seeAll, { color: primaryColor }]}>Ver todos</Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={s.studentList}>
-                  {recentStudents.slice(0, 5).map((student, idx) => {
-                    const list = recentStudents.slice(0, 5);
-                    const initials = student.full_name.split(' ').map((w: string) => w[0]).join('').slice(0, 2).toUpperCase();
-                    const isLast = idx === list.length - 1;
-                    return (
-                      <TouchableOpacity
-                        key={student.id}
-                        style={[s.studentRow, !isLast && s.studentRowBorder]}
-                        onPress={() => router.push(`/(admin)/alunos/${student.id}` as any)}
-                        activeOpacity={0.7}
-                      >
-                        <View style={[s.studentAvatar, { backgroundColor: `${primaryColor}20` }]}>
-                          <Text style={[s.studentInitials, { color: primaryColor }]}>{initials}</Text>
-                        </View>
-                        <View style={{ flex: 1 }}>
-                          <Text style={s.studentName}>{student.full_name}</Text>
-                          <Text style={s.studentStatus}>
-                            {student.status === 'active' ? 'Ativo' : 'Inativo'}
-                          </Text>
-                        </View>
-                        <View style={[s.statusPill, {
-                          backgroundColor: student.status === 'active' ? `${Colors.success}18` : `${Colors.border}`,
-                        }]}>
-                          <View style={[s.statusDot, {
-                            backgroundColor: student.status === 'active' ? Colors.success : Colors.textSecondary,
-                          }]} />
-                        </View>
-                        <Ionicons name="chevron-forward" size={14} color={Colors.border} />
-                      </TouchableOpacity>
-                    );
-                  })}
-                </View>
-              </>
+            {/* ── Frequência de hoje ── */}
+            <View style={s.sectionHeader}>
+              <Text style={s.sectionTitle}>Frequência de hoje</Text>
+              {has(MODULE.FREQUENCIA) && (
+                <TouchableOpacity onPress={() => router.push('/(admin)/frequencia' as any)}>
+                  <Text style={[s.seeAll, { color: primaryColor }]}>Ver histórico</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+            {todayAttendance.length === 0 ? (
+              <View style={s.emptyAttendance}>
+                <Ionicons name="calendar-outline" size={22} color={Colors.border} />
+                <Text style={s.emptyAttendanceText}>Nenhum aluno treinou hoje ainda.</Text>
+              </View>
+            ) : (
+              <View style={s.studentList}>
+                {todayAttendance.map((att, idx) => {
+                  const initials = att.full_name.split(' ').map((w: string) => w[0]).join('').slice(0, 2).toUpperCase();
+                  const isLast = idx === todayAttendance.length - 1;
+                  const time = new Date(att.attended_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                  return (
+                    <TouchableOpacity
+                      key={att.student_id}
+                      style={[s.studentRow, !isLast && s.studentRowBorder]}
+                      onPress={() => router.push(`/(admin)/alunos/${att.student_id}` as any)}
+                      activeOpacity={0.7}
+                    >
+                      <View style={[s.studentAvatar, { backgroundColor: `${primaryColor}20` }]}>
+                        <Text style={[s.studentInitials, { color: primaryColor }]}>{initials}</Text>
+                      </View>
+                      <View style={{ flex: 1 }}>
+                        <Text style={s.studentName}>{att.full_name}</Text>
+                        <Text style={s.studentStatus}>Treinou às {time}</Text>
+                      </View>
+                      <Ionicons name="checkmark-circle" size={16} color={Colors.success} />
+                      <Ionicons name="chevron-forward" size={14} color={Colors.border} />
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
             )}
           </>
         )}
@@ -454,6 +462,20 @@ const s = StyleSheet.create({
     fontSize: FontSize.xs,
     marginBottom: 10,
   },
+  emptyAttendance: {
+    backgroundColor: Colors.surface,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    paddingVertical: 24,
+    alignItems: 'center',
+    gap: 8,
+  },
+  emptyAttendanceText: {
+    fontFamily: FontFamily.body,
+    fontSize: FontSize.sm,
+    color: Colors.textSecondary,
+  },
 
   // Quick actions
   primaryCTA: {
@@ -536,17 +558,5 @@ const s = StyleSheet.create({
     fontSize: FontSize.xs,
     color: Colors.textSecondary,
     marginTop: 1,
-  },
-  statusPill: {
-    width: 20,
-    height: 20,
-    borderRadius: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  statusDot: {
-    width: 7,
-    height: 7,
-    borderRadius: 4,
   },
 });
