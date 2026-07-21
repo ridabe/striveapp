@@ -301,6 +301,58 @@ export default function PlanDetailScreen() {
     await reloadItems();
   }
 
+  /** Move um exercício uma posição para cima/baixo dentro do seu contexto (lista de soltos ou membros do mesmo combo), trocando o display_order com o vizinho. */
+  async function handleMoveItem(context: WorkoutItem[], itemId: string, direction: 'up' | 'down') {
+    const idx = context.findIndex(i => i.id === itemId);
+    const swapIdx = direction === 'up' ? idx - 1 : idx + 1;
+    if (idx === -1 || swapIdx < 0 || swapIdx >= context.length) return;
+    const a = context[idx];
+    const b = context[swapIdx];
+    const [aOrder, bOrder] = [a.display_order, b.display_order];
+
+    setRoutines(prev => prev.map(r => ({
+      ...r,
+      items: r.items
+        .map(it => {
+          if (it.id === a.id) return { ...it, display_order: bOrder };
+          if (it.id === b.id) return { ...it, display_order: aOrder };
+          return it;
+        })
+        .sort((x, y) => x.display_order - y.display_order),
+    })));
+
+    const [resA, resB] = await Promise.all([
+      supabase.from('workout_items').update({ display_order: bOrder }).eq('id', a.id),
+      supabase.from('workout_items').update({ display_order: aOrder }).eq('id', b.id),
+    ]);
+    const error = resA.error ?? resB.error;
+    if (error) { Alert.alert('Erro', error.message); await reloadItems(); }
+  }
+
+  /** Move um bloco inteiro (exercício solto ou combo/bi-série/tri-série completo) uma posição para cima/baixo,
+   * renumerando o display_order de todos os itens da rotina para refletir a nova ordem de execução. */
+  async function handleMoveBlock(routineId: string, blocks: { items: WorkoutItem[] }[], blockIdx: number, direction: 'up' | 'down') {
+    const swapIdx = direction === 'up' ? blockIdx - 1 : blockIdx + 1;
+    if (swapIdx < 0 || swapIdx >= blocks.length) return;
+    const newBlocks = [...blocks];
+    [newBlocks[blockIdx], newBlocks[swapIdx]] = [newBlocks[swapIdx], newBlocks[blockIdx]];
+    const flat = newBlocks.flatMap(b => b.items);
+    const orderMap = new Map(flat.map((it, idx) => [it.id, idx]));
+
+    setRoutines(prev => prev.map(r => r.id !== routineId ? r : {
+      ...r,
+      items: r.items
+        .map(it => ({ ...it, display_order: orderMap.get(it.id) ?? it.display_order }))
+        .sort((a, b) => a.display_order - b.display_order),
+    }));
+
+    const results = await Promise.all(
+      flat.map((it, idx) => supabase.from('workout_items').update({ display_order: idx }).eq('id', it.id))
+    );
+    const firstError = results.find(r => r.error)?.error;
+    if (firstError) { Alert.alert('Erro', firstError.message); await reloadItems(); }
+  }
+
   function toggleCombining(routineId: string) {
     if (combiningRoutineId === routineId) {
       setCombiningRoutineId(null);
@@ -563,15 +615,15 @@ export default function PlanDetailScreen() {
                 </View>
                 <View style={{ flex: 1 }}>
                   <Text style={s.routineName}>{routine.name}</Text>
-                  <TouchableOpacity
-                    onPress={() => setEditingDaysId(editingDaysId === routine.id ? null : routine.id)}
-                    activeOpacity={0.7}
-                  >
-                    <Text style={s.routineMeta}>
-                      {routine.days_of_week?.length ? routine.days_of_week.map(d => DAYS_OF_WEEK[d]).join(', ') : 'Dia livre'} · {routine.items.length} exercício{routine.items.length !== 1 ? 's' : ''}
-                    </Text>
-                  </TouchableOpacity>
+                  <Text style={s.routineMeta}>
+                    {routine.days_of_week?.length ? routine.days_of_week.map(d => DAYS_OF_WEEK[d]).join(', ') : 'Dia livre'} · {routine.items.length} exercício{routine.items.length !== 1 ? 's' : ''}
+                  </Text>
                 </View>
+                <TouchableOpacity
+                  onPress={() => setEditingDaysId(editingDaysId === routine.id ? null : routine.id)}
+                  style={s.iconBtn} activeOpacity={0.75}>
+                  <Ionicons name="calendar-outline" size={17} color={Colors.textSecondary} />
+                </TouchableOpacity>
                 <TouchableOpacity onPress={() => {
                   setPickerRoutineId(routine.id);
                   setPickerVisible(true);
@@ -635,11 +687,16 @@ export default function PlanDetailScreen() {
                   )}
                   {(() => {
                     const isCombining = combiningRoutineId === routine.id;
-                    const soloItems = routine.items.filter(it => !it.combo_group_id);
+                    // Blocos na ordem real de display_order: exercícios soltos viram blocos de 1,
+                    // exercícios de um mesmo combo (contíguos) viram um único bloco — assim dá para
+                    // mover o combo inteiro (início/meio/fim) entre os exercícios individuais.
                     const comboReady = routine.items.map(it => ({ ...it, itemId: it.id, comboGroupId: it.combo_group_id }));
-                    const comboGroups = groupByCombo(comboReady).filter(g => g.isCombo);
+                    const blocks = groupByCombo(comboReady);
 
-                    function renderRow(item: WorkoutItem, opts: { badgeIndex?: number; borderBottom: boolean }) {
+                    function renderRow(item: WorkoutItem, opts: {
+                      badgeIndex?: number; borderBottom: boolean;
+                      move: { canUp: boolean; canDown: boolean; onUp: () => void; onDown: () => void };
+                    }) {
                       const isSelected = selectedForCombo.has(item.id);
                       return (
                         <TouchableOpacity
@@ -673,6 +730,18 @@ export default function PlanDetailScreen() {
                           </View>
                           {!isCombining && (
                             <>
+                              <View style={s.reorderCol}>
+                                <TouchableOpacity
+                                  onPress={opts.move.onUp}
+                                  disabled={!opts.move.canUp} style={s.reorderBtn} activeOpacity={0.6}>
+                                  <Ionicons name="chevron-up" size={16} color={opts.move.canUp ? primaryColor : Colors.border} />
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                  onPress={opts.move.onDown}
+                                  disabled={!opts.move.canDown} style={s.reorderBtn} activeOpacity={0.6}>
+                                  <Ionicons name="chevron-down" size={16} color={opts.move.canDown ? primaryColor : Colors.border} />
+                                </TouchableOpacity>
+                              </View>
                               <TouchableOpacity onPress={() => openEditItem(item)} style={s.iconBtn} activeOpacity={0.75}>
                                 <Ionicons name="create-outline" size={16} color={primaryColor} />
                               </TouchableOpacity>
@@ -687,49 +756,71 @@ export default function PlanDetailScreen() {
 
                     return (
                       <>
-                        {/* Exercícios individuais */}
-                        {soloItems.map((item, idx) => renderRow(item, {
-                          borderBottom: idx < soloItems.length - 1,
-                        }))}
+                        {blocks.map((block, blockIdx) => {
+                          const canBlockUp = blockIdx > 0;
+                          const canBlockDown = blockIdx < blocks.length - 1;
 
-                        {/* Exercícios Combinados — seção própria, "lista dentro da lista" */}
-                        {comboGroups.length > 0 && (
-                          <View style={s.combinedSection}>
-                            <View style={s.combinedSectionHeader}>
-                              <Ionicons name="link" size={12} color={Colors.textSecondary} />
-                              <Text style={s.combinedSectionTitle}>
-                                EXERCÍCIOS COMBINADOS · {comboGroups.length} {comboGroups.length > 1 ? 'GRUPOS' : 'GRUPO'}
-                              </Text>
-                            </View>
-                            {comboGroups.map((group, gi) => (
-                              <View key={group.comboId ?? `combo-${gi}`}
-                                style={[s.comboWrap, { borderColor: primaryColor, backgroundColor: `${primaryColor}0f` }]}>
-                                <View style={[s.comboHeader, { backgroundColor: `${primaryColor}22` }]}>
-                                  <Ionicons name="git-merge" size={14} color={primaryColor} />
-                                  <Text style={[s.comboLabel, { color: primaryColor }]}>{comboTypeLabel(group.items.length)} · {group.items.length} exercícios</Text>
-                                  {!isCombining && (
-                                    <View style={s.comboHeaderActions}>
-                                      <TouchableOpacity onPress={() => handleEditCombo(routine.id, group.comboId!)}
-                                        style={s.comboHeaderActionBtn} activeOpacity={0.75}>
-                                        <Ionicons name="swap-horizontal-outline" size={13} color={primaryColor} />
-                                        <Text style={[s.comboHeaderActionText, { color: primaryColor }]}>Recombinar</Text>
-                                      </TouchableOpacity>
-                                      <TouchableOpacity onPress={() => handleUngroupCombo(group.comboId!)}
-                                        style={s.comboHeaderActionBtn} activeOpacity={0.75}>
-                                        <Ionicons name="close-circle-outline" size={13} color={Colors.error} />
-                                        <Text style={[s.comboHeaderActionText, { color: Colors.error }]}>Desagrupar</Text>
-                                      </TouchableOpacity>
-                                    </View>
-                                  )}
-                                </View>
-                                {group.items.map((item, memberIdx) => renderRow(item, {
-                                  badgeIndex: memberIdx + 1,
-                                  borderBottom: memberIdx < group.items.length - 1,
-                                }))}
+                          if (!block.isCombo) {
+                            const item = block.items[0];
+                            return renderRow(item, {
+                              borderBottom: false,
+                              move: {
+                                canUp: canBlockUp,
+                                canDown: canBlockDown,
+                                onUp: () => handleMoveBlock(routine.id, blocks, blockIdx, 'up'),
+                                onDown: () => handleMoveBlock(routine.id, blocks, blockIdx, 'down'),
+                              },
+                            });
+                          }
+
+                          return (
+                            <View key={block.comboId ?? `combo-${blockIdx}`}
+                              style={[s.comboWrap, { borderColor: primaryColor, backgroundColor: `${primaryColor}0f` }]}>
+                              <View style={[s.comboHeader, { backgroundColor: `${primaryColor}22` }]}>
+                                {!isCombining && (
+                                  <View style={s.blockMoveCol}>
+                                    <TouchableOpacity
+                                      onPress={() => handleMoveBlock(routine.id, blocks, blockIdx, 'up')}
+                                      disabled={!canBlockUp} style={s.reorderBtn} activeOpacity={0.6}>
+                                      <Ionicons name="chevron-up" size={16} color={canBlockUp ? primaryColor : Colors.border} />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                      onPress={() => handleMoveBlock(routine.id, blocks, blockIdx, 'down')}
+                                      disabled={!canBlockDown} style={s.reorderBtn} activeOpacity={0.6}>
+                                      <Ionicons name="chevron-down" size={16} color={canBlockDown ? primaryColor : Colors.border} />
+                                    </TouchableOpacity>
+                                  </View>
+                                )}
+                                <Ionicons name="git-merge" size={14} color={primaryColor} />
+                                <Text style={[s.comboLabel, { color: primaryColor }]}>{comboTypeLabel(block.items.length)} · {block.items.length} exercícios</Text>
+                                {!isCombining && (
+                                  <View style={s.comboHeaderActions}>
+                                    <TouchableOpacity onPress={() => handleEditCombo(routine.id, block.comboId!)}
+                                      style={s.comboHeaderActionBtn} activeOpacity={0.75}>
+                                      <Ionicons name="swap-horizontal-outline" size={13} color={primaryColor} />
+                                      <Text style={[s.comboHeaderActionText, { color: primaryColor }]}>Recombinar</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => handleUngroupCombo(block.comboId!)}
+                                      style={s.comboHeaderActionBtn} activeOpacity={0.75}>
+                                      <Ionicons name="close-circle-outline" size={13} color={Colors.error} />
+                                      <Text style={[s.comboHeaderActionText, { color: Colors.error }]}>Desagrupar</Text>
+                                    </TouchableOpacity>
+                                  </View>
+                                )}
                               </View>
-                            ))}
-                          </View>
-                        )}
+                              {block.items.map((item, memberIdx) => renderRow(item, {
+                                badgeIndex: memberIdx + 1,
+                                borderBottom: memberIdx < block.items.length - 1,
+                                move: {
+                                  canUp: memberIdx > 0,
+                                  canDown: memberIdx < block.items.length - 1,
+                                  onUp: () => handleMoveItem(block.items, item.id, 'up'),
+                                  onDown: () => handleMoveItem(block.items, item.id, 'down'),
+                                },
+                              }))}
+                            </View>
+                          );
+                        })}
                       </>
                     );
                   })()}
@@ -1019,6 +1110,9 @@ const s = StyleSheet.create({
   itemsList: { borderTopWidth: 1, borderTopColor: Colors.border },
   itemRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 10, paddingHorizontal: 14, gap: 10 },
   itemBorder: { borderBottomWidth: 1, borderBottomColor: Colors.border },
+  reorderCol: { alignItems: 'center', justifyContent: 'center' },
+  reorderBtn: { width: 24, height: 16, alignItems: 'center', justifyContent: 'center' },
+  blockMoveCol: { alignItems: 'center', justifyContent: 'center', marginRight: 2 },
   combinedSection: { marginTop: 14, paddingHorizontal: 12, paddingBottom: 4, gap: 8 },
   combinedSectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 2 },
   combinedSectionTitle: { fontFamily: FontFamily.bodyBold, fontSize: 10.5, letterSpacing: 1, color: Colors.textSecondary },
