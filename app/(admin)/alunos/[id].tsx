@@ -62,7 +62,17 @@ function fmtBirth(iso: string): string {
 }
 
 // ─── Module card config ───────────────────────────────────────────────────────
-function getModuleLabel(counts: ModuleCounts) {
+interface ModuleCardConfig {
+  key: string;
+  title: string;
+  icon: keyof typeof Ionicons.glyphMap;
+  iconBg: string;
+  badge: string;
+  badgeColor: string;
+  onPress: ((sid: string) => void) | null;
+}
+
+function getModuleLabel(counts: ModuleCounts): ModuleCardConfig[] {
   const anamneseLabel =
     counts.anamnese === 'completed' ? 'Preenchida' :
     counts.anamnese === 'partial'   ? 'Rascunho' : 'Pendente';
@@ -104,7 +114,7 @@ function getModuleLabel(counts: ModuleCounts) {
       iconBg: '#10B981',
       badge: `${counts.financeiro} ${counts.financeiro === 1 ? 'plano' : 'planos'}`,
       badgeColor: Colors.textSecondary,
-      onPress: null,
+      onPress: (sid: string) => router.push({ pathname: '/(admin)/financeiro' as any, params: { studentId: sid } }),
     },
     {
       key: 'frequencia',

@@ -20,6 +20,15 @@ const STATUS_CONFIG: Record<string, { label: string; color: string; icon: string
   cancelled: { label: 'Cancelado', color: '#94A3B8', icon: 'close-circle-outline' },
 };
 
+interface Subscription {
+  id: string;
+  plan_name: string;
+  amount: number;
+  due_day: number;
+  billing_type: 'recorrente' | 'pacote';
+  total_installments: number | null;
+}
+
 function fmtDate(iso: string) {
   return new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
 }
@@ -32,16 +41,26 @@ export default function FinanceiroScreen() {
   const { selectedStudent } = useStudent();
   const { primaryColor } = useThemeStore();
   const [plans, setPlans] = useState<any[]>([]);
+  const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
     if (!selectedStudent) return;
-    const { data } = await supabase
-      .from('financial_plans')
-      .select('id, plan_name, amount, due_date, status, paid_at, notes')
-      .eq('student_id', selectedStudent.id)
-      .order('due_date', { ascending: false });
-    setPlans(data ?? []);
+    const [plansRes, subRes] = await Promise.all([
+      supabase
+        .from('financial_plans')
+        .select('id, plan_name, amount, due_date, status, paid_at, notes, subscription_id')
+        .eq('student_id', selectedStudent.id)
+        .order('due_date', { ascending: false }),
+      supabase
+        .from('student_billing_subscriptions')
+        .select('id, plan_name, amount, due_day, billing_type, total_installments')
+        .eq('student_id', selectedStudent.id)
+        .eq('active', true)
+        .maybeSingle(),
+    ]);
+    setPlans(plansRes.data ?? []);
+    setSubscription((subRes.data as Subscription) ?? null);
     setLoading(false);
   }, [selectedStudent?.id]);
 
@@ -49,6 +68,13 @@ export default function FinanceiroScreen() {
 
   const pending = plans.filter(p => p.status === 'pending' || p.status === 'overdue');
   const totalPending = pending.reduce((a, p) => a + (p.amount ?? 0), 0);
+
+  const isPacote = subscription?.billing_type === 'pacote';
+  const total = subscription?.total_installments ?? 0;
+  const paidInPackage = isPacote
+    ? plans.filter(p => p.subscription_id === subscription?.id && p.status === 'paid').length
+    : 0;
+  const packageDone = isPacote && total > 0 && paidInPackage >= total;
 
   return (
     <SafeAreaView style={s.safe} edges={['top']}>
@@ -62,7 +88,24 @@ export default function FinanceiroScreen() {
           contentContainerStyle={s.list}
           showsVerticalScrollIndicator={false}
           ListHeaderComponent={
-            pending.length > 0 ? (
+            <>
+            {subscription && (
+              <View style={s.subCard}>
+                <Text style={s.subLabel}>{isPacote ? 'PACOTE ATUAL' : 'MENSALIDADE'}</Text>
+                <Text style={s.subName}>{subscription.plan_name}</Text>
+                <Text style={s.subInfo}>
+                  {fmtCurrency(subscription.amount)} / mês · vencimento dia {subscription.due_day}
+                </Text>
+                {isPacote && (
+                  <View style={[s.progressPill, packageDone && { backgroundColor: '#F59E0B18' }]}>
+                    <Text style={[s.progressText, packageDone && { color: '#F59E0B' }]}>
+                      {paidInPackage} de {total} meses pagos{packageDone ? ' · fale com seu personal para renovar' : ''}
+                    </Text>
+                  </View>
+                )}
+              </View>
+            )}
+            {pending.length > 0 ? (
               <View style={[s.alertCard, { borderColor: '#F59E0B40', backgroundColor: '#F59E0B08' }]}>
                 <Ionicons name="wallet-outline" size={24} color="#F59E0B" />
                 <View style={{ flex: 1 }}>
@@ -75,7 +118,8 @@ export default function FinanceiroScreen() {
                 <Ionicons name="checkmark-circle" size={24} color="#4ADE80" />
                 <Text style={[s.alertTitle, { color: '#4ADE80' }]}>Tudo em dia! 🎉</Text>
               </View>
-            ) : null
+            ) : null}
+            </>
           }
           ListEmptyComponent={
             <View style={s.empty}>
@@ -120,6 +164,12 @@ export default function FinanceiroScreen() {
 const s = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.bg },
   list: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 40, gap: 10 },
+  subCard: { backgroundColor: Colors.surface, borderRadius: 16, borderWidth: 1, borderColor: Colors.border, padding: 16, marginBottom: 12 },
+  subLabel: { fontFamily: FontFamily.bodyBold, fontSize: 10, color: Colors.textSecondary, letterSpacing: 1 },
+  subName: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.md, color: Colors.textPrimary, marginTop: 4 },
+  subInfo: { fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textSecondary, marginTop: 2 },
+  progressPill: { alignSelf: 'flex-start', backgroundColor: Colors.bg, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 20, marginTop: 10 },
+  progressText: { fontFamily: FontFamily.bodyMedium, fontSize: 11, color: Colors.textSecondary },
   alertCard: { flexDirection: 'row', alignItems: 'center', gap: 12, borderRadius: 18, borderWidth: 1.5, padding: 18, marginBottom: 6 },
   alertTitle: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm, color: Colors.textSecondary },
   alertAmount: { fontFamily: FontFamily.bodyBold, fontSize: 22, marginTop: 2 },

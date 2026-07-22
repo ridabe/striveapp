@@ -2424,6 +2424,7 @@ export type Database = {
         Row: {
           active: boolean
           amount: number
+          billing_type: Database["public"]["Enums"]["billing_type"]
           created_at: string
           due_day: number
           id: string
@@ -2431,11 +2432,13 @@ export type Database = {
           started_at: string
           student_id: string
           tenant_id: string
+          total_installments: number | null
           updated_at: string
         }
         Insert: {
           active?: boolean
           amount: number
+          billing_type?: Database["public"]["Enums"]["billing_type"]
           created_at?: string
           due_day: number
           id?: string
@@ -2443,11 +2446,13 @@ export type Database = {
           started_at?: string
           student_id: string
           tenant_id: string
+          total_installments?: number | null
           updated_at?: string
         }
         Update: {
           active?: boolean
           amount?: number
+          billing_type?: Database["public"]["Enums"]["billing_type"]
           created_at?: string
           due_day?: number
           id?: string
@@ -2455,6 +2460,7 @@ export type Database = {
           started_at?: string
           student_id?: string
           tenant_id?: string
+          total_installments?: number | null
           updated_at?: string
         }
         Relationships: [
@@ -3818,6 +3824,7 @@ export type Database = {
     Enums: {
       app_role: "global_admin" | "personal" | "student"
       audit_category: "auth" | "tenant" | "user" | "system"
+      billing_type: "recorrente" | "pacote"
       extra_workout_category:
         | "aquecimento"
         | "hiit"
@@ -3978,6 +3985,7 @@ export const Constants = {
     Enums: {
       app_role: ["global_admin", "personal", "student"],
       audit_category: ["auth", "tenant", "user", "system"],
+      billing_type: ["recorrente", "pacote"],
       extra_workout_category: [
         "aquecimento",
         "hiit",

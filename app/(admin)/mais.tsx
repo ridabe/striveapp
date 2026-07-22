@@ -106,6 +106,7 @@ export default function MaisScreen() {
           icon: 'card-outline',
           label: 'Faturas',
           description: 'Planos e pagamentos dos alunos',
+          route: '/(admin)/financeiro',
         },
       ],
     },
