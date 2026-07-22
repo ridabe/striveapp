@@ -510,64 +510,76 @@ export default function RoutineExecutionScreen() {
     const finishedAt = new Date().toISOString();
     const startedAt = sessionStart.current?.toISOString() ?? finishedAt;
 
-    const { data: session, error } = await supabase
-      .from('workout_sessions')
-      .insert({
-        student_id: selectedStudent.id, tenant_id: selectedStudent.tenant_id,
-        workout_plan_id: planId ?? null, workout_routine_id: routineId ?? null,
-        started_at: startedAt, finished_at: finishedAt,
-        duration_seconds: sessionSecs, intensity,
-        notes: finishNotes.trim() || null,
-        heart_rate_avg:   wearableMetrics?.heartRateAvg   ?? null,
-        heart_rate_max:   wearableMetrics?.heartRateMax   ?? null,
-        heart_rate_min:   wearableMetrics?.heartRateMin   ?? null,
-        calories_active:  wearableMetrics?.caloriesActive ?? null,
-        spo2_avg:         wearableMetrics?.spo2Avg        ?? null,
-        steps:            wearableMetrics?.steps          ?? null,
-        distance_meters:  wearableMetrics?.distanceMeters ?? null,
-        wearable_source:  wearableMetrics?.source         ?? null,
-        wearable_device:  wearableMetrics?.wearableDevice ?? null,
-      } as any)
-      .select('id').single();
+    try {
+      const { data: session, error } = await supabase
+        .from('workout_sessions')
+        .insert({
+          student_id: selectedStudent.id, tenant_id: selectedStudent.tenant_id,
+          workout_plan_id: planId ?? null, workout_routine_id: routineId ?? null,
+          started_at: startedAt, finished_at: finishedAt,
+          duration_seconds: sessionSecs, intensity,
+          notes: finishNotes.trim() || null,
+          heart_rate_avg:   wearableMetrics?.heartRateAvg   ?? null,
+          heart_rate_max:   wearableMetrics?.heartRateMax   ?? null,
+          heart_rate_min:   wearableMetrics?.heartRateMin   ?? null,
+          calories_active:  wearableMetrics?.caloriesActive ?? null,
+          spo2_avg:         wearableMetrics?.spo2Avg        ?? null,
+          steps:            wearableMetrics?.steps          ?? null,
+          distance_meters:  wearableMetrics?.distanceMeters ?? null,
+          wearable_source:  wearableMetrics?.source         ?? null,
+          wearable_device:  wearableMetrics?.wearableDevice ?? null,
+        } as any)
+        .select('id').single();
 
-    if (!error && session?.id) {
-      const completed = flatItems.filter(it => (seriesDone[it.itemId] ?? []).some(Boolean));
-      if (completed.length > 0) {
-        await supabase.from('workout_session_exercises').insert(
-          completed.map(it => ({
-            session_id: session.id, exercise_id: it.exerciseId,
-            workout_item_id: it.itemId,
-            sets_done: (seriesDone[it.itemId] ?? []).filter(Boolean).length,
-            reps_done: it.defaultReps,
-            load_used: loadValues[it.itemId] || null,
-          })) as any
-        );
+      if (error) throw error;
+
+      if (session?.id) {
+        const completed = flatItems.filter(it => (seriesDone[it.itemId] ?? []).some(Boolean));
+        if (completed.length > 0) {
+          const { error: exError } = await supabase.from('workout_session_exercises').insert(
+            completed.map(it => ({
+              session_id: session.id, exercise_id: it.exerciseId,
+              workout_item_id: it.itemId,
+              sets_done: (seriesDone[it.itemId] ?? []).filter(Boolean).length,
+              reps_done: it.defaultReps,
+              load_used: loadValues[it.itemId] || null,
+            })) as any
+          );
+          if (exError) throw exError;
+        }
+
+        // Atualiza pontos do ranking (função atômica no banco)
+        const allExDone = flatItems.length > 0 &&
+          flatItems.every(it => (seriesDone[it.itemId] ?? []).every(Boolean));
+        try {
+          await supabase.rpc('award_workout_points', {
+            p_student_id:      selectedStudent.id,
+            p_duration_secs:   sessionSecs,
+            p_exercises_count: completed.length,
+            p_all_done:        allExDone,
+          });
+        } catch {
+          // falha silenciosa — não bloqueia o salvamento do treino
+        }
+        await registerAttendanceToday(selectedStudent.id, selectedStudent.tenant_id).catch(() => {});
       }
 
-      // Atualiza pontos do ranking (função atômica no banco)
-      const allExDone = flatItems.length > 0 &&
-        flatItems.every(it => (seriesDone[it.itemId] ?? []).every(Boolean));
-      try {
-        await supabase.rpc('award_workout_points', {
-          p_student_id:      selectedStudent.id,
-          p_duration_secs:   sessionSecs,
-          p_exercises_count: completed.length,
-          p_all_done:        allExDone,
-        });
-      } catch {
-        // falha silenciosa — não bloqueia o salvamento do treino
+      if (finishRating > 0) {
+        await supabase.from('workout_feedbacks').insert({
+          tenant_id: selectedStudent.tenant_id, student_id: selectedStudent.id,
+          workout_plan_id: planId ?? null,
+          rating: finishRating, comment: finishNotes.trim() || null,
+        } as any);
       }
-      await registerAttendanceToday(selectedStudent.id, selectedStudent.tenant_id).catch(() => {});
+      router.back();
+    } catch (e: any) {
+      setPhase('finishing');
+      setShowDoneModal(true);
+      Alert.alert(
+        'Não foi possível salvar',
+        e?.message ? `Tente novamente. (${e.message})` : 'Tente novamente em instantes.',
+      );
     }
-
-    if (finishRating > 0) {
-      await supabase.from('workout_feedbacks').insert({
-        tenant_id: selectedStudent.tenant_id, student_id: selectedStudent.id,
-        workout_plan_id: planId ?? null,
-        rating: finishRating, comment: finishNotes.trim() || null,
-      } as any);
-    }
-    router.back();
   }
 
   const hasAnyDone = flatItems.some(it => (seriesDone[it.itemId] ?? []).some(Boolean));
@@ -950,6 +962,15 @@ export default function RoutineExecutionScreen() {
                 activeOpacity={0.87}
               >
                 <Text style={s.mainBtnText}>Concluir Série {currentSeriesIdx + 1}</Text>
+              </TouchableOpacity>
+            ) : isLastExercise ? (
+              <TouchableOpacity
+                style={[s.mainBtn, { backgroundColor: primaryColor }]}
+                onPress={openFinish}
+                activeOpacity={0.87}
+              >
+                <Ionicons name="checkmark-done-circle" size={20} color="#000" />
+                <Text style={s.mainBtnText}>Finalizar treino</Text>
               </TouchableOpacity>
             ) : (
               <View style={[s.mainBtn, { backgroundColor: `${primaryColor}30`, borderWidth: 1.5, borderColor: primaryColor }]}>

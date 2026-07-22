@@ -68,6 +68,7 @@ export type Database = {
           created_at: string
           description: string | null
           event_date: string
+          financial_plan_id: string | null
           id: string
           location: string | null
           meeting_url: string | null
@@ -90,6 +91,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           event_date: string
+          financial_plan_id?: string | null
           id?: string
           location?: string | null
           meeting_url?: string | null
@@ -112,6 +114,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           event_date?: string
+          financial_plan_id?: string | null
           id?: string
           location?: string | null
           meeting_url?: string | null
@@ -129,6 +132,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "agenda_events_financial_plan_id_fkey"
+            columns: ["financial_plan_id"]
+            isOneToOne: false
+            referencedRelation: "financial_plans"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "agenda_events_student_id_fkey"
             columns: ["student_id"]
@@ -558,6 +568,8 @@ export type Database = {
       challenge_day_items: {
         Row: {
           challenge_day_id: string
+          combo_group_id: string | null
+          combo_type: string | null
           content: string | null
           created_at: string
           exercise_id: string | null
@@ -571,6 +583,8 @@ export type Database = {
         }
         Insert: {
           challenge_day_id: string
+          combo_group_id?: string | null
+          combo_type?: string | null
           content?: string | null
           created_at?: string
           exercise_id?: string | null
@@ -584,6 +598,8 @@ export type Database = {
         }
         Update: {
           challenge_day_id?: string
+          combo_group_id?: string | null
+          combo_type?: string | null
           content?: string | null
           created_at?: string
           exercise_id?: string | null
@@ -2431,6 +2447,7 @@ export type Database = {
           plan_name: string
           started_at: string
           student_id: string
+          sync_to_agenda: boolean
           tenant_id: string
           total_installments: number | null
           updated_at: string
@@ -2445,6 +2462,7 @@ export type Database = {
           plan_name?: string
           started_at?: string
           student_id: string
+          sync_to_agenda?: boolean
           tenant_id: string
           total_installments?: number | null
           updated_at?: string
@@ -2459,6 +2477,7 @@ export type Database = {
           plan_name?: string
           started_at?: string
           student_id?: string
+          sync_to_agenda?: boolean
           tenant_id?: string
           total_installments?: number | null
           updated_at?: string

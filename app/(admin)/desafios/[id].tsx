@@ -15,6 +15,7 @@ import { useThemeStore } from '@/stores/themeStore';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
 import { ExercisePickerModal, type ExerciseSummary } from '@/components/ExercisePickerModal';
+import { groupByCombo, comboTypeLabel, comboTypeKey } from '@/lib/comboExercises';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface Challenge {
@@ -33,6 +34,7 @@ interface Participant {
 interface DayItem {
   id: string; item_type: string; title: string; content: string | null; exercise_id: string | null;
   exercise_name?: string | null; file_url: string | null; sort_order: number;
+  combo_group_id: string | null; combo_type: string | null;
 }
 interface Day {
   id: string; day_number: number; title: string | null; status: string; items: DayItem[];
@@ -107,8 +109,12 @@ export default function ChallengeDetailScreen() {
   const [itemTitle, setItemTitle] = useState('');
   const [itemContent, setItemContent] = useState('');
   const [itemFileUrl, setItemFileUrl] = useState('');
-  const [itemExercise, setItemExercise] = useState<ExerciseSummary | null>(null);
+  const [itemExercises, setItemExercises] = useState<ExerciseSummary[]>([]);
   const [exercisePickerVisible, setExercisePickerVisible] = useState(false);
+
+  // Combinação de exercícios (Bi-Série/Tri-Série/Circuito) — mesmo padrão de rotinas de treino
+  const [combiningDayId, setCombiningDayId] = useState<string | null>(null);
+  const [selectedForCombo, setSelectedForCombo] = useState<Set<string>>(new Set());
 
   // Publish results modal
   const [publishModal, setPublishModal] = useState(false);
@@ -123,7 +129,7 @@ export default function ChallengeDetailScreen() {
       supabase.from('challenges').select('*').eq('id', id).single(),
       supabase.from('challenge_participants').select('*, students(full_name, email)').eq('challenge_id', id),
       supabase.from('challenge_days').select('id, day_number, title, status').eq('challenge_id', id).order('day_number'),
-      supabase.from('challenge_day_items').select('id, challenge_day_id, item_type, title, content, exercise_id, file_url, sort_order, exercises(name)')
+      supabase.from('challenge_day_items').select('id, challenge_day_id, item_type, title, content, exercise_id, file_url, sort_order, combo_group_id, combo_type, exercises(name)')
         .in('challenge_day_id',
           (await supabase.from('challenge_days').select('id').eq('challenge_id', id)).data?.map((d: any) => d.id) ?? []),
       supabase.from('challenge_messages').select('id, message, created_at').eq('challenge_id', id).order('created_at', { ascending: false }),
@@ -492,23 +498,28 @@ export default function ChallengeDetailScreen() {
   function openItemModal(day: Day) {
     setItemModalDay(day);
     setItemType('exercise');
-    setItemTitle(''); setItemContent(''); setItemFileUrl(''); setItemExercise(null);
+    setItemTitle(''); setItemContent(''); setItemFileUrl(''); setItemExercises([]);
   }
 
   async function handleAddItem() {
     if (!itemModalDay || !challenge) return;
-    if (itemType === 'exercise' && !itemExercise) { Alert.alert('Atenção', 'Selecione um exercício.'); return; }
+    if (itemType === 'exercise' && itemExercises.length === 0) { Alert.alert('Atenção', 'Selecione ao menos um exercício.'); return; }
     if (itemType !== 'exercise' && !itemTitle.trim()) { Alert.alert('Atenção', 'Informe um título.'); return; }
     setBusy(true);
     try {
-      const { error } = await supabase.from('challenge_day_items').insert({
-        tenant_id: tenantId, challenge_day_id: itemModalDay.id, item_type: itemType,
-        title: itemType === 'exercise' ? (itemExercise?.name ?? '') : itemTitle.trim(),
-        content: itemContent.trim() || null,
-        exercise_id: itemType === 'exercise' ? itemExercise?.id ?? null : null,
-        file_url: itemType === 'file' ? (itemFileUrl.trim() || null) : null,
-        sort_order: itemModalDay.items.length,
-      } as any);
+      const startOrder = itemModalDay.items.length;
+      const rows = itemType === 'exercise'
+        ? itemExercises.map((ex, idx) => ({
+            tenant_id: tenantId, challenge_day_id: itemModalDay.id, item_type: itemType,
+            title: ex.name, content: itemContent.trim() || null, exercise_id: ex.id,
+            file_url: null, sort_order: startOrder + idx,
+          }))
+        : [{
+            tenant_id: tenantId, challenge_day_id: itemModalDay.id, item_type: itemType,
+            title: itemTitle.trim(), content: itemContent.trim() || null, exercise_id: null,
+            file_url: itemType === 'file' ? (itemFileUrl.trim() || null) : null, sort_order: startOrder,
+          }];
+      const { error } = await supabase.from('challenge_day_items').insert(rows as any);
       if (error) throw error;
       setItemModalDay(null);
       await load();
@@ -529,6 +540,113 @@ export default function ChallengeDetailScreen() {
         },
       },
     ]);
+  }
+
+  // ── Combinação de exercícios (Bi-Série/Tri-Série/Circuito) ──
+  function toggleCombining(dayId: string) {
+    if (combiningDayId === dayId) {
+      setCombiningDayId(null);
+      setSelectedForCombo(new Set());
+    } else {
+      setCombiningDayId(dayId);
+      setSelectedForCombo(new Set());
+    }
+  }
+
+  function handleEditCombo(dayId: string, comboGroupId: string) {
+    const day = days.find(d => d.id === dayId);
+    const memberIds = day?.items.filter(it => it.combo_group_id === comboGroupId).map(it => it.id) ?? [];
+    setCombiningDayId(dayId);
+    setSelectedForCombo(new Set(memberIds));
+  }
+
+  function toggleComboItem(itemId: string) {
+    setSelectedForCombo(prev => {
+      const next = new Set(prev);
+      if (next.has(itemId)) next.delete(itemId); else next.add(itemId);
+      return next;
+    });
+  }
+
+  async function handleGroupItems(dayId: string, explicitIds?: string[]) {
+    const day = days.find(d => d.id === dayId);
+    const ids = new Set(explicitIds ?? Array.from(selectedForCombo));
+    if (!day || ids.size < 2) return;
+    const items = day.items;
+    const comboGroupId = items.find(it => ids.has(it.id))?.id;
+    if (!comboGroupId) return;
+    const comboType = comboTypeKey(ids.size);
+
+    const oldGroupIdsInvolved = new Set(
+      items.filter(it => it.combo_group_id && ids.has(it.id)).map(it => it.combo_group_id!)
+    );
+    const toRelease = items.filter(it => it.combo_group_id && oldGroupIdsInvolved.has(it.combo_group_id) && !ids.has(it.id));
+
+    const newOrder: DayItem[] = [];
+    let insertedCombo = false;
+    for (const it of items) {
+      if (ids.has(it.id)) {
+        if (!insertedCombo) {
+          newOrder.push(...items.filter(i => ids.has(i.id)));
+          insertedCombo = true;
+        }
+      } else {
+        newOrder.push(it);
+      }
+    }
+
+    const results = await Promise.all([
+      ...newOrder.map((it, idx) => supabase.from('challenge_day_items').update({
+        sort_order: idx,
+        ...(ids.has(it.id) ? { combo_group_id: comboGroupId, combo_type: comboType } : {}),
+      } as any).eq('id', it.id)),
+      ...toRelease.map(it => supabase.from('challenge_day_items').update({ combo_group_id: null, combo_type: null } as any).eq('id', it.id)),
+    ]);
+    const firstError = results.find(r => r.error)?.error;
+    if (firstError) { Alert.alert('Erro ao combinar', firstError.message); return; }
+
+    setCombiningDayId(null);
+    setSelectedForCombo(new Set());
+    await load();
+  }
+
+  async function handleUngroupCombo(comboGroupId: string) {
+    await supabase.from('challenge_day_items').update({ combo_group_id: null, combo_type: null } as any).eq('combo_group_id', comboGroupId);
+    await load();
+  }
+
+  /** Move um exercício uma posição para cima/baixo dentro do seu contexto (soltos ou membros do mesmo combo). */
+  async function handleMoveItem(context: DayItem[], itemId: string, direction: 'up' | 'down') {
+    const idx = context.findIndex(i => i.id === itemId);
+    const swapIdx = direction === 'up' ? idx - 1 : idx + 1;
+    if (idx === -1 || swapIdx < 0 || swapIdx >= context.length) return;
+    const a = context[idx];
+    const b = context[swapIdx];
+    const [aOrder, bOrder] = [a.sort_order, b.sort_order];
+
+    const [resA, resB] = await Promise.all([
+      supabase.from('challenge_day_items').update({ sort_order: bOrder } as any).eq('id', a.id),
+      supabase.from('challenge_day_items').update({ sort_order: aOrder } as any).eq('id', b.id),
+    ]);
+    const error = resA.error ?? resB.error;
+    if (error) Alert.alert('Erro', error.message);
+    await load();
+  }
+
+  /** Move um bloco inteiro (item solto ou combo completo) uma posição para cima/baixo. */
+  async function handleMoveBlock(dayId: string, blocks: { items: DayItem[] }[], blockIdx: number, direction: 'up' | 'down') {
+    const swapIdx = direction === 'up' ? blockIdx - 1 : blockIdx + 1;
+    if (swapIdx < 0 || swapIdx >= blocks.length) return;
+    const newBlocks = [...blocks];
+    [newBlocks[blockIdx], newBlocks[swapIdx]] = [newBlocks[swapIdx], newBlocks[blockIdx]];
+    const flat = newBlocks.flatMap(b => b.items);
+
+    const results = await Promise.all(
+      flat.map((it, idx) => supabase.from('challenge_day_items').update({ sort_order: idx } as any).eq('id', it.id))
+    );
+    const firstError = results.find(r => r.error)?.error;
+    if (firstError) Alert.alert('Erro', firstError.message);
+    await load();
   }
 
   // ── Messages ──
@@ -714,35 +832,147 @@ export default function ChallengeDetailScreen() {
                 <Ionicons name={expanded ? 'chevron-up' : 'chevron-down'} size={18} color={Colors.textSecondary} />
               </TouchableOpacity>
 
-              {expanded && (
-                <View style={s.dayBody}>
-                  {day.items.map(item => (
-                    <View key={item.id} style={s.itemRow}>
+              {expanded && (() => {
+                const exerciseCount = day.items.filter(it => it.item_type === 'exercise').length;
+                const isCombining = combiningDayId === day.id;
+                const comboReady = day.items.map(it => ({ ...it, itemId: it.id, comboGroupId: it.combo_group_id }));
+                const blocks = groupByCombo(comboReady);
+
+                function renderItemRow(item: DayItem, opts: {
+                  comboLetter?: string;
+                  onMoveUp?: () => void; onMoveDown?: () => void;
+                  canMoveUp?: boolean; canMoveDown?: boolean;
+                } = {}) {
+                  const isSelected = selectedForCombo.has(item.id);
+                  const isExercise = item.item_type === 'exercise';
+                  return (
+                    <TouchableOpacity
+                      key={item.id}
+                      disabled={!isCombining || !isExercise}
+                      activeOpacity={isCombining && isExercise ? 0.7 : 1}
+                      onPress={() => toggleComboItem(item.id)}
+                      style={[s.itemRow, isCombining && isSelected && { backgroundColor: `${primaryColor}1f`, borderRadius: 8 }]}
+                    >
+                      {isCombining && isExercise && (
+                        <Ionicons name={isSelected ? 'checkbox' : 'square-outline'} size={17} color={isSelected ? primaryColor : Colors.textSecondary} />
+                      )}
+                      {(opts.onMoveUp || opts.onMoveDown) && !isCombining && (
+                        <View style={{ gap: 2 }}>
+                          <TouchableOpacity onPress={opts.onMoveUp} disabled={!opts.canMoveUp} hitSlop={{ top: 4, bottom: 4, left: 4, right: 4 }}>
+                            <Ionicons name="chevron-up" size={13} color={opts.canMoveUp ? Colors.textSecondary : Colors.border} />
+                          </TouchableOpacity>
+                          <TouchableOpacity onPress={opts.onMoveDown} disabled={!opts.canMoveDown} hitSlop={{ top: 4, bottom: 4, left: 4, right: 4 }}>
+                            <Ionicons name="chevron-down" size={13} color={opts.canMoveDown ? Colors.textSecondary : Colors.border} />
+                          </TouchableOpacity>
+                        </View>
+                      )}
                       <Ionicons name={itemIcon(item.item_type) as any} size={16} color={Colors.textSecondary} />
+                      {opts.comboLetter && (
+                        <View style={[s.comboLetterBadge, { backgroundColor: primaryColor }]}>
+                          <Text style={s.comboLetterText}>{opts.comboLetter}</Text>
+                        </View>
+                      )}
                       <Text style={s.itemTitle} numberOfLines={1}>{item.exercise_name || item.title}</Text>
-                      <TouchableOpacity onPress={() => handleDeleteItem(item)}>
-                        <Ionicons name="close" size={16} color={Colors.textSecondary} />
-                      </TouchableOpacity>
-                    </View>
-                  ))}
-                  <View style={s.dayFooter}>
-                    <TouchableOpacity style={s.smallBtn} onPress={() => openItemModal(day)}>
-                      <Ionicons name="add" size={14} color={primaryColor} />
-                      <Text style={[s.smallBtnText, { color: primaryColor }]}>Adicionar item</Text>
+                      {!isCombining && (
+                        <TouchableOpacity onPress={() => handleDeleteItem(item)}>
+                          <Ionicons name="close" size={16} color={Colors.textSecondary} />
+                        </TouchableOpacity>
+                      )}
                     </TouchableOpacity>
-                    {day.status === 'draft' && (
-                      <TouchableOpacity style={s.smallBtn} onPress={() => handlePublishDay(day)}>
-                        <Ionicons name="megaphone-outline" size={14} color={primaryColor} />
-                        <Text style={[s.smallBtnText, { color: primaryColor }]}>Publicar dia</Text>
+                  );
+                }
+
+                return (
+                  <View style={s.dayBody}>
+                    {exerciseCount >= 2 && (
+                      <TouchableOpacity
+                        style={[s.combineBtn, isCombining && { backgroundColor: `${primaryColor}18`, borderColor: primaryColor }]}
+                        onPress={() => toggleCombining(day.id)} activeOpacity={0.75}
+                      >
+                        <Ionicons name="git-merge-outline" size={14} color={primaryColor} />
+                        <Text style={[s.combineBtnText, { color: primaryColor }]}>
+                          {isCombining ? 'Cancelar combinação' : 'Combinar exercícios em Bi-Série/Tri-Série'}
+                        </Text>
                       </TouchableOpacity>
                     )}
-                    <TouchableOpacity style={s.smallBtn} onPress={() => handleDeleteDay(day)}>
-                      <Ionicons name="trash-outline" size={14} color={Colors.error} />
-                      <Text style={[s.smallBtnText, { color: Colors.error }]}>Excluir dia</Text>
-                    </TouchableOpacity>
+
+                    {blocks.map((block, blockIdx) => {
+                      const canBlockUp = blockIdx > 0;
+                      const canBlockDown = blockIdx < blocks.length - 1;
+
+                      if (!block.isCombo) {
+                        return renderItemRow(block.items[0], {
+                          onMoveUp: () => handleMoveBlock(day.id, blocks, blockIdx, 'up'),
+                          onMoveDown: () => handleMoveBlock(day.id, blocks, blockIdx, 'down'),
+                          canMoveUp: canBlockUp, canMoveDown: canBlockDown,
+                        });
+                      }
+                      return (
+                        <View key={block.comboId} style={{ gap: 2 }}>
+                          <View style={s.comboHeaderRow}>
+                            <View style={{ gap: 1 }}>
+                              <TouchableOpacity onPress={() => handleMoveBlock(day.id, blocks, blockIdx, 'up')} disabled={!canBlockUp} hitSlop={{ top: 4, bottom: 4, left: 4, right: 4 }}>
+                                <Ionicons name="chevron-up" size={12} color={canBlockUp ? primaryColor : Colors.border} />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => handleMoveBlock(day.id, blocks, blockIdx, 'down')} disabled={!canBlockDown} hitSlop={{ top: 4, bottom: 4, left: 4, right: 4 }}>
+                                <Ionicons name="chevron-down" size={12} color={canBlockDown ? primaryColor : Colors.border} />
+                              </TouchableOpacity>
+                            </View>
+                            <Text style={[s.comboHeaderText, { color: primaryColor }]}>
+                              {comboTypeLabel(block.items.length).toUpperCase()} · {block.items.length} exercícios
+                            </Text>
+                            {!isCombining && (
+                              <>
+                                <TouchableOpacity onPress={() => handleEditCombo(day.id, block.comboId!)} style={s.comboActionBtn}>
+                                  <Ionicons name="repeat-outline" size={12} color={Colors.textSecondary} />
+                                  <Text style={s.comboActionText}>Recombinar</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleUngroupCombo(block.comboId!)} style={s.comboActionBtn}>
+                                  <Ionicons name="close-circle-outline" size={12} color={Colors.error} />
+                                </TouchableOpacity>
+                              </>
+                            )}
+                          </View>
+                          {block.items.map((item, idx) => renderItemRow(item, {
+                            comboLetter: String.fromCharCode(65 + idx),
+                            onMoveUp: () => handleMoveItem(block.items, item.itemId, 'up'),
+                            onMoveDown: () => handleMoveItem(block.items, item.itemId, 'down'),
+                            canMoveUp: idx > 0, canMoveDown: idx < block.items.length - 1,
+                          }))}
+                        </View>
+                      );
+                    })}
+
+                    {isCombining && selectedForCombo.size >= 2 && (
+                      <TouchableOpacity
+                        style={[s.groupConfirmBtn, { backgroundColor: primaryColor }]}
+                        onPress={() => handleGroupItems(day.id)} activeOpacity={0.85}
+                      >
+                        <Text style={[s.groupConfirmText, { color: primaryTextColor }]}>
+                          Agrupar em {comboTypeLabel(selectedForCombo.size)}
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+
+                    <View style={s.dayFooter}>
+                      <TouchableOpacity style={s.smallBtn} onPress={() => openItemModal(day)}>
+                        <Ionicons name="add" size={14} color={primaryColor} />
+                        <Text style={[s.smallBtnText, { color: primaryColor }]}>Adicionar item</Text>
+                      </TouchableOpacity>
+                      {day.status === 'draft' && (
+                        <TouchableOpacity style={s.smallBtn} onPress={() => handlePublishDay(day)}>
+                          <Ionicons name="megaphone-outline" size={14} color={primaryColor} />
+                          <Text style={[s.smallBtnText, { color: primaryColor }]}>Publicar dia</Text>
+                        </TouchableOpacity>
+                      )}
+                      <TouchableOpacity style={s.smallBtn} onPress={() => handleDeleteDay(day)}>
+                        <Ionicons name="trash-outline" size={14} color={Colors.error} />
+                        <Text style={[s.smallBtnText, { color: Colors.error }]}>Excluir dia</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                </View>
-              )}
+                );
+              })()}
             </View>
           );
         })}
@@ -915,12 +1145,27 @@ export default function ChallengeDetailScreen() {
               </View>
 
               {itemType === 'exercise' ? (
-                <TouchableOpacity style={s.exercisePickBtn} onPress={() => setExercisePickerVisible(true)}>
-                  <Ionicons name="barbell-outline" size={16} color={primaryColor} />
-                  <Text style={[s.exercisePickText, { color: primaryColor }]}>
-                    {itemExercise ? itemExercise.name : 'Selecionar exercício'}
-                  </Text>
-                </TouchableOpacity>
+                <View style={{ marginBottom: 14 }}>
+                  <TouchableOpacity style={s.exercisePickBtn} onPress={() => setExercisePickerVisible(true)}>
+                    <Ionicons name="barbell-outline" size={16} color={primaryColor} />
+                    <Text style={[s.exercisePickText, { color: primaryColor }]}>
+                      {itemExercises.length > 0 ? `${itemExercises.length} selecionado${itemExercises.length > 1 ? 's' : ''}` : 'Selecionar exercício(s)'}
+                    </Text>
+                  </TouchableOpacity>
+                  {itemExercises.length > 0 && (
+                    <View style={s.chipRow}>
+                      {itemExercises.map(ex => (
+                        <View key={ex.id} style={[s.chip, { borderColor: `${primaryColor}40`, backgroundColor: `${primaryColor}12` }]}>
+                          <Text style={[s.chipText, { color: primaryColor }]} numberOfLines={1}>{ex.name}</Text>
+                          <TouchableOpacity onPress={() => setItemExercises(prev => prev.filter(e => e.id !== ex.id))}>
+                            <Ionicons name="close" size={12} color={primaryColor} />
+                          </TouchableOpacity>
+                        </View>
+                      ))}
+                    </View>
+                  )}
+                  <Text style={s.hintText}>Selecione um ou mais — depois dá para combinar em Bi-Série/Tri-Série.</Text>
+                </View>
               ) : (
                 <Field label="TÍTULO"><TextInput value={itemTitle} onChangeText={setItemTitle} style={s.input} placeholderTextColor={Colors.textSecondary} /></Field>
               )}
@@ -943,7 +1188,8 @@ export default function ChallengeDetailScreen() {
       <ExercisePickerModal
         visible={exercisePickerVisible}
         tenantId={tenantId}
-        onSelect={(ex) => { setItemExercise(ex); setExercisePickerVisible(false); }}
+        multiSelect
+        onConfirm={(exs) => { setItemExercises(exs); setExercisePickerVisible(false); }}
         onClose={() => setExercisePickerVisible(false)}
       />
 
@@ -1067,9 +1313,25 @@ const s = StyleSheet.create({
   dayTitle: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm, color: Colors.textPrimary },
   dayMeta: { fontFamily: FontFamily.body, fontSize: 11, color: Colors.textSecondary, marginTop: 2 },
   dayBody: { paddingHorizontal: 12, paddingBottom: 12, borderTopWidth: 1, borderTopColor: Colors.border, paddingTop: 10, gap: 8 },
-  itemRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  itemRow: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 4, paddingHorizontal: 4 },
   itemTitle: { flex: 1, fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textPrimary },
   dayFooter: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 4 },
+
+  combineBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, borderWidth: 1.5, borderColor: Colors.border, backgroundColor: Colors.bg, borderRadius: 10, paddingVertical: 9, marginBottom: 4 },
+  combineBtnText: { fontFamily: FontFamily.bodyMedium, fontSize: 12 },
+  comboLetterBadge: { width: 18, height: 18, borderRadius: 9, alignItems: 'center', justifyContent: 'center' },
+  comboLetterText: { fontFamily: FontFamily.bodyBold, fontSize: 10, color: '#000' },
+  comboHeaderRow: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 4, paddingTop: 4 },
+  comboHeaderText: { flex: 1, fontFamily: FontFamily.bodyBold, fontSize: 10, letterSpacing: 0.6 },
+  comboActionBtn: { flexDirection: 'row', alignItems: 'center', gap: 3 },
+  comboActionText: { fontFamily: FontFamily.bodyMedium, fontSize: 10, color: Colors.textSecondary },
+  groupConfirmBtn: { borderRadius: 10, paddingVertical: 12, alignItems: 'center', marginTop: 2 },
+  groupConfirmText: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.sm },
+
+  chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 8 },
+  chip: { flexDirection: 'row', alignItems: 'center', gap: 5, borderWidth: 1, borderRadius: 10, paddingHorizontal: 9, paddingVertical: 6, maxWidth: '100%' },
+  chipText: { fontFamily: FontFamily.bodyMedium, fontSize: 12, maxWidth: 180 },
+  hintText: { fontFamily: FontFamily.body, fontSize: 11, color: Colors.textSecondary, marginTop: 6, lineHeight: 15 },
 
   trackRow: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 10 },
   trackName: { width: 90, fontFamily: FontFamily.bodyMedium, fontSize: 12, color: Colors.textPrimary },

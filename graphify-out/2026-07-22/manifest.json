@@ -1,18 +1,18 @@
 {
   ".claude/settings.local.json": {
-    "mtime": 1784729243.1842446,
-    "ast_hash": "7f2aaf75eb65a8c8a8406f004c79023e",
+    "mtime": 1784644201.8376727,
+    "ast_hash": "4a6c5785e49d00e8d5bc8ae264cdf3eb",
     "semantic_hash": ""
   },
   "app.json": {
-    "mtime": 1784660291.5620396,
-    "ast_hash": "fa020800de548c7095109746931cd0d2",
+    "mtime": 1784396557.702472,
+    "ast_hash": "873d8a71174a4d0a994b71754cf2c79d",
     "semantic_hash": ""
   },
   "app/(admin)/_layout.tsx": {
-    "mtime": 1784732661.7185638,
-    "ast_hash": "ee5b450b127cbacc6154d6e967157678",
-    "semantic_hash": ""
+    "mtime": 1783380581.144207,
+    "ast_hash": "0eca0183f9f35f87da1be461b6ef4d58",
+    "semantic_hash": "0eca0183f9f35f87da1be461b6ef4d58"
   },
   "app/(admin)/agenda.tsx": {
     "mtime": 1782395164.0334814,
@@ -20,9 +20,9 @@
     "semantic_hash": "8d8dd95d27fbe43c1a6dad3a423cdef8"
   },
   "app/(admin)/alunos/[id].tsx": {
-    "mtime": 1784732853.3104515,
-    "ast_hash": "e12afc89badeb6bef2176f8c2dac4516",
-    "semantic_hash": ""
+    "mtime": 1783604794.0751772,
+    "ast_hash": "63c1f650776244bb24515b4f4501baa4",
+    "semantic_hash": "63c1f650776244bb24515b4f4501baa4"
   },
   "app/(admin)/alunos/_layout.tsx": {
     "mtime": 1782152489.0422077,
@@ -90,14 +90,14 @@
     "semantic_hash": "6282ab3aa77fb120ec2d54935a0797f5"
   },
   "app/(admin)/index.tsx": {
-    "mtime": 1784648712.219944,
-    "ast_hash": "cd495dc08129594d9caa4ea5258e6c00",
-    "semantic_hash": ""
+    "mtime": 1783380658.6142707,
+    "ast_hash": "834b24400d9f454df381a37882405ecf",
+    "semantic_hash": "834b24400d9f454df381a37882405ecf"
   },
   "app/(admin)/mais.tsx": {
-    "mtime": 1784732645.7487142,
-    "ast_hash": "d78be0eb1a511e0486b8dd7c6118ab75",
-    "semantic_hash": ""
+    "mtime": 1783110515.7167432,
+    "ast_hash": "a351016e4acb37fdd63666eae0162045",
+    "semantic_hash": "a351016e4acb37fdd63666eae0162045"
   },
   "app/(admin)/perfil.tsx": {
     "mtime": 1783380608.200117,
@@ -225,9 +225,9 @@
     "semantic_hash": "3f531f952a7fcb87982321dfc2b5f6c3"
   },
   "app/(student)/mais/financeiro.tsx": {
-    "mtime": 1784732718.904796,
-    "ast_hash": "6cfbf3ef21ad40221126c097fec97361",
-    "semantic_hash": ""
+    "mtime": 1783006713.7605014,
+    "ast_hash": "482e5abf59828246819ab803e310b885",
+    "semantic_hash": "482e5abf59828246819ab803e310b885"
   },
   "app/(student)/mais/frequencia.tsx": {
     "mtime": 1783006713.7625115,
@@ -320,9 +320,9 @@
     "semantic_hash": "1514b86b6e6651a25f9b793620b37573"
   },
   "app/_layout.tsx": {
-    "mtime": 1784729139.4722438,
-    "ast_hash": "8264b2e56a9dd10fa0cbdc972ab26bb9",
-    "semantic_hash": ""
+    "mtime": 1784393629.9175494,
+    "ast_hash": "f0395057dfb94821776c5eb833a2fd00",
+    "semantic_hash": "f0395057dfb94821776c5eb833a2fd00"
   },
   "app/index.tsx": {
     "mtime": 1782174971.274273,
@@ -570,9 +570,9 @@
     "semantic_hash": "86a8be607ab644a1a69e845e8ff48f60"
   },
   "src/types/database.ts": {
-    "mtime": 1784732465.6295674,
-    "ast_hash": "bdb1c740128476592600a8cedd328c73",
-    "semantic_hash": ""
+    "mtime": 1783380439.8598232,
+    "ast_hash": "853f6d6bbd49503560e5a8b427bb341e",
+    "semantic_hash": "853f6d6bbd49503560e5a8b427bb341e"
   },
   "supabase/functions/ai-assistant/features/analyze-progress.ts": {
     "mtime": 1783608517.253546,
@@ -920,9 +920,9 @@
     "semantic_hash": "bb5973f66be513f224118b28d716786f"
   },
   "app/(admin)/desafios/[id].tsx": {
-    "mtime": 1784729476.3946767,
-    "ast_hash": "d428ec2209c2f8f95d75bb5ee9d4258a",
-    "semantic_hash": ""
+    "mtime": 1783345225.824573,
+    "ast_hash": "dae4212c0f9109d8e04e6825c62d50f3",
+    "semantic_hash": "dae4212c0f9109d8e04e6825c62d50f3"
   },
   "app/(admin)/desafios/_layout.tsx": {
     "mtime": 1783110500.402093,
@@ -1047,21 +1047,6 @@
   "docs/SESSAO_2026-07-18_combos_ia_e_melhorias_ux.md": {
     "mtime": 1784396628.1085796,
     "ast_hash": "224c5ccbb516580751b0ece812e6f9b2",
-    "semantic_hash": ""
-  },
-  "app/(admin)/financeiro.tsx": {
-    "mtime": 1784732626.7698028,
-    "ast_hash": "09f478485a6092feca8a63b380fc402b",
-    "semantic_hash": ""
-  },
-  "src/components/notifications/AgendaAlertBanner.tsx": {
-    "mtime": 1784729127.5276346,
-    "ast_hash": "def6c8bf31738641026bc8d6a940cd67",
-    "semantic_hash": ""
-  },
-  "supabase/migrations/20260721_agenda_notifications.sql": {
-    "mtime": 1784728999.8627658,
-    "ast_hash": "f989a22596a09d4d6a38b12cbb5c3fd7",
     "semantic_hash": ""
   }
 }

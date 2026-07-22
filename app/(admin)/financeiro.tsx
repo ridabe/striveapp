@@ -1,10 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import {
   View, Text, FlatList, TouchableOpacity, StyleSheet,
   ActivityIndicator, ScrollView, Modal, TextInput,
-  KeyboardAvoidingView, Platform, Alert,
+  KeyboardAvoidingView, Platform, Alert, Switch,
 } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
@@ -15,6 +15,9 @@ import { ModuleGuard } from '@/components/ModuleGuard';
 import { MODULE } from '@/lib/modules';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
+import { GuideModal } from '@/components/guides/GuideModal';
+import { useGuide } from '@/hooks/useGuide';
+import { GUIDES } from '@/lib/guides';
 
 // ─── Tipos ──────────────────────────────────────────────────────────────────
 type BillingType = 'recorrente' | 'pacote';
@@ -32,6 +35,7 @@ interface Subscription {
   active: boolean;
   billing_type: BillingType;
   total_installments: number | null;
+  sync_to_agenda: boolean;
 }
 
 interface Charge {
@@ -84,7 +88,7 @@ function fmtCurrency(v: number) {
 async function generateMonthlyCharges(tenantId: string) {
   const { data: subs } = await supabase
     .from('student_billing_subscriptions')
-    .select('id, student_id, plan_name, amount, due_day')
+    .select('id, student_id, plan_name, amount, due_day, sync_to_agenda')
     .eq('tenant_id', tenantId)
     .eq('active', true)
     .eq('billing_type', 'recorrente');
@@ -111,17 +115,55 @@ async function generateMonthlyCharges(tenantId: string) {
   const pending = subs.filter((s) => !billed.has(s.id));
   if (!pending.length) return;
 
-  await supabase.from('financial_plans').insert(
-    pending.map((s) => ({
-      tenant_id: tenantId,
-      student_id: s.student_id,
-      subscription_id: s.id,
-      plan_name: s.plan_name,
-      amount: s.amount,
-      due_date: `${year}-${pad(month + 1)}-${pad(s.due_day)}`,
-      status: 'pending' as const,
-    })),
-  );
+  const { data: inserted } = await supabase
+    .from('financial_plans')
+    .insert(
+      pending.map((s) => ({
+        tenant_id: tenantId,
+        student_id: s.student_id,
+        subscription_id: s.id,
+        plan_name: s.plan_name,
+        amount: s.amount,
+        due_date: `${year}-${pad(month + 1)}-${pad(s.due_day)}`,
+        status: 'pending' as const,
+      })),
+    )
+    .select('id, student_id, subscription_id, plan_name, amount, due_date');
+
+  const syncIds = new Set(pending.filter((s) => s.sync_to_agenda).map((s) => s.id));
+  const toSync = (inserted ?? []).filter((c) => c.subscription_id && syncIds.has(c.subscription_id));
+  if (toSync.length) await createAgendaEventsForCharges(tenantId, toSync);
+}
+
+// Cria eventos de agenda (type=pagamento_a_receber) para cobranças cuja
+// assinatura tem sync_to_agenda=true — espelha createAgendaEventsForCharges
+// do web (src/lib/billing/core.ts). Idempotente via índice único em
+// agenda_events.financial_plan_id.
+async function createAgendaEventsForCharges(
+  tenantId: string,
+  charges: { id: string; student_id: string; plan_name: string; amount: number; due_date: string }[],
+) {
+  const studentIds = [...new Set(charges.map((c) => c.student_id))];
+  const { data: students } = await supabase.from('students').select('id, full_name').in('id', studentIds);
+  const nameById = new Map((students ?? []).map((s) => [s.id, s.full_name]));
+
+  const events = charges.map((c) => ({
+    tenant_id: tenantId,
+    type: 'pagamento_a_receber',
+    title: c.plan_name,
+    event_date: c.due_date,
+    student_id: c.student_id,
+    student_name: nameById.get(c.student_id) ?? null,
+    amount: c.amount,
+    status: 'scheduled',
+    origin: 'personal' as const,
+    financial_plan_id: c.id,
+  }));
+
+  const { error } = await supabase.from('agenda_events').insert(events);
+  if (error && (error as any).code !== '23505') {
+    console.error('[financeiro] falha ao criar eventos de agenda:', error.message);
+  }
 }
 
 async function markOverdueCharges(tenantId: string) {
@@ -144,8 +186,9 @@ async function saveSubscription(params: {
   dueDay: number;
   billingType: BillingType;
   totalInstallments: number | null;
+  syncToAgenda: boolean;
 }) {
-  const { tenantId, studentId, planName, amount, dueDay, billingType, totalInstallments } = params;
+  const { tenantId, studentId, planName, amount, dueDay, billingType, totalInstallments, syncToAgenda } = params;
 
   const { data: subscription, error } = await supabase
     .from('student_billing_subscriptions')
@@ -159,6 +202,7 @@ async function saveSubscription(params: {
         active: true,
         billing_type: billingType,
         total_installments: billingType === 'pacote' ? totalInstallments : null,
+        sync_to_agenda: syncToAgenda,
       },
       { onConflict: 'student_id' },
     )
@@ -186,9 +230,16 @@ async function saveSubscription(params: {
     };
   });
 
-  const { error: insertError } = await supabase.from('financial_plans').insert(rows);
+  const { data: inserted, error: insertError } = await supabase
+    .from('financial_plans')
+    .insert(rows)
+    .select('id, student_id, plan_name, amount, due_date');
   // 23505 = unique_violation — parcela do mês já existe (reenvio); ignora.
   if (insertError && (insertError as any).code !== '23505') throw insertError;
+
+  if (syncToAgenda && inserted?.length) {
+    await createAgendaEventsForCharges(tenantId, inserted);
+  }
 }
 
 // ─── Linha de cobrança (dar baixa / desfazer / cancelar) ────────────────────
@@ -210,6 +261,7 @@ function ChargeRow({ charge, primaryColor, onChanged }: {
         .update({ status: 'paid', paid_at: new Date().toISOString(), paid_by: user?.id ?? null, payment_method: method })
         .eq('id', charge.id);
       if (error) throw error;
+      await supabase.from('agenda_events').update({ status: 'completed' }).eq('financial_plan_id', charge.id);
       setPickerOpen(false);
       onChanged();
     } catch (e: any) {
@@ -234,6 +286,7 @@ function ChargeRow({ charge, primaryColor, onChanged }: {
               .update({ status, paid_at: null, paid_by: null, payment_method: null })
               .eq('id', charge.id);
             if (error) throw error;
+            await supabase.from('agenda_events').update({ status: 'scheduled' }).eq('financial_plan_id', charge.id);
             onChanged();
           } catch (e: any) {
             Alert.alert('Erro', e.message ?? 'Não foi possível desfazer.');
@@ -255,6 +308,7 @@ function ChargeRow({ charge, primaryColor, onChanged }: {
           try {
             const { error } = await supabase.from('financial_plans').update({ status: 'cancelled' }).eq('id', charge.id);
             if (error) throw error;
+            await supabase.from('agenda_events').update({ status: 'cancelled' }).eq('financial_plan_id', charge.id);
             onChanged();
           } catch (e: any) {
             Alert.alert('Erro', e.message ?? 'Não foi possível cancelar.');
@@ -322,11 +376,12 @@ function ChargeRow({ charge, primaryColor, onChanged }: {
 }
 
 // ─── Lista de alunos ─────────────────────────────────────────────────────────
-function StudentListView({ students, loading, primaryColor, onSelect }: {
+function StudentListView({ students, loading, primaryColor, onSelect, onOpenGuide }: {
   students: StudentSummary[];
   loading: boolean;
   primaryColor: string;
   onSelect: (s: StudentSummary) => void;
+  onOpenGuide: () => void;
 }) {
   if (loading) return <ActivityIndicator color={primaryColor} style={{ marginTop: 60 }} />;
 
@@ -336,6 +391,12 @@ function StudentListView({ students, loading, primaryColor, onSelect }: {
       keyExtractor={(s) => s.id}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32, paddingTop: 12 }}
+      ListHeaderComponent={
+        <TouchableOpacity onPress={onOpenGuide} style={sl.guideLink} activeOpacity={0.7}>
+          <Ionicons name="help-circle-outline" size={14} color={primaryColor} />
+          <Text style={[sl.guideLinkText, { color: primaryColor }]}>Como funciona a cobrança?</Text>
+        </TouchableOpacity>
+      }
       renderItem={({ item }) => {
         const initials = item.full_name.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase();
         const sub = item.subscription;
@@ -381,6 +442,7 @@ export default function FinanceiroScreen() {
   const { primaryColor, primaryTextColor } = useThemeStore();
   const { studentId } = useLocalSearchParams<{ studentId?: string }>();
   const tenantId = profile?.tenant_id;
+  const guide = useGuide('faturas_cobranca', profile?.id);
 
   const [students, setStudents] = useState<StudentSummary[]>([]);
   const [loading, setLoading] = useState(true);
@@ -389,12 +451,14 @@ export default function FinanceiroScreen() {
   const [loadingDetail, setLoadingDetail] = useState(false);
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [pickerVisible, setPickerVisible] = useState(false);
   const [saving, setSaving] = useState(false);
   const [fPlanName, setFPlanName] = useState('Mensalidade');
   const [fAmount, setFAmount] = useState('');
   const [fDueDay, setFDueDay] = useState('');
   const [fBillingType, setFBillingType] = useState<BillingType>('recorrente');
   const [fTotalInstallments, setFTotalInstallments] = useState('');
+  const [fSyncToAgenda, setFSyncToAgenda] = useState(false);
 
   const load = useCallback(async () => {
     if (!tenantId) return;
@@ -404,7 +468,7 @@ export default function FinanceiroScreen() {
     const [stRes, subRes, chargesRes] = await Promise.all([
       supabase.from('students').select('id, full_name, status').eq('tenant_id', tenantId).eq('status', 'active').order('full_name'),
       supabase.from('student_billing_subscriptions')
-        .select('id, student_id, plan_name, amount, due_day, active, billing_type, total_installments')
+        .select('id, student_id, plan_name, amount, due_day, active, billing_type, total_installments, sync_to_agenda')
         .eq('tenant_id', tenantId).eq('active', true),
       supabase.from('financial_plans')
         .select('id, student_id, subscription_id, status')
@@ -443,22 +507,40 @@ export default function FinanceiroScreen() {
     setLoadingDetail(false);
   }, []);
 
-  useEffect(() => { load().finally(() => setLoading(false)); }, [load]);
+  // Tela vive dentro de um Tabs navigator (fica montada em segundo plano após a
+  // primeira visita) e também é aberta via studentId a partir do hub do aluno —
+  // useFocusEffect garante que os dados fiquem em dia sempre que a tela volta a
+  // ficar em foco (ex.: depois de dar baixa e voltar de outra aba).
+  useFocusEffect(useCallback(() => { load().finally(() => setLoading(false)); }, [load]));
 
   async function handleSelect(s: StudentSummary) {
     setSelected(s);
     await loadDetail(s.id);
   }
 
-  function openModal() {
-    if (!selected) return;
-    const sub = selected.subscription;
+  function openModalFor(s: StudentSummary) {
+    const sub = s.subscription;
     setFPlanName(sub?.plan_name ?? 'Mensalidade');
     setFAmount(sub ? String(sub.amount) : '');
     setFDueDay(sub ? String(sub.due_day) : '');
     setFBillingType(sub?.billing_type ?? 'recorrente');
     setFTotalInstallments(sub?.total_installments ? String(sub.total_installments) : '');
+    setFSyncToAgenda(sub?.sync_to_agenda ?? false);
     setModalVisible(true);
+  }
+
+  function openModal() {
+    if (!selected) return;
+    openModalFor(selected);
+  }
+
+  // Botão "+" da lista: escolher o aluno e já abrir o formulário de cobrança,
+  // sem precisar entrar no detalhe do aluno primeiro (era o principal motivo
+  // do botão de criar cobrança ser difícil de encontrar).
+  async function handlePickAndCreate(s: StudentSummary) {
+    setPickerVisible(false);
+    await handleSelect(s);
+    openModalFor(s);
   }
 
   async function handleSave() {
@@ -484,6 +566,7 @@ export default function FinanceiroScreen() {
         dueDay,
         billingType: fBillingType,
         totalInstallments,
+        syncToAgenda: fSyncToAgenda,
       });
       setModalVisible(false);
       await load();
@@ -520,7 +603,11 @@ export default function FinanceiroScreen() {
           <TouchableOpacity style={[st.addBtn, { backgroundColor: primaryColor }]} onPress={openModal} activeOpacity={0.85}>
             <Ionicons name={sub ? 'create-outline' : 'add'} size={20} color={primaryTextColor} />
           </TouchableOpacity>
-        ) : <View style={{ width: 38 }} />}
+        ) : (
+          <TouchableOpacity style={[st.addBtn, { backgroundColor: primaryColor }]} onPress={() => setPickerVisible(true)} activeOpacity={0.85}>
+            <Ionicons name="add" size={22} color={primaryTextColor} />
+          </TouchableOpacity>
+        )}
       </View>
 
       <ModuleGuard slug={MODULE.FATURAS}>
@@ -567,7 +654,7 @@ export default function FinanceiroScreen() {
             />
           )
         ) : (
-          <StudentListView students={students} loading={loading} primaryColor={primaryColor} onSelect={handleSelect} />
+          <StudentListView students={students} loading={loading} primaryColor={primaryColor} onSelect={handleSelect} onOpenGuide={guide.open} />
         )}
       </ModuleGuard>
 
@@ -626,6 +713,19 @@ export default function FinanceiroScreen() {
               </>
             )}
 
+            <View style={st.switchRow}>
+              <View style={{ flex: 1 }}>
+                <Text style={st.modalLabel}>ADICIONAR NA AGENDA</Text>
+                <Text style={st.helperText}>Vencimentos aparecem na agenda do personal e do aluno.</Text>
+              </View>
+              <Switch
+                value={fSyncToAgenda}
+                onValueChange={setFSyncToAgenda}
+                trackColor={{ false: Colors.border, true: `${primaryColor}80` }}
+                thumbColor={fSyncToAgenda ? primaryColor : Colors.textSecondary}
+              />
+            </View>
+
             <TouchableOpacity
               style={[st.saveBtn, { backgroundColor: primaryColor }, saving && { opacity: 0.6 }]}
               onPress={handleSave} disabled={saving} activeOpacity={0.85}
@@ -637,6 +737,35 @@ export default function FinanceiroScreen() {
           </ScrollView>
         </KeyboardAvoidingView>
       </Modal>
+
+      {/* Picker: escolher o aluno ao tocar em "+" na lista */}
+      <Modal visible={pickerVisible} transparent animationType="fade" onRequestClose={() => setPickerVisible(false)}>
+        <TouchableOpacity style={cr.overlay} activeOpacity={1} onPress={() => setPickerVisible(false)}>
+          <View style={[cr.sheet, { maxHeight: '70%' }]}>
+            <Text style={cr.sheetTitle}>Para qual aluno?</Text>
+            <ScrollView keyboardShouldPersistTaps="handled">
+              {students.map((item) => (
+                <TouchableOpacity key={item.id} style={cr.sheetItem} onPress={() => handlePickAndCreate(item)}>
+                  <Text style={cr.sheetItemText}>{item.full_name}</Text>
+                  <Ionicons name="chevron-forward" size={16} color={Colors.textSecondary} />
+                </TouchableOpacity>
+              ))}
+              {students.length === 0 && (
+                <Text style={{ fontFamily: FontFamily.body, fontSize: FontSize.sm, color: Colors.textSecondary, paddingVertical: 14 }}>
+                  Nenhum aluno ativo cadastrado.
+                </Text>
+              )}
+            </ScrollView>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
+      <GuideModal
+        visible={guide.visible}
+        content={GUIDES.faturas_cobranca}
+        onClose={guide.close}
+        onDismissForever={guide.dismissForever}
+      />
     </SafeAreaView>
   );
 }
@@ -658,6 +787,8 @@ const cr = StyleSheet.create({
 });
 
 const sl = StyleSheet.create({
+  guideLink: { flexDirection: 'row', alignItems: 'center', gap: 5, alignSelf: 'flex-start', marginBottom: 12 },
+  guideLinkText: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.xs },
   card: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: Colors.surface, borderRadius: 14, borderWidth: 1, borderColor: Colors.border, padding: 14, marginBottom: 10 },
   avatar: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
   avatarLetter: { fontFamily: FontFamily.bodyBold, fontSize: 16 },
@@ -699,6 +830,7 @@ const st = StyleSheet.create({
   typeOption: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 12, borderRadius: 12, borderWidth: 1.5, borderColor: Colors.border, backgroundColor: Colors.surface },
   typeOptionText: { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.xs, textAlign: 'center' },
   helperText: { fontFamily: FontFamily.body, fontSize: 11, color: Colors.textSecondary, marginTop: 8, lineHeight: 16 },
+  switchRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 20, paddingVertical: 4 },
   saveBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderRadius: 14, paddingVertical: 16, marginTop: 28 },
   saveBtnText: { fontFamily: FontFamily.bodyBold, fontSize: FontSize.md },
 });

@@ -15,6 +15,7 @@ import { useModules } from '@/hooks/useModules';
 import { useTenant } from '@/hooks/useTenant';
 import { AppUpdateAlert } from '@/components/AppUpdateAlert';
 import { AgendaAlertBanner } from '@/components/notifications/AgendaAlertBanner';
+import { StudentBillingAlertBanner } from '@/components/notifications/StudentBillingAlertBanner';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -49,6 +50,7 @@ export default function RootLayout() {
       </Stack>
       <AppUpdateAlert />
       <AgendaAlertBanner />
+      <StudentBillingAlertBanner />
     </>
   );
 }

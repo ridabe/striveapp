@@ -152,40 +152,51 @@ export default function ExtraExecutionScreen() {
     const finishedAt = new Date().toISOString();
     const startedAt = sessionStart.current?.toISOString() ?? finishedAt;
 
-    const { data: session, error } = await supabase
-      .from('workout_sessions')
-      .insert({
-        student_id: selectedStudent.id,
-        tenant_id: selectedStudent.tenant_id,
-        workout_plan_id: null,
-        workout_routine_id: null,
-        started_at: startedAt,
-        finished_at: finishedAt,
-        duration_seconds: sessionSecs,
-        intensity,
-        notes: finishNotes.trim() ? `[${workoutName}] ${finishNotes.trim()}` : `[${workoutName}]`,
-      } as any)
-      .select('id')
-      .single();
+    try {
+      const { data: session, error } = await supabase
+        .from('workout_sessions')
+        .insert({
+          student_id: selectedStudent.id,
+          tenant_id: selectedStudent.tenant_id,
+          workout_plan_id: null,
+          workout_routine_id: null,
+          started_at: startedAt,
+          finished_at: finishedAt,
+          duration_seconds: sessionSecs,
+          intensity,
+          notes: finishNotes.trim() ? `[${workoutName}] ${finishNotes.trim()}` : `[${workoutName}]`,
+        } as any)
+        .select('id')
+        .single();
 
-    if (!error && session?.id) {
-      const completed = items.filter(it => it.done);
-      if (completed.length > 0) {
-        await supabase.from('workout_session_exercises').insert(
-          completed.map(it => ({
-            session_id: session.id,
-            exercise_id: it.exerciseId,
-            workout_item_id: null,
-            sets_done: it.defaultSets,
-            reps_done: it.defaultReps,
-            load_used: it.currentLoad || null,
-          })) as any
-        );
+      if (error) throw error;
+
+      if (session?.id) {
+        const completed = items.filter(it => it.done);
+        if (completed.length > 0) {
+          const { error: exError } = await supabase.from('workout_session_exercises').insert(
+            completed.map(it => ({
+              session_id: session.id,
+              exercise_id: it.exerciseId,
+              workout_item_id: null,
+              sets_done: it.defaultSets,
+              reps_done: it.defaultReps,
+              load_used: it.currentLoad || null,
+            })) as any
+          );
+          if (exError) throw exError;
+        }
+        await registerAttendanceToday(selectedStudent.id, selectedStudent.tenant_id).catch(() => {});
       }
-      await registerAttendanceToday(selectedStudent.id, selectedStudent.tenant_id).catch(() => {});
-    }
 
-    router.back();
+      router.back();
+    } catch (e: any) {
+      setPhase('finishing');
+      Alert.alert(
+        'Não foi possível salvar',
+        e?.message ? `Tente novamente. (${e.message})` : 'Tente novamente em instantes.',
+      );
+    }
   }
 
   const doneCount = items.filter(it => it.done).length;

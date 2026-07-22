@@ -63,6 +63,9 @@ export default function StudentHome() {
 
   const [todayPlan, setTodayPlan]       = useState<any>(null);
   const [todaySession, setTodaySession] = useState<any>(null);
+  const [challengeStatus, setChallengeStatus] = useState<{
+    challengeId: string; name: string; pendingCount: number; totalCount: number;
+  } | null>(null);
   const [streak, setStreak]             = useState(0);
   const [weekSessions, setWeekSessions] = useState(0);
   const [totalSessions, setTotalSessions] = useState(0);
@@ -108,15 +111,59 @@ export default function StudentHome() {
     loadData(selectedStudent.id, selectedStudent.tenant_id);
   }, [selectedStudent?.id, studentLoading]);
 
-  // Atualiza o sino ao retornar para a home depois de ler mensagens.
+  // Indicador de Desafio — totalmente independente do indicador de treino comum.
+  // Um desafio ("Desafios") não tem nenhuma relação estrutural com workout_plans/
+  // workout_sessions: é lido só de challenge_participants/challenge_days/
+  // challenge_day_items/challenge_item_progress.
+  async function loadChallengeStatus(studentId: string) {
+    const { data: participations } = await supabase
+      .from('challenge_participants')
+      .select('id, challenge_id, challenges(id, name, status)')
+      .eq('student_id', studentId);
+
+    const active = (participations ?? []).find((p: any) => p.challenges?.status === 'active');
+    if (!active) { setChallengeStatus(null); return; }
+
+    const { data: daysData } = await supabase
+      .from('challenge_days')
+      .select('id, challenge_day_items(id)')
+      .eq('challenge_id', active.challenge_id)
+      .eq('status', 'published');
+
+    const allItemIds: string[] = (daysData ?? []).flatMap((d: any) =>
+      (d.challenge_day_items ?? []).map((i: any) => i.id)
+    );
+
+    if (allItemIds.length === 0) { setChallengeStatus(null); return; }
+
+    const { data: progress } = await supabase
+      .from('challenge_item_progress')
+      .select('challenge_day_item_id')
+      .eq('participant_id', active.id);
+
+    const doneSet = new Set((progress ?? []).map((p: any) => p.challenge_day_item_id));
+    const pendingCount = allItemIds.filter(id => !doneSet.has(id)).length;
+
+    setChallengeStatus({
+      challengeId: active.challenge_id,
+      name: (active as any).challenges.name,
+      pendingCount,
+      totalCount: allItemIds.length,
+    });
+  }
+
+  // Atualiza o sino ao retornar para a home depois de ler mensagens, e o status
+  // do desafio (que pode ter mudado ao voltar da tela de Desafios).
   useFocusEffect(
     useCallback(() => {
       if (!selectedStudent?.id) {
         setUnreadMessageCount(0);
+        setChallengeStatus(null);
         return;
       }
 
       void refreshUnreadMessageCount(selectedStudent.id);
+      void loadChallengeStatus(selectedStudent.id);
     }, [selectedStudent?.id])
   );
 
@@ -508,6 +555,44 @@ export default function StudentHome() {
           <Text style={s.sectionLabel}>TREINO DE HOJE — {todayLabel.toUpperCase()}</Text>
           {renderTodayCard()}
         </Animated.View>
+
+        {/* Desafio — indicador totalmente independente do treino comum acima */}
+        {challengeStatus && (!modulesLoaded || hasModule(MODULE.DESAFIOS)) && (
+          <Animated.View style={[s.section, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
+            <Text style={s.sectionLabel}>DESAFIO</Text>
+            {challengeStatus.pendingCount > 0 ? (
+              <TouchableOpacity
+                style={[s.todayCard, { borderColor: `${primaryColor}35` }]}
+                onPress={() => router.push('/(student)/mais/desafios' as any)}
+                activeOpacity={0.85}
+              >
+                <View style={[s.cardStripe, { backgroundColor: primaryColor }]} />
+                <View style={s.todayBody}>
+                  <Text style={s.todayRoutine}>{challengeStatus.name}</Text>
+                  <Text style={s.todayPlan}>
+                    {challengeStatus.pendingCount} {challengeStatus.pendingCount === 1 ? 'item pendente' : 'itens pendentes'}
+                  </Text>
+                </View>
+                <Ionicons name="chevron-forward" size={20} color={primaryColor} style={{ marginRight: 14 }} />
+              </TouchableOpacity>
+            ) : (
+              <View style={[s.doneCard, { borderColor: '#4ADE8040' }]}>
+                <View style={[s.cardStripe, { backgroundColor: '#4ADE80' }]} />
+                <View style={s.doneBody}>
+                  <View style={s.doneHeaderRow}>
+                    <View style={s.doneCheckWrap}>
+                      <Ionicons name="checkmark-circle" size={24} color="#4ADE80" />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Text style={s.doneTitleText}>Desafio em dia!</Text>
+                      <Text style={s.doneSubText} numberOfLines={1}>{challengeStatus.name}</Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            )}
+          </Animated.View>
+        )}
 
         {/* Stats */}
         <Animated.View style={[s.section, { opacity: fadeAnim }]}>

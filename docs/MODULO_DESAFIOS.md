@@ -163,7 +163,20 @@ Tabelas ja adicionadas nabase
 | `exercise_id` | uuid | FK `exercises`, só quando `item_type = 'exercise'` |
 | `file_url` | text | URL do arquivo, só quando `item_type = 'file'` |
 | `sort_order` | integer | Ordem de exibição dentro do dia |
+| `combo_group_id` | uuid \| null | Agrupa 2+ itens `exercise` em uma Bi-Série/Tri-Série/Circuito — mesmo padrão de `workout_items.combo_group_id` |
+| `combo_type` | text \| null | `biset` \| `triset` \| `circuit`, junto com `combo_group_id` |
 | `created_at` / `updated_at` | timestamptz | — |
+
+**Combinação de exercícios (Bi-Série/Tri-Série/Circuito):** desde a migration
+`20260722_challenge_day_items_combo.sql`, o personal pode selecionar 2+ itens
+`item_type = 'exercise'` de um mesmo dia e combiná-los, exatamente como já era
+feito ao montar rotinas de treino comuns (`workout_items`). No web, isso vive em
+`ChallengeDayItems.tsx` (reaproveita o `CombineModal` das rotinas) e nas actions
+`groupChallengeDayItems`/`ungroupChallengeDayItems`/`reorderChallengeDayItems`
+em `src/app/actions/challenges.ts`. No mobile, os handlers foram portados de
+`app/(admin)/planos/[id].tsx` para `app/(admin)/desafios/[id].tsx`, reaproveitando
+o helper `src/lib/comboExercises.ts` sem alterá-lo. Itens `reading`/`tip`/`file`
+não podem ser combinados — só exercícios.
 
 ### 4.5 `challenge_item_progress`
 

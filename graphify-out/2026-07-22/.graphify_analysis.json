@@ -1,0 +1,2700 @@
+{
+  "communities": {
+    "0": [
+      "supabase_functions_ai_assistant_features_analyze_progress",
+      "supabase_functions_ai_assistant_features_analyze_progress_buildanalyzeprompt",
+      "supabase_functions_ai_assistant_features_analyze_progress_buildsseresponse",
+      "supabase_functions_ai_assistant_features_analyze_progress_cors_headers",
+      "supabase_functions_ai_assistant_features_analyze_progress_handleanalyzeprogress",
+      "supabase_functions_ai_assistant_features_chat",
+      "supabase_functions_ai_assistant_features_chat_buildsseresponse",
+      "supabase_functions_ai_assistant_features_chat_cors_headers",
+      "supabase_functions_ai_assistant_features_chat_handlechat",
+      "supabase_functions_ai_assistant_features_chat_plan_creation_note",
+      "supabase_functions_ai_assistant_features_generate_plan",
+      "supabase_functions_ai_assistant_features_generate_plan_buildplansummary",
+      "supabase_functions_ai_assistant_features_generate_plan_buildplantool",
+      "supabase_functions_ai_assistant_features_generate_plan_cors_headers",
+      "supabase_functions_ai_assistant_features_generate_plan_errorsse",
+      "supabase_functions_ai_assistant_features_generate_plan_fetchavailableexercises",
+      "supabase_functions_ai_assistant_features_generate_plan_formatexerciselist",
+      "supabase_functions_ai_assistant_features_generate_plan_generatedplan",
+      "supabase_functions_ai_assistant_features_generate_plan_handlegenerateplan",
+      "supabase_functions_ai_assistant_features_generate_plan_insertplan",
+      "supabase_functions_ai_assistant_features_generate_plan_planitem",
+      "supabase_functions_ai_assistant_features_generate_plan_planroutine",
+      "supabase_functions_ai_assistant_features_generate_plan_streamtext",
+      "supabase_functions_ai_assistant_features_motivation",
+      "supabase_functions_ai_assistant_features_motivation_buildmotivationprompt",
+      "supabase_functions_ai_assistant_features_motivation_calcstreak",
+      "supabase_functions_ai_assistant_features_motivation_cors_headers",
+      "supabase_functions_ai_assistant_features_motivation_fetchgamificationcontext",
+      "supabase_functions_ai_assistant_features_motivation_gamificationcontext",
+      "supabase_functions_ai_assistant_features_motivation_handlemotivation",
+      "supabase_functions_ai_assistant_features_motivation_sanitizedirectstudentmessage",
+      "supabase_functions_ai_assistant_features_suggest_load",
+      "supabase_functions_ai_assistant_features_suggest_load_buildsseresponse",
+      "supabase_functions_ai_assistant_features_suggest_load_buildsuggestloadprompt",
+      "supabase_functions_ai_assistant_features_suggest_load_cors_headers",
+      "supabase_functions_ai_assistant_features_suggest_load_handlesuggestload",
+      "supabase_functions_ai_assistant_features_suggest_load_sanitizedirectstudentmessage",
+      "supabase_functions_ai_assistant_features_suggest_load_streamtext",
+      "supabase_functions_ai_assistant_index",
+      "supabase_functions_ai_assistant_index_cors_headers",
+      "supabase_functions_ai_assistant_index_createconversation",
+      "supabase_functions_ai_assistant_index_errorresponse",
+      "supabase_functions_ai_assistant_index_feature",
+      "supabase_functions_ai_assistant_index_requestbody",
+      "supabase_functions_ai_assistant_prompts_max_system_prompt",
+      "supabase_functions_ai_assistant_prompts_max_system_prompt_buildmaxsystemprompt",
+      "supabase_functions_ai_assistant_prompts_max_system_prompt_formatcontextsection",
+      "supabase_functions_ai_assistant_prompts_max_system_prompt_max_base_persona",
+      "supabase_functions_ai_assistant_prompts_vita_system_prompt",
+      "supabase_functions_ai_assistant_retrieval_student_context",
+      "supabase_functions_ai_assistant_retrieval_student_context_assessmentcontext",
+      "supabase_functions_ai_assistant_retrieval_student_context_calcage",
+      "supabase_functions_ai_assistant_retrieval_student_context_fetchactiveplan",
+      "supabase_functions_ai_assistant_retrieval_student_context_fetchlatestassessment",
+      "supabase_functions_ai_assistant_retrieval_student_context_fetchprogresssummary",
+      "supabase_functions_ai_assistant_retrieval_student_context_fetchrecentsessions",
+      "supabase_functions_ai_assistant_retrieval_student_context_fetchstudent",
+      "supabase_functions_ai_assistant_retrieval_student_context_fetchstudentcontext",
+      "supabase_functions_ai_assistant_retrieval_student_context_progresssummary",
+      "supabase_functions_ai_assistant_retrieval_student_context_routinecontext",
+      "supabase_functions_ai_assistant_retrieval_student_context_sessionsummary",
+      "supabase_functions_ai_assistant_retrieval_student_context_studentcontext",
+      "supabase_functions_ai_assistant_retrieval_student_context_workoutitemcontext",
+      "supabase_functions_ai_assistant_retrieval_student_context_workoutplancontext",
+      "supabase_functions_ai_assistant_retrieval_workout_context",
+      "supabase_functions_ai_assistant_retrieval_workout_context_exerciseloadhistory",
+      "supabase_functions_ai_assistant_retrieval_workout_context_fetchworkoutloadhistory",
+      "supabase_functions_ai_assistant_retrieval_workout_context_formatloadhistoryforprompt"
+    ],
+    "1": [
+      "package",
+      "package_dependencies",
+      "package_dependencies_expo",
+      "package_dependencies_expo_av",
+      "package_dependencies_expo_build_properties",
+      "package_dependencies_expo_constants",
+      "package_dependencies_expo_document_picker",
+      "package_dependencies_expo_file_system",
+      "package_dependencies_expo_font",
+      "package_dependencies_expo_google_fonts_dm_sans",
+      "package_dependencies_expo_google_fonts_syncopate",
+      "package_dependencies_expo_haptics",
+      "package_dependencies_expo_image_picker",
+      "package_dependencies_expo_linking",
+      "package_dependencies_expo_local_authentication",
+      "package_dependencies_expo_notifications",
+      "package_dependencies_expo_router",
+      "package_dependencies_expo_secure_store",
+      "package_dependencies_expo_splash_screen",
+      "package_dependencies_expo_status_bar",
+      "package_dependencies_expo_vector_icons",
+      "package_dependencies_expo_web_browser",
+      "package_dependencies_nativewind",
+      "package_dependencies_react",
+      "package_dependencies_react_native",
+      "package_dependencies_react_native_health_connect",
+      "package_dependencies_react_native_reanimated",
+      "package_dependencies_react_native_safe_area_context",
+      "package_dependencies_react_native_screens",
+      "package_dependencies_react_native_worklets",
+      "package_dependencies_supabase_supabase_js",
+      "package_dependencies_tailwindcss",
+      "package_dependencies_zustand",
+      "package_devdependencies",
+      "package_devdependencies_babel_core",
+      "package_devdependencies_eslint",
+      "package_devdependencies_eslint_config_expo",
+      "package_devdependencies_types_react",
+      "package_devdependencies_typescript",
+      "package_main",
+      "package_name",
+      "package_scripts",
+      "package_scripts_android",
+      "package_scripts_ios",
+      "package_scripts_lint",
+      "package_scripts_start",
+      "package_scripts_typecheck",
+      "package_scripts_web",
+      "package_version"
+    ],
+    "2": [
+      "app",
+      "app_adaptiveicon_backgroundcolor",
+      "app_adaptiveicon_foregroundimage",
+      "app_android_adaptiveicon",
+      "app_android_minsdkversion",
+      "app_android_package",
+      "app_android_permissions",
+      "app_android_versioncode",
+      "app_eas_projectid",
+      "app_experiments_typedroutes",
+      "app_expo",
+      "app_expo_android",
+      "app_expo_assetbundlepatterns",
+      "app_expo_experiments",
+      "app_expo_extra",
+      "app_expo_icon",
+      "app_expo_jsengine",
+      "app_expo_name",
+      "app_expo_newarchenabled",
+      "app_expo_orientation",
+      "app_expo_owner",
+      "app_expo_platforms",
+      "app_expo_plugins",
+      "app_expo_scheme",
+      "app_expo_slug",
+      "app_expo_splash",
+      "app_expo_userinterfacestyle",
+      "app_expo_version",
+      "app_expo_web",
+      "app_extra_eas",
+      "app_extra_router",
+      "app_splash_backgroundcolor",
+      "app_splash_image",
+      "app_splash_resizemode",
+      "app_web_bundler",
+      "app_web_favicon",
+      "app_web_output",
+      "src_hooks_useappversion",
+      "src_hooks_useappversion_appversionrow",
+      "src_hooks_useappversion_updatestatus",
+      "src_hooks_useappversion_useappversionresult",
+      "src_lib_appversion",
+      "src_lib_appversion_appjson"
+    ],
+    "3": [
+      "docs_modulo_assistente_ia",
+      "docs_modulo_assistente_ia_001_habilitar_pgvector",
+      "docs_modulo_assistente_ia_002_tabela_ai_conversations",
+      "docs_modulo_assistente_ia_003_tabela_ai_messages",
+      "docs_modulo_assistente_ia_004_tabela_exercise_embeddings",
+      "docs_modulo_assistente_ia_005_fun\u00e7\u00e3o_sql_de_busca_vetorial",
+      "docs_modulo_assistente_ia_006_m\u00f3dulo_assistente_ia_no_sistema",
+      "docs_modulo_assistente_ia_1_vis\u00e3o_geral",
+      "docs_modulo_assistente_ia_2_a_persona_quem_\u00e9_o_assistente",
+      "docs_modulo_assistente_ia_3_as_5_funcionalidades",
+      "docs_modulo_assistente_ia_4_arquitetura_t\u00e9cnica",
+      "docs_modulo_assistente_ia_5_schema_do_banco_de_dados",
+      "docs_modulo_assistente_ia_6_1_ai_assistant_fun\u00e7\u00e3o_principal",
+      "docs_modulo_assistente_ia_6_2_embed_exercises_indexador",
+      "docs_modulo_assistente_ia_6_edge_functions",
+      "docs_modulo_assistente_ia_7_componentes_de_ui",
+      "docs_modulo_assistente_ia_app_admin_alunos_id_assistente_tsx_painel_max_na_ficha_do_aluno",
+      "docs_modulo_assistente_ia_assets_a_criar",
+      "docs_modulo_assistente_ia_assistente_ia_module",
+      "docs_modulo_assistente_ia_avatar_rosto",
+      "docs_modulo_assistente_ia_estrutura_de_arquivos_novos",
+      "docs_modulo_assistente_ia_exemplo_de_resposta_do_max_strive",
+      "docs_modulo_assistente_ia_feature_1_gerar_treino_pelo_objetivo",
+      "docs_modulo_assistente_ia_feature_2_explicar_evolu\u00e7\u00e3o_do_aluno",
+      "docs_modulo_assistente_ia_feature_3_sugerir_ajuste_de_carga",
+      "docs_modulo_assistente_ia_feature_4_mensagem_motivacional",
+      "docs_modulo_assistente_ia_feature_5_chat_q_a_sobre_ficha_e_exerc\u00edcios_rag",
+      "docs_modulo_assistente_ia_fluxo_de_uma_requisi\u00e7\u00e3o_feature_5_chat",
+      "docs_modulo_assistente_ia_integra\u00e7\u00e3o_na_navega\u00e7\u00e3o_do_personal",
+      "docs_modulo_assistente_ia_migrations_a_criar_em_ordem",
+      "docs_modulo_assistente_ia_nome_max_strive",
+      "docs_modulo_assistente_ia_personalidade",
+      "docs_modulo_assistente_ia_por_que_n\u00e3o_est\u00e1_dispon\u00edvel_para_todos",
+      "docs_modulo_assistente_ia_sum\u00e1rio",
+      "docs_modulo_assistente_ia_system_prompt_base_do_max_strive"
+    ],
+    "4": [
+      "app_not_found",
+      "app_not_found_notfoundscreen",
+      "app_student_mais_nutricao",
+      "app_student_mais_nutricao_features",
+      "app_student_mais_nutricao_nutricaoscreen",
+      "app_student_mais_nutricao_s",
+      "src_components_ai_maxchatmessage",
+      "src_components_ai_maxchatmessage_maxchatmessage",
+      "src_components_ai_maxchatmessage_maxchatmessageprops",
+      "src_components_ai_maxchatmessage_small_avatar",
+      "src_components_ai_maxchatmessage_styles",
+      "src_components_ai_maxonboardingmodal",
+      "src_components_ai_maxonboardingmodal_maxonboardingmodal",
+      "src_components_ai_maxonboardingmodal_props",
+      "src_components_ai_maxonboardingmodal_s",
+      "src_components_ai_maxonboardingmodal_steps",
+      "src_components_ai_maxstreamingtext",
+      "src_components_ai_maxstreamingtext_maxstreamingtext",
+      "src_components_ai_maxstreamingtext_maxstreamingtextprops",
+      "src_components_ai_maxstreamingtext_styles",
+      "src_components_appupdatealert",
+      "src_components_appupdatealert_appupdatealert",
+      "src_components_appupdatealert_s",
+      "src_hooks_useappversion_useappversion",
+      "src_theme_index",
+      "src_theme_spacing",
+      "src_theme_spacing_radius",
+      "src_theme_spacing_spacing",
+      "src_theme_typography",
+      "src_theme_typography_fontfamily",
+      "src_theme_typography_fontsize",
+      "src_theme_typography_lineheight"
+    ],
+    "5": [
+      "scripts_import_exercisedb_import",
+      "scripts_import_exercisedb_import_apifetch",
+      "scripts_import_exercisedb_import_buildbaserecord",
+      "scripts_import_exercisedb_import_fetchexercises",
+      "scripts_import_exercisedb_import_import_limit",
+      "scripts_import_exercisedb_import_main",
+      "scripts_import_exercisedb_import_max_api_calls",
+      "scripts_import_exercisedb_import_page_size",
+      "scripts_import_exercisedb_import_request_delay_ms",
+      "scripts_import_exercisedb_import_requireenv",
+      "scripts_import_exercisedb_import_sleep",
+      "scripts_import_exercisedb_import_supabase",
+      "scripts_import_exercisedb_import_translatebatch",
+      "scripts_import_exercisedb_import_uploadgif",
+      "scripts_import_exercisedb_maps",
+      "scripts_import_exercisedb_maps_bodypart_to_group",
+      "scripts_import_exercisedb_maps_correctterms",
+      "scripts_import_exercisedb_maps_equipment_to_load",
+      "scripts_import_exercisedb_maps_escaperegexp",
+      "scripts_import_exercisedb_maps_glossary",
+      "scripts_import_exercisedb_maps_mapcounttype",
+      "scripts_import_exercisedb_maps_maploadtype",
+      "scripts_import_exercisedb_maps_mapmusclegroup",
+      "scripts_import_exercisedb_maps_muscle_pt",
+      "scripts_import_exercisedb_maps_target_to_group",
+      "scripts_import_exercisedb_maps_translatemusclelist",
+      "scripts_import_exercisedb_maps_valid_load_types",
+      "scripts_import_exercisedb_maps_valid_muscle_groups"
+    ],
+    "6": [
+      "app_admin_mais",
+      "app_admin_mais_maisscreen",
+      "app_admin_mais_modulegroup",
+      "app_admin_mais_moduleitem",
+      "app_admin_mais_styles",
+      "app_admin_treinos",
+      "app_admin_treinos_modulecard",
+      "app_admin_treinos_styles",
+      "app_admin_treinos_treino_modules",
+      "app_admin_treinos_treinosscreen",
+      "src_components_moduleguard",
+      "src_components_moduleguard_moduleguard",
+      "src_components_moduleguard_props",
+      "src_components_moduleguard_s",
+      "src_hooks_usemodules",
+      "src_lib_moduleonboarding",
+      "src_lib_moduleonboarding_getonboardingloop",
+      "src_lib_moduleonboarding_moduleonboardingitem",
+      "src_lib_moduleonboarding_onboardingrole",
+      "src_lib_moduleonboarding_personal_loop",
+      "src_lib_moduleonboarding_student_loop",
+      "src_lib_modules",
+      "src_lib_modules_module",
+      "src_lib_modules_moduleslug",
+      "src_stores_modulesstore",
+      "src_stores_modulesstore_modulesstate",
+      "src_stores_modulesstore_usemodulesstore"
+    ],
+    "7": [
+      "app_admin_alunos_id",
+      "app_admin_alunos_id_calcage",
+      "app_admin_alunos_id_fmtbirth",
+      "app_admin_alunos_id_getmodulelabel",
+      "app_admin_alunos_id_inforow",
+      "app_admin_alunos_id_medal",
+      "app_admin_alunos_id_modulecounts",
+      "app_admin_alunos_id_month_names",
+      "app_admin_alunos_id_rankinginfo",
+      "app_admin_alunos_id_s",
+      "app_admin_alunos_id_studentdetail",
+      "app_admin_alunos_id_studentdetailscreen",
+      "app_admin_alunos_id_width_w",
+      "src_components_editaralunomodal",
+      "src_components_editaralunomodal_datetoiso",
+      "src_components_editaralunomodal_editaralunomodal",
+      "src_components_editaralunomodal_empty",
+      "src_components_editaralunomodal_field",
+      "src_components_editaralunomodal_formstate",
+      "src_components_editaralunomodal_isotomasked",
+      "src_components_editaralunomodal_maskdate",
+      "src_components_editaralunomodal_maskphone",
+      "src_components_editaralunomodal_props",
+      "src_components_editaralunomodal_s",
+      "src_components_editaralunomodal_student_goals",
+      "src_components_editaralunomodal_studenttoedit"
+    ],
+    "8": [
+      "app_auth_welcome",
+      "app_auth_welcome_benefits",
+      "app_auth_welcome_styles",
+      "app_auth_welcome_welcomescreen",
+      "src_components_exercisepickermodal",
+      "src_components_exercisepickermodal_exercisepickermodal",
+      "src_components_exercisepickermodal_exercisesummary",
+      "src_components_exercisepickermodal_props",
+      "src_components_exercisepickermodal_s",
+      "src_components_notifications_trainernotificationbell",
+      "src_components_notifications_trainernotificationbell_fmtdate",
+      "src_components_notifications_trainernotificationbell_props",
+      "src_components_notifications_trainernotificationbell_s",
+      "src_components_notifications_trainernotificationbell_trainernotification",
+      "src_components_notifications_trainernotificationbell_trainernotificationbell",
+      "src_components_strivelogo",
+      "src_components_strivelogo_strivelogo",
+      "src_components_strivelogo_strivelogoprops",
+      "src_components_strivelogo_styles",
+      "src_lib_exerciseconfig_muscle_groups",
+      "src_theme_colors",
+      "src_theme_colors_colorkey",
+      "src_theme_colors_colors"
+    ],
+    "9": [
+      "app_admin_alunos_index",
+      "app_admin_alunos_index_alunosscreen",
+      "app_admin_alunos_index_student",
+      "app_admin_alunos_index_styles",
+      "app_admin_banco_exercicios_id",
+      "app_admin_banco_exercicios_id_exercise",
+      "app_admin_banco_exercicios_id_exercisedetailscreen",
+      "app_admin_banco_exercicios_id_s",
+      "app_admin_banco_exercicios_index",
+      "app_admin_banco_exercicios_index_bancoexerciciosscreen",
+      "app_admin_banco_exercicios_index_exercise",
+      "app_admin_banco_exercicios_index_s",
+      "app_admin_treinos_extras_index",
+      "app_admin_treinos_extras_index_category_colors",
+      "app_admin_treinos_extras_index_category_icons",
+      "app_admin_treinos_extras_index_extraworkout",
+      "app_admin_treinos_extras_index_s",
+      "app_admin_treinos_extras_index_treinosextrasscreen",
+      "app_student_layout",
+      "app_student_layout_studentlayout",
+      "src_components_novoalunomodal_novoalunomodal",
+      "src_stores_themestore_usethemestore"
+    ],
+    "10": [
+      "app_admin_anamnese",
+      "app_admin_anamnese_anamnesefield",
+      "app_admin_anamnese_anamneseresponse",
+      "app_admin_anamnese_anamnesescreen",
+      "app_admin_anamnese_category_icons",
+      "app_admin_anamnese_category_labels",
+      "app_admin_anamnese_caticon",
+      "app_admin_anamnese_default_categories",
+      "app_admin_anamnese_fe",
+      "app_admin_anamnese_field_types",
+      "app_admin_anamnese_fieldeditormodal",
+      "app_admin_anamnese_fieldtypelabel",
+      "app_admin_anamnese_fmtdate",
+      "app_admin_anamnese_formatfieldvalue",
+      "app_admin_anamnese_generatefieldkey",
+      "app_admin_anamnese_groupfields",
+      "app_admin_anamnese_needsoptions",
+      "app_admin_anamnese_s",
+      "app_admin_anamnese_student",
+      "app_admin_anamnese_studentwithresponse"
+    ],
+    "11": [
+      "app_admin_progresso",
+      "app_admin_progresso_day_labels",
+      "app_admin_progresso_daycount",
+      "app_admin_progresso_dv",
+      "app_admin_progresso_fmtdate",
+      "app_admin_progresso_linechart",
+      "app_admin_progresso_months",
+      "app_admin_progresso_progressentry",
+      "app_admin_progresso_progressoscreen",
+      "app_admin_progresso_sl",
+      "app_admin_progresso_st",
+      "app_admin_progresso_student",
+      "app_admin_progresso_studentdetailview",
+      "app_admin_progresso_studentlistview",
+      "app_admin_progresso_studentsummary",
+      "app_admin_progresso_uploadphotos",
+      "app_admin_progresso_week_order",
+      "app_admin_progresso_weeklybars",
+      "app_admin_progresso_weekpoint",
+      "app_admin_progresso_width_w"
+    ],
+    "12": [
+      "app_student_treinos_planid_executar_routineid",
+      "app_student_treinos_planid_executar_routineid_exitem",
+      "app_student_treinos_planid_executar_routineid_fmttime",
+      "app_student_treinos_planid_executar_routineid_intensities",
+      "app_student_treinos_planid_executar_routineid_phase",
+      "app_student_treinos_planid_executar_routineid_restring",
+      "app_student_treinos_planid_executar_routineid_routineexecutionscreen",
+      "app_student_treinos_planid_executar_routineid_rt",
+      "app_student_treinos_planid_executar_routineid_s",
+      "app_student_treinos_planid_executar_routineid_section",
+      "app_student_treinos_planid_executar_routineid_star_colors",
+      "app_student_treinos_planid_executar_routineid_star_labels",
+      "app_student_treinos_planid_executar_routineid_starrow",
+      "app_student_treinos_planid_executar_routineid_width_w",
+      "src_hooks_usehealthconnect",
+      "src_hooks_usehealthconnect_detectdevice",
+      "src_hooks_usehealthconnect_known_sources",
+      "src_hooks_usehealthconnect_required_permissions",
+      "src_hooks_usehealthconnect_usehealthconnect",
+      "src_hooks_usehealthconnect_wearablemetrics"
+    ],
+    "13": [
+      "app_admin_avaliacao",
+      "app_admin_avaliacao_assessment",
+      "app_admin_avaliacao_avaliacaoscreen",
+      "app_admin_avaliacao_bmibar",
+      "app_admin_avaliacao_bmicategory",
+      "app_admin_avaliacao_bmist",
+      "app_admin_avaliacao_calcbmi",
+      "app_admin_avaliacao_det",
+      "app_admin_avaliacao_fmtdate",
+      "app_admin_avaliacao_measure",
+      "app_admin_avaliacao_mest",
+      "app_admin_avaliacao_months",
+      "app_admin_avaliacao_sl",
+      "app_admin_avaliacao_st",
+      "app_admin_avaliacao_student",
+      "app_admin_avaliacao_studentdetailview",
+      "app_admin_avaliacao_studentlistview",
+      "app_admin_avaliacao_studentsummary"
+    ],
+    "14": [
+      "app_student_mais_mensagens",
+      "app_student_mais_mensagens_s",
+      "app_student_mais_mensagens_studentmessage",
+      "app_student_mais_planos_alimentares",
+      "app_student_mais_planos_alimentares_calcmealmacros",
+      "app_student_mais_planos_alimentares_fmt1",
+      "app_student_mais_planos_alimentares_fooditem",
+      "app_student_mais_planos_alimentares_goal_colors",
+      "app_student_mais_planos_alimentares_meal",
+      "app_student_mais_planos_alimentares_meal_type_label",
+      "app_student_mais_planos_alimentares_mealfood",
+      "app_student_mais_planos_alimentares_plan",
+      "app_student_mais_planos_alimentares_s",
+      "app_student_mais_planos_alimentares_studentplanosalimentaresscreen",
+      "src_components_studentheader",
+      "src_components_studentheader_s",
+      "src_components_studentheader_studentheader",
+      "src_components_studentheader_studentheaderprops"
+    ],
+    "15": [
+      "src_components_ai_maxavatar",
+      "src_components_ai_maxavatar_images",
+      "src_components_ai_maxavatar_maxavatar",
+      "src_components_ai_maxavatar_maxavatarprops",
+      "src_components_ai_maxavatar_sizes",
+      "src_components_ai_maxavatar_styles",
+      "src_components_ai_maxavatar_variant",
+      "src_components_ai_maxquickactions",
+      "src_components_ai_maxquickactions_action",
+      "src_components_ai_maxquickactions_actions",
+      "src_components_ai_maxquickactions_maxquickactions",
+      "src_components_ai_maxquickactions_maxquickactionsprops",
+      "src_components_ai_maxquickactions_styles",
+      "src_hooks_usemaxstream",
+      "src_hooks_usemaxstream_maxfeature",
+      "src_hooks_usemaxstream_maxstreamparams",
+      "src_hooks_usemaxstream_usemaxstream",
+      "src_hooks_usemaxstream_usemaxstreamresult"
+    ],
+    "16": [
+      "app_student_progresso_index",
+      "app_student_progresso_index_bs",
+      "app_student_progresso_index_counter",
+      "app_student_progresso_index_day_labels",
+      "app_student_progresso_index_daycount",
+      "app_student_progresso_index_fmtdate",
+      "app_student_progresso_index_linechart",
+      "app_student_progresso_index_progressentry",
+      "app_student_progresso_index_progressoscreen",
+      "app_student_progresso_index_s",
+      "app_student_progresso_index_storagepath",
+      "app_student_progresso_index_uploadphotos",
+      "app_student_progresso_index_week_order",
+      "app_student_progresso_index_weeklabel",
+      "app_student_progresso_index_weeklybars",
+      "app_student_progresso_index_weekpoint",
+      "app_student_progresso_index_width_w"
+    ],
+    "17": [
+      "app_admin_layout",
+      "app_admin_layout_adminlayout",
+      "app_admin_perfil",
+      "app_admin_perfil_fieldhint",
+      "app_admin_perfil_maskphone",
+      "app_admin_perfil_perfilscreen",
+      "app_admin_perfil_plan",
+      "app_admin_perfil_sectionlabel",
+      "app_admin_perfil_styles",
+      "app_select_organization",
+      "app_select_organization_role_label",
+      "app_select_organization_selectorganizationscreen",
+      "app_select_organization_styles",
+      "src_hooks_useactiveorg",
+      "src_hooks_useactiveorg_activeorgoption",
+      "src_hooks_useactiveorg_useactiveorg"
+    ],
+    "18": [
+      "app_admin_studio",
+      "app_admin_studio_isvalidhex",
+      "app_admin_studio_preset_colors",
+      "app_admin_studio_primarytextmode",
+      "app_admin_studio_studioscreen",
+      "app_admin_studio_styles",
+      "app_select_tenant",
+      "app_select_tenant_selecttenantscreen",
+      "app_select_tenant_styles",
+      "src_hooks_usetenant",
+      "src_lib_colorcontrast",
+      "src_lib_colorcontrast_getreadabletextcolor",
+      "src_lib_colorcontrast_resolvetextcolor",
+      "src_stores_themestore",
+      "src_stores_themestore_effectiverole",
+      "src_stores_themestore_themestate"
+    ],
+    "19": [
+      "src_hooks_usestudent",
+      "src_hooks_usestudent_student",
+      "src_stores_selectedstudentstore",
+      "src_stores_selectedstudentstore_selectedstudentstate",
+      "src_stores_selectedstudentstore_useselectedstudentstore",
+      "src_types_database",
+      "src_types_database_compositetypes",
+      "src_types_database_constants",
+      "src_types_database_database",
+      "src_types_database_databasewithoutinternals",
+      "src_types_database_defaultschema",
+      "src_types_database_enums",
+      "src_types_database_json",
+      "src_types_database_tables",
+      "src_types_database_tablesinsert",
+      "src_types_database_tablesupdate"
+    ],
+    "20": [
+      "app_admin_desafios_id",
+      "app_admin_desafios_id_challenge",
+      "app_admin_desafios_id_challengedetailscreen",
+      "app_admin_desafios_id_day",
+      "app_admin_desafios_id_dayitem",
+      "app_admin_desafios_id_field",
+      "app_admin_desafios_id_infoblock",
+      "app_admin_desafios_id_item_types",
+      "app_admin_desafios_id_itemicon",
+      "app_admin_desafios_id_modalheader",
+      "app_admin_desafios_id_participant",
+      "app_admin_desafios_id_s",
+      "app_admin_desafios_id_sectionheader",
+      "app_admin_desafios_id_status_label",
+      "app_admin_desafios_id_studentoption"
+    ],
+    "21": [
+      "app_student_treinos_planid_executar_index",
+      "app_student_treinos_planid_executar_index_exitem",
+      "app_student_treinos_planid_executar_index_fmttime",
+      "app_student_treinos_planid_executar_index_intensities",
+      "app_student_treinos_planid_executar_index_phase",
+      "app_student_treinos_planid_executar_index_planexecutionscreen",
+      "app_student_treinos_planid_executar_index_restring",
+      "app_student_treinos_planid_executar_index_rt",
+      "app_student_treinos_planid_executar_index_s",
+      "app_student_treinos_planid_executar_index_section",
+      "app_student_treinos_planid_executar_index_star_colors",
+      "app_student_treinos_planid_executar_index_star_labels",
+      "app_student_treinos_planid_executar_index_starrow",
+      "app_student_treinos_planid_executar_index_width_w",
+      "src_lib_exerciseconfig_musclecolor"
+    ],
+    "22": [
+      "app_admin_agenda",
+      "app_admin_agenda_agendaevent",
+      "app_admin_agenda_day_names_short",
+      "app_admin_agenda_displaytoiso",
+      "app_admin_agenda_es",
+      "app_admin_agenda_event_types",
+      "app_admin_agenda_eventcard",
+      "app_admin_agenda_fmtcurrency",
+      "app_admin_agenda_isotodisplay",
+      "app_admin_agenda_maskdate",
+      "app_admin_agenda_month_names",
+      "app_admin_agenda_s",
+      "app_admin_agenda_toymd",
+      "app_admin_agenda_type_config"
+    ],
+    "23": [
+      "app_admin_frequencia",
+      "app_admin_frequencia_animcounter",
+      "app_admin_frequencia_attrecord",
+      "app_admin_frequencia_det",
+      "app_admin_frequencia_frequenciascreen",
+      "app_admin_frequencia_months",
+      "app_admin_frequencia_s",
+      "app_admin_frequencia_sl",
+      "app_admin_frequencia_student",
+      "app_admin_frequencia_studentdetailview",
+      "app_admin_frequencia_studentlistview",
+      "app_admin_frequencia_studentsummary",
+      "app_admin_frequencia_todatestr",
+      "app_admin_frequencia_week_days"
+    ],
+    "24": [
+      "app_auth_login",
+      "app_auth_login_biobtn",
+      "app_auth_login_biobtntext",
+      "app_auth_login_dividerline",
+      "app_auth_login_dividerrow",
+      "app_auth_login_dividertext",
+      "app_auth_login_input",
+      "app_auth_login_label",
+      "app_auth_login_loginscreen",
+      "app_auth_login_submitbtn",
+      "src_hooks_usebiometric",
+      "src_hooks_usebiometric_biocreds",
+      "src_hooks_usebiometric_usebiometric",
+      "src_services_auth_signin"
+    ],
+    "25": [
+      "app_student_mais_avaliacao",
+      "app_student_mais_avaliacao_assessment",
+      "app_student_mais_avaliacao_avaliacaoscreen",
+      "app_student_mais_avaliacao_bmi_zones",
+      "app_student_mais_avaliacao_bmibar",
+      "app_student_mais_avaliacao_bmis",
+      "app_student_mais_avaliacao_bmizone",
+      "app_student_mais_avaliacao_delta",
+      "app_student_mais_avaliacao_deltabadge",
+      "app_student_mais_avaliacao_fmtdate",
+      "app_student_mais_avaliacao_fmtshort",
+      "app_student_mais_avaliacao_m",
+      "app_student_mais_avaliacao_measure",
+      "app_student_mais_avaliacao_width_w"
+    ],
+    "26": [
+      "app_student_mais_ranking",
+      "app_student_mais_ranking_badge",
+      "app_student_mais_ranking_badge_config",
+      "app_student_mais_ranking_how_it_works",
+      "app_student_mais_ranking_howitworkscard",
+      "app_student_mais_ranking_hw",
+      "app_student_mais_ranking_medal",
+      "app_student_mais_ranking_month_names",
+      "app_student_mais_ranking_motivationalmessage",
+      "app_student_mais_ranking_mypoints",
+      "app_student_mais_ranking_rankingentry",
+      "app_student_mais_ranking_s",
+      "app_student_mais_ranking_snapshot",
+      "app_student_mais_ranking_studentrankingscreen"
+    ],
+    "27": [
+      "app_admin_agenda_adminagendascreen",
+      "app_admin_feedbacks",
+      "app_admin_feedbacks_feedbackitem",
+      "app_admin_feedbacks_feedbacksscreen",
+      "app_admin_feedbacks_fmtdate",
+      "app_admin_feedbacks_s",
+      "app_admin_feedbacks_stars",
+      "app_index",
+      "app_index_index",
+      "src_stores_authstore",
+      "src_stores_authstore_authstate",
+      "src_stores_authstore_profile",
+      "src_stores_authstore_useauthstore"
+    ],
+    "28": [
+      "app_admin_arquivos",
+      "app_admin_arquivos_arquivosscreen",
+      "app_admin_arquivos_categoryfrommime",
+      "app_admin_arquivos_chip",
+      "app_admin_arquivos_extfromname",
+      "app_admin_arquivos_filecategory",
+      "app_admin_arquivos_fileicon",
+      "app_admin_arquivos_fileiconcolor",
+      "app_admin_arquivos_formatdate",
+      "app_admin_arquivos_formatsize",
+      "app_admin_arquivos_sharedfile",
+      "app_admin_arquivos_student",
+      "app_admin_arquivos_styles"
+    ],
+    "29": [
+      "app_admin_assistente_ia",
+      "app_admin_assistente_ia_assistenteiascreen",
+      "app_admin_assistente_ia_chat",
+      "app_admin_assistente_ia_chat_assistenteiachatscreen",
+      "app_admin_assistente_ia_chat_s",
+      "app_admin_assistente_ia_chat_storedmessage",
+      "app_admin_assistente_ia_chat_studentmini",
+      "app_admin_assistente_ia_feature_labels",
+      "app_admin_assistente_ia_plan_steps",
+      "app_admin_assistente_ia_s",
+      "app_admin_assistente_ia_studentmini",
+      "src_lib_studentnav",
+      "src_lib_studentnav_backtostudenthub"
+    ],
+    "30": [
+      "app_student_mais_agenda",
+      "app_student_mais_agenda_agendaevent",
+      "app_student_mais_agenda_day_names",
+      "app_student_mais_agenda_displaytoiso",
+      "app_student_mais_agenda_ec",
+      "app_student_mais_agenda_maskdate",
+      "app_student_mais_agenda_month_names",
+      "app_student_mais_agenda_s",
+      "app_student_mais_agenda_studentagendascreen",
+      "app_student_mais_agenda_studenteventcard",
+      "app_student_mais_agenda_toymd",
+      "app_student_mais_agenda_type_color",
+      "app_student_mais_agenda_type_icon"
+    ],
+    "31": [
+      "app_student_treinos_extras_extraid_index",
+      "app_student_treinos_extras_extraid_index_category_color",
+      "app_student_treinos_extras_extraid_index_extra",
+      "app_student_treinos_extras_extraid_index_extradetailscreen",
+      "app_student_treinos_extras_extraid_index_extraexercise",
+      "app_student_treinos_extras_extraid_index_s",
+      "src_components_mediaviewermodal",
+      "src_components_mediaviewermodal_mediatype",
+      "src_components_mediaviewermodal_mediaviewermodal",
+      "src_components_mediaviewermodal_props",
+      "src_components_mediaviewermodal_s",
+      "src_components_mediaviewermodal_width_w_height_h",
+      "src_lib_exerciseconfig_extracategorylabel"
+    ],
+    "32": [
+      "app_student_treinos_index",
+      "app_student_treinos_index_bar_w",
+      "app_student_treinos_index_category_color",
+      "app_student_treinos_index_category_icon",
+      "app_student_treinos_index_day_labels",
+      "app_student_treinos_index_day_short",
+      "app_student_treinos_index_extraworkout",
+      "app_student_treinos_index_plan",
+      "app_student_treinos_index_s",
+      "app_student_treinos_index_treinosscreen",
+      "app_student_treinos_index_weektracker",
+      "app_student_treinos_index_width_w",
+      "app_student_treinos_index_wt"
+    ],
+    "33": [
+      "app_admin_index",
+      "app_admin_index_actionpill",
+      "app_admin_index_admindashboard",
+      "app_admin_index_dashboardstats",
+      "app_admin_index_ministat",
+      "app_admin_index_recentstudent",
+      "app_admin_index_s",
+      "src_components_onboarding_moduleonboardingpopup",
+      "src_components_onboarding_moduleonboardingpopup_max_openers",
+      "src_components_onboarding_moduleonboardingpopup_moduleonboardingpopup",
+      "src_components_onboarding_moduleonboardingpopup_props",
+      "src_components_onboarding_moduleonboardingpopup_s"
+    ],
+    "34": [
+      "app_student_mais_arquivos",
+      "app_student_mais_arquivos_arquivosstudentscreen",
+      "app_student_mais_arquivos_filecategory",
+      "app_student_mais_arquivos_fileicon",
+      "app_student_mais_arquivos_fileiconcolor",
+      "app_student_mais_arquivos_formatdate",
+      "app_student_mais_arquivos_formatsize",
+      "app_student_mais_arquivos_s",
+      "app_student_mais_arquivos_sharedfile",
+      "app_student_mais_arquivos_type_filters",
+      "app_student_mais_mensagens_studentmessages",
+      "src_hooks_usestudent_usestudent"
+    ],
+    "35": [
+      "docs_spec_mobile_strivepersonal",
+      "docs_spec_mobile_strivepersonal_1_introdu\u00e7\u00e3o",
+      "docs_spec_mobile_strivepersonal_2_arquitetura_e_stack",
+      "docs_spec_mobile_strivepersonal_3_estrutura_de_diret\u00f3rios_proposta",
+      "docs_spec_mobile_strivepersonal_4_1_autentica\u00e7\u00e3o",
+      "docs_spec_mobile_strivepersonal_4_2_acesso_a_dados_e_rls",
+      "docs_spec_mobile_strivepersonal_4_3_upload_de_arquivos_storage",
+      "docs_spec_mobile_strivepersonal_4_integra\u00e7\u00e3o_com_supabase",
+      "docs_spec_mobile_strivepersonal_5_implementa\u00e7\u00e3o_do_design_system",
+      "docs_spec_mobile_strivepersonal_6_fluxos_cr\u00edticos_a_desenvolver",
+      "docs_spec_mobile_strivepersonal_7_estrat\u00e9gia_de_testes",
+      "docs_spec_mobile_strivepersonal_spec_driven_development_sdd_strive_personal_mobile"
+    ],
+    "36": [
+      "app_admin_planos_alimentares_id",
+      "app_admin_planos_alimentares_id_calcmacros",
+      "app_admin_planos_alimentares_id_draftfood",
+      "app_admin_planos_alimentares_id_fmtmacro",
+      "app_admin_planos_alimentares_id_fooditem",
+      "app_admin_planos_alimentares_id_goals",
+      "app_admin_planos_alimentares_id_meal",
+      "app_admin_planos_alimentares_id_meal_types",
+      "app_admin_planos_alimentares_id_plan",
+      "app_admin_planos_alimentares_id_planoalimentardetailscreen",
+      "app_admin_planos_alimentares_id_s"
+    ],
+    "37": [
+      "app_admin_planos_id",
+      "app_admin_planos_id_assignedstudent",
+      "app_admin_planos_id_datetoiso",
+      "app_admin_planos_id_isotomasked",
+      "app_admin_planos_id_maskdate",
+      "app_admin_planos_id_plan",
+      "app_admin_planos_id_plandetailscreen",
+      "app_admin_planos_id_routine",
+      "app_admin_planos_id_s",
+      "app_admin_planos_id_student",
+      "app_admin_planos_id_workoutitem"
+    ],
+    "38": [
+      "app_student_perfil_index",
+      "app_student_perfil_index_all_modules",
+      "app_student_perfil_index_fmtphone",
+      "app_student_perfil_index_openwhatsapp",
+      "app_student_perfil_index_perfilscreen",
+      "app_student_perfil_index_s",
+      "app_student_perfil_index_tenantcontact",
+      "src_components_tenantlogo",
+      "src_components_tenantlogo_styles",
+      "src_components_tenantlogo_tenantlogo",
+      "src_components_tenantlogo_tenantlogoprops"
+    ],
+    "39": [
+      "app_student_treinos_extras_extraid_executar_index",
+      "app_student_treinos_extras_extraid_executar_index_exgroup",
+      "app_student_treinos_extras_extraid_executar_index_exitem",
+      "app_student_treinos_extras_extraid_executar_index_extraexecutionscreen",
+      "app_student_treinos_extras_extraid_executar_index_fmttime",
+      "app_student_treinos_extras_extraid_executar_index_groupbycombo",
+      "app_student_treinos_extras_extraid_executar_index_intensities",
+      "app_student_treinos_extras_extraid_executar_index_phase",
+      "app_student_treinos_extras_extraid_executar_index_s",
+      "src_lib_attendance",
+      "src_lib_attendance_registerattendancetoday"
+    ],
+    "40": [
+      "docs_prd_mobile_strivepersonal",
+      "docs_prd_mobile_strivepersonal_1_vis\u00e3o_geral_do_produto",
+      "docs_prd_mobile_strivepersonal_2_objetivos",
+      "docs_prd_mobile_strivepersonal_3_1_autentica\u00e7\u00e3o_e_white_label",
+      "docs_prd_mobile_strivepersonal_3_2_navega\u00e7\u00e3o_principal_bottom_navigation",
+      "docs_prd_mobile_strivepersonal_3_3_m\u00f3dulos_do_aluno",
+      "docs_prd_mobile_strivepersonal_3_escopo_funcional",
+      "docs_prd_mobile_strivepersonal_4_design_system_e_interface",
+      "docs_prd_mobile_strivepersonal_5_regras_de_neg\u00f3cio_e_restri\u00e7\u00f5es",
+      "docs_prd_mobile_strivepersonal_6_stack_tecnol\u00f3gica",
+      "docs_prd_mobile_strivepersonal_product_requirements_document_prd_strive_personal_mobile"
+    ],
+    "41": [
+      "src_lib_exerciseconfig",
+      "src_lib_exerciseconfig_count_types",
+      "src_lib_exerciseconfig_counttypelabel",
+      "src_lib_exerciseconfig_days_of_week",
+      "src_lib_exerciseconfig_extra_categories",
+      "src_lib_exerciseconfig_goal_colors",
+      "src_lib_exerciseconfig_load_types",
+      "src_lib_exerciseconfig_loadtypelabel",
+      "src_lib_exerciseconfig_muscle_colors",
+      "src_lib_exerciseconfig_musclegroup",
+      "src_lib_exerciseconfig_plan_goals"
+    ],
+    "42": [
+      "src_lib_workoutaudio",
+      "src_lib_workoutaudio_cancelrestnotification",
+      "src_lib_workoutaudio_ensurebeepready",
+      "src_lib_workoutaudio_generatebeepwav",
+      "src_lib_workoutaudio_getnotifications",
+      "src_lib_workoutaudio_notificationsmodule",
+      "src_lib_workoutaudio_playrestendalert",
+      "src_lib_workoutaudio_preloadrestbeep",
+      "src_lib_workoutaudio_releaserestbeep",
+      "src_lib_workoutaudio_requestnotificationpermission",
+      "src_lib_workoutaudio_schedulerestendnotification"
+    ],
+    "43": [
+      "app_admin_historico_treinos",
+      "app_admin_historico_treinos_fmtdate",
+      "app_admin_historico_treinos_fmtduration",
+      "app_admin_historico_treinos_fmttime",
+      "app_admin_historico_treinos_historicotreinosscreen",
+      "app_admin_historico_treinos_intensity_config",
+      "app_admin_historico_treinos_one",
+      "app_admin_historico_treinos_s",
+      "app_admin_historico_treinos_session",
+      "app_admin_historico_treinos_sessionexercise"
+    ],
+    "44": [
+      "app_admin_planos_index",
+      "app_admin_planos_index_extra_category_colors",
+      "app_admin_planos_index_fmtdate",
+      "app_admin_planos_index_planosscreen",
+      "app_admin_planos_index_s",
+      "app_admin_planos_index_sp",
+      "app_admin_planos_index_studentextra",
+      "app_admin_planos_index_studentplan",
+      "app_admin_planos_index_studentplansview",
+      "app_admin_planos_index_workoutplan"
+    ],
+    "45": [
+      "app_student_mais_desafios",
+      "app_student_mais_desafios_challenge",
+      "app_student_mais_desafios_day",
+      "app_student_mais_desafios_dayitem",
+      "app_student_mais_desafios_infoblock",
+      "app_student_mais_desafios_item_icon",
+      "app_student_mais_desafios_message",
+      "app_student_mais_desafios_rankingrow",
+      "app_student_mais_desafios_s",
+      "app_student_mais_desafios_studentdesafiosscreen"
+    ],
+    "46": [
+      "docs_modulo_desafios",
+      "docs_modulo_desafios_10_integra\u00e7\u00e3o_com_sistema_de_m\u00f3dulos",
+      "docs_modulo_desafios_12_limita\u00e7\u00f5es_conhecidas",
+      "docs_modulo_desafios_1_vis\u00e3o_geral",
+      "docs_modulo_desafios_2_identifica\u00e7\u00e3o_do_m\u00f3dulo",
+      "docs_modulo_desafios_5_storage_capa_do_desafio",
+      "docs_modulo_desafios_7_fluxo_do_personal_web",
+      "docs_modulo_desafios_8_fluxo_do_aluno_web",
+      "docs_modulo_desafios_m\u00f3dulo_desafios",
+      "docs_modulo_desafios_sum\u00e1rio"
+    ],
+    "47": [
+      "scripts_import_exercisedb_update_media",
+      "scripts_import_exercisedb_update_media_fetchgif",
+      "scripts_import_exercisedb_update_media_main",
+      "scripts_import_exercisedb_update_media_max_api_calls",
+      "scripts_import_exercisedb_update_media_max_session_bytes",
+      "scripts_import_exercisedb_update_media_request_delay_ms",
+      "scripts_import_exercisedb_update_media_requireenv",
+      "scripts_import_exercisedb_update_media_sleep",
+      "scripts_import_exercisedb_update_media_supabase",
+      "scripts_import_exercisedb_update_media_uploadandupdate"
+    ],
+    "48": [
+      "src_components_novoalunomodal",
+      "src_components_novoalunomodal_datetoiso",
+      "src_components_novoalunomodal_empty",
+      "src_components_novoalunomodal_field",
+      "src_components_novoalunomodal_formstate",
+      "src_components_novoalunomodal_maskdate",
+      "src_components_novoalunomodal_maskphone",
+      "src_components_novoalunomodal_props",
+      "src_components_novoalunomodal_s",
+      "src_components_novoalunomodal_student_goals"
+    ],
+    "49": [
+      "app_admin_execucao",
+      "app_admin_execucao_execucaoscreen",
+      "app_admin_execucao_fmtdate",
+      "app_admin_execucao_fmtduration",
+      "app_admin_execucao_fmttime",
+      "app_admin_execucao_intensity_config",
+      "app_admin_execucao_s",
+      "app_admin_execucao_sessionsummary",
+      "app_admin_execucao_studentsummary"
+    ],
+    "50": [
+      "app_student_index",
+      "app_student_index_day_labels",
+      "app_student_index_fmtduration",
+      "app_student_index_greeting",
+      "app_student_index_intensity_label",
+      "app_student_index_rest_motivations",
+      "app_student_index_s",
+      "app_student_index_studenthome",
+      "app_student_index_width_w"
+    ],
+    "51": [
+      "docs_modulo_desafios_3_1_m\u00e9trica_do_ranking",
+      "docs_modulo_desafios_3_2_libera\u00e7\u00e3o_dos_dias_sem_automa\u00e7\u00e3o_por_data",
+      "docs_modulo_desafios_3_3_convite_de_novo_participante",
+      "docs_modulo_desafios_3_4_edi\u00e7\u00e3o_do_desafio",
+      "docs_modulo_desafios_3_5_exclus\u00e3o_do_desafio",
+      "docs_modulo_desafios_3_6_pontua\u00e7\u00e3o_no_ranking_global_gamifica\u00e7\u00e3o",
+      "docs_modulo_desafios_3_7_publica\u00e7\u00e3o_dos_resultados",
+      "docs_modulo_desafios_3_8_visibilidade_da_\u00e1rea_do_aluno",
+      "docs_modulo_desafios_3_regras_de_neg\u00f3cio"
+    ],
+    "52": [
+      "docs_onboarding_popup_modulos",
+      "docs_onboarding_popup_modulos_1_objetivo",
+      "docs_onboarding_popup_modulos_2_regras_de_funcionamento",
+      "docs_onboarding_popup_modulos_3_comportamento_t\u00e9cnico_vis\u00e3o_geral_para_implementa\u00e7\u00e3o",
+      "docs_onboarding_popup_modulos_4_loop_personal_trainer_dashboard",
+      "docs_onboarding_popup_modulos_5_loop_aluno_student",
+      "docs_onboarding_popup_modulos_6_visual",
+      "docs_onboarding_popup_modulos_7_fora_de_escopo_por_ora",
+      "docs_onboarding_popup_modulos_feature_popup_de_onboarding_por_m\u00f3dulo_loop_no_login"
+    ],
+    "53": [
+      "app_student_mais_feedback",
+      "app_student_mais_feedback_feedbackscreen",
+      "app_student_mais_feedback_label_colors",
+      "app_student_mais_feedback_labels",
+      "app_student_mais_feedback_s",
+      "app_student_mais_feedback_starrow",
+      "app_student_mais_feedback_workoutfeedback",
+      "app_student_mais_feedback_workoutplan"
+    ],
+    "54": [
+      "docs_modulo_desafios_6_1_desafio_crud_e_ciclo_de_vida",
+      "docs_modulo_desafios_6_2_capa",
+      "docs_modulo_desafios_6_3_participantes",
+      "docs_modulo_desafios_6_4_dias_e_itens",
+      "docs_modulo_desafios_6_5_mensagens",
+      "docs_modulo_desafios_6_6_acompanhamento",
+      "docs_modulo_desafios_6_7_\u00e1rea_do_aluno",
+      "docs_modulo_desafios_6_server_actions"
+    ],
+    "55": [
+      "src_hooks_useauth",
+      "src_hooks_useauth_fetchandsetprofile",
+      "src_lib_supabase",
+      "src_lib_supabase_exposecurestoreadapter",
+      "src_lib_supabase_supabase",
+      "src_services_auth",
+      "src_services_auth_resetpassword",
+      "src_services_auth_signout"
+    ],
+    "56": [
+      "supabase_functions_embed_exercises_index",
+      "supabase_functions_embed_exercises_index_buildembeddingtext",
+      "supabase_functions_embed_exercises_index_cors_headers",
+      "supabase_functions_embed_exercises_index_errorresponse",
+      "supabase_functions_embed_exercises_index_generateembeddings",
+      "supabase_functions_embed_exercises_index_getjwtrole",
+      "supabase_functions_embed_exercises_index_jsonresponse",
+      "supabase_functions_embed_exercises_index_requestbody"
+    ],
+    "57": [
+      "app_admin_desafios_index",
+      "app_admin_desafios_index_challengerow",
+      "app_admin_desafios_index_challengeslistscreen",
+      "app_admin_desafios_index_desafiosscreen",
+      "app_admin_desafios_index_release_modes",
+      "app_admin_desafios_index_s",
+      "app_admin_desafios_index_status_label"
+    ],
+    "58": [
+      "app_admin_planos_alimentares_index",
+      "app_admin_planos_alimentares_index_fmtdate",
+      "app_admin_planos_alimentares_index_goal_colors",
+      "app_admin_planos_alimentares_index_goals",
+      "app_admin_planos_alimentares_index_mealplan",
+      "app_admin_planos_alimentares_index_planosalimentaresscreen",
+      "app_admin_planos_alimentares_index_s"
+    ],
+    "59": [
+      "app_admin_ranking",
+      "app_admin_ranking_adminrankingscreen",
+      "app_admin_ranking_badge_config",
+      "app_admin_ranking_month_names",
+      "app_admin_ranking_rankingentry",
+      "app_admin_ranking_s",
+      "app_admin_ranking_snapshot"
+    ],
+    "60": [
+      "app_admin_treinos_extras_id",
+      "app_admin_treinos_extras_id_category_colors",
+      "app_admin_treinos_extras_id_extraitem",
+      "app_admin_treinos_extras_id_extraworkout",
+      "app_admin_treinos_extras_id_extraworkoutdetailscreen",
+      "app_admin_treinos_extras_id_s",
+      "app_admin_treinos_extras_id_student"
+    ],
+    "61": [
+      "app_student_mais_frequencia",
+      "app_student_mais_frequencia_days_header",
+      "app_student_mais_frequencia_frequenciascreen",
+      "app_student_mais_frequencia_getdaysinmonth",
+      "app_student_mais_frequencia_getfirstdayofweek",
+      "app_student_mais_frequencia_months",
+      "app_student_mais_frequencia_s"
+    ],
+    "62": [
+      "app_student_mais_historico",
+      "app_student_mais_historico_fmtdate",
+      "app_student_mais_historico_fmtduration",
+      "app_student_mais_historico_fmttime",
+      "app_student_mais_historico_historicoscreen",
+      "app_student_mais_historico_intensity_config",
+      "app_student_mais_historico_s"
+    ],
+    "63": [
+      "app_student_treinos_planid_index",
+      "app_student_treinos_planid_index_day_short",
+      "app_student_treinos_planid_index_exercise",
+      "app_student_treinos_planid_index_plan",
+      "app_student_treinos_planid_index_plandetailscreen",
+      "app_student_treinos_planid_index_s",
+      "app_student_treinos_planid_index_section"
+    ],
+    "64": [
+      "docs_modulo_desafios_13_1_cliente_supabase_e_rls",
+      "docs_modulo_desafios_13_2_telas_necess\u00e1rias_aluno_prioridade_para_o_mobile",
+      "docs_modulo_desafios_13_3_telas_do_personal_mobile_se_for_priorizado_depois",
+      "docs_modulo_desafios_13_4_upload_de_capa_no_mobile",
+      "docs_modulo_desafios_13_5_pontua\u00e7\u00e3o_no_ranking_global",
+      "docs_modulo_desafios_13_6_push_notifications_sugest\u00e3o_n\u00e3o_implementado_na_web",
+      "docs_modulo_desafios_13_notas_para_implementa\u00e7\u00e3o_mobile_android"
+    ],
+    "65": [
+      "docs_modulo_desafios_4_1_challenges",
+      "docs_modulo_desafios_4_2_challenge_participants",
+      "docs_modulo_desafios_4_3_challenge_days",
+      "docs_modulo_desafios_4_4_challenge_day_items",
+      "docs_modulo_desafios_4_5_challenge_item_progress",
+      "docs_modulo_desafios_4_6_challenge_messages",
+      "docs_modulo_desafios_4_schema_do_banco_de_dados"
+    ],
+    "66": [
+      "scripts_import_exercisedb_readme",
+      "scripts_import_exercisedb_readme_1_migration_rodar_uma_vez",
+      "scripts_import_exercisedb_readme_2_configurar",
+      "scripts_import_exercisedb_readme_3_rodar",
+      "scripts_import_exercisedb_readme_importa\u00e7\u00e3o_exercisedb_supabase",
+      "scripts_import_exercisedb_readme_notas",
+      "scripts_import_exercisedb_readme_vari\u00e1veis_principais"
+    ],
+    "67": [
+      "tsconfig",
+      "tsconfig_compileroptions",
+      "tsconfig_compileroptions_paths",
+      "tsconfig_compileroptions_strict",
+      "tsconfig_extends",
+      "tsconfig_include",
+      "tsconfig_paths"
+    ],
+    "68": [
+      "app_student_mais_anamnese",
+      "app_student_mais_anamnese_anamnesescreen",
+      "app_student_mais_anamnese_anamnesetemplate",
+      "app_student_mais_anamnese_fmtdate",
+      "app_student_mais_anamnese_mode",
+      "app_student_mais_anamnese_s"
+    ],
+    "69": [
+      "app_student_mais_financeiro",
+      "app_student_mais_financeiro_financeiroscreen",
+      "app_student_mais_financeiro_fmtcurrency",
+      "app_student_mais_financeiro_fmtdate",
+      "app_student_mais_financeiro_s",
+      "app_student_mais_financeiro_status_config"
+    ],
+    "70": [
+      "docs_modulo_desafios_9_arquivos_criados_modificados_web",
+      "docs_modulo_desafios_banco_de_dados",
+      "docs_modulo_desafios_navega\u00e7\u00e3o_e_m\u00f3dulos_arquivos_existentes_modificados",
+      "docs_modulo_desafios_server_actions",
+      "docs_modulo_desafios_ui_aluno",
+      "docs_modulo_desafios_ui_personal"
+    ],
+    "71": [
+      "app_layout",
+      "app_layout_rootlayout",
+      "src_hooks_useauth_useauth",
+      "src_hooks_usemodules_usemodules",
+      "src_hooks_usetenant_usetenant"
+    ],
+    "72": [
+      "docs_modulo_desafios_11_1_maybesingle_falha_quando_o_aluno_est\u00e1_em_m\u00faltiplos_desafios_ativos",
+      "docs_modulo_desafios_11_2_constantes_em_arquivo_use_server",
+      "docs_modulo_desafios_11_3_ui_de_mensagens_do_personal_ficou_faltando_por_3_etapas",
+      "docs_modulo_desafios_11_4_migra\u00e7\u00e3o_aplicada_sem_arquivo_local_correspondente",
+      "docs_modulo_desafios_11_bugs_encontrados_e_corrigidos_durante_o_desenvolvimento"
+    ],
+    "73": [
+      "docs_prd_mobile_strivepersonal_stack",
+      "github_workflows_build_aab",
+      "github_workflows_build_aab_build",
+      "github_workflows_build_aab_check_version",
+      "github_workflows_build_aab_eas"
+    ],
+    "74": [
+      "supabase_functions_ai_assistant_retrieval_rag_retrieval",
+      "supabase_functions_ai_assistant_retrieval_rag_retrieval_formatretrievedcontext",
+      "supabase_functions_ai_assistant_retrieval_rag_retrieval_generateembedding",
+      "supabase_functions_ai_assistant_retrieval_rag_retrieval_retrievedexercise",
+      "supabase_functions_ai_assistant_retrieval_rag_retrieval_retrieverelevantexercises"
+    ],
+    "75": [
+      "metro_config",
+      "metro_config_config",
+      "metro_config_getdefaultconfig",
+      "metro_config_withnativewind"
+    ],
+    "76": [
+      "supabase_functions_invite_student_index",
+      "supabase_functions_invite_student_index_corsheaders",
+      "supabase_functions_invite_student_index_generatetemppassword",
+      "supabase_functions_invite_student_index_sendwelcomeemail"
+    ],
+    "77": [
+      "claude",
+      "claude_graphify_obrigat\u00f3rio",
+      "claude_instru\u00e7\u00f5es_do_projeto_strivepersonalapp"
+    ],
+    "78": [
+      "eslint_config",
+      "eslint_config_defineconfig",
+      "eslint_config_expoconfig"
+    ],
+    "79": [
+      "src_components_appicon",
+      "src_components_appicon_appicon",
+      "src_components_appicon_appiconprops"
+    ],
+    "80": [
+      "src_components_striveloader",
+      "src_components_striveloader_striveloader",
+      "src_components_striveloader_striveloaderprops"
+    ],
+    "81": [
+      "supabase_functions_reset_student_password_index",
+      "supabase_functions_reset_student_password_index_corsheaders",
+      "supabase_functions_reset_student_password_index_generatetemppassword"
+    ],
+    "82": [
+      "app_admin_alunos_layout",
+      "app_admin_alunos_layout_alunoslayout"
+    ],
+    "83": [
+      "app_admin_banco_exercicios_layout",
+      "app_admin_banco_exercicios_layout_bancoexercicioslayout"
+    ],
+    "84": [
+      "app_admin_desafios_layout",
+      "app_admin_desafios_layout_desafioslayout"
+    ],
+    "85": [
+      "app_admin_planos_alimentares_layout",
+      "app_admin_planos_alimentares_layout_planosalimentareslayout"
+    ],
+    "86": [
+      "app_admin_planos_layout",
+      "app_admin_planos_layout_planoslayout"
+    ],
+    "87": [
+      "app_admin_treinos_extras_layout",
+      "app_admin_treinos_extras_layout_treinosextraslayout"
+    ],
+    "88": [
+      "app_auth_layout",
+      "app_auth_layout_authlayout"
+    ],
+    "89": [
+      "app_student_mais_layout",
+      "app_student_mais_layout_maisstudentlayout"
+    ],
+    "90": [
+      "app_student_perfil_layout",
+      "app_student_perfil_layout_perfillayout"
+    ],
+    "91": [
+      "app_student_progresso_layout",
+      "app_student_progresso_layout_progressolayout"
+    ],
+    "92": [
+      "app_student_treinos_layout",
+      "app_student_treinos_layout_treinosstudentlayout"
+    ],
+    "93": [
+      "assets_ai_leia_me",
+      "assets_ai_leia_me_assets_do_max_strive_assistente_ia"
+    ],
+    "94": [
+      "supabase_functions_create_plan_checkout_index",
+      "supabase_functions_create_plan_checkout_index_corsheaders"
+    ],
+    "95": [
+      "supabase_functions_update_student_index",
+      "supabase_functions_update_student_index_corsheaders"
+    ],
+    "96": [
+      "agenda_de_hoje_list"
+    ],
+    "97": [
+      "alunos_recentes_list"
+    ],
+    "98": [
+      "ana_lima_student"
+    ],
+    "99": [
+      "assets_ai_leia_me_max_avatar_assets"
+    ],
+    "100": [
+      "assets_ai_max_avatar_happy_image"
+    ],
+    "101": [
+      "assets_ai_max_avatar_image"
+    ],
+    "102": [
+      "assets_ai_max_avatar_small_image"
+    ],
+    "103": [
+      "assets_ai_max_avatar_thinking_image"
+    ],
+    "104": [
+      "assets_images_adaptive_icon_image"
+    ],
+    "105": [
+      "assets_images_favicon_brand_mark"
+    ],
+    "106": [
+      "assets_images_favicon_image"
+    ],
+    "107": [
+      "assets_images_feature_graphic_playstore_1024x500_evolucao_screen"
+    ],
+    "108": [
+      "assets_images_feature_graphic_playstore_1024x500_image"
+    ],
+    "109": [
+      "assets_images_feature_graphic_playstore_1024x500_tagline"
+    ],
+    "110": [
+      "assets_images_feature_graphic_playstore_1024x500_treino_screen"
+    ],
+    "111": [
+      "assets_images_icon_image"
+    ],
+    "112": [
+      "assets_images_icon_playstore_512x512_image"
+    ],
+    "113": [
+      "assets_images_screenshot_01_home_playstore_image"
+    ],
+    "114": [
+      "assets_images_screenshot_02_execucao_playstore_action_ajustar_carga"
+    ],
+    "115": [
+      "assets_images_screenshot_02_execucao_playstore_action_concluir_serie"
+    ],
+    "116": [
+      "assets_images_screenshot_02_execucao_playstore_exercicio_supino_reto_barra"
+    ],
+    "117": [
+      "assets_images_screenshot_02_execucao_playstore_feature_carga_reps"
+    ],
+    "118": [
+      "assets_images_screenshot_02_execucao_playstore_feature_serie_tracking"
+    ],
+    "119": [
+      "assets_images_screenshot_02_execucao_playstore_feature_timer_descanso"
+    ],
+    "120": [
+      "assets_images_screenshot_02_execucao_playstore_image"
+    ],
+    "121": [
+      "assets_images_screenshot_02_execucao_playstore_nav_bottom_bar"
+    ],
+    "122": [
+      "assets_images_screenshot_02_execucao_playstore_progress_exercicios"
+    ],
+    "123": [
+      "assets_images_screenshot_02_execucao_playstore_screen_executando_treino"
+    ],
+    "124": [
+      "assets_images_screenshot_03_evolucao_playstore_image"
+    ],
+    "125": [
+      "assets_images_screenshot_04_onboarding_playstore_image"
+    ],
+    "126": [
+      "assets_images_splash_icon_image"
+    ],
+    "127": [
+      "assets_images_tablet10_01_dashboard_image"
+    ],
+    "128": [
+      "assets_images_tablet10_02_alunos_image"
+    ],
+    "129": [
+      "assets_images_tablet10_03_progresso_image"
+    ],
+    "130": [
+      "assets_images_tablet10_04_execucao_image"
+    ],
+    "131": [
+      "assets_images_tablet_01_dashboard_image"
+    ],
+    "132": [
+      "assets_images_tablet_02_alunos_image"
+    ],
+    "133": [
+      "assets_images_tablet_03_progresso_image"
+    ],
+    "134": [
+      "assets_images_tablet_04_execucao_image"
+    ],
+    "135": [
+      "babel_config"
+    ],
+    "136": [
+      "body_measurements_section"
+    ],
+    "137": [
+      "bruno_melo_student"
+    ],
+    "138": [
+      "carla_souza_student"
+    ],
+    "139": [
+      "carlos_trainer_user"
+    ],
+    "140": [
+      "claude_graphify_query_command"
+    ],
+    "141": [
+      "claude_graphify_update_command"
+    ],
+    "142": [
+      "color_brand_dark_2a2a45"
+    ],
+    "143": [
+      "color_deep_space_0e0e1a"
+    ],
+    "144": [
+      "color_divider_4a4a6a"
+    ],
+    "145": [
+      "color_error_red_ef4444"
+    ],
+    "146": [
+      "color_lime_dark_c8e600"
+    ],
+    "147": [
+      "color_lime_volt_e8ff47"
+    ],
+    "148": [
+      "color_midnight_1a1a2e"
+    ],
+    "149": [
+      "color_success_green_22c55e"
+    ],
+    "150": [
+      "color_text_secondary_b0b0c3"
+    ],
+    "151": [
+      "color_warning_amber_f59e0b"
+    ],
+    "152": [
+      "color_white_ffffff"
+    ],
+    "153": [
+      "comecar_agora_cta_button"
+    ],
+    "154": [
+      "daniel_costa_student"
+    ],
+    "155": [
+      "dark_theme_yellow_accent_design"
+    ],
+    "156": [
+      "dashboard_screen"
+    ],
+    "157": [
+      "design_system_strive_personal"
+    ],
+    "158": [
+      "desing_system_ds_colors_image"
+    ],
+    "159": [
+      "desing_system_ds_spacing_image"
+    ],
+    "160": [
+      "desing_system_ds_spacing_scale"
+    ],
+    "161": [
+      "desing_system_ds_typography_image"
+    ],
+    "162": [
+      "desing_system_supino_reto_com_barra_exercise"
+    ],
+    "163": [
+      "desing_system_tela1_home_bottom_nav_bar"
+    ],
+    "164": [
+      "desing_system_tela1_home_exercise_list"
+    ],
+    "165": [
+      "desing_system_tela1_home_greeting_header"
+    ],
+    "166": [
+      "desing_system_tela1_home_image"
+    ],
+    "167": [
+      "desing_system_tela1_home_iniciar_treino_button"
+    ],
+    "168": [
+      "desing_system_tela1_home_thumb_image"
+    ],
+    "169": [
+      "desing_system_tela1_home_today_workout_card"
+    ],
+    "170": [
+      "desing_system_tela1_home_ver_historico_button"
+    ],
+    "171": [
+      "desing_system_tela1_home_weekly_progress_bar"
+    ],
+    "172": [
+      "desing_system_tela2_execucao_ajustar_carga_button"
+    ],
+    "173": [
+      "desing_system_tela2_execucao_bottom_nav"
+    ],
+    "174": [
+      "desing_system_tela2_execucao_concluir_serie_button"
+    ],
+    "175": [
+      "desing_system_tela2_execucao_exercise_progress_bar"
+    ],
+    "176": [
+      "desing_system_tela2_execucao_image"
+    ],
+    "177": [
+      "desing_system_tela2_execucao_load_reps_cards"
+    ],
+    "178": [
+      "desing_system_tela2_execucao_rest_timer_component"
+    ],
+    "179": [
+      "desing_system_tela2_execucao_set_tracker_component"
+    ],
+    "180": [
+      "desing_system_tela3_evolucao_bottom_nav"
+    ],
+    "181": [
+      "desing_system_tela3_evolucao_carga_media_chart"
+    ],
+    "182": [
+      "desing_system_tela3_evolucao_dark_theme"
+    ],
+    "183": [
+      "desing_system_tela3_evolucao_frequencia_semanal"
+    ],
+    "184": [
+      "desing_system_tela3_evolucao_header"
+    ],
+    "185": [
+      "desing_system_tela3_evolucao_image"
+    ],
+    "186": [
+      "desing_system_tela3_evolucao_proxima_meta"
+    ],
+    "187": [
+      "desing_system_tela3_evolucao_summary_cards"
+    ],
+    "188": [
+      "desing_system_tela4_splash_cta_button"
+    ],
+    "189": [
+      "desing_system_tela4_splash_feature_list"
+    ],
+    "190": [
+      "desing_system_tela4_splash_headline"
+    ],
+    "191": [
+      "desing_system_tela4_splash_image"
+    ],
+    "192": [
+      "desing_system_tela4_splash_login_link"
+    ],
+    "193": [
+      "desing_system_tela4_splash_logo"
+    ],
+    "194": [
+      "desing_system_tela4_splash_thumb_image"
+    ],
+    "195": [
+      "desing_system_treino_a_workout"
+    ],
+    "196": [
+      "docs_modulo_assistente_ia_admin_global_access_control"
+    ],
+    "197": [
+      "docs_modulo_assistente_ia_ai_assistant_edge_function"
+    ],
+    "198": [
+      "docs_modulo_assistente_ia_ai_conversations_table"
+    ],
+    "199": [
+      "docs_modulo_assistente_ia_ai_messages_table"
+    ],
+    "200": [
+      "docs_modulo_assistente_ia_claude_sonnet"
+    ],
+    "201": [
+      "docs_modulo_assistente_ia_embed_exercises_edge_function"
+    ],
+    "202": [
+      "docs_modulo_assistente_ia_exercise_embeddings_table"
+    ],
+    "203": [
+      "docs_modulo_assistente_ia_langchain_js"
+    ],
+    "204": [
+      "docs_modulo_assistente_ia_match_exercises_function"
+    ],
+    "205": [
+      "docs_modulo_assistente_ia_max_strive_persona"
+    ],
+    "206": [
+      "docs_modulo_assistente_ia_max_system_prompt"
+    ],
+    "207": [
+      "docs_modulo_assistente_ia_openai_embeddings"
+    ],
+    "208": [
+      "docs_modulo_assistente_ia_rag_pgvector"
+    ],
+    "209": [
+      "docs_modulo_assistente_ia_rag_retrieval"
+    ],
+    "210": [
+      "docs_modulo_assistente_ia_student_context"
+    ],
+    "211": [
+      "docs_modulo_assistente_ia_system_modules"
+    ],
+    "212": [
+      "docs_modulo_desafios_add_day_button"
+    ],
+    "213": [
+      "docs_modulo_desafios_add_day_item_button"
+    ],
+    "214": [
+      "docs_modulo_desafios_add_existing_student_as_participant"
+    ],
+    "215": [
+      "docs_modulo_desafios_add_participant_button"
+    ],
+    "216": [
+      "docs_modulo_desafios_branding_actions"
+    ],
+    "217": [
+      "docs_modulo_desafios_bug_maybesingle"
+    ],
+    "218": [
+      "docs_modulo_desafios_bug_migration_parity"
+    ],
+    "219": [
+      "docs_modulo_desafios_bug_ui_gap_messages"
+    ],
+    "220": [
+      "docs_modulo_desafios_bug_use_server_constants"
+    ],
+    "221": [
+      "docs_modulo_desafios_challenge_constants"
+    ],
+    "222": [
+      "docs_modulo_desafios_challenge_cover_upload_component"
+    ],
+    "223": [
+      "docs_modulo_desafios_challenge_covers_bucket"
+    ],
+    "224": [
+      "docs_modulo_desafios_challenge_day_items_table"
+    ],
+    "225": [
+      "docs_modulo_desafios_challenge_days_section"
+    ],
+    "226": [
+      "docs_modulo_desafios_challenge_days_table"
+    ],
+    "227": [
+      "docs_modulo_desafios_challenge_detail_client"
+    ],
+    "228": [
+      "docs_modulo_desafios_challenge_item_progress_table"
+    ],
+    "229": [
+      "docs_modulo_desafios_challenge_messages_section"
+    ],
+    "230": [
+      "docs_modulo_desafios_challenge_messages_table"
+    ],
+    "231": [
+      "docs_modulo_desafios_challenge_participants_table"
+    ],
+    "232": [
+      "docs_modulo_desafios_challenge_tracking_section"
+    ],
+    "233": [
+      "docs_modulo_desafios_challenges_actions"
+    ],
+    "234": [
+      "docs_modulo_desafios_challenges_table"
+    ],
+    "235": [
+      "docs_modulo_desafios_cover_image_spec"
+    ],
+    "236": [
+      "docs_modulo_desafios_create_challenge"
+    ],
+    "237": [
+      "docs_modulo_desafios_create_challenge_day"
+    ],
+    "238": [
+      "docs_modulo_desafios_create_challenge_day_item"
+    ],
+    "239": [
+      "docs_modulo_desafios_create_student"
+    ],
+    "240": [
+      "docs_modulo_desafios_dashboard_desafios_page"
+    ],
+    "241": [
+      "docs_modulo_desafios_dashboard_sidebar"
+    ],
+    "242": [
+      "docs_modulo_desafios_database_types"
+    ],
+    "243": [
+      "docs_modulo_desafios_delete_challenge"
+    ],
+    "244": [
+      "docs_modulo_desafios_delete_challenge_button"
+    ],
+    "245": [
+      "docs_modulo_desafios_delete_rule"
+    ],
+    "246": [
+      "docs_modulo_desafios_detail_page"
+    ],
+    "247": [
+      "docs_modulo_desafios_edit_challenge_button"
+    ],
+    "248": [
+      "docs_modulo_desafios_edit_rule"
+    ],
+    "249": [
+      "docs_modulo_desafios_final_data_button"
+    ],
+    "250": [
+      "docs_modulo_desafios_finish_challenge"
+    ],
+    "251": [
+      "docs_modulo_desafios_finish_challenge_button"
+    ],
+    "252": [
+      "docs_modulo_desafios_free_plan_gate"
+    ],
+    "253": [
+      "docs_modulo_desafios_gamification_events"
+    ],
+    "254": [
+      "docs_modulo_desafios_gamification_scoring_rule"
+    ],
+    "255": [
+      "docs_modulo_desafios_gamification_settings"
+    ],
+    "256": [
+      "docs_modulo_desafios_get_challenge"
+    ],
+    "257": [
+      "docs_modulo_desafios_get_challenge_days"
+    ],
+    "258": [
+      "docs_modulo_desafios_get_challenge_messages"
+    ],
+    "259": [
+      "docs_modulo_desafios_get_challenge_tracking"
+    ],
+    "260": [
+      "docs_modulo_desafios_get_challenges"
+    ],
+    "261": [
+      "docs_modulo_desafios_get_student_active_challenge"
+    ],
+    "262": [
+      "docs_modulo_desafios_get_student_challenge_messages"
+    ],
+    "263": [
+      "docs_modulo_desafios_get_student_challenge_results"
+    ],
+    "264": [
+      "docs_modulo_desafios_get_student_latest_published_challenge_id"
+    ],
+    "265": [
+      "docs_modulo_desafios_has_visible_student_challenge"
+    ],
+    "266": [
+      "docs_modulo_desafios_invite_new_participant"
+    ],
+    "267": [
+      "docs_modulo_desafios_invite_participant_rule"
+    ],
+    "268": [
+      "docs_modulo_desafios_limitation_active_and_published"
+    ],
+    "269": [
+      "docs_modulo_desafios_mark_item_complete"
+    ],
+    "270": [
+      "docs_modulo_desafios_migration_challenge_cover_image"
+    ],
+    "271": [
+      "docs_modulo_desafios_migration_challenges_module"
+    ],
+    "272": [
+      "docs_modulo_desafios_mobile_notes"
+    ],
+    "273": [
+      "docs_modulo_desafios_modules_config"
+    ],
+    "274": [
+      "docs_modulo_desafios_novo_page"
+    ],
+    "275": [
+      "docs_modulo_desafios_physical_assessments"
+    ],
+    "276": [
+      "docs_modulo_desafios_publish_all_challenge_days"
+    ],
+    "277": [
+      "docs_modulo_desafios_publish_challenge_day"
+    ],
+    "278": [
+      "docs_modulo_desafios_publish_challenge_results"
+    ],
+    "279": [
+      "docs_modulo_desafios_publish_results_button"
+    ],
+    "280": [
+      "docs_modulo_desafios_publish_results_rule"
+    ],
+    "281": [
+      "docs_modulo_desafios_ranking_metric_rule"
+    ],
+    "282": [
+      "docs_modulo_desafios_release_mode_rule"
+    ],
+    "283": [
+      "docs_modulo_desafios_remove_challenge_cover"
+    ],
+    "284": [
+      "docs_modulo_desafios_remove_participant"
+    ],
+    "285": [
+      "docs_modulo_desafios_search_exercises"
+    ],
+    "286": [
+      "docs_modulo_desafios_send_challenge_message"
+    ],
+    "287": [
+      "docs_modulo_desafios_send_student_welcome"
+    ],
+    "288": [
+      "docs_modulo_desafios_start_challenge"
+    ],
+    "289": [
+      "docs_modulo_desafios_student_challenge_active_view"
+    ],
+    "290": [
+      "docs_modulo_desafios_student_challenge_results_view"
+    ],
+    "291": [
+      "docs_modulo_desafios_student_desafios_page"
+    ],
+    "292": [
+      "docs_modulo_desafios_student_layout"
+    ],
+    "293": [
+      "docs_modulo_desafios_student_mobile_nav"
+    ],
+    "294": [
+      "docs_modulo_desafios_student_sidebar"
+    ],
+    "295": [
+      "docs_modulo_desafios_student_visibility_rule"
+    ],
+    "296": [
+      "docs_modulo_desafios_system_modules"
+    ],
+    "297": [
+      "docs_modulo_desafios_tenant_modules"
+    ],
+    "298": [
+      "docs_modulo_desafios_update_challenge"
+    ],
+    "299": [
+      "docs_modulo_desafios_update_participant_final_data"
+    ],
+    "300": [
+      "docs_modulo_desafios_update_participant_initial_data"
+    ],
+    "301": [
+      "docs_modulo_desafios_upload_challenge_cover"
+    ],
+    "302": [
+      "docs_modulo_desafios_upload_pattern_admin_client"
+    ],
+    "303": [
+      "docs_onboarding_popup_modulos_localstorage_persistence"
+    ],
+    "304": [
+      "docs_onboarding_popup_modulos_max_onboarding_modal"
+    ],
+    "305": [
+      "docs_onboarding_popup_modulos_module_onboarding_popup"
+    ],
+    "306": [
+      "docs_onboarding_popup_modulos_module_onboarding_popup_component"
+    ],
+    "307": [
+      "docs_onboarding_popup_modulos_performance_terminal_design"
+    ],
+    "308": [
+      "docs_onboarding_popup_modulos_tenant_modules_gating"
+    ],
+    "309": [
+      "docs_prd_mobile_strivepersonal_bottom_navigation"
+    ],
+    "310": [
+      "docs_prd_mobile_strivepersonal_design_system"
+    ],
+    "311": [
+      "docs_prd_mobile_strivepersonal_rls"
+    ],
+    "312": [
+      "docs_prd_mobile_strivepersonal_whitelabel"
+    ],
+    "313": [
+      "docs_spec_mobile_strivepersonal_architecture"
+    ],
+    "314": [
+      "docs_spec_mobile_strivepersonal_design_system"
+    ],
+    "315": [
+      "docs_spec_mobile_strivepersonal_directory_structure"
+    ],
+    "316": [
+      "docs_spec_mobile_strivepersonal_supabase_integration"
+    ],
+    "317": [
+      "docs_spec_mobile_strivepersonal_test_strategy"
+    ],
+    "318": [
+      "ds_border_radius_scale"
+    ],
+    "319": [
+      "ds_elevation_layers"
+    ],
+    "320": [
+      "ds_grid_mobile"
+    ],
+    "321": [
+      "ds_grid_web"
+    ],
+    "322": [
+      "entity_exercise_leg_press_45"
+    ],
+    "323": [
+      "entity_workout_plan_hipertrofia_pernas"
+    ],
+    "324": [
+      "fazer_login_link"
+    ],
+    "325": [
+      "feature_agenda_do_dia"
+    ],
+    "326": [
+      "feature_alunos_recentes"
+    ],
+    "327": [
+      "feature_carga_media_chart"
+    ],
+    "328": [
+      "feature_frequencia_semanal"
+    ],
+    "329": [
+      "feature_minha_evolucao_screen"
+    ],
+    "330": [
+      "feature_next_exercises_list"
+    ],
+    "331": [
+      "feature_proxima_meta"
+    ],
+    "332": [
+      "feature_rest_timer"
+    ],
+    "333": [
+      "feature_series_log"
+    ],
+    "334": [
+      "feature_stats_summary_cards"
+    ],
+    "335": [
+      "feature_summary_stat_cards"
+    ],
+    "336": [
+      "fernanda_reis_student"
+    ],
+    "337": [
+      "font_dm_sans"
+    ],
+    "338": [
+      "font_syncopate_bold"
+    ],
+    "339": [
+      "font_weight_scale"
+    ],
+    "340": [
+      "graphify_out_directory"
+    ],
+    "341": [
+      "install_graphify"
+    ],
+    "342": [
+      "last_evaluation_section"
+    ],
+    "343": [
+      "marketing_headline_acompanhe_avanco"
+    ],
+    "344": [
+      "max_ai_assistant_mascot"
+    ],
+    "345": [
+      "nativewind_env_d"
+    ],
+    "346": [
+      "nav_bottom_tabbar"
+    ],
+    "347": [
+      "nav_bottom_tabs_personal"
+    ],
+    "348": [
+      "onboarding_carousel_indicator"
+    ],
+    "349": [
+      "onboarding_welcome_screen"
+    ],
+    "350": [
+      "persona_personal_trainer_carlos"
+    ],
+    "351": [
+      "readme"
+    ],
+    "352": [
+      "screen_dashboard_personal"
+    ],
+    "353": [
+      "screen_progresso"
+    ],
+    "354": [
+      "screen_workout_execution"
+    ],
+    "355": [
+      "scripts_import_exercisedb_readme_exercise_videos_bucket"
+    ],
+    "356": [
+      "scripts_import_exercisedb_readme_exercisedb_api"
+    ],
+    "357": [
+      "scripts_import_exercisedb_readme_exercises_table"
+    ],
+    "358": [
+      "scripts_import_exercisedb_readme_import_script"
+    ],
+    "359": [
+      "scripts_import_exercisedb_readme_maps_mjs"
+    ],
+    "360": [
+      "sidebar_nav_menu"
+    ],
+    "361": [
+      "stats_summary_cards"
+    ],
+    "362": [
+      "strive_brand"
+    ],
+    "363": [
+      "strive_brand_identity"
+    ],
+    "364": [
+      "strive_persona_ana_lima"
+    ],
+    "365": [
+      "strive_persona_carlos_trainer"
+    ],
+    "366": [
+      "strive_personal_app"
+    ],
+    "367": [
+      "strive_personal_logo"
+    ],
+    "368": [
+      "strive_progresso_body_measurements"
+    ],
+    "369": [
+      "strive_progresso_frequency_chart"
+    ],
+    "370": [
+      "strive_progresso_last_assessment"
+    ],
+    "371": [
+      "strive_progresso_screen"
+    ],
+    "372": [
+      "strive_progresso_summary_cards"
+    ],
+    "373": [
+      "strive_progresso_weight_chart"
+    ],
+    "374": [
+      "strive_tablet_sidebar_nav"
+    ],
+    "375": [
+      "tablet_bottom_nav"
+    ],
+    "376": [
+      "tablet_layout"
+    ],
+    "377": [
+      "tailwind_config"
+    ],
+    "378": [
+      "typography_body_large"
+    ],
+    "379": [
+      "typography_body_small"
+    ],
+    "380": [
+      "typography_caption"
+    ],
+    "381": [
+      "typography_h1"
+    ],
+    "382": [
+      "typography_h2"
+    ],
+    "383": [
+      "typography_h3"
+    ],
+    "384": [
+      "typography_h4"
+    ],
+    "385": [
+      "typography_label"
+    ],
+    "386": [
+      "ui_bottom_nav_inicio_alunos_progresso_mais"
+    ],
+    "387": [
+      "ui_button_registrar_serie"
+    ],
+    "388": [
+      "user_ana_lima"
+    ],
+    "389": [
+      "weight_evolution_chart"
+    ]
+  },
+  "cohesion": {
+    "0": 0.05311676909569798,
+    "1": 0.04081632653061224,
+    "2": 0.046511627906976744,
+    "3": 0.05714285714285714,
+    "4": 0.10483870967741936,
+    "5": 0.11904761904761904,
+    "6": 0.1339031339031339,
+    "7": 0.08923076923076922,
+    "8": 0.11067193675889328,
+    "9": 0.11688311688311688,
+    "10": 0.12105263157894737,
+    "11": 0.11052631578947368,
+    "12": 0.12631578947368421,
+    "13": 0.13725490196078433,
+    "14": 0.12418300653594772,
+    "15": 0.13071895424836602,
+    "16": 0.125,
+    "17": 0.18333333333333332,
+    "18": 0.20833333333333334,
+    "19": 0.16666666666666666,
+    "20": 0.13333333333333333,
+    "21": 0.1619047619047619,
+    "22": 0.14285714285714285,
+    "23": 0.16483516483516483,
+    "24": 0.16483516483516483,
+    "25": 0.17582417582417584,
+    "26": 0.15384615384615385,
+    "27": 0.20512820512820512,
+    "28": 0.19230769230769232,
+    "29": 0.1794871794871795,
+    "30": 0.15384615384615385,
+    "31": 0.1794871794871795,
+    "32": 0.15384615384615385,
+    "33": 0.18181818181818182,
+    "34": 0.18181818181818182,
+    "35": 0.16666666666666666,
+    "36": 0.2,
+    "37": 0.2,
+    "38": 0.21818181818181817,
+    "39": 0.23636363636363636,
+    "40": 0.18181818181818182,
+    "41": 0.18181818181818182,
+    "42": 0.34545454545454546,
+    "43": 0.2,
+    "44": 0.2,
+    "45": 0.2,
+    "46": 0.2,
+    "47": 0.28888888888888886,
+    "48": 0.2,
+    "49": 0.2222222222222222,
+    "50": 0.25,
+    "51": 0.2222222222222222,
+    "52": 0.2222222222222222,
+    "53": 0.25,
+    "54": 0.25,
+    "55": 0.32142857142857145,
+    "56": 0.2857142857142857,
+    "57": 0.2857142857142857,
+    "58": 0.2857142857142857,
+    "59": 0.2857142857142857,
+    "60": 0.2857142857142857,
+    "61": 0.38095238095238093,
+    "62": 0.2857142857142857,
+    "63": 0.2857142857142857,
+    "64": 0.2857142857142857,
+    "65": 0.2857142857142857,
+    "66": 0.2857142857142857,
+    "67": 0.2857142857142857,
+    "68": 0.3333333333333333,
+    "69": 0.4,
+    "70": 0.3333333333333333,
+    "71": 0.7,
+    "72": 0.4,
+    "73": 0.5,
+    "74": 0.5,
+    "75": 0.5,
+    "76": 0.5,
+    "77": 0.6666666666666666,
+    "78": 0.6666666666666666,
+    "79": 0.6666666666666666,
+    "80": 0.6666666666666666,
+    "81": 0.6666666666666666,
+    "82": 1.0,
+    "83": 1.0,
+    "84": 1.0,
+    "85": 1.0,
+    "86": 1.0,
+    "87": 1.0,
+    "88": 1.0,
+    "89": 1.0,
+    "90": 1.0,
+    "91": 1.0,
+    "92": 1.0,
+    "93": 1.0,
+    "94": 1.0,
+    "95": 1.0,
+    "96": 1.0,
+    "97": 1.0,
+    "98": 1.0,
+    "99": 1.0,
+    "100": 1.0,
+    "101": 1.0,
+    "102": 1.0,
+    "103": 1.0,
+    "104": 1.0,
+    "105": 1.0,
+    "106": 1.0,
+    "107": 1.0,
+    "108": 1.0,
+    "109": 1.0,
+    "110": 1.0,
+    "111": 1.0,
+    "112": 1.0,
+    "113": 1.0,
+    "114": 1.0,
+    "115": 1.0,
+    "116": 1.0,
+    "117": 1.0,
+    "118": 1.0,
+    "119": 1.0,
+    "120": 1.0,
+    "121": 1.0,
+    "122": 1.0,
+    "123": 1.0,
+    "124": 1.0,
+    "125": 1.0,
+    "126": 1.0,
+    "127": 1.0,
+    "128": 1.0,
+    "129": 1.0,
+    "130": 1.0,
+    "131": 1.0,
+    "132": 1.0,
+    "133": 1.0,
+    "134": 1.0,
+    "135": 1.0,
+    "136": 1.0,
+    "137": 1.0,
+    "138": 1.0,
+    "139": 1.0,
+    "140": 1.0,
+    "141": 1.0,
+    "142": 1.0,
+    "143": 1.0,
+    "144": 1.0,
+    "145": 1.0,
+    "146": 1.0,
+    "147": 1.0,
+    "148": 1.0,
+    "149": 1.0,
+    "150": 1.0,
+    "151": 1.0,
+    "152": 1.0,
+    "153": 1.0,
+    "154": 1.0,
+    "155": 1.0,
+    "156": 1.0,
+    "157": 1.0,
+    "158": 1.0,
+    "159": 1.0,
+    "160": 1.0,
+    "161": 1.0,
+    "162": 1.0,
+    "163": 1.0,
+    "164": 1.0,
+    "165": 1.0,
+    "166": 1.0,
+    "167": 1.0,
+    "168": 1.0,
+    "169": 1.0,
+    "170": 1.0,
+    "171": 1.0,
+    "172": 1.0,
+    "173": 1.0,
+    "174": 1.0,
+    "175": 1.0,
+    "176": 1.0,
+    "177": 1.0,
+    "178": 1.0,
+    "179": 1.0,
+    "180": 1.0,
+    "181": 1.0,
+    "182": 1.0,
+    "183": 1.0,
+    "184": 1.0,
+    "185": 1.0,
+    "186": 1.0,
+    "187": 1.0,
+    "188": 1.0,
+    "189": 1.0,
+    "190": 1.0,
+    "191": 1.0,
+    "192": 1.0,
+    "193": 1.0,
+    "194": 1.0,
+    "195": 1.0,
+    "196": 1.0,
+    "197": 1.0,
+    "198": 1.0,
+    "199": 1.0,
+    "200": 1.0,
+    "201": 1.0,
+    "202": 1.0,
+    "203": 1.0,
+    "204": 1.0,
+    "205": 1.0,
+    "206": 1.0,
+    "207": 1.0,
+    "208": 1.0,
+    "209": 1.0,
+    "210": 1.0,
+    "211": 1.0,
+    "212": 1.0,
+    "213": 1.0,
+    "214": 1.0,
+    "215": 1.0,
+    "216": 1.0,
+    "217": 1.0,
+    "218": 1.0,
+    "219": 1.0,
+    "220": 1.0,
+    "221": 1.0,
+    "222": 1.0,
+    "223": 1.0,
+    "224": 1.0,
+    "225": 1.0,
+    "226": 1.0,
+    "227": 1.0,
+    "228": 1.0,
+    "229": 1.0,
+    "230": 1.0,
+    "231": 1.0,
+    "232": 1.0,
+    "233": 1.0,
+    "234": 1.0,
+    "235": 1.0,
+    "236": 1.0,
+    "237": 1.0,
+    "238": 1.0,
+    "239": 1.0,
+    "240": 1.0,
+    "241": 1.0,
+    "242": 1.0,
+    "243": 1.0,
+    "244": 1.0,
+    "245": 1.0,
+    "246": 1.0,
+    "247": 1.0,
+    "248": 1.0,
+    "249": 1.0,
+    "250": 1.0,
+    "251": 1.0,
+    "252": 1.0,
+    "253": 1.0,
+    "254": 1.0,
+    "255": 1.0,
+    "256": 1.0,
+    "257": 1.0,
+    "258": 1.0,
+    "259": 1.0,
+    "260": 1.0,
+    "261": 1.0,
+    "262": 1.0,
+    "263": 1.0,
+    "264": 1.0,
+    "265": 1.0,
+    "266": 1.0,
+    "267": 1.0,
+    "268": 1.0,
+    "269": 1.0,
+    "270": 1.0,
+    "271": 1.0,
+    "272": 1.0,
+    "273": 1.0,
+    "274": 1.0,
+    "275": 1.0,
+    "276": 1.0,
+    "277": 1.0,
+    "278": 1.0,
+    "279": 1.0,
+    "280": 1.0,
+    "281": 1.0,
+    "282": 1.0,
+    "283": 1.0,
+    "284": 1.0,
+    "285": 1.0,
+    "286": 1.0,
+    "287": 1.0,
+    "288": 1.0,
+    "289": 1.0,
+    "290": 1.0,
+    "291": 1.0,
+    "292": 1.0,
+    "293": 1.0,
+    "294": 1.0,
+    "295": 1.0,
+    "296": 1.0,
+    "297": 1.0,
+    "298": 1.0,
+    "299": 1.0,
+    "300": 1.0,
+    "301": 1.0,
+    "302": 1.0,
+    "303": 1.0,
+    "304": 1.0,
+    "305": 1.0,
+    "306": 1.0,
+    "307": 1.0,
+    "308": 1.0,
+    "309": 1.0,
+    "310": 1.0,
+    "311": 1.0,
+    "312": 1.0,
+    "313": 1.0,
+    "314": 1.0,
+    "315": 1.0,
+    "316": 1.0,
+    "317": 1.0,
+    "318": 1.0,
+    "319": 1.0,
+    "320": 1.0,
+    "321": 1.0,
+    "322": 1.0,
+    "323": 1.0,
+    "324": 1.0,
+    "325": 1.0,
+    "326": 1.0,
+    "327": 1.0,
+    "328": 1.0,
+    "329": 1.0,
+    "330": 1.0,
+    "331": 1.0,
+    "332": 1.0,
+    "333": 1.0,
+    "334": 1.0,
+    "335": 1.0,
+    "336": 1.0,
+    "337": 1.0,
+    "338": 1.0,
+    "339": 1.0,
+    "340": 1.0,
+    "341": 1.0,
+    "342": 1.0,
+    "343": 1.0,
+    "344": 1.0,
+    "345": 1.0,
+    "346": 1.0,
+    "347": 1.0,
+    "348": 1.0,
+    "349": 1.0,
+    "350": 1.0,
+    "351": 1.0,
+    "352": 1.0,
+    "353": 1.0,
+    "354": 1.0,
+    "355": 1.0,
+    "356": 1.0,
+    "357": 1.0,
+    "358": 1.0,
+    "359": 1.0,
+    "360": 1.0,
+    "361": 1.0,
+    "362": 1.0,
+    "363": 1.0,
+    "364": 1.0,
+    "365": 1.0,
+    "366": 1.0,
+    "367": 1.0,
+    "368": 1.0,
+    "369": 1.0,
+    "370": 1.0,
+    "371": 1.0,
+    "372": 1.0,
+    "373": 1.0,
+    "374": 1.0,
+    "375": 1.0,
+    "376": 1.0,
+    "377": 1.0,
+    "378": 1.0,
+    "379": 1.0,
+    "380": 1.0,
+    "381": 1.0,
+    "382": 1.0,
+    "383": 1.0,
+    "384": 1.0,
+    "385": 1.0,
+    "386": 1.0,
+    "387": 1.0,
+    "388": 1.0,
+    "389": 1.0
+  },
+  "gods": [
+    {
+      "id": "src_stores_themestore_usethemestore",
+      "label": "useThemeStore",
+      "degree": 114
+    },
+    {
+      "id": "src_theme_colors_colors",
+      "label": "Colors",
+      "degree": 42
+    },
+    {
+      "id": "src_theme_typography_fontfamily",
+      "label": "FontFamily",
+      "degree": 41
+    },
+    {
+      "id": "src_theme_typography_fontsize",
+      "label": "FontSize",
+      "degree": 39
+    },
+    {
+      "id": "src_hooks_usestudent_usestudent",
+      "label": "useStudent()",
+      "degree": 33
+    },
+    {
+      "id": "src_lib_supabase_supabase",
+      "label": "supabase",
+      "degree": 33
+    },
+    {
+      "id": "src_stores_authstore_useauthstore",
+      "label": "useAuthStore",
+      "degree": 25
+    },
+    {
+      "id": "app_expo",
+      "label": "expo",
+      "degree": 19
+    },
+    {
+      "id": "src_lib_modules_module",
+      "label": "MODULE",
+      "degree": 15
+    },
+    {
+      "id": "docs_modulo_desafios_m\u00f3dulo_desafios",
+      "label": "M\u00f3dulo: Desafios",
+      "degree": 15
+    }
+  ],
+  "surprises": [
+    {
+      "source": "ChallengeDetailScreen()",
+      "target": "useThemeStore",
+      "source_files": [
+        "app/(admin)/desafios/[id].tsx",
+        "src/stores/themeStore.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; bridges separate communities; peripheral node `ChallengeDetailScreen()` unexpectedly reaches hub `useThemeStore`"
+    },
+    {
+      "source": "ChallengesListScreen()",
+      "target": "useThemeStore",
+      "source_files": [
+        "app/(admin)/desafios/index.tsx",
+        "src/stores/themeStore.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; bridges separate communities; peripheral node `ChallengesListScreen()` unexpectedly reaches hub `useThemeStore`"
+    },
+    {
+      "source": "FrequenciaScreen()",
+      "target": "useThemeStore",
+      "source_files": [
+        "app/(admin)/frequencia.tsx",
+        "src/stores/themeStore.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; bridges separate communities; peripheral node `FrequenciaScreen()` unexpectedly reaches hub `useThemeStore`"
+    },
+    {
+      "source": "HistoricoTreinosScreen()",
+      "target": "useThemeStore",
+      "source_files": [
+        "app/(admin)/historico-treinos.tsx",
+        "src/stores/themeStore.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; bridges separate communities; peripheral node `HistoricoTreinosScreen()` unexpectedly reaches hub `useThemeStore`"
+    },
+    {
+      "source": "AdminDashboard()",
+      "target": "useThemeStore",
+      "source_files": [
+        "app/(admin)/index.tsx",
+        "src/stores/themeStore.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; bridges separate communities; peripheral node `AdminDashboard()` unexpectedly reaches hub `useThemeStore`"
+    }
+  ],
+  "tokens": {
+    "input": 0,
+    "output": 0
+  }
+}

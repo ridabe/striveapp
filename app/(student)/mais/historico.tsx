@@ -125,14 +125,21 @@ export default function HistoricoScreen() {
                 </View>
 
                 {/* ── Plano ── */}
-                {(item.workout_plans?.name || item.workout_routines?.name) && (
+                {(item.workout_plans?.name || item.workout_routines?.name) ? (
                   <View style={s.planRow}>
                     <Ionicons name="document-text-outline" size={12} color={Colors.textSecondary} />
                     <Text style={s.planText} numberOfLines={1}>
                       {[item.workout_plans?.name, item.workout_routines?.name].filter(Boolean).join(' · ')}
                     </Text>
                   </View>
-                )}
+                ) : item.notes?.startsWith('[Desafio]') ? (
+                  <View style={s.planRow}>
+                    <Ionicons name="trophy-outline" size={12} color={Colors.textSecondary} />
+                    <Text style={s.planText} numberOfLines={1}>
+                      {item.notes.replace('[Desafio] ', '')}
+                    </Text>
+                  </View>
+                ) : null}
 
                 {/* ── Dados do smartwatch ── */}
                 {hasHealth && (

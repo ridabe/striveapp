@@ -93,6 +93,15 @@ export default function StudentLayout() {
           href: showTreinos ? undefined : null,
           tabBarIcon: ({ color, size }) => <Ionicons name="barbell" size={size} color={color} />,
         }}
+        listeners={({ navigation }) => ({
+          // Sempre volta para a lista de treinos ao tocar na aba, mesmo vindo
+          // de uma tela de execução — evita ficar preso numa tela travada
+          // (ex: "Salvando Treino") ao trocar de aba e voltar.
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.navigate('treinos', { screen: 'index' });
+          },
+        })}
       />
       <Tabs.Screen
         name="progresso"
