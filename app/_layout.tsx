@@ -14,6 +14,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useModules } from '@/hooks/useModules';
 import { useTenant } from '@/hooks/useTenant';
 import { AppUpdateAlert } from '@/components/AppUpdateAlert';
+import { AgendaAlertBanner } from '@/components/notifications/AgendaAlertBanner';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -47,6 +48,7 @@ export default function RootLayout() {
         <Stack.Screen name="+not-found" />
       </Stack>
       <AppUpdateAlert />
+      <AgendaAlertBanner />
     </>
   );
 }

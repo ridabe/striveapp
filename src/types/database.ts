@@ -1348,9 +1348,16 @@ export type Database = {
           id: string
           notes: string | null
           paid_at: string | null
+          paid_by: string | null
+          payment_method: Database["public"]["Enums"]["payment_method"] | null
           plan_name: string
+          reminder_channel:
+            | Database["public"]["Enums"]["reminder_channel"]
+            | null
+          reminder_sent_at: string | null
           status: Database["public"]["Enums"]["financial_plan_status"]
           student_id: string
+          subscription_id: string | null
           tenant_id: string
           updated_at: string
         }
@@ -1361,9 +1368,16 @@ export type Database = {
           id?: string
           notes?: string | null
           paid_at?: string | null
+          paid_by?: string | null
+          payment_method?: Database["public"]["Enums"]["payment_method"] | null
           plan_name: string
+          reminder_channel?:
+            | Database["public"]["Enums"]["reminder_channel"]
+            | null
+          reminder_sent_at?: string | null
           status?: Database["public"]["Enums"]["financial_plan_status"]
           student_id: string
+          subscription_id?: string | null
           tenant_id: string
           updated_at?: string
         }
@@ -1374,18 +1388,39 @@ export type Database = {
           id?: string
           notes?: string | null
           paid_at?: string | null
+          paid_by?: string | null
+          payment_method?: Database["public"]["Enums"]["payment_method"] | null
           plan_name?: string
+          reminder_channel?:
+            | Database["public"]["Enums"]["reminder_channel"]
+            | null
+          reminder_sent_at?: string | null
           status?: Database["public"]["Enums"]["financial_plan_status"]
           student_id?: string
+          subscription_id?: string | null
           tenant_id?: string
           updated_at?: string
         }
         Relationships: [
           {
+            foreignKeyName: "financial_plans_paid_by_fkey"
+            columns: ["paid_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "financial_plans_student_id_fkey"
             columns: ["student_id"]
             isOneToOne: false
             referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_plans_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "student_billing_subscriptions"
             referencedColumns: ["id"]
           },
           {
@@ -2385,6 +2420,67 @@ export type Database = {
           },
         ]
       }
+      student_billing_subscriptions: {
+        Row: {
+          active: boolean
+          amount: number
+          created_at: string
+          due_day: number
+          id: string
+          plan_name: string
+          started_at: string
+          student_id: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          amount: number
+          created_at?: string
+          due_day: number
+          id?: string
+          plan_name?: string
+          started_at?: string
+          student_id: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          amount?: number
+          created_at?: string
+          due_day?: number
+          id?: string
+          plan_name?: string
+          started_at?: string
+          student_id?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_billing_subscriptions_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: true
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_billing_subscriptions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "student_billing_subscriptions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       student_meal_plan_assignments: {
         Row: {
           assigned_at: string
@@ -2492,6 +2588,58 @@ export type Database = {
           },
           {
             foreignKeyName: "student_messages_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_notifications: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          student_id: string
+          tenant_id: string
+          title: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: string
+          student_id: string
+          tenant_id: string
+          title: string
+          type: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          student_id?: string
+          tenant_id?: string
+          title?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_notifications_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_notifications_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "current_ranking"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "student_notifications_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
@@ -2909,11 +3057,13 @@ export type Database = {
           accent_text_color: string | null
           app_name: string | null
           business_name: string
+          cnpj: string | null
           contact_email: string | null
           contact_phone: string | null
           created_at: string
           cref: string | null
           id: string
+          logo_light_url: string | null
           logo_url: string | null
           max_personals: number
           max_students: number
@@ -2932,11 +3082,13 @@ export type Database = {
           accent_text_color?: string | null
           app_name?: string | null
           business_name: string
+          cnpj?: string | null
           contact_email?: string | null
           contact_phone?: string | null
           created_at?: string
           cref?: string | null
           id?: string
+          logo_light_url?: string | null
           logo_url?: string | null
           max_personals?: number
           max_students?: number
@@ -2955,11 +3107,13 @@ export type Database = {
           accent_text_color?: string | null
           app_name?: string | null
           business_name?: string
+          cnpj?: string | null
           contact_email?: string | null
           contact_phone?: string | null
           created_at?: string
           cref?: string | null
           id?: string
+          logo_light_url?: string | null
           logo_url?: string | null
           max_personals?: number
           max_students?: number
@@ -3574,6 +3728,7 @@ export type Database = {
       }
     }
     Functions: {
+      am_i_operations: { Args: never; Returns: boolean }
       award_workout_points: {
         Args: {
           p_all_done: boolean
@@ -3582,6 +3737,19 @@ export type Database = {
           p_student_id: string
         }
         Returns: Json
+      }
+      can_manage_billing: { Args: { p_tenant_id: string }; Returns: boolean }
+      can_view_student: {
+        Args: { p_assigned_personal_id: string; p_tenant_id: string }
+        Returns: boolean
+      }
+      can_view_student_by_id: {
+        Args: { p_student_id: string }
+        Returns: boolean
+      }
+      create_own_tenant: {
+        Args: { p_business_name: string; p_slug: string }
+        Returns: string
       }
       generate_tenant_slug: { Args: { p_name: string }; Returns: string }
       get_admin_last_sign_in: { Args: { p_user_id: string }; Returns: string }
@@ -3600,6 +3768,7 @@ export type Database = {
           plan_name: string
         }[]
       }
+      is_operations_member: { Args: { p_tenant_id: string }; Returns: boolean }
       mark_challenge_item_complete: {
         Args: { p_item_id: string }
         Returns: Json
@@ -3635,9 +3804,16 @@ export type Database = {
           tenant_id: string
           type: string
         }
+        SetofOptions: {
+          from: "*"
+          to: "inventory_movements"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
+      tenant_member_role: { Args: { p_tenant_id: string }; Returns: string }
     }
     Enums: {
       app_role: "global_admin" | "personal" | "student"
@@ -3661,7 +3837,14 @@ export type Database = {
         | "pre_treino"
         | "pos_treino"
         | "outro"
+      payment_method:
+        | "dinheiro"
+        | "pix_manual"
+        | "transferencia"
+        | "cartao_manual"
+        | "outro"
       profile_status: "active" | "inactive" | "suspended"
+      reminder_channel: "email" | "whatsapp"
       student_status: "active" | "inactive"
       tenant_plan: "free" | "pro" | "premium"
       tenant_status: "active" | "inactive" | "suspended"
@@ -3816,7 +3999,15 @@ export const Constants = {
         "pos_treino",
         "outro",
       ],
+      payment_method: [
+        "dinheiro",
+        "pix_manual",
+        "transferencia",
+        "cartao_manual",
+        "outro",
+      ],
       profile_status: ["active", "inactive", "suspended"],
+      reminder_channel: ["email", "whatsapp"],
       student_status: ["active", "inactive"],
       tenant_plan: ["free", "pro", "premium"],
       tenant_status: ["active", "inactive", "suspended"],

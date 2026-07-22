@@ -8,6 +8,7 @@ import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system/legacy';
 import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
@@ -37,6 +38,9 @@ interface Day {
   id: string; day_number: number; title: string | null; status: string; items: DayItem[];
 }
 interface StudentOption { id: string; full_name: string; email: string | null }
+
+const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL!;
+const SUPABASE_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
 
 const ITEM_TYPES = [
   { key: 'exercise', label: 'Exercício', icon: 'barbell-outline' },
@@ -285,13 +289,31 @@ export default function ChallengeDetailScreen() {
     setUploadingCover(true);
     try {
       const uri = result.assets[0].uri;
-      const response = await fetch(uri);
-      const blob = await response.blob();
       const ext = uri.toLowerCase().includes('.png') ? 'png' : 'jpg';
       const path = `${tenantId}/${challenge.id}.${ext}`;
-      const { error } = await supabase.storage.from('challenge-covers')
-        .upload(path, blob, { contentType: ext === 'png' ? 'image/png' : 'image/jpeg', upsert: true });
-      if (error) throw error;
+
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
+      if (!token) throw new Error('Sessão expirada.');
+
+      // fetch(uri).blob() falha com "Network request failed" no RN para URIs
+      // de arquivo local — FileSystem.uploadAsync faz upload nativo direto,
+      // mesmo padrão já usado (e comprovado) no upload de vídeo de exercícios.
+      const res = await FileSystem.uploadAsync(
+        `${SUPABASE_URL}/storage/v1/object/challenge-covers/${path}`,
+        uri,
+        {
+          httpMethod: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            apikey: SUPABASE_KEY,
+            'x-upsert': 'true',
+            'Content-Type': ext === 'png' ? 'image/png' : 'image/jpeg',
+          },
+        },
+      );
+      if (res.status >= 300) throw new Error(`Upload falhou: ${res.body}`);
+
       const { data: urlData } = supabase.storage.from('challenge-covers').getPublicUrl(path);
       const finalUrl = `${urlData.publicUrl}?v=${Date.now()}`;
       await supabase.from('challenges').update({ cover_image_url: finalUrl } as any).eq('id', challenge.id);
