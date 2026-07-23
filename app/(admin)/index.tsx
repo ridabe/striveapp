@@ -200,13 +200,24 @@ export default function AdminDashboard() {
                 color="#60A5FA"
                 onPress={() => router.push('/(admin)/treinos')}
               />
-              {has(MODULE.FATURAS) && (
+              {has(MODULE.FATURAS) ? (
                 <MiniStat
                   label="Pag. pendentes"
                   value={stats?.pendingPayments ?? 0}
                   icon="alert-circle"
                   color={stats?.pendingPayments ? Colors.warning : Colors.success}
-                  onPress={() => router.push('/(admin)/mais')}
+                  onPress={() => router.push('/(admin)/financeiro' as any)}
+                />
+              ) : (
+                // Módulo de Faturas desativado para este tenant — mostra um dado
+                // sempre disponível (check-ins do dia, já carregado abaixo) no
+                // lugar do card de pagamentos pendentes.
+                <MiniStat
+                  label="Check-ins hoje"
+                  value={todayAttendance.length}
+                  icon="checkmark-done-circle"
+                  color={Colors.success}
+                  onPress={() => { if (has(MODULE.FREQUENCIA)) router.push('/(admin)/frequencia' as any); }}
                 />
               )}
               <MiniStat
