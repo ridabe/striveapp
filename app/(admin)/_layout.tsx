@@ -115,6 +115,7 @@ export default function AdminLayout() {
       <Tabs.Screen name="ranking" options={{ href: null }} />
       <Tabs.Screen name="desafios" options={{ href: null }} />
       <Tabs.Screen name="planos-alimentares" options={{ href: null }} />
+      <Tabs.Screen name="biblioteca" options={{ href: null }} />
       {/* Max Strive IA */}
       <Tabs.Screen name="assistente-ia" options={{ href: null }} />
       <Tabs.Screen name="assistente-ia-chat" options={{ href: null }} />

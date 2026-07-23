@@ -17,6 +17,7 @@ export const MODULE = {
   GAMIFICACAO:        'gamificacao-ranking',
   ASSISTENTE_IA:      'assistente-ia',
   DESAFIOS:           'desafios',
+  BIBLIOTECA_CONTEUDO: 'biblioteca_conteudo',
 } as const;
 
 export type ModuleSlug = typeof MODULE[keyof typeof MODULE];

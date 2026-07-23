@@ -981,6 +981,163 @@ export type Database = {
           },
         ]
       }
+      content_library_categories: {
+        Row: {
+          created_at: string
+          icon: string | null
+          id: string
+          kind: string
+          name: string
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          icon?: string | null
+          id?: string
+          kind: string
+          name: string
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          icon?: string | null
+          id?: string
+          kind?: string
+          name?: string
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      content_library_item_saves: {
+        Row: {
+          created_at: string
+          id: string
+          item_id: string
+          personal_id: string
+          tenant_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_id: string
+          personal_id: string
+          tenant_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_id?: string
+          personal_id?: string
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_library_item_saves_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "content_library_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_library_item_saves_personal_id_fkey"
+            columns: ["personal_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_library_item_saves_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_library_items: {
+        Row: {
+          canva_open_count: number
+          canva_template_url: string | null
+          category_id: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          download_count: number
+          file_url: string | null
+          format: string
+          id: string
+          kind: string
+          min_plan: Database["public"]["Enums"]["tenant_plan"]
+          status: string
+          suggested_caption: string | null
+          tags: string[]
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          canva_open_count?: number
+          canva_template_url?: string | null
+          category_id: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          download_count?: number
+          file_url?: string | null
+          format: string
+          id?: string
+          kind: string
+          min_plan?: Database["public"]["Enums"]["tenant_plan"]
+          status?: string
+          suggested_caption?: string | null
+          tags?: string[]
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          canva_open_count?: number
+          canva_template_url?: string | null
+          category_id?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          download_count?: number
+          file_url?: string | null
+          format?: string
+          id?: string
+          kind?: string
+          min_plan?: Database["public"]["Enums"]["tenant_plan"]
+          status?: string
+          suggested_caption?: string | null
+          tags?: string[]
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_library_items_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "content_library_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_library_items_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       exercise_combo_items: {
         Row: {
           combo_id: string
@@ -3792,6 +3949,10 @@ export type Database = {
           plan: string
           plan_name: string
         }[]
+      }
+      increment_content_library_item_usage: {
+        Args: { p_item_id: string; p_event: string }
+        Returns: undefined
       }
       is_operations_member: { Args: { p_tenant_id: string }; Returns: boolean }
       mark_challenge_item_complete: {

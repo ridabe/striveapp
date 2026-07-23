@@ -140,6 +140,13 @@ export default function MaisScreen() {
           label: 'Notificações',
           description: 'Avisos e comunicados',
         },
+        {
+          slug: MODULE.BIBLIOTECA_CONTEUDO,
+          icon: 'images-outline',
+          label: 'Biblioteca',
+          description: 'Artes, materiais de apoio e estudos prontos',
+          route: '/(admin)/biblioteca',
+        },
       ],
     },
     {
