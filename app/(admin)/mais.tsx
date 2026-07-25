@@ -60,6 +60,20 @@ export default function MaisScreen() {
           route: '/(admin)/ranking',
         },
         {
+          slug: MODULE.TREINO_ADAPTATIVO,
+          icon: 'speedometer-outline',
+          label: 'Treino Adaptativo',
+          description: 'Limites do ajuste automático de carga e volume',
+          route: '/(admin)/treino-adaptativo',
+        },
+        {
+          slug: MODULE.RELATORIO_EVOLUCAO,
+          icon: 'bar-chart-outline',
+          label: 'Relatórios de Evolução',
+          description: 'Revisar e publicar o fechamento mensal de cada aluno',
+          route: '/(admin)/relatorios',
+        },
+        {
           slug: MODULE.RADAR_RETENCAO,
           icon: 'radio-outline',
           label: 'Radar de Retenção',

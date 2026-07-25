@@ -17,6 +17,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
 import { ModuleGuard } from '@/components/ModuleGuard';
+import { GuideModal } from '@/components/guides/GuideModal';
+import { useGuide } from '@/hooks/useGuide';
+import { GUIDES } from '@/lib/guides';
 import { MODULE } from '@/lib/modules';
 import {
   loadRadar, draftMessage, sendMessage, listActiveChallenges,
@@ -51,6 +54,10 @@ export default function RadarScreen() {
   const [busy, setBusy] = useState(false);
 
   const tenantId = profile?.tenant_id ?? null;
+
+  // Abre sozinho na primeira visita; "Nao mostrar mais" persiste por usuario
+  // (SecureStore). O link no cabecalho reabre quando ele precisar.
+  const guide = useGuide('radar_retencao', profile?.id);
   const personalFirstName = profile?.full_name?.split(' ')[0] ?? 'Seu personal';
 
   const load = useCallback(async () => {
@@ -247,11 +254,16 @@ export default function RadarScreen() {
       <View style={s.safe}>
         <SafeAreaView edges={['top']} style={{ flex: 1 }}>
           <View style={s.header}>
-            <View style={{ width: 40 }} />
+            <View style={{ width: 80 }} />
             <Text style={s.headerTitle}>Radar de Retenção</Text>
-            <TouchableOpacity onPress={load} style={s.iconBtn}>
-              <Ionicons name="refresh" size={19} color={Colors.textSecondary} />
-            </TouchableOpacity>
+            <View style={{ flexDirection: 'row' }}>
+              <TouchableOpacity onPress={guide.open} style={s.iconBtn}>
+                <Ionicons name="help-circle-outline" size={20} color={primaryColor} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={load} style={s.iconBtn}>
+                <Ionicons name="refresh" size={19} color={Colors.textSecondary} />
+              </TouchableOpacity>
+            </View>
           </View>
 
           {loading ? (
@@ -377,6 +389,12 @@ export default function RadarScreen() {
           )}
         </SafeAreaView>
       </View>
+      <GuideModal
+        visible={guide.visible}
+        content={GUIDES.radar_retencao}
+        onClose={guide.close}
+        onDismissForever={guide.dismissForever}
+      />
     </ModuleGuard>
   );
 }

@@ -117,6 +117,12 @@ export default function AdminLayout() {
       <Tabs.Screen name="planos-alimentares" options={{ href: null }} />
       <Tabs.Screen name="biblioteca" options={{ href: null }} />
       {/* Max Strive IA */}
+      {/* Modulos novos: fora da tab bar (espaco curto). Sao alcancados
+          pelos atalhos da tela de Inicio e pelo menu Mais. */}
+      <Tabs.Screen name="treino-adaptativo" options={{ href: null }} />
+      <Tabs.Screen name="radar" options={{ href: null }} />
+      <Tabs.Screen name="relatorios" options={{ href: null }} />
+
       <Tabs.Screen name="assistente-ia" options={{ href: null }} />
       <Tabs.Screen name="assistente-ia-chat" options={{ href: null }} />
     </Tabs>

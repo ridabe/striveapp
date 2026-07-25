@@ -261,6 +261,35 @@ export default function AdminDashboard() {
               />
             </View>
 
+            {/* Modulos novos: ficam aqui na Inicio e no menu Mais — nao na tab
+                bar, que tem espaco curto demais para mais itens. Cada um so
+                aparece se o tenant tiver o modulo habilitado. */}
+            {(has(MODULE.TREINO_ADAPTATIVO) || has(MODULE.RADAR_RETENCAO) || has(MODULE.RELATORIO_EVOLUCAO)) && (
+              <View style={s.actionsRow}>
+                {has(MODULE.TREINO_ADAPTATIVO) && (
+                  <ActionPill
+                    icon="speedometer-outline"
+                    label="Treino Adaptativo"
+                    onPress={() => router.push('/(admin)/treino-adaptativo' as any)}
+                  />
+                )}
+                {has(MODULE.RADAR_RETENCAO) && (
+                  <ActionPill
+                    icon="radio-outline"
+                    label="Radar"
+                    onPress={() => router.push('/(admin)/radar' as any)}
+                  />
+                )}
+                {has(MODULE.RELATORIO_EVOLUCAO) && (
+                  <ActionPill
+                    icon="bar-chart-outline"
+                    label="Relatórios"
+                    onPress={() => router.push('/(admin)/relatorios' as any)}
+                  />
+                )}
+              </View>
+            )}
+
             {/* ── Frequência de hoje ── */}
             <View style={s.sectionHeader}>
               <Text style={s.sectionTitle}>Frequência de hoje</Text>

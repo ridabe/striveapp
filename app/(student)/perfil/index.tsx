@@ -13,6 +13,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
 import { useModulesStore } from '@/stores/modulesStore';
 import { MODULE } from '@/lib/modules';
+import { countUnseenReports } from '@/lib/newReportBadge';
 import { TenantLogo } from '@/components/TenantLogo';
 import { Colors } from '@/theme/colors';
 import { FontFamily, FontSize } from '@/theme/typography';
@@ -66,6 +67,15 @@ export default function PerfilScreen() {
     .filter(m => m.slug !== MODULE.DESAFIOS || hasVisibleChallenge);
 
   const [tenantContact, setTenantContact] = useState<TenantContact | null>(null);
+
+  // Selo de relatorio nao lido. Some quando o aluno abre — mesmo estado do
+  // banner da home (evolution_reports.viewed_by_student_at).
+  const [unseenReports, setUnseenReports] = useState(0);
+
+  useEffect(() => {
+    if (!selectedStudent?.id) { setUnseenReports(0); return; }
+    countUnseenReports(selectedStudent.id).then(setUnseenReports).catch(() => setUnseenReports(0));
+  }, [selectedStudent?.id]);
   const [loadingTenant, setLoadingTenant] = useState(true);
 
   const fullName = selectedStudent?.full_name ?? profile?.full_name ?? 'Aluno';
@@ -292,6 +302,11 @@ export default function PerfilScreen() {
                 <Text style={s.menuLabel}>{item.label}</Text>
                 <Text style={s.menuDesc}>{item.desc}</Text>
               </View>
+              {item.slug === MODULE.RELATORIO_EVOLUCAO && unseenReports > 0 && (
+                <View style={[s.menuBadge, { backgroundColor: primaryColor }]}>
+                  <Text style={s.menuBadgeText}>{unseenReports > 9 ? '9+' : unseenReports}</Text>
+                </View>
+              )}
               <Ionicons name="chevron-forward" size={16} color={Colors.textSecondary} />
             </TouchableOpacity>
           ))}
@@ -351,6 +366,11 @@ const s = StyleSheet.create({
   menuItem:      { flexDirection: 'row', alignItems: 'center', padding: 16, gap: 14 },
   menuItemBorder:{ borderBottomWidth: 1, borderBottomColor: Colors.border },
   menuIcon:      { width: 38, height: 38, borderRadius: 11, alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+  menuBadge: {
+    minWidth: 20, height: 20, borderRadius: 10, paddingHorizontal: 6,
+    alignItems: 'center', justifyContent: 'center', marginRight: 6,
+  },
+  menuBadgeText: { fontFamily: FontFamily.bodyBold, fontSize: 11, color: Colors.bg },
   menuLabel:     { fontFamily: FontFamily.bodyMedium, fontSize: FontSize.sm, color: Colors.textPrimary },
   menuDesc:      { fontFamily: FontFamily.body, fontSize: FontSize.xs, color: Colors.textSecondary, marginTop: 2 },
 

@@ -2725,46 +2725,58 @@ export type Database = {
           action_type: string
           challenge_id: string | null
           created_at: string
+          days_to_return: number | null
           edited_by_personal: boolean
           id: string
           message_body: string | null
           notes: string | null
+          outcome: string | null
+          outcome_evaluated_at: string | null
           performed_by: string | null
           risk_score_at_action: number | null
           snapshot_id: string | null
           snooze_until: string | null
           student_id: string
           tenant_id: string
+          workouts_after: number | null
         }
         Insert: {
           action_type: string
           challenge_id?: string | null
           created_at?: string
+          days_to_return?: number | null
           edited_by_personal?: boolean
           id?: string
           message_body?: string | null
           notes?: string | null
+          outcome?: string | null
+          outcome_evaluated_at?: string | null
           performed_by?: string | null
           risk_score_at_action?: number | null
           snapshot_id?: string | null
           snooze_until?: string | null
           student_id: string
           tenant_id: string
+          workouts_after?: number | null
         }
         Update: {
           action_type?: string
           challenge_id?: string | null
           created_at?: string
+          days_to_return?: number | null
           edited_by_personal?: boolean
           id?: string
           message_body?: string | null
           notes?: string | null
+          outcome?: string | null
+          outcome_evaluated_at?: string | null
           performed_by?: string | null
           risk_score_at_action?: number | null
           snapshot_id?: string | null
           snooze_until?: string | null
           student_id?: string
           tenant_id?: string
+          workouts_after?: number | null
         }
         Relationships: [
           {

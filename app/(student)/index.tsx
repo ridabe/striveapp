@@ -9,6 +9,7 @@ import { router, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
+import { loadNewReportNotice, type NewReportNotice } from '@/lib/newReportBadge';
 import { useStudent } from '@/hooks/useStudent';
 import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
@@ -77,6 +78,10 @@ export default function StudentHome() {
   const [unseenAssignment, setUnseenAssignment] = useState<{
     label: string; route: string; icon: string;
   } | null>(null);
+
+  // Relatorio publicado que o aluno ainda nao abriu. Nao tem "dispensar":
+  // some quando ele ABRE o relatorio, que e o objetivo do aviso.
+  const [newReport, setNewReport] = useState<NewReportNotice | null>(null);
 
   const fadeAnim  = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(28)).current;
@@ -237,6 +242,9 @@ export default function StudentHome() {
 
   // Carrega o resumo inicial da home e os indicadores visuais do aluno.
   async function loadData(studentId: string, tenantId?: string | null) {
+    // Best-effort: falhar aqui nao pode derrubar a home inteira.
+    loadNewReportNotice(studentId).then(setNewReport).catch(() => setNewReport(null));
+
     const today     = new Date().getDay();
     const todayStart = new Date(); todayStart.setHours(0, 0, 0, 0);
     const weekStart  = new Date(); weekStart.setDate(weekStart.getDate() - weekStart.getDay()); weekStart.setHours(0, 0, 0, 0);
@@ -527,6 +535,34 @@ export default function StudentHome() {
               <Text style={s.bannerDesc}>Preencha seu histórico de saúde para que seu personal personalize seu treino.</Text>
             </View>
             <Ionicons name="chevron-forward" size={16} color="#F59E0B" />
+          </TouchableOpacity>
+        )}
+
+        {/* ── Banner: relatório de evolução novo ──
+            Sem botão de fechar de propósito: ele desaparece quando o aluno
+            abre o relatório (marca viewed_by_student_at). Um "dispensar"
+            faria o aluno perder de vista justamente a prova do trabalho
+            que o personal fez com ele. */}
+        {newReport && (
+          <TouchableOpacity
+            style={[s.bannerInfo, { backgroundColor: `${primaryColor}14`, borderColor: `${primaryColor}55` }]}
+            onPress={() => router.push('/(student)/mais/relatorios' as any)}
+            activeOpacity={0.85}
+          >
+            <View style={[s.bannerIconWrapBlue, { backgroundColor: `${primaryColor}22` }]}>
+              <Ionicons name="bar-chart" size={18} color={primaryColor} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={s.bannerTitleBlue}>
+                {newReport.count > 1
+                  ? `${newReport.count} relatórios novos`
+                  : `Seu relatório de ${newReport.label} está pronto`}
+              </Text>
+              <Text style={s.bannerDescBlue} numberOfLines={2}>
+                {newReport.headline ?? 'Veja tudo o que você conquistou no período.'}
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color={primaryColor} />
           </TouchableOpacity>
         )}
 

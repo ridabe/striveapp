@@ -5,13 +5,13 @@
     "semantic_hash": ""
   },
   "app.json": {
-    "mtime": 1784834488.9210448,
-    "ast_hash": "9b28fb70f72f582f77ac6f19297759ad",
+    "mtime": 1785019102.02781,
+    "ast_hash": "ef7e44a747f2d461de8a40d131502437",
     "semantic_hash": ""
   },
   "app/(admin)/_layout.tsx": {
-    "mtime": 1784822566.2013266,
-    "ast_hash": "3af59742124a8b46c5df9f519e9c6c14",
+    "mtime": 1785019212.1716301,
+    "ast_hash": "81a79682be76c44f01b15196c5b68dc7",
     "semantic_hash": ""
   },
   "app/(admin)/agenda.tsx": {
@@ -90,13 +90,13 @@
     "semantic_hash": "6282ab3aa77fb120ec2d54935a0797f5"
   },
   "app/(admin)/index.tsx": {
-    "mtime": 1784814124.1261852,
-    "ast_hash": "3ab09e021bc7034ef0a8b095cbdd64cd",
+    "mtime": 1785019212.209444,
+    "ast_hash": "e2c042d4950bc8f2806737d76071da67",
     "semantic_hash": ""
   },
   "app/(admin)/mais.tsx": {
-    "mtime": 1784996244.9746854,
-    "ast_hash": "6cdcd70e1a26cd576454b2f247a89b26",
+    "mtime": 1785019212.2304492,
+    "ast_hash": "4064d5f524d8ef1d1ec1ddd637fb351a",
     "semantic_hash": ""
   },
   "app/(admin)/perfil.tsx": {
@@ -190,8 +190,8 @@
     "semantic_hash": ""
   },
   "app/(student)/index.tsx": {
-    "mtime": 1784994683.5240955,
-    "ast_hash": "176fea12233f90fdef692fbc50f9c1d3",
+    "mtime": 1785019659.0400684,
+    "ast_hash": "8f20e16126b22c555a815dbdac86e0c3",
     "semantic_hash": ""
   },
   "app/(student)/mais/_layout.tsx": {
@@ -265,8 +265,8 @@
     "semantic_hash": "9b5e8e3efe19ae417dc47ddadd643d4a"
   },
   "app/(student)/perfil/index.tsx": {
-    "mtime": 1784994683.4820945,
-    "ast_hash": "bfd618ea1035158bd62938624870a172",
+    "mtime": 1785019685.7869437,
+    "ast_hash": "b99243fb999f718c710810ae64259858",
     "semantic_hash": ""
   },
   "app/(student)/progresso/_layout.tsx": {
@@ -570,8 +570,8 @@
     "semantic_hash": "86a8be607ab644a1a69e845e8ff48f60"
   },
   "src/types/database.ts": {
-    "mtime": 1784995192.1809883,
-    "ast_hash": "3142d95b8d2d805b6ad99af306ec26c0",
+    "mtime": 1785014893.200697,
+    "ast_hash": "eb9f51e331ed2229eacefd9f5a961807",
     "semantic_hash": ""
   },
   "supabase/functions/ai-assistant/features/analyze-progress.ts": {
@@ -1040,8 +1040,8 @@
     "semantic_hash": ""
   },
   "src/lib/guides.ts": {
-    "mtime": 1784822509.8770833,
-    "ast_hash": "833b2c2b38b0fda71d40f3684dfa74fa",
+    "mtime": 1785019960.289013,
+    "ast_hash": "b73784401972cd4e01d699a921edc0e6",
     "semantic_hash": ""
   },
   "docs/SESSAO_2026-07-18_combos_ia_e_melhorias_ux.md": {
@@ -1115,8 +1115,8 @@
     "semantic_hash": ""
   },
   "app/(admin)/radar.tsx": {
-    "mtime": 1784996231.5263898,
-    "ast_hash": "3ca51591885bfb50564a4af1a56c7dad",
+    "mtime": 1785019985.6267922,
+    "ast_hash": "6f6a7905988812a165aab917bccbe0e1",
     "semantic_hash": ""
   },
   "src/lib/retentionEngine.ts": {
@@ -1127,6 +1127,31 @@
   "src/lib/retentionRadar.ts": {
     "mtime": 1784996163.2026277,
     "ast_hash": "c1add8f881e15e07365423cb73054c5d",
+    "semantic_hash": ""
+  },
+  "app/(admin)/relatorios.tsx": {
+    "mtime": 1785019985.5846677,
+    "ast_hash": "693cde3d80f6bb211de0ea75685bb614",
+    "semantic_hash": ""
+  },
+  "app/(admin)/treino-adaptativo.tsx": {
+    "mtime": 1785019985.5509648,
+    "ast_hash": "ffe341eb5779536dd1b449b7a279e309",
+    "semantic_hash": ""
+  },
+  "src/lib/adaptiveRules.ts": {
+    "mtime": 1785018740.5867982,
+    "ast_hash": "77188ebe5d82a1e738a9a17b4c836464",
+    "semantic_hash": ""
+  },
+  "src/lib/evolutionReportsAdmin.ts": {
+    "mtime": 1785019307.78154,
+    "ast_hash": "1e492da517351f6a5b9c09114a13e1fa",
+    "semantic_hash": ""
+  },
+  "src/lib/newReportBadge.ts": {
+    "mtime": 1785019640.1791124,
+    "ast_hash": "17d7905f35836ab1d4ec31ea21d7ae9f",
     "semantic_hash": ""
   }
 }
