@@ -2720,6 +2720,150 @@ export type Database = {
           },
         ]
       }
+      retention_actions: {
+        Row: {
+          action_type: string
+          challenge_id: string | null
+          created_at: string
+          edited_by_personal: boolean
+          id: string
+          message_body: string | null
+          notes: string | null
+          performed_by: string | null
+          risk_score_at_action: number | null
+          snapshot_id: string | null
+          snooze_until: string | null
+          student_id: string
+          tenant_id: string
+        }
+        Insert: {
+          action_type: string
+          challenge_id?: string | null
+          created_at?: string
+          edited_by_personal?: boolean
+          id?: string
+          message_body?: string | null
+          notes?: string | null
+          performed_by?: string | null
+          risk_score_at_action?: number | null
+          snapshot_id?: string | null
+          snooze_until?: string | null
+          student_id: string
+          tenant_id: string
+        }
+        Update: {
+          action_type?: string
+          challenge_id?: string | null
+          created_at?: string
+          edited_by_personal?: boolean
+          id?: string
+          message_body?: string | null
+          notes?: string | null
+          performed_by?: string | null
+          risk_score_at_action?: number | null
+          snapshot_id?: string | null
+          snooze_until?: string | null
+          student_id?: string
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "retention_actions_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "retention_actions_performed_by_fkey"
+            columns: ["performed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "retention_actions_snapshot_id_fkey"
+            columns: ["snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "retention_snapshots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "retention_actions_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "retention_actions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      retention_snapshots: {
+        Row: {
+          created_at: string
+          days_since_last_workout: number | null
+          headline: string
+          id: string
+          risk_band: string
+          risk_score: number
+          signals: Json
+          snapshot_date: string
+          student_id: string
+          tenant_id: string
+          workouts_last_30: number | null
+          workouts_previous_30: number | null
+        }
+        Insert: {
+          created_at?: string
+          days_since_last_workout?: number | null
+          headline: string
+          id?: string
+          risk_band: string
+          risk_score: number
+          signals?: Json
+          snapshot_date?: string
+          student_id: string
+          tenant_id: string
+          workouts_last_30?: number | null
+          workouts_previous_30?: number | null
+        }
+        Update: {
+          created_at?: string
+          days_since_last_workout?: number | null
+          headline?: string
+          id?: string
+          risk_band?: string
+          risk_score?: number
+          signals?: Json
+          snapshot_date?: string
+          student_id?: string
+          tenant_id?: string
+          workouts_last_30?: number | null
+          workouts_previous_30?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "retention_snapshots_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "retention_snapshots_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       session_adaptations: {
         Row: {
           adaptation_type: string

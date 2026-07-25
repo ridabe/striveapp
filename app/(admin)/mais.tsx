@@ -60,6 +60,13 @@ export default function MaisScreen() {
           route: '/(admin)/ranking',
         },
         {
+          slug: MODULE.RADAR_RETENCAO,
+          icon: 'radio-outline',
+          label: 'Radar de Retenção',
+          description: 'Quem está se afastando e o que fazer hoje',
+          route: '/(admin)/radar',
+        },
+        {
           slug: MODULE.DESAFIOS,
           icon: 'flag-outline',
           label: 'Desafios',

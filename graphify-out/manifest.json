@@ -95,8 +95,8 @@
     "semantic_hash": ""
   },
   "app/(admin)/mais.tsx": {
-    "mtime": 1784822558.807856,
-    "ast_hash": "7d8cec809be6081451c77c62db3e58f1",
+    "mtime": 1784996244.9746854,
+    "ast_hash": "6cdcd70e1a26cd576454b2f247a89b26",
     "semantic_hash": ""
   },
   "app/(admin)/perfil.tsx": {
@@ -510,8 +510,8 @@
     "semantic_hash": "c1fff259286dd1f1d8f71f3d5b6a4850"
   },
   "src/lib/modules.ts": {
-    "mtime": 1784994602.1605296,
-    "ast_hash": "c3bef937a74ffb9321c1677e0c8e210b",
+    "mtime": 1784996131.7640128,
+    "ast_hash": "7afa416c3c0c8dd971cd710ca3d4639e",
     "semantic_hash": ""
   },
   "src/lib/supabase.ts": {
@@ -570,8 +570,8 @@
     "semantic_hash": "86a8be607ab644a1a69e845e8ff48f60"
   },
   "src/types/database.ts": {
-    "mtime": 1784993374.3967972,
-    "ast_hash": "516f6306783d5bab16a8dc4c490a3cba",
+    "mtime": 1784995192.1809883,
+    "ast_hash": "3142d95b8d2d805b6ad99af306ec26c0",
     "semantic_hash": ""
   },
   "supabase/functions/ai-assistant/features/analyze-progress.ts": {
@@ -1112,6 +1112,21 @@
   "docs/ANALISE_MODULOS_INOVADORES.md": {
     "mtime": 1784988859.6900065,
     "ast_hash": "46c7dda2522a229ef8dbb47a471c3c77",
+    "semantic_hash": ""
+  },
+  "app/(admin)/radar.tsx": {
+    "mtime": 1784996231.5263898,
+    "ast_hash": "3ca51591885bfb50564a4af1a56c7dad",
+    "semantic_hash": ""
+  },
+  "src/lib/retentionEngine.ts": {
+    "mtime": 1784996131.7022698,
+    "ast_hash": "126b00d153f866f4f47a2a9b84683b7b",
+    "semantic_hash": ""
+  },
+  "src/lib/retentionRadar.ts": {
+    "mtime": 1784996163.2026277,
+    "ast_hash": "c1add8f881e15e07365423cb73054c5d",
     "semantic_hash": ""
   }
 }

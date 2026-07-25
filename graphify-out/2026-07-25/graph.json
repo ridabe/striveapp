@@ -710,7 +710,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_admin_alunos_index",
-      "community": 33,
+      "community": 48,
       "norm_label": "index.tsx"
     },
     {
@@ -720,7 +720,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "app_admin_alunos_index_student",
-      "community": 33,
+      "community": 48,
       "norm_label": "student"
     },
     {
@@ -730,7 +730,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "app_admin_alunos_index_alunosscreen",
-      "community": 33,
+      "community": 48,
       "norm_label": "alunosscreen()"
     },
     {
@@ -740,7 +740,7 @@
       "source_location": "L209",
       "_origin": "ast",
       "id": "app_admin_alunos_index_styles",
-      "community": 33,
+      "community": 48,
       "norm_label": "styles"
     },
     {
@@ -1110,7 +1110,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "app_admin_assistente_ia_chat_assistenteiachatscreen",
-      "community": 8,
+      "community": 391,
       "norm_label": "assistenteiachatscreen()"
     },
     {
@@ -1130,7 +1130,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_admin_assistente_ia",
-      "community": 8,
+      "community": 391,
       "norm_label": "assistente-ia.tsx"
     },
     {
@@ -1140,7 +1140,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "app_admin_assistente_ia_studentmini",
-      "community": 8,
+      "community": 391,
       "norm_label": "studentmini"
     },
     {
@@ -1150,7 +1150,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "app_admin_assistente_ia_feature_labels",
-      "community": 8,
+      "community": 391,
       "norm_label": "feature_labels"
     },
     {
@@ -1160,7 +1160,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "app_admin_assistente_ia_plan_steps",
-      "community": 8,
+      "community": 391,
       "norm_label": "plan_steps"
     },
     {
@@ -1170,7 +1170,7 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "app_admin_assistente_ia_assistenteiascreen",
-      "community": 8,
+      "community": 391,
       "norm_label": "assistenteiascreen()"
     },
     {
@@ -1180,7 +1180,7 @@
       "source_location": "L410",
       "_origin": "ast",
       "id": "app_admin_assistente_ia_s",
-      "community": 8,
+      "community": 391,
       "norm_label": "s"
     },
     {
@@ -1640,7 +1640,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "app_admin_desafios_id_challengedetailscreen",
-      "community": 33,
+      "community": 20,
       "norm_label": "challengedetailscreen()"
     },
     {
@@ -1890,7 +1890,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_admin_feedbacks",
-      "community": 69,
+      "community": 41,
       "norm_label": "feedbacks.tsx"
     },
     {
@@ -1900,7 +1900,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "app_admin_feedbacks_feedbackitem",
-      "community": 69,
+      "community": 41,
       "norm_label": "feedbackitem"
     },
     {
@@ -1910,7 +1910,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "app_admin_feedbacks_stars",
-      "community": 69,
+      "community": 41,
       "norm_label": "stars()"
     },
     {
@@ -1920,7 +1920,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "app_admin_feedbacks_fmtdate",
-      "community": 69,
+      "community": 41,
       "norm_label": "fmtdate()"
     },
     {
@@ -1930,7 +1930,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "app_admin_feedbacks_feedbacksscreen",
-      "community": 69,
+      "community": 41,
       "norm_label": "feedbacksscreen()"
     },
     {
@@ -1940,7 +1940,7 @@
       "source_location": "L197",
       "_origin": "ast",
       "id": "app_admin_feedbacks_s",
-      "community": 69,
+      "community": 41,
       "norm_label": "s"
     },
     {
@@ -2450,7 +2450,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "app_admin_index_admindashboard",
-      "community": 33,
+      "community": 6,
       "norm_label": "admindashboard()"
     },
     {
@@ -2490,7 +2490,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_admin_mais",
-      "community": 6,
+      "community": 392,
       "norm_label": "mais.tsx"
     },
     {
@@ -2500,7 +2500,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "app_admin_mais_moduleitem",
-      "community": 6,
+      "community": 392,
       "norm_label": "moduleitem"
     },
     {
@@ -2510,7 +2510,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "app_admin_mais_modulegroup",
-      "community": 6,
+      "community": 392,
       "norm_label": "modulegroup"
     },
     {
@@ -2520,7 +2520,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "app_admin_mais_maisscreen",
-      "community": 6,
+      "community": 392,
       "norm_label": "maisscreen()"
     },
     {
@@ -2530,7 +2530,7 @@
       "source_location": "L264",
       "_origin": "ast",
       "id": "app_admin_mais_styles",
-      "community": 6,
+      "community": 392,
       "norm_label": "styles"
     },
     {
@@ -2740,7 +2740,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_admin_planos_alimentares_index",
-      "community": 58,
+      "community": 27,
       "norm_label": "index.tsx"
     },
     {
@@ -2750,7 +2750,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "app_admin_planos_alimentares_index_goals",
-      "community": 58,
+      "community": 27,
       "norm_label": "goals"
     },
     {
@@ -2760,7 +2760,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "app_admin_planos_alimentares_index_goal_colors",
-      "community": 58,
+      "community": 27,
       "norm_label": "goal_colors"
     },
     {
@@ -2770,7 +2770,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "app_admin_planos_alimentares_index_mealplan",
-      "community": 58,
+      "community": 27,
       "norm_label": "mealplan"
     },
     {
@@ -2780,7 +2780,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "app_admin_planos_alimentares_index_fmtdate",
-      "community": 58,
+      "community": 27,
       "norm_label": "fmtdate()"
     },
     {
@@ -2790,7 +2790,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "app_admin_planos_alimentares_index_planosalimentaresscreen",
-      "community": 58,
+      "community": 27,
       "norm_label": "planosalimentaresscreen()"
     },
     {
@@ -2800,7 +2800,7 @@
       "source_location": "L224",
       "_origin": "ast",
       "id": "app_admin_planos_alimentares_index_s",
-      "community": 58,
+      "community": 27,
       "norm_label": "s"
     },
     {
@@ -3310,7 +3310,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_admin_studio",
-      "community": 22,
+      "community": 69,
       "norm_label": "studio.tsx"
     },
     {
@@ -3320,7 +3320,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "app_admin_studio_primarytextmode",
-      "community": 22,
+      "community": 69,
       "norm_label": "primarytextmode"
     },
     {
@@ -3330,7 +3330,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "app_admin_studio_preset_colors",
-      "community": 22,
+      "community": 69,
       "norm_label": "preset_colors"
     },
     {
@@ -3340,7 +3340,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "app_admin_studio_isvalidhex",
-      "community": 22,
+      "community": 69,
       "norm_label": "isvalidhex()"
     },
     {
@@ -3350,7 +3350,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "app_admin_studio_studioscreen",
-      "community": 22,
+      "community": 69,
       "norm_label": "studioscreen()"
     },
     {
@@ -3360,7 +3360,7 @@
       "source_location": "L339",
       "_origin": "ast",
       "id": "app_admin_studio_styles",
-      "community": 22,
+      "community": 69,
       "norm_label": "styles"
     },
     {
@@ -3370,7 +3370,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_admin_treinos_extras_id",
-      "community": 20,
+      "community": 390,
       "norm_label": "[id].tsx"
     },
     {
@@ -3380,7 +3380,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "app_admin_treinos_extras_id_extraitem",
-      "community": 20,
+      "community": 390,
       "norm_label": "extraitem"
     },
     {
@@ -3390,7 +3390,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "app_admin_treinos_extras_id_extraworkout",
-      "community": 20,
+      "community": 390,
       "norm_label": "extraworkout"
     },
     {
@@ -3400,7 +3400,7 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "app_admin_treinos_extras_id_student",
-      "community": 20,
+      "community": 390,
       "norm_label": "student"
     },
     {
@@ -3410,7 +3410,7 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "app_admin_treinos_extras_id_category_colors",
-      "community": 20,
+      "community": 390,
       "norm_label": "category_colors"
     },
     {
@@ -3420,7 +3420,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "app_admin_treinos_extras_id_extraworkoutdetailscreen",
-      "community": 20,
+      "community": 31,
       "norm_label": "extraworkoutdetailscreen()"
     },
     {
@@ -3430,7 +3430,7 @@
       "source_location": "L566",
       "_origin": "ast",
       "id": "app_admin_treinos_extras_id_s",
-      "community": 20,
+      "community": 390,
       "norm_label": "s"
     },
     {
@@ -3690,7 +3690,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_auth_welcome",
-      "community": 390,
+      "community": 38,
       "norm_label": "welcome.tsx"
     },
     {
@@ -3700,7 +3700,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "app_auth_welcome_benefits",
-      "community": 390,
+      "community": 38,
       "norm_label": "benefits"
     },
     {
@@ -3710,7 +3710,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "app_auth_welcome_welcomescreen",
-      "community": 390,
+      "community": 38,
       "norm_label": "welcomescreen()"
     },
     {
@@ -3720,7 +3720,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "app_auth_welcome_styles",
-      "community": 390,
+      "community": 38,
       "norm_label": "styles"
     },
     {
@@ -3730,7 +3730,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_student_layout",
-      "community": 6,
+      "community": 392,
       "norm_label": "_layout.tsx"
     },
     {
@@ -3827,7 +3827,7 @@
       "label": "s",
       "file_type": "code",
       "source_file": "app/(student)/index.tsx",
-      "source_location": "L660",
+      "source_location": "L661",
       "_origin": "ast",
       "id": "app_student_index_s",
       "community": 394,
@@ -3990,7 +3990,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_student_mais_anamnese",
-      "community": 396,
+      "community": 53,
       "norm_label": "anamnese.tsx"
     },
     {
@@ -4000,7 +4000,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "app_student_mais_anamnese_anamnesetemplate",
-      "community": 396,
+      "community": 53,
       "norm_label": "anamnesetemplate"
     },
     {
@@ -4010,7 +4010,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "app_student_mais_anamnese_mode",
-      "community": 396,
+      "community": 53,
       "norm_label": "mode"
     },
     {
@@ -4020,7 +4020,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "app_student_mais_anamnese_fmtdate",
-      "community": 396,
+      "community": 53,
       "norm_label": "fmtdate()"
     },
     {
@@ -4030,7 +4030,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "app_student_mais_anamnese_anamnesescreen",
-      "community": 396,
+      "community": 71,
       "norm_label": "anamnesescreen()"
     },
     {
@@ -4040,7 +4040,7 @@
       "source_location": "L375",
       "_origin": "ast",
       "id": "app_student_mais_anamnese_s",
-      "community": 396,
+      "community": 53,
       "norm_label": "s"
     },
     {
@@ -4390,7 +4390,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_student_mais_feedback",
-      "community": 53,
+      "community": 399,
       "norm_label": "feedback.tsx"
     },
     {
@@ -4400,7 +4400,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "app_student_mais_feedback_workoutfeedback",
-      "community": 53,
+      "community": 399,
       "norm_label": "workoutfeedback"
     },
     {
@@ -4410,7 +4410,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "app_student_mais_feedback_workoutplan",
-      "community": 53,
+      "community": 399,
       "norm_label": "workoutplan"
     },
     {
@@ -4420,7 +4420,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "app_student_mais_feedback_labels",
-      "community": 53,
+      "community": 399,
       "norm_label": "labels"
     },
     {
@@ -4430,7 +4430,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "app_student_mais_feedback_label_colors",
-      "community": 53,
+      "community": 399,
       "norm_label": "label_colors"
     },
     {
@@ -4440,7 +4440,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "app_student_mais_feedback_starrow",
-      "community": 53,
+      "community": 399,
       "norm_label": "starrow()"
     },
     {
@@ -4450,7 +4450,7 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "app_student_mais_feedback_feedbackscreen",
-      "community": 53,
+      "community": 399,
       "norm_label": "feedbackscreen()"
     },
     {
@@ -4460,7 +4460,7 @@
       "source_location": "L338",
       "_origin": "ast",
       "id": "app_student_mais_feedback_s",
-      "community": 53,
+      "community": 399,
       "norm_label": "s"
     },
     {
@@ -4540,7 +4540,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_student_mais_frequencia",
-      "community": 53,
+      "community": 400,
       "norm_label": "frequencia.tsx"
     },
     {
@@ -4550,7 +4550,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "app_student_mais_frequencia_months",
-      "community": 53,
+      "community": 400,
       "norm_label": "months"
     },
     {
@@ -4560,7 +4560,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "app_student_mais_frequencia_days_header",
-      "community": 53,
+      "community": 400,
       "norm_label": "days_header"
     },
     {
@@ -4570,7 +4570,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "app_student_mais_frequencia_getdaysinmonth",
-      "community": 53,
+      "community": 400,
       "norm_label": "getdaysinmonth()"
     },
     {
@@ -4580,7 +4580,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "app_student_mais_frequencia_getfirstdayofweek",
-      "community": 53,
+      "community": 400,
       "norm_label": "getfirstdayofweek()"
     },
     {
@@ -4590,7 +4590,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "app_student_mais_frequencia_frequenciascreen",
-      "community": 53,
+      "community": 400,
       "norm_label": "frequenciascreen()"
     },
     {
@@ -4600,7 +4600,7 @@
       "source_location": "L177",
       "_origin": "ast",
       "id": "app_student_mais_frequencia_s",
-      "community": 53,
+      "community": 400,
       "norm_label": "s"
     },
     {
@@ -4680,7 +4680,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_student_mais_mensagens",
-      "community": 19,
+      "community": 53,
       "norm_label": "mensagens.tsx"
     },
     {
@@ -4690,7 +4690,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "app_student_mais_mensagens_studentmessage",
-      "community": 19,
+      "community": 53,
       "norm_label": "studentmessage"
     },
     {
@@ -4700,7 +4700,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "app_student_mais_mensagens_studentmessages",
-      "community": 19,
+      "community": 71,
       "norm_label": "studentmessages()"
     },
     {
@@ -4710,7 +4710,7 @@
       "source_location": "L275",
       "_origin": "ast",
       "id": "app_student_mais_mensagens_s",
-      "community": 19,
+      "community": 53,
       "norm_label": "s"
     },
     {
@@ -4720,7 +4720,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_student_mais_nutricao",
-      "community": 394,
+      "community": 38,
       "norm_label": "nutricao.tsx"
     },
     {
@@ -4730,7 +4730,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "app_student_mais_nutricao_features",
-      "community": 394,
+      "community": 38,
       "norm_label": "features"
     },
     {
@@ -4740,7 +4740,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "app_student_mais_nutricao_nutricaoscreen",
-      "community": 394,
+      "community": 38,
       "norm_label": "nutricaoscreen()"
     },
     {
@@ -4750,7 +4750,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "app_student_mais_nutricao_s",
-      "community": 394,
+      "community": 38,
       "norm_label": "s"
     },
     {
@@ -5004,6 +5004,76 @@
       "norm_label": "hw"
     },
     {
+      "label": "relatorios.tsx",
+      "file_type": "code",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "app_student_mais_relatorios",
+      "community": 58,
+      "norm_label": "relatorios.tsx"
+    },
+    {
+      "label": "ReportRow",
+      "file_type": "code",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L29",
+      "_origin": "ast",
+      "id": "app_student_mais_relatorios_reportrow",
+      "community": 58,
+      "norm_label": "reportrow"
+    },
+    {
+      "label": "StatBox()",
+      "file_type": "code",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L40",
+      "_origin": "ast",
+      "id": "app_student_mais_relatorios_statbox",
+      "community": 58,
+      "norm_label": "statbox()"
+    },
+    {
+      "label": "Delta()",
+      "file_type": "code",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L49",
+      "_origin": "ast",
+      "id": "app_student_mais_relatorios_delta",
+      "community": 58,
+      "norm_label": "delta()"
+    },
+    {
+      "label": "ReportContent()",
+      "file_type": "code",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L60",
+      "_origin": "ast",
+      "id": "app_student_mais_relatorios_reportcontent",
+      "community": 58,
+      "norm_label": "reportcontent()"
+    },
+    {
+      "label": "RelatoriosScreen()",
+      "file_type": "code",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L192",
+      "_origin": "ast",
+      "id": "app_student_mais_relatorios_relatoriosscreen",
+      "community": 58,
+      "norm_label": "relatoriosscreen()"
+    },
+    {
+      "label": "s",
+      "file_type": "code",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L305",
+      "_origin": "ast",
+      "id": "app_student_mais_relatorios_s",
+      "community": 58,
+      "norm_label": "s"
+    },
+    {
       "label": "_layout.tsx",
       "file_type": "code",
       "source_file": "app/(student)/perfil/_layout.tsx",
@@ -5057,17 +5127,17 @@
       "label": "fmtPhone()",
       "file_type": "code",
       "source_file": "app/(student)/perfil/index.tsx",
-      "source_location": "L38",
+      "source_location": "L39",
       "_origin": "ast",
       "id": "app_student_perfil_index_fmtphone",
-      "community": 392,
+      "community": 71,
       "norm_label": "fmtphone()"
     },
     {
       "label": "openWhatsApp()",
       "file_type": "code",
       "source_file": "app/(student)/perfil/index.tsx",
-      "source_location": "L45",
+      "source_location": "L46",
       "_origin": "ast",
       "id": "app_student_perfil_index_openwhatsapp",
       "community": 392,
@@ -5077,17 +5147,17 @@
       "label": "PerfilScreen()",
       "file_type": "code",
       "source_file": "app/(student)/perfil/index.tsx",
-      "source_location": "L55",
+      "source_location": "L56",
       "_origin": "ast",
       "id": "app_student_perfil_index_perfilscreen",
-      "community": 392,
+      "community": 71,
       "norm_label": "perfilscreen()"
     },
     {
       "label": "s",
       "file_type": "code",
       "source_file": "app/(student)/perfil/index.tsx",
-      "source_location": "L320",
+      "source_location": "L321",
       "_origin": "ast",
       "id": "app_student_perfil_index_s",
       "community": 392,
@@ -5297,7 +5367,7 @@
       "label": "Phase",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L32",
+      "source_location": "L45",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_phase",
       "community": 12,
@@ -5307,7 +5377,7 @@
       "label": "ExItem",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L34",
+      "source_location": "L47",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_exitem",
       "community": 12,
@@ -5317,7 +5387,7 @@
       "label": "Section",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L51",
+      "source_location": "L64",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_section",
       "community": 12,
@@ -5327,7 +5397,7 @@
       "label": "INTENSITIES",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L57",
+      "source_location": "L70",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_intensities",
       "community": 12,
@@ -5337,7 +5407,7 @@
       "label": "STAR_LABELS",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L65",
+      "source_location": "L78",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_star_labels",
       "community": 12,
@@ -5347,7 +5417,7 @@
       "label": "STAR_COLORS",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L66",
+      "source_location": "L79",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_star_colors",
       "community": 12,
@@ -5357,7 +5427,7 @@
       "label": "{ width: W }",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L68",
+      "source_location": "L81",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_width_w",
       "community": 12,
@@ -5367,7 +5437,7 @@
       "label": "fmtTime()",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L72",
+      "source_location": "L85",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_fmttime",
       "community": 12,
@@ -5377,7 +5447,7 @@
       "label": "RestRing()",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L79",
+      "source_location": "L92",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_restring",
       "community": 12,
@@ -5387,7 +5457,7 @@
       "label": "StarRow()",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L145",
+      "source_location": "L158",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_starrow",
       "community": 12,
@@ -5397,17 +5467,17 @@
       "label": "RoutineExecutionScreen()",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L158",
+      "source_location": "L171",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_routineexecutionscreen",
-      "community": 12,
+      "community": 390,
       "norm_label": "routineexecutionscreen()"
     },
     {
       "label": "rt",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L1238",
+      "source_location": "L1441",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_rt",
       "community": 12,
@@ -5417,7 +5487,7 @@
       "label": "s",
       "file_type": "code",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L1243",
+      "source_location": "L1446",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_routineid_s",
       "community": 12,
@@ -5510,7 +5580,7 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_index_fmttime",
-      "community": 12,
+      "community": 18,
       "norm_label": "fmttime()"
     },
     {
@@ -5520,7 +5590,7 @@
       "source_location": "L78",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_index_restring",
-      "community": 12,
+      "community": 18,
       "norm_label": "restring()"
     },
     {
@@ -5540,7 +5610,7 @@
       "source_location": "L157",
       "_origin": "ast",
       "id": "app_student_treinos_planid_executar_index_planexecutionscreen",
-      "community": 12,
+      "community": 390,
       "norm_label": "planexecutionscreen()"
     },
     {
@@ -6020,7 +6090,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_select_tenant",
-      "community": 22,
+      "community": 69,
       "norm_label": "select-tenant.tsx"
     },
     {
@@ -6030,7 +6100,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "app_select_tenant_selecttenantscreen",
-      "community": 22,
+      "community": 71,
       "norm_label": "selecttenantscreen()"
     },
     {
@@ -6040,7 +6110,7 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "app_select_tenant_styles",
-      "community": 22,
+      "community": 69,
       "norm_label": "styles"
     },
     {
@@ -7080,7 +7150,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_editaralunomodal",
-      "community": 7,
+      "community": 393,
       "norm_label": "editaralunomodal.tsx"
     },
     {
@@ -7090,7 +7160,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_components_editaralunomodal_studenttoedit",
-      "community": 7,
+      "community": 393,
       "norm_label": "studenttoedit"
     },
     {
@@ -7100,7 +7170,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "src_components_editaralunomodal_props",
-      "community": 7,
+      "community": 393,
       "norm_label": "props"
     },
     {
@@ -7110,7 +7180,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "src_components_editaralunomodal_formstate",
-      "community": 7,
+      "community": 393,
       "norm_label": "formstate"
     },
     {
@@ -7120,7 +7190,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "src_components_editaralunomodal_empty",
-      "community": 7,
+      "community": 393,
       "norm_label": "empty"
     },
     {
@@ -7130,7 +7200,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "src_components_editaralunomodal_student_goals",
-      "community": 7,
+      "community": 393,
       "norm_label": "student_goals"
     },
     {
@@ -7140,7 +7210,7 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "src_components_editaralunomodal_maskphone",
-      "community": 7,
+      "community": 393,
       "norm_label": "maskphone()"
     },
     {
@@ -7150,7 +7220,7 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "src_components_editaralunomodal_maskdate",
-      "community": 7,
+      "community": 393,
       "norm_label": "maskdate()"
     },
     {
@@ -7160,7 +7230,7 @@
       "source_location": "L64",
       "_origin": "ast",
       "id": "src_components_editaralunomodal_datetoiso",
-      "community": 7,
+      "community": 393,
       "norm_label": "datetoiso()"
     },
     {
@@ -7170,7 +7240,7 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "src_components_editaralunomodal_isotomasked",
-      "community": 7,
+      "community": 393,
       "norm_label": "isotomasked()"
     },
     {
@@ -7180,7 +7250,7 @@
       "source_location": "L78",
       "_origin": "ast",
       "id": "src_components_editaralunomodal_editaralunomodal",
-      "community": 7,
+      "community": 393,
       "norm_label": "editaralunomodal()"
     },
     {
@@ -7190,7 +7260,7 @@
       "source_location": "L345",
       "_origin": "ast",
       "id": "src_components_editaralunomodal_field",
-      "community": 7,
+      "community": 393,
       "norm_label": "field()"
     },
     {
@@ -7200,7 +7270,7 @@
       "source_location": "L363",
       "_origin": "ast",
       "id": "src_components_editaralunomodal_s",
-      "community": 7,
+      "community": 393,
       "norm_label": "s"
     },
     {
@@ -7210,7 +7280,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_exercisepickermodal",
-      "community": 20,
+      "community": 37,
       "norm_label": "exercisepickermodal.tsx"
     },
     {
@@ -7220,7 +7290,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_components_exercisepickermodal_exercisesummary",
-      "community": 20,
+      "community": 37,
       "norm_label": "exercisesummary"
     },
     {
@@ -7230,7 +7300,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "src_components_exercisepickermodal_props",
-      "community": 20,
+      "community": 37,
       "norm_label": "props"
     },
     {
@@ -7240,7 +7310,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "src_components_exercisepickermodal_exercisepickermodal",
-      "community": 20,
+      "community": 37,
       "norm_label": "exercisepickermodal()"
     },
     {
@@ -7250,7 +7320,7 @@
       "source_location": "L218",
       "_origin": "ast",
       "id": "src_components_exercisepickermodal_s",
-      "community": 20,
+      "community": 37,
       "norm_label": "s"
     },
     {
@@ -7260,7 +7330,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_mediaviewermodal",
-      "community": 45,
+      "community": 401,
       "norm_label": "mediaviewermodal.tsx"
     },
     {
@@ -7270,7 +7340,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_components_mediaviewermodal_width_w_height_h",
-      "community": 45,
+      "community": 401,
       "norm_label": "{ width: w, height: h }"
     },
     {
@@ -7280,7 +7350,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_components_mediaviewermodal_mediatype",
-      "community": 28,
+      "community": 401,
       "norm_label": "mediatype"
     },
     {
@@ -7290,7 +7360,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_components_mediaviewermodal_props",
-      "community": 45,
+      "community": 401,
       "norm_label": "props"
     },
     {
@@ -7300,7 +7370,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "src_components_mediaviewermodal_mediaviewermodal",
-      "community": 45,
+      "community": 401,
       "norm_label": "mediaviewermodal()"
     },
     {
@@ -7310,7 +7380,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "src_components_mediaviewermodal_s",
-      "community": 45,
+      "community": 401,
       "norm_label": "s"
     },
     {
@@ -7320,7 +7390,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_moduleguard",
-      "community": 6,
+      "community": 27,
       "norm_label": "moduleguard.tsx"
     },
     {
@@ -7330,7 +7400,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_components_moduleguard_props",
-      "community": 6,
+      "community": 27,
       "norm_label": "props"
     },
     {
@@ -7340,7 +7410,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_components_moduleguard_moduleguard",
-      "community": 53,
+      "community": 27,
       "norm_label": "moduleguard()"
     },
     {
@@ -7350,7 +7420,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "src_components_moduleguard_s",
-      "community": 6,
+      "community": 27,
       "norm_label": "s"
     },
     {
@@ -7440,7 +7510,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "src_components_novoalunomodal_novoalunomodal",
-      "community": 33,
+      "community": 48,
       "norm_label": "novoalunomodal()"
     },
     {
@@ -7500,7 +7570,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_strivelogo",
-      "community": 390,
+      "community": 38,
       "norm_label": "strivelogo.tsx"
     },
     {
@@ -7510,7 +7580,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_components_strivelogo_strivelogoprops",
-      "community": 390,
+      "community": 38,
       "norm_label": "strivelogoprops"
     },
     {
@@ -7520,7 +7590,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "src_components_strivelogo_strivelogo",
-      "community": 390,
+      "community": 38,
       "norm_label": "strivelogo()"
     },
     {
@@ -7530,7 +7600,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "src_components_strivelogo_styles",
-      "community": 390,
+      "community": 38,
       "norm_label": "styles"
     },
     {
@@ -7580,7 +7650,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_tenantlogo",
-      "community": 394,
+      "community": 392,
       "norm_label": "tenantlogo.tsx"
     },
     {
@@ -7590,7 +7660,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_components_tenantlogo_tenantlogoprops",
-      "community": 394,
+      "community": 392,
       "norm_label": "tenantlogoprops"
     },
     {
@@ -7600,7 +7670,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "src_components_tenantlogo_tenantlogo",
-      "community": 394,
+      "community": 392,
       "norm_label": "tenantlogo()"
     },
     {
@@ -7610,8 +7680,188 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "src_components_tenantlogo_styles",
-      "community": 394,
+      "community": 392,
       "norm_label": "styles"
+    },
+    {
+      "label": "AdaptationSummary.tsx",
+      "file_type": "code",
+      "source_file": "src/components/adaptive/AdaptationSummary.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_components_adaptive_adaptationsummary",
+      "community": 12,
+      "norm_label": "adaptationsummary.tsx"
+    },
+    {
+      "label": "iconFor()",
+      "file_type": "code",
+      "source_file": "src/components/adaptive/AdaptationSummary.tsx",
+      "source_location": "L13",
+      "_origin": "ast",
+      "id": "src_components_adaptive_adaptationsummary_iconfor",
+      "community": 12,
+      "norm_label": "iconfor()"
+    },
+    {
+      "label": "AdaptationSummary()",
+      "file_type": "code",
+      "source_file": "src/components/adaptive/AdaptationSummary.tsx",
+      "source_location": "L31",
+      "_origin": "ast",
+      "id": "src_components_adaptive_adaptationsummary_adaptationsummary",
+      "community": 12,
+      "norm_label": "adaptationsummary()"
+    },
+    {
+      "label": "s",
+      "file_type": "code",
+      "source_file": "src/components/adaptive/AdaptationSummary.tsx",
+      "source_location": "L100",
+      "_origin": "ast",
+      "id": "src_components_adaptive_adaptationsummary_s",
+      "community": 12,
+      "norm_label": "s"
+    },
+    {
+      "label": "ReadinessCheckIn.tsx",
+      "file_type": "code",
+      "source_file": "src/components/adaptive/ReadinessCheckIn.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_components_adaptive_readinesscheckin",
+      "community": 398,
+      "norm_label": "readinesscheckin.tsx"
+    },
+    {
+      "label": "ReadinessAnswers",
+      "file_type": "code",
+      "source_file": "src/components/adaptive/ReadinessCheckIn.tsx",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "src_components_adaptive_readinesscheckin_readinessanswers",
+      "community": 398,
+      "norm_label": "readinessanswers"
+    },
+    {
+      "label": "Scale",
+      "file_type": "code",
+      "source_file": "src/components/adaptive/ReadinessCheckIn.tsx",
+      "source_location": "L21",
+      "_origin": "ast",
+      "id": "src_components_adaptive_readinesscheckin_scale",
+      "community": 398,
+      "norm_label": "scale"
+    },
+    {
+      "label": "SLEEP",
+      "file_type": "code",
+      "source_file": "src/components/adaptive/ReadinessCheckIn.tsx",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "src_components_adaptive_readinesscheckin_sleep",
+      "community": 398,
+      "norm_label": "sleep"
+    },
+    {
+      "label": "SORENESS",
+      "file_type": "code",
+      "source_file": "src/components/adaptive/ReadinessCheckIn.tsx",
+      "source_location": "L32",
+      "_origin": "ast",
+      "id": "src_components_adaptive_readinesscheckin_soreness",
+      "community": 398,
+      "norm_label": "soreness"
+    },
+    {
+      "label": "ENERGY",
+      "file_type": "code",
+      "source_file": "src/components/adaptive/ReadinessCheckIn.tsx",
+      "source_location": "L40",
+      "_origin": "ast",
+      "id": "src_components_adaptive_readinesscheckin_energy",
+      "community": 398,
+      "norm_label": "energy"
+    },
+    {
+      "label": "PAIN_AREAS",
+      "file_type": "code",
+      "source_file": "src/components/adaptive/ReadinessCheckIn.tsx",
+      "source_location": "L50",
+      "_origin": "ast",
+      "id": "src_components_adaptive_readinesscheckin_pain_areas",
+      "community": 398,
+      "norm_label": "pain_areas"
+    },
+    {
+      "label": "ScaleRow()",
+      "file_type": "code",
+      "source_file": "src/components/adaptive/ReadinessCheckIn.tsx",
+      "source_location": "L52",
+      "_origin": "ast",
+      "id": "src_components_adaptive_readinesscheckin_scalerow",
+      "community": 398,
+      "norm_label": "scalerow()"
+    },
+    {
+      "label": "ReadinessCheckIn()",
+      "file_type": "code",
+      "source_file": "src/components/adaptive/ReadinessCheckIn.tsx",
+      "source_location": "L97",
+      "_origin": "ast",
+      "id": "src_components_adaptive_readinesscheckin_readinesscheckin",
+      "community": 398,
+      "norm_label": "readinesscheckin()"
+    },
+    {
+      "label": "s",
+      "file_type": "code",
+      "source_file": "src/components/adaptive/ReadinessCheckIn.tsx",
+      "source_location": "L220",
+      "_origin": "ast",
+      "id": "src_components_adaptive_readinesscheckin_s",
+      "community": 398,
+      "norm_label": "s"
+    },
+    {
+      "label": "RpeModal.tsx",
+      "file_type": "code",
+      "source_file": "src/components/adaptive/RpeModal.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_components_adaptive_rpemodal",
+      "community": 4,
+      "norm_label": "rpemodal.tsx"
+    },
+    {
+      "label": "RPE_OPTIONS",
+      "file_type": "code",
+      "source_file": "src/components/adaptive/RpeModal.tsx",
+      "source_location": "L15",
+      "_origin": "ast",
+      "id": "src_components_adaptive_rpemodal_rpe_options",
+      "community": 4,
+      "norm_label": "rpe_options"
+    },
+    {
+      "label": "RpeModal()",
+      "file_type": "code",
+      "source_file": "src/components/adaptive/RpeModal.tsx",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "src_components_adaptive_rpemodal_rpemodal",
+      "community": 4,
+      "norm_label": "rpemodal()"
+    },
+    {
+      "label": "s",
+      "file_type": "code",
+      "source_file": "src/components/adaptive/RpeModal.tsx",
+      "source_location": "L81",
+      "_origin": "ast",
+      "id": "src_components_adaptive_rpemodal_s",
+      "community": 4,
+      "norm_label": "s"
     },
     {
       "label": "CriarTreinoWizardModal.tsx",
@@ -7820,7 +8070,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ai_maxonboardingmodal",
-      "community": 62,
+      "community": 33,
       "norm_label": "maxonboardingmodal.tsx"
     },
     {
@@ -7830,7 +8080,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "src_components_ai_maxonboardingmodal_steps",
-      "community": 62,
+      "community": 33,
       "norm_label": "steps"
     },
     {
@@ -7840,7 +8090,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "src_components_ai_maxonboardingmodal_props",
-      "community": 62,
+      "community": 33,
       "norm_label": "props"
     },
     {
@@ -7850,7 +8100,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "src_components_ai_maxonboardingmodal_maxonboardingmodal",
-      "community": 62,
+      "community": 33,
       "norm_label": "maxonboardingmodal()"
     },
     {
@@ -7860,7 +8110,7 @@
       "source_location": "L250",
       "_origin": "ast",
       "id": "src_components_ai_maxonboardingmodal_s",
-      "community": 62,
+      "community": 33,
       "norm_label": "s"
     },
     {
@@ -7970,7 +8220,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_guides_guidemodal",
-      "community": 395,
+      "community": 60,
       "norm_label": "guidemodal.tsx"
     },
     {
@@ -7980,7 +8230,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "src_components_guides_guidemodal_props",
-      "community": 395,
+      "community": 60,
       "norm_label": "props"
     },
     {
@@ -8000,7 +8250,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "src_components_guides_guidemodal_s",
-      "community": 395,
+      "community": 60,
       "norm_label": "s"
     },
     {
@@ -8070,7 +8320,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_notifications_trainernotificationbell",
-      "community": 61,
+      "community": 33,
       "norm_label": "trainernotificationbell.tsx"
     },
     {
@@ -8080,7 +8330,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "src_components_notifications_trainernotificationbell_trainernotification",
-      "community": 61,
+      "community": 33,
       "norm_label": "trainernotification"
     },
     {
@@ -8090,7 +8340,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "src_components_notifications_trainernotificationbell_props",
-      "community": 61,
+      "community": 33,
       "norm_label": "props"
     },
     {
@@ -8100,7 +8350,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "src_components_notifications_trainernotificationbell_fmtdate",
-      "community": 61,
+      "community": 33,
       "norm_label": "fmtdate()"
     },
     {
@@ -8110,7 +8360,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "src_components_notifications_trainernotificationbell_trainernotificationbell",
-      "community": 61,
+      "community": 33,
       "norm_label": "trainernotificationbell()"
     },
     {
@@ -8120,7 +8370,7 @@
       "source_location": "L139",
       "_origin": "ast",
       "id": "src_components_notifications_trainernotificationbell_s",
-      "community": 61,
+      "community": 33,
       "norm_label": "s"
     },
     {
@@ -8160,7 +8410,7 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "src_components_onboarding_moduleonboardingpopup_moduleonboardingpopup",
-      "community": 33,
+      "community": 21,
       "norm_label": "moduleonboardingpopup()"
     },
     {
@@ -8350,7 +8600,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_hooks_usehealthconnect",
-      "community": 12,
+      "community": 18,
       "norm_label": "usehealthconnect.ts"
     },
     {
@@ -8360,7 +8610,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "src_hooks_usehealthconnect_wearablemetrics",
-      "community": 12,
+      "community": 18,
       "norm_label": "wearablemetrics"
     },
     {
@@ -8370,7 +8620,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "src_hooks_usehealthconnect_known_sources",
-      "community": 12,
+      "community": 18,
       "norm_label": "known_sources"
     },
     {
@@ -8380,7 +8630,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "src_hooks_usehealthconnect_required_permissions",
-      "community": 12,
+      "community": 18,
       "norm_label": "required_permissions"
     },
     {
@@ -8390,7 +8640,7 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "src_hooks_usehealthconnect_detectdevice",
-      "community": 12,
+      "community": 18,
       "norm_label": "detectdevice()"
     },
     {
@@ -8400,7 +8650,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "src_hooks_usehealthconnect_usehealthconnect",
-      "community": 12,
+      "community": 390,
       "norm_label": "usehealthconnect()"
     },
     {
@@ -8460,7 +8710,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "src_hooks_usemaxstream_usemaxstream",
-      "community": 8,
+      "community": 391,
       "norm_label": "usemaxstream()"
     },
     {
@@ -8470,7 +8720,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_hooks_usemodules",
-      "community": 6,
+      "community": 21,
       "norm_label": "usemodules.ts"
     },
     {
@@ -8520,7 +8770,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_hooks_usetenant",
-      "community": 71,
+      "community": 69,
       "norm_label": "usetenant.ts"
     },
     {
@@ -8532,6 +8782,336 @@
       "id": "src_hooks_usetenant_usetenant",
       "community": 71,
       "norm_label": "usetenant()"
+    },
+    {
+      "label": "adaptationEngine.ts",
+      "file_type": "code",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_lib_adaptationengine",
+      "community": 61,
+      "norm_label": "adaptationengine.ts"
+    },
+    {
+      "label": "AdaptationRule",
+      "file_type": "code",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L19",
+      "_origin": "ast",
+      "id": "src_lib_adaptationengine_adaptationrule",
+      "community": 396,
+      "norm_label": "adaptationrule"
+    },
+    {
+      "label": "ReadinessInput",
+      "file_type": "code",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L38",
+      "_origin": "ast",
+      "id": "src_lib_adaptationengine_readinessinput",
+      "community": 61,
+      "norm_label": "readinessinput"
+    },
+    {
+      "label": "PrescribedItem",
+      "file_type": "code",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L46",
+      "_origin": "ast",
+      "id": "src_lib_adaptationengine_prescribeditem",
+      "community": 396,
+      "norm_label": "prescribeditem"
+    },
+    {
+      "label": "AdaptationType",
+      "file_type": "code",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L57",
+      "_origin": "ast",
+      "id": "src_lib_adaptationengine_adaptationtype",
+      "community": 61,
+      "norm_label": "adaptationtype"
+    },
+    {
+      "label": "TriggerSource",
+      "file_type": "code",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L65",
+      "_origin": "ast",
+      "id": "src_lib_adaptationengine_triggersource",
+      "community": 61,
+      "norm_label": "triggersource"
+    },
+    {
+      "label": "PlannedAdaptation",
+      "file_type": "code",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L68",
+      "_origin": "ast",
+      "id": "src_lib_adaptationengine_plannedadaptation",
+      "community": 12,
+      "norm_label": "plannedadaptation"
+    },
+    {
+      "label": "SessionPlan",
+      "file_type": "code",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L87",
+      "_origin": "ast",
+      "id": "src_lib_adaptationengine_sessionplan",
+      "community": 396,
+      "norm_label": "sessionplan"
+    },
+    {
+      "label": "readinessBand",
+      "file_type": "code",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L128",
+      "_origin": "ast",
+      "id": "src_lib_adaptationengine_readinessband",
+      "community": 61,
+      "norm_label": "readinessband"
+    },
+    {
+      "label": "calcReadinessScore()",
+      "file_type": "code",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L122",
+      "_origin": "ast",
+      "id": "src_lib_adaptationengine_calcreadinessscore",
+      "community": 61,
+      "norm_label": "calcreadinessscore()"
+    },
+    {
+      "label": "readinessLabel()",
+      "file_type": "code",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L134",
+      "_origin": "ast",
+      "id": "src_lib_adaptationengine_readinesslabel",
+      "community": 61,
+      "norm_label": "readinesslabel()"
+    },
+    {
+      "label": "parseLoadKg()",
+      "file_type": "code",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L147",
+      "_origin": "ast",
+      "id": "src_lib_adaptationengine_parseloadkg",
+      "community": 61,
+      "norm_label": "parseloadkg()"
+    },
+    {
+      "label": "roundToPlate()",
+      "file_type": "code",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L158",
+      "_origin": "ast",
+      "id": "src_lib_adaptationengine_roundtoplate",
+      "community": 61,
+      "norm_label": "roundtoplate()"
+    },
+    {
+      "label": "formatLoadKg()",
+      "file_type": "code",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L165",
+      "_origin": "ast",
+      "id": "src_lib_adaptationengine_formatloadkg",
+      "community": 61,
+      "norm_label": "formatloadkg()"
+    },
+    {
+      "label": "resolveRule()",
+      "file_type": "code",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L179",
+      "_origin": "ast",
+      "id": "src_lib_adaptationengine_resolverule",
+      "community": 396,
+      "norm_label": "resolverule()"
+    },
+    {
+      "label": "loadDeltaPctFromReadiness()",
+      "file_type": "code",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L206",
+      "_origin": "ast",
+      "id": "src_lib_adaptationengine_loaddeltapctfromreadiness",
+      "community": 61,
+      "norm_label": "loaddeltapctfromreadiness()"
+    },
+    {
+      "label": "planSession()",
+      "file_type": "code",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L229",
+      "_origin": "ast",
+      "id": "src_lib_adaptationengine_plansession",
+      "community": 61,
+      "norm_label": "plansession()"
+    },
+    {
+      "label": "SetFeedback",
+      "file_type": "code",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L382",
+      "_origin": "ast",
+      "id": "src_lib_adaptationengine_setfeedback",
+      "community": 61,
+      "norm_label": "setfeedback"
+    },
+    {
+      "label": "SetAdjustment",
+      "file_type": "code",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L392",
+      "_origin": "ast",
+      "id": "src_lib_adaptationengine_setadjustment",
+      "community": 61,
+      "norm_label": "setadjustment"
+    },
+    {
+      "label": "adjustNextSet()",
+      "file_type": "code",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L407",
+      "_origin": "ast",
+      "id": "src_lib_adaptationengine_adjustnextset",
+      "community": 61,
+      "norm_label": "adjustnextset()"
+    },
+    {
+      "label": "detectProgressionSignal()",
+      "file_type": "code",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L447",
+      "_origin": "ast",
+      "id": "src_lib_adaptationengine_detectprogressionsignal",
+      "community": 61,
+      "norm_label": "detectprogressionsignal()"
+    },
+    {
+      "label": "round1()",
+      "file_type": "code",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L464",
+      "_origin": "ast",
+      "id": "src_lib_adaptationengine_round1",
+      "community": 61,
+      "norm_label": "round1()"
+    },
+    {
+      "label": "noChange()",
+      "file_type": "code",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L468",
+      "_origin": "ast",
+      "id": "src_lib_adaptationengine_nochange",
+      "community": 61,
+      "norm_label": "nochange()"
+    },
+    {
+      "label": "reasonForNoChange()",
+      "file_type": "code",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L483",
+      "_origin": "ast",
+      "id": "src_lib_adaptationengine_reasonfornochange",
+      "community": 61,
+      "norm_label": "reasonfornochange()"
+    },
+    {
+      "label": "matchesArea()",
+      "file_type": "code",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L494",
+      "_origin": "ast",
+      "id": "src_lib_adaptationengine_matchesarea",
+      "community": 61,
+      "norm_label": "matchesarea()"
+    },
+    {
+      "label": "buildSummary()",
+      "file_type": "code",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L511",
+      "_origin": "ast",
+      "id": "src_lib_adaptationengine_buildsummary",
+      "community": 61,
+      "norm_label": "buildsummary()"
+    },
+    {
+      "label": "adaptiveWorkout.ts",
+      "file_type": "code",
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_lib_adaptiveworkout",
+      "community": 396,
+      "norm_label": "adaptiveworkout.ts"
+    },
+    {
+      "label": "BufferedSetLog",
+      "file_type": "code",
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L36",
+      "_origin": "ast",
+      "id": "src_lib_adaptiveworkout_bufferedsetlog",
+      "community": 396,
+      "norm_label": "bufferedsetlog"
+    },
+    {
+      "label": "loadAdaptiveRule()",
+      "file_type": "code",
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L56",
+      "_origin": "ast",
+      "id": "src_lib_adaptiveworkout_loadadaptiverule",
+      "community": 396,
+      "norm_label": "loadadaptiverule()"
+    },
+    {
+      "label": "loadPrescribedItems()",
+      "file_type": "code",
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L81",
+      "_origin": "ast",
+      "id": "src_lib_adaptiveworkout_loadprescribeditems",
+      "community": 396,
+      "norm_label": "loadprescribeditems()"
+    },
+    {
+      "label": "ReadinessSubmission",
+      "file_type": "code",
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L102",
+      "_origin": "ast",
+      "id": "src_lib_adaptiveworkout_readinesssubmission",
+      "community": 396,
+      "norm_label": "readinesssubmission"
+    },
+    {
+      "label": "saveReadinessCheckin()",
+      "file_type": "code",
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L117",
+      "_origin": "ast",
+      "id": "src_lib_adaptiveworkout_savereadinesscheckin",
+      "community": 396,
+      "norm_label": "savereadinesscheckin()"
+    },
+    {
+      "label": "flushAdaptiveSession()",
+      "file_type": "code",
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L168",
+      "_origin": "ast",
+      "id": "src_lib_adaptiveworkout_flushadaptivesession",
+      "community": 396,
+      "norm_label": "flushadaptivesession()"
     },
     {
       "label": "appVersion.ts",
@@ -8580,7 +9160,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_colorcontrast",
-      "community": 22,
+      "community": 69,
       "norm_label": "colorcontrast.ts"
     },
     {
@@ -8590,7 +9170,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_lib_colorcontrast_getreadabletextcolor",
-      "community": 22,
+      "community": 69,
       "norm_label": "getreadabletextcolor()"
     },
     {
@@ -8600,7 +9180,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "src_lib_colorcontrast_resolvetextcolor",
-      "community": 22,
+      "community": 69,
       "norm_label": "resolvetextcolor()"
     },
     {
@@ -8610,7 +9190,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_comboexercises",
-      "community": 20,
+      "community": 390,
       "norm_label": "comboexercises.ts"
     },
     {
@@ -8620,7 +9200,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_comboexercises_combomember",
-      "community": 20,
+      "community": 390,
       "norm_label": "combomember"
     },
     {
@@ -8630,7 +9210,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_lib_comboexercises_combogroup",
-      "community": 20,
+      "community": 390,
       "norm_label": "combogroup"
     },
     {
@@ -8640,7 +9220,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_lib_comboexercises_groupbycombo",
-      "community": 39,
+      "community": 390,
       "norm_label": "groupbycombo()"
     },
     {
@@ -8650,7 +9230,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "src_lib_comboexercises_combotypelabel",
-      "community": 20,
+      "community": 390,
       "norm_label": "combotypelabel()"
     },
     {
@@ -8660,8 +9240,238 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "src_lib_comboexercises_combotypekey",
-      "community": 20,
+      "community": 390,
       "norm_label": "combotypekey()"
+    },
+    {
+      "label": "evolutionReport.ts",
+      "file_type": "code",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_lib_evolutionreport",
+      "community": 58,
+      "norm_label": "evolutionreport.ts"
+    },
+    {
+      "label": "SessionRow",
+      "file_type": "code",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L16",
+      "_origin": "ast",
+      "id": "src_lib_evolutionreport_sessionrow",
+      "community": 58,
+      "norm_label": "sessionrow"
+    },
+    {
+      "label": "SetRow",
+      "file_type": "code",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "src_lib_evolutionreport_setrow",
+      "community": 58,
+      "norm_label": "setrow"
+    },
+    {
+      "label": "ExerciseAggRow",
+      "file_type": "code",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L33",
+      "_origin": "ast",
+      "id": "src_lib_evolutionreport_exerciseaggrow",
+      "community": 58,
+      "norm_label": "exerciseaggrow"
+    },
+    {
+      "label": "AssessmentRow",
+      "file_type": "code",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L42",
+      "_origin": "ast",
+      "id": "src_lib_evolutionreport_assessmentrow",
+      "community": 58,
+      "norm_label": "assessmentrow"
+    },
+    {
+      "label": "ProgressRow",
+      "file_type": "code",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L53",
+      "_origin": "ast",
+      "id": "src_lib_evolutionreport_progressrow",
+      "community": 58,
+      "norm_label": "progressrow"
+    },
+    {
+      "label": "ReadinessRow",
+      "file_type": "code",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L59",
+      "_origin": "ast",
+      "id": "src_lib_evolutionreport_readinessrow",
+      "community": 58,
+      "norm_label": "readinessrow"
+    },
+    {
+      "label": "ReportInput",
+      "file_type": "code",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L64",
+      "_origin": "ast",
+      "id": "src_lib_evolutionreport_reportinput",
+      "community": 58,
+      "norm_label": "reportinput"
+    },
+    {
+      "label": "PersonalRecord",
+      "file_type": "code",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L86",
+      "_origin": "ast",
+      "id": "src_lib_evolutionreport_personalrecord",
+      "community": 58,
+      "norm_label": "personalrecord"
+    },
+    {
+      "label": "ExerciseProgress",
+      "file_type": "code",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L94",
+      "_origin": "ast",
+      "id": "src_lib_evolutionreport_exerciseprogress",
+      "community": 58,
+      "norm_label": "exerciseprogress"
+    },
+    {
+      "label": "ReportMetrics",
+      "file_type": "code",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L102",
+      "_origin": "ast",
+      "id": "src_lib_evolutionreport_reportmetrics",
+      "community": 58,
+      "norm_label": "reportmetrics"
+    },
+    {
+      "label": "round1()",
+      "file_type": "code",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L152",
+      "_origin": "ast",
+      "id": "src_lib_evolutionreport_round1",
+      "community": 58,
+      "norm_label": "round1()"
+    },
+    {
+      "label": "pctDelta()",
+      "file_type": "code",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L156",
+      "_origin": "ast",
+      "id": "src_lib_evolutionreport_pctdelta",
+      "community": 58,
+      "norm_label": "pctdelta()"
+    },
+    {
+      "label": "parseLoadKg()",
+      "file_type": "code",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L166",
+      "_origin": "ast",
+      "id": "src_lib_evolutionreport_parseloadkg",
+      "community": 58,
+      "norm_label": "parseloadkg()"
+    },
+    {
+      "label": "dayKey()",
+      "file_type": "code",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L176",
+      "_origin": "ast",
+      "id": "src_lib_evolutionreport_daykey",
+      "community": 58,
+      "norm_label": "daykey()"
+    },
+    {
+      "label": "longestStreak()",
+      "file_type": "code",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L185",
+      "_origin": "ast",
+      "id": "src_lib_evolutionreport_longeststreak",
+      "community": 58,
+      "norm_label": "longeststreak()"
+    },
+    {
+      "label": "totalVolumeKg()",
+      "file_type": "code",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L204",
+      "_origin": "ast",
+      "id": "src_lib_evolutionreport_totalvolumekg",
+      "community": 58,
+      "norm_label": "totalvolumekg()"
+    },
+    {
+      "label": "bestLoadByExercise()",
+      "file_type": "code",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L211",
+      "_origin": "ast",
+      "id": "src_lib_evolutionreport_bestloadbyexercise",
+      "community": 58,
+      "norm_label": "bestloadbyexercise()"
+    },
+    {
+      "label": "loadTrendByExercise()",
+      "file_type": "code",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L230",
+      "_origin": "ast",
+      "id": "src_lib_evolutionreport_loadtrendbyexercise",
+      "community": 58,
+      "norm_label": "loadtrendbyexercise()"
+    },
+    {
+      "label": "buildReportMetrics()",
+      "file_type": "code",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L257",
+      "_origin": "ast",
+      "id": "src_lib_evolutionreport_buildreportmetrics",
+      "community": 58,
+      "norm_label": "buildreportmetrics()"
+    },
+    {
+      "label": "previousMonthPeriod()",
+      "file_type": "code",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L448",
+      "_origin": "ast",
+      "id": "src_lib_evolutionreport_previousmonthperiod",
+      "community": 58,
+      "norm_label": "previousmonthperiod()"
+    },
+    {
+      "label": "periodLabel()",
+      "file_type": "code",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L471",
+      "_origin": "ast",
+      "id": "src_lib_evolutionreport_periodlabel",
+      "community": 58,
+      "norm_label": "periodlabel()"
+    },
+    {
+      "label": "fallbackNarrative()",
+      "file_type": "code",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L481",
+      "_origin": "ast",
+      "id": "src_lib_evolutionreport_fallbacknarrative",
+      "community": 58,
+      "norm_label": "fallbacknarrative()"
     },
     {
       "label": "exerciseConfig.ts",
@@ -8760,7 +9570,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "src_lib_exerciseconfig_goal_colors",
-      "community": 48,
+      "community": 44,
       "norm_label": "goal_colors"
     },
     {
@@ -8830,7 +9640,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_lib_guides_guidecontent",
-      "community": 395,
+      "community": 60,
       "norm_label": "guidecontent"
     },
     {
@@ -8910,7 +9720,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_modules",
-      "community": 6,
+      "community": 21,
       "norm_label": "modules.ts"
     },
     {
@@ -8920,17 +9730,17 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_modules_module",
-      "community": 6,
+      "community": 21,
       "norm_label": "module"
     },
     {
       "label": "ModuleSlug",
       "file_type": "code",
       "source_file": "src/lib/modules.ts",
-      "source_location": "L23",
+      "source_location": "L25",
       "_origin": "ast",
       "id": "src_lib_modules_moduleslug",
-      "community": 6,
+      "community": 21,
       "norm_label": "moduleslug"
     },
     {
@@ -9000,7 +9810,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_workoutaudio",
-      "community": 18,
+      "community": 397,
       "norm_label": "workoutaudio.ts"
     },
     {
@@ -9010,7 +9820,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_lib_workoutaudio_notificationsmodule",
-      "community": 18,
+      "community": 397,
       "norm_label": "notificationsmodule"
     },
     {
@@ -9020,7 +9830,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "src_lib_workoutaudio_getnotifications",
-      "community": 18,
+      "community": 397,
       "norm_label": "getnotifications()"
     },
     {
@@ -9030,7 +9840,7 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "src_lib_workoutaudio_requestnotificationpermission",
-      "community": 18,
+      "community": 397,
       "norm_label": "requestnotificationpermission()"
     },
     {
@@ -9040,7 +9850,7 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "src_lib_workoutaudio_schedulerestendnotification",
-      "community": 18,
+      "community": 397,
       "norm_label": "schedulerestendnotification()"
     },
     {
@@ -9050,7 +9860,7 @@
       "source_location": "L87",
       "_origin": "ast",
       "id": "src_lib_workoutaudio_cancelrestnotification",
-      "community": 18,
+      "community": 397,
       "norm_label": "cancelrestnotification()"
     },
     {
@@ -9060,7 +9870,7 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "src_lib_workoutaudio_generatebeepwav",
-      "community": 18,
+      "community": 397,
       "norm_label": "generatebeepwav()"
     },
     {
@@ -9070,7 +9880,7 @@
       "source_location": "L138",
       "_origin": "ast",
       "id": "src_lib_workoutaudio_ensurebeepready",
-      "community": 18,
+      "community": 397,
       "norm_label": "ensurebeepready()"
     },
     {
@@ -9080,7 +9890,7 @@
       "source_location": "L156",
       "_origin": "ast",
       "id": "src_lib_workoutaudio_preloadrestbeep",
-      "community": 18,
+      "community": 397,
       "norm_label": "preloadrestbeep()"
     },
     {
@@ -9090,7 +9900,7 @@
       "source_location": "L169",
       "_origin": "ast",
       "id": "src_lib_workoutaudio_playrestendalert",
-      "community": 18,
+      "community": 397,
       "norm_label": "playrestendalert()"
     },
     {
@@ -9100,7 +9910,7 @@
       "source_location": "L202",
       "_origin": "ast",
       "id": "src_lib_workoutaudio_releaserestbeep",
-      "community": 18,
+      "community": 397,
       "norm_label": "releaserestbeep()"
     },
     {
@@ -9110,7 +9920,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_services_auth",
-      "community": 24,
+      "community": 392,
       "norm_label": "auth.ts"
     },
     {
@@ -9130,7 +9940,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_services_auth_signout",
-      "community": 24,
+      "community": 392,
       "norm_label": "signout()"
     },
     {
@@ -9140,7 +9950,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_services_auth_resetpassword",
-      "community": 24,
+      "community": 392,
       "norm_label": "resetpassword()"
     },
     {
@@ -9150,7 +9960,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_stores_authstore",
-      "community": 71,
+      "community": 41,
       "norm_label": "authstore.ts"
     },
     {
@@ -9160,7 +9970,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_stores_authstore_profile",
-      "community": 71,
+      "community": 41,
       "norm_label": "profile"
     },
     {
@@ -9170,7 +9980,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_stores_authstore_authstate",
-      "community": 71,
+      "community": 41,
       "norm_label": "authstate"
     },
     {
@@ -9190,7 +10000,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_stores_modulesstore",
-      "community": 6,
+      "community": 21,
       "norm_label": "modulesstore.ts"
     },
     {
@@ -9200,7 +10010,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_stores_modulesstore_modulesstate",
-      "community": 6,
+      "community": 21,
       "norm_label": "modulesstate"
     },
     {
@@ -9250,7 +10060,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_stores_themestore",
-      "community": 22,
+      "community": 69,
       "norm_label": "themestore.ts"
     },
     {
@@ -9260,7 +10070,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_stores_themestore_effectiverole",
-      "community": 22,
+      "community": 69,
       "norm_label": "effectiverole"
     },
     {
@@ -9270,7 +10080,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "src_stores_themestore_themestate",
-      "community": 22,
+      "community": 69,
       "norm_label": "themestate"
     },
     {
@@ -9280,7 +10090,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "src_stores_themestore_usethemestore",
-      "community": 33,
+      "community": 6,
       "norm_label": "usethemestore"
     },
     {
@@ -9370,7 +10180,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_theme_typography_fontfamily",
-      "community": 390,
+      "community": 38,
       "norm_label": "fontfamily"
     },
     {
@@ -9427,7 +10237,7 @@
       "label": "DatabaseWithoutInternals",
       "file_type": "code",
       "source_file": "src/types/database.ts",
-      "source_location": "L4046",
+      "source_location": "L4506",
       "_origin": "ast",
       "id": "src_types_database_databasewithoutinternals",
       "community": 19,
@@ -9437,7 +10247,7 @@
       "label": "DefaultSchema",
       "file_type": "code",
       "source_file": "src/types/database.ts",
-      "source_location": "L4048",
+      "source_location": "L4508",
       "_origin": "ast",
       "id": "src_types_database_defaultschema",
       "community": 19,
@@ -9447,7 +10257,7 @@
       "label": "Tables",
       "file_type": "code",
       "source_file": "src/types/database.ts",
-      "source_location": "L4050",
+      "source_location": "L4510",
       "_origin": "ast",
       "id": "src_types_database_tables",
       "community": 19,
@@ -9457,7 +10267,7 @@
       "label": "TablesInsert",
       "file_type": "code",
       "source_file": "src/types/database.ts",
-      "source_location": "L4079",
+      "source_location": "L4539",
       "_origin": "ast",
       "id": "src_types_database_tablesinsert",
       "community": 19,
@@ -9467,7 +10277,7 @@
       "label": "TablesUpdate",
       "file_type": "code",
       "source_file": "src/types/database.ts",
-      "source_location": "L4104",
+      "source_location": "L4564",
       "_origin": "ast",
       "id": "src_types_database_tablesupdate",
       "community": 19,
@@ -9477,7 +10287,7 @@
       "label": "Enums",
       "file_type": "code",
       "source_file": "src/types/database.ts",
-      "source_location": "L4129",
+      "source_location": "L4589",
       "_origin": "ast",
       "id": "src_types_database_enums",
       "community": 19,
@@ -9487,7 +10297,7 @@
       "label": "CompositeTypes",
       "file_type": "code",
       "source_file": "src/types/database.ts",
-      "source_location": "L4146",
+      "source_location": "L4606",
       "_origin": "ast",
       "id": "src_types_database_compositetypes",
       "community": 19,
@@ -9497,7 +10307,7 @@
       "label": "Constants",
       "file_type": "code",
       "source_file": "src/types/database.ts",
-      "source_location": "L4163",
+      "source_location": "L4623",
       "_origin": "ast",
       "id": "src_types_database_constants",
       "community": 19,
@@ -10772,6 +11582,176 @@
       "id": "assets_ai_leia_me_assets_do_max_strive_assistente_ia",
       "community": 93,
       "norm_label": "assets do max strive \u2014 assistente ia"
+    },
+    {
+      "label": "ANALISE_MODULOS_INOVADORES.md",
+      "file_type": "document",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_analise_modulos_inovadores",
+      "community": 62,
+      "norm_label": "analise_modulos_inovadores.md"
+    },
+    {
+      "label": "An\u00e1lise Competitiva e Propostas de M\u00f3dulos Inovadores \u2014 StrivePersonal",
+      "file_type": "document",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_analise_modulos_inovadores_an\u00e1lise_competitiva_e_propostas_de_m\u00f3dulos_inovadores_strivepersonal",
+      "community": 62,
+      "norm_label": "analise competitiva e propostas de modulos inovadores \u2014 strivepersonal"
+    },
+    {
+      "label": "1. O que o StrivePersonal j\u00e1 tem hoje",
+      "file_type": "document",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "docs_analise_modulos_inovadores_1_o_que_o_strivepersonal_j\u00e1_tem_hoje",
+      "community": 62,
+      "norm_label": "1. o que o strivepersonal ja tem hoje"
+    },
+    {
+      "label": "2. Benchmark do segmento",
+      "file_type": "document",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "docs_analise_modulos_inovadores_2_benchmark_do_segmento",
+      "community": 62,
+      "norm_label": "2. benchmark do segmento"
+    },
+    {
+      "label": "Brasil",
+      "file_type": "document",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L28",
+      "_origin": "ast",
+      "id": "docs_analise_modulos_inovadores_brasil",
+      "community": 62,
+      "norm_label": "brasil"
+    },
+    {
+      "label": "Exterior (refer\u00eancia de teto)",
+      "file_type": "document",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L36",
+      "_origin": "ast",
+      "id": "docs_analise_modulos_inovadores_exterior_refer\u00eancia_de_teto",
+      "community": 62,
+      "norm_label": "exterior (referencia de teto)"
+    },
+    {
+      "label": "Conclus\u00e3o do benchmark",
+      "file_type": "document",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L44",
+      "_origin": "ast",
+      "id": "docs_analise_modulos_inovadores_conclus\u00e3o_do_benchmark",
+      "community": 62,
+      "norm_label": "conclusao do benchmark"
+    },
+    {
+      "label": "3. A tese",
+      "file_type": "document",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L58",
+      "_origin": "ast",
+      "id": "docs_analise_modulos_inovadores_3_a_tese",
+      "community": 62,
+      "norm_label": "3. a tese"
+    },
+    {
+      "label": "4. Propostas de m\u00f3dulos \u2014 ranqueadas",
+      "file_type": "document",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L68",
+      "_origin": "ast",
+      "id": "docs_analise_modulos_inovadores_4_propostas_de_m\u00f3dulos_ranqueadas",
+      "community": 62,
+      "norm_label": "4. propostas de modulos \u2014 ranqueadas"
+    },
+    {
+      "label": "\ud83e\udd47 #1 \u2014 `treino-adaptativo` \u00b7 \"Autorregula\u00e7\u00e3o Inteligente\"",
+      "file_type": "document",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L70",
+      "_origin": "ast",
+      "id": "docs_analise_modulos_inovadores_1_treino_adaptativo_autorregula\u00e7\u00e3o_inteligente",
+      "community": 62,
+      "norm_label": "\ud83e\udd47 #1 \u2014 `treino-adaptativo` \u00b7 \"autorregulacao inteligente\""
+    },
+    {
+      "label": "\ud83e\udd48 #2 \u2014 `radar-de-retencao` \u00b7 \"Risco + A\u00e7\u00e3o, n\u00e3o s\u00f3 alerta\"",
+      "file_type": "document",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L96",
+      "_origin": "ast",
+      "id": "docs_analise_modulos_inovadores_2_radar_de_retencao_risco_a\u00e7\u00e3o_n\u00e3o_s\u00f3_alerta",
+      "community": 62,
+      "norm_label": "\ud83e\udd48 #2 \u2014 `radar-de-retencao` \u00b7 \"risco + acao, nao so alerta\""
+    },
+    {
+      "label": "\ud83e\udd49 #3 \u2014 `relatorio-de-evolucao` \u00b7 \"A prova do seu trabalho\"",
+      "file_type": "document",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L117",
+      "_origin": "ast",
+      "id": "docs_analise_modulos_inovadores_3_relatorio_de_evolucao_a_prova_do_seu_trabalho",
+      "community": 62,
+      "norm_label": "\ud83e\udd49 #3 \u2014 `relatorio-de-evolucao` \u00b7 \"a prova do seu trabalho\""
+    },
+    {
+      "label": "\ud83c\udfaf #4 \u2014 `max-vision` \u00b7 An\u00e1lise de execu\u00e7\u00e3o por v\u00eddeo (a aposta de marketing)",
+      "file_type": "document",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L136",
+      "_origin": "ast",
+      "id": "docs_analise_modulos_inovadores_4_max_vision_an\u00e1lise_de_execu\u00e7\u00e3o_por_v\u00eddeo_a_aposta_de_marketing",
+      "community": 62,
+      "norm_label": "\ud83c\udfaf #4 \u2014 `max-vision` \u00b7 analise de execucao por video (a aposta de marketing)"
+    },
+    {
+      "label": "#5 \u2014 `habitos` (complemento barato)",
+      "file_type": "document",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L147",
+      "_origin": "ast",
+      "id": "docs_analise_modulos_inovadores_5_habitos_complemento_barato",
+      "community": 62,
+      "norm_label": "#5 \u2014 `habitos` (complemento barato)"
+    },
+    {
+      "label": "5. Recomenda\u00e7\u00e3o final",
+      "file_type": "document",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L155",
+      "_origin": "ast",
+      "id": "docs_analise_modulos_inovadores_5_recomenda\u00e7\u00e3o_final",
+      "community": 62,
+      "norm_label": "5. recomendacao final"
+    },
+    {
+      "label": "6. Pontos de aten\u00e7\u00e3o",
+      "file_type": "document",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L181",
+      "_origin": "ast",
+      "id": "docs_analise_modulos_inovadores_6_pontos_de_aten\u00e7\u00e3o",
+      "community": 62,
+      "norm_label": "6. pontos de atencao"
+    },
+    {
+      "label": "Fontes",
+      "file_type": "document",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L190",
+      "_origin": "ast",
+      "id": "docs_analise_modulos_inovadores_fontes",
+      "community": 62,
+      "norm_label": "fontes"
     },
     {
       "label": "MODULO_ASSISTENTE_IA.md",
@@ -26666,7 +27646,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/index.tsx",
-      "source_location": "L660",
+      "source_location": "L661",
       "weight": 1.0,
       "source": "app_student_index",
       "target": "app_student_index_s",
@@ -30640,6 +31620,308 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L49",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios",
+      "target": "app_student_mais_relatorios_delta",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L192",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios",
+      "target": "app_student_mais_relatorios_relatoriosscreen",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L60",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios",
+      "target": "app_student_mais_relatorios_reportcontent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios",
+      "target": "app_student_mais_relatorios_reportrow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L305",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios",
+      "target": "app_student_mais_relatorios_s",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L40",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios",
+      "target": "app_student_mais_relatorios_statbox",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios",
+      "target": "src_components_moduleguard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios",
+      "target": "src_components_moduleguard_moduleguard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios",
+      "target": "src_components_studentheader",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios",
+      "target": "src_components_studentheader_studentheader",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios",
+      "target": "src_hooks_usestudent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios",
+      "target": "src_hooks_usestudent_usestudent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios",
+      "target": "src_lib_evolutionreport",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios",
+      "target": "src_lib_evolutionreport_periodlabel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios",
+      "target": "src_lib_evolutionreport_reportmetrics",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios",
+      "target": "src_lib_modules",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios",
+      "target": "src_lib_modules_module",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios",
+      "target": "src_lib_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios",
+      "target": "src_lib_supabase_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios",
+      "target": "src_stores_themestore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios",
+      "target": "src_stores_themestore_usethemestore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios",
+      "target": "src_theme_colors",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios",
+      "target": "src_theme_colors_colors",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios",
+      "target": "src_theme_typography",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios",
+      "target": "src_theme_typography_fontfamily",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios",
+      "target": "src_theme_typography_fontsize",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L193",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios_relatoriosscreen",
+      "target": "src_hooks_usestudent_usestudent"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/(student)/mais/relatorios.tsx",
+      "source_location": "L194",
+      "weight": 1.0,
+      "source": "app_student_mais_relatorios_relatoriosscreen",
+      "target": "src_stores_themestore_usethemestore"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "app/(student)/perfil/_layout.tsx",
       "source_location": "L3",
       "weight": 1.0,
@@ -30661,7 +31943,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/perfil/index.tsx",
-      "source_location": "L38",
+      "source_location": "L39",
       "weight": 1.0,
       "source": "app_student_perfil_index",
       "target": "app_student_perfil_index_fmtphone",
@@ -30671,7 +31953,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/perfil/index.tsx",
-      "source_location": "L45",
+      "source_location": "L46",
       "weight": 1.0,
       "source": "app_student_perfil_index",
       "target": "app_student_perfil_index_openwhatsapp",
@@ -30681,7 +31963,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/perfil/index.tsx",
-      "source_location": "L55",
+      "source_location": "L56",
       "weight": 1.0,
       "source": "app_student_perfil_index",
       "target": "app_student_perfil_index_perfilscreen",
@@ -30691,7 +31973,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/perfil/index.tsx",
-      "source_location": "L320",
+      "source_location": "L321",
       "weight": 1.0,
       "source": "app_student_perfil_index",
       "target": "app_student_perfil_index_s",
@@ -30954,7 +32236,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/perfil/index.tsx",
-      "source_location": "L154",
+      "source_location": "L155",
       "weight": 1.0,
       "source": "app_student_perfil_index_perfilscreen",
       "target": "app_student_perfil_index_fmtphone",
@@ -30966,7 +32248,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/(student)/perfil/index.tsx",
-      "source_location": "L56",
+      "source_location": "L57",
       "weight": 1.0,
       "source": "app_student_perfil_index_perfilscreen",
       "target": "src_hooks_usestudent_usestudent"
@@ -30977,7 +32259,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/(student)/perfil/index.tsx",
-      "source_location": "L57",
+      "source_location": "L58",
       "weight": 1.0,
       "source": "app_student_perfil_index_perfilscreen",
       "target": "src_stores_authstore_useauthstore"
@@ -30988,7 +32270,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/(student)/perfil/index.tsx",
-      "source_location": "L59",
+      "source_location": "L60",
       "weight": 1.0,
       "source": "app_student_perfil_index_perfilscreen",
       "target": "src_stores_modulesstore_usemodulesstore"
@@ -30999,7 +32281,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/(student)/perfil/index.tsx",
-      "source_location": "L58",
+      "source_location": "L59",
       "weight": 1.0,
       "source": "app_student_perfil_index_perfilscreen",
       "target": "src_stores_themestore_usethemestore"
@@ -31376,7 +32658,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L34",
+      "source_location": "L47",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_exitem",
@@ -31386,7 +32668,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L72",
+      "source_location": "L85",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_fmttime",
@@ -31396,7 +32678,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L57",
+      "source_location": "L70",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_intensities",
@@ -31406,7 +32688,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L32",
+      "source_location": "L45",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_phase",
@@ -31416,7 +32698,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L79",
+      "source_location": "L92",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_restring",
@@ -31426,7 +32708,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L158",
+      "source_location": "L171",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_routineexecutionscreen",
@@ -31436,7 +32718,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L1238",
+      "source_location": "L1441",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_rt",
@@ -31446,7 +32728,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L1243",
+      "source_location": "L1446",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_s",
@@ -31456,7 +32738,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L51",
+      "source_location": "L64",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_section",
@@ -31466,7 +32748,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L66",
+      "source_location": "L79",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_star_colors",
@@ -31476,7 +32758,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L65",
+      "source_location": "L78",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_star_labels",
@@ -31486,7 +32768,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L145",
+      "source_location": "L158",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_starrow",
@@ -31496,10 +32778,87 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L68",
+      "source_location": "L81",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "app_student_treinos_planid_executar_routineid_width_w",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "app_student_treinos_planid_executar_routineid",
+      "target": "src_components_adaptive_adaptationsummary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "app_student_treinos_planid_executar_routineid",
+      "target": "src_components_adaptive_adaptationsummary_adaptationsummary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "app_student_treinos_planid_executar_routineid",
+      "target": "src_components_adaptive_readinesscheckin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "app_student_treinos_planid_executar_routineid",
+      "target": "src_components_adaptive_readinesscheckin_readinessanswers",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "app_student_treinos_planid_executar_routineid",
+      "target": "src_components_adaptive_readinesscheckin_readinesscheckin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "app_student_treinos_planid_executar_routineid",
+      "target": "src_components_adaptive_rpemodal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "app_student_treinos_planid_executar_routineid",
+      "target": "src_components_adaptive_rpemodal_rpemodal",
       "confidence_score": 1.0
     },
     {
@@ -31577,6 +32936,105 @@
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "src_hooks_usestudent_usestudent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "app_student_treinos_planid_executar_routineid",
+      "target": "src_lib_adaptationengine",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "app_student_treinos_planid_executar_routineid",
+      "target": "src_lib_adaptationengine_adaptationrule",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "app_student_treinos_planid_executar_routineid",
+      "target": "src_lib_adaptationengine_plannedadaptation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "app_student_treinos_planid_executar_routineid",
+      "target": "src_lib_adaptationengine_sessionplan",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "app_student_treinos_planid_executar_routineid",
+      "target": "src_lib_adaptiveworkout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "app_student_treinos_planid_executar_routineid",
+      "target": "src_lib_adaptiveworkout_bufferedsetlog",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "app_student_treinos_planid_executar_routineid",
+      "target": "src_lib_adaptiveworkout_flushadaptivesession",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "app_student_treinos_planid_executar_routineid",
+      "target": "src_lib_adaptiveworkout_loadadaptiverule",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "app_student_treinos_planid_executar_routineid",
+      "target": "src_lib_adaptiveworkout_savereadinesscheckin",
       "confidence_score": 1.0
     },
     {
@@ -31683,7 +33141,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L22",
+      "source_location": "L32",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "src_lib_workoutaudio",
@@ -31694,7 +33152,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L22",
+      "source_location": "L32",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "src_lib_workoutaudio_cancelrestnotification",
@@ -31705,7 +33163,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L22",
+      "source_location": "L32",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "src_lib_workoutaudio_playrestendalert",
@@ -31716,7 +33174,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L22",
+      "source_location": "L32",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "src_lib_workoutaudio_preloadrestbeep",
@@ -31727,7 +33185,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L22",
+      "source_location": "L32",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "src_lib_workoutaudio_releaserestbeep",
@@ -31738,7 +33196,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L22",
+      "source_location": "L32",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "src_lib_workoutaudio_requestnotificationpermission",
@@ -31749,7 +33207,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L22",
+      "source_location": "L32",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid",
       "target": "src_lib_workoutaudio_schedulerestendnotification",
@@ -31837,7 +33295,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L137",
+      "source_location": "L150",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid_restring",
       "target": "app_student_treinos_planid_executar_routineid_fmttime",
@@ -31848,7 +33306,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L782",
+      "source_location": "L970",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid_routineexecutionscreen",
       "target": "app_student_treinos_planid_executar_routineid_fmttime",
@@ -31860,7 +33318,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L221",
+      "source_location": "L251",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid_routineexecutionscreen",
       "target": "src_hooks_usehealthconnect_usehealthconnect"
@@ -31871,7 +33329,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L160",
+      "source_location": "L173",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid_routineexecutionscreen",
       "target": "src_hooks_usestudent_usestudent"
@@ -31882,7 +33340,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L805",
+      "source_location": "L993",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid_routineexecutionscreen",
       "target": "src_lib_comboexercises_combotypelabel"
@@ -31893,7 +33351,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L234",
+      "source_location": "L264",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid_routineexecutionscreen",
       "target": "src_lib_comboexercises_groupbycombo"
@@ -31904,7 +33362,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L765",
+      "source_location": "L953",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid_routineexecutionscreen",
       "target": "src_lib_exerciseconfig_musclecolor"
@@ -31915,7 +33373,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/(student)/treinos/[planId]/executar/[routineId].tsx",
-      "source_location": "L161",
+      "source_location": "L174",
       "weight": 1.0,
       "source": "app_student_treinos_planid_executar_routineid_routineexecutionscreen",
       "target": "src_stores_themestore_usethemestore"
@@ -36663,6 +38121,354 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/AdaptationSummary.tsx",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "src_components_adaptive_adaptationsummary",
+      "target": "src_components_adaptive_adaptationsummary_adaptationsummary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/AdaptationSummary.tsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "src_components_adaptive_adaptationsummary",
+      "target": "src_components_adaptive_adaptationsummary_iconfor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/AdaptationSummary.tsx",
+      "source_location": "L100",
+      "weight": 1.0,
+      "source": "src_components_adaptive_adaptationsummary",
+      "target": "src_components_adaptive_adaptationsummary_s",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/AdaptationSummary.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "src_components_adaptive_adaptationsummary",
+      "target": "src_lib_adaptationengine",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/AdaptationSummary.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "src_components_adaptive_adaptationsummary",
+      "target": "src_lib_adaptationengine_plannedadaptation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/AdaptationSummary.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "src_components_adaptive_adaptationsummary",
+      "target": "src_lib_adaptationengine_readinessband",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/AdaptationSummary.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "src_components_adaptive_adaptationsummary",
+      "target": "src_theme_colors",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/AdaptationSummary.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "src_components_adaptive_adaptationsummary",
+      "target": "src_theme_colors_colors",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/AdaptationSummary.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "src_components_adaptive_adaptationsummary",
+      "target": "src_theme_typography",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/AdaptationSummary.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "src_components_adaptive_adaptationsummary",
+      "target": "src_theme_typography_fontfamily",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/AdaptationSummary.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "src_components_adaptive_adaptationsummary",
+      "target": "src_theme_typography_fontsize",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/ReadinessCheckIn.tsx",
+      "source_location": "L40",
+      "weight": 1.0,
+      "source": "src_components_adaptive_readinesscheckin",
+      "target": "src_components_adaptive_readinesscheckin_energy",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/ReadinessCheckIn.tsx",
+      "source_location": "L50",
+      "weight": 1.0,
+      "source": "src_components_adaptive_readinesscheckin",
+      "target": "src_components_adaptive_readinesscheckin_pain_areas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/ReadinessCheckIn.tsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "src_components_adaptive_readinesscheckin",
+      "target": "src_components_adaptive_readinesscheckin_readinessanswers",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/ReadinessCheckIn.tsx",
+      "source_location": "L97",
+      "weight": 1.0,
+      "source": "src_components_adaptive_readinesscheckin",
+      "target": "src_components_adaptive_readinesscheckin_readinesscheckin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/ReadinessCheckIn.tsx",
+      "source_location": "L220",
+      "weight": 1.0,
+      "source": "src_components_adaptive_readinesscheckin",
+      "target": "src_components_adaptive_readinesscheckin_s",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/ReadinessCheckIn.tsx",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "src_components_adaptive_readinesscheckin",
+      "target": "src_components_adaptive_readinesscheckin_scale",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/ReadinessCheckIn.tsx",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "src_components_adaptive_readinesscheckin",
+      "target": "src_components_adaptive_readinesscheckin_scalerow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/ReadinessCheckIn.tsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "src_components_adaptive_readinesscheckin",
+      "target": "src_components_adaptive_readinesscheckin_sleep",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/ReadinessCheckIn.tsx",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "src_components_adaptive_readinesscheckin",
+      "target": "src_components_adaptive_readinesscheckin_soreness",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/ReadinessCheckIn.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "src_components_adaptive_readinesscheckin",
+      "target": "src_theme_colors",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/ReadinessCheckIn.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "src_components_adaptive_readinesscheckin",
+      "target": "src_theme_colors_colors",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/ReadinessCheckIn.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "src_components_adaptive_readinesscheckin",
+      "target": "src_theme_typography",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/ReadinessCheckIn.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "src_components_adaptive_readinesscheckin",
+      "target": "src_theme_typography_fontfamily",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/ReadinessCheckIn.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "src_components_adaptive_readinesscheckin",
+      "target": "src_theme_typography_fontsize",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/RpeModal.tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "src_components_adaptive_rpemodal",
+      "target": "src_components_adaptive_rpemodal_rpe_options",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/RpeModal.tsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "src_components_adaptive_rpemodal",
+      "target": "src_components_adaptive_rpemodal_rpemodal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/RpeModal.tsx",
+      "source_location": "L81",
+      "weight": 1.0,
+      "source": "src_components_adaptive_rpemodal",
+      "target": "src_components_adaptive_rpemodal_s",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/RpeModal.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "src_components_adaptive_rpemodal",
+      "target": "src_theme_colors",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/RpeModal.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "src_components_adaptive_rpemodal",
+      "target": "src_theme_colors_colors",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/RpeModal.tsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "src_components_adaptive_rpemodal",
+      "target": "src_theme_typography",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/RpeModal.tsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "src_components_adaptive_rpemodal",
+      "target": "src_theme_typography_fontfamily",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/adaptive/RpeModal.tsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "src_components_adaptive_rpemodal",
+      "target": "src_theme_typography_fontsize",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "src/components/ai/CriarTreinoWizardModal.tsx",
       "source_location": "L38",
       "weight": 1.0,
@@ -39067,6 +40873,580 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine",
+      "target": "src_lib_adaptationengine_adaptationrule",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L57",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine",
+      "target": "src_lib_adaptationengine_adaptationtype",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L407",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine",
+      "target": "src_lib_adaptationengine_adjustnextset",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L511",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine",
+      "target": "src_lib_adaptationengine_buildsummary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L122",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine",
+      "target": "src_lib_adaptationengine_calcreadinessscore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L447",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine",
+      "target": "src_lib_adaptationengine_detectprogressionsignal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L165",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine",
+      "target": "src_lib_adaptationengine_formatloadkg",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L206",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine",
+      "target": "src_lib_adaptationengine_loaddeltapctfromreadiness",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L494",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine",
+      "target": "src_lib_adaptationengine_matchesarea",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L468",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine",
+      "target": "src_lib_adaptationengine_nochange",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L147",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine",
+      "target": "src_lib_adaptationengine_parseloadkg",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L68",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine",
+      "target": "src_lib_adaptationengine_plannedadaptation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L229",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine",
+      "target": "src_lib_adaptationengine_plansession",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L46",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine",
+      "target": "src_lib_adaptationengine_prescribeditem",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L128",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine",
+      "target": "src_lib_adaptationengine_readinessband",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine",
+      "target": "src_lib_adaptationengine_readinessinput",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L134",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine",
+      "target": "src_lib_adaptationengine_readinesslabel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L483",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine",
+      "target": "src_lib_adaptationengine_reasonfornochange",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L179",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine",
+      "target": "src_lib_adaptationengine_resolverule",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L464",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine",
+      "target": "src_lib_adaptationengine_round1",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L158",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine",
+      "target": "src_lib_adaptationengine_roundtoplate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L87",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine",
+      "target": "src_lib_adaptationengine_sessionplan",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L392",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine",
+      "target": "src_lib_adaptationengine_setadjustment",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L382",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine",
+      "target": "src_lib_adaptationengine_setfeedback",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L65",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine",
+      "target": "src_lib_adaptationengine_triggersource",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "re_exports",
+      "context": "export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L161",
+      "weight": 1.0,
+      "source": "src_lib_adaptiveworkout",
+      "target": "src_lib_adaptationengine",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "src_lib_adaptiveworkout",
+      "target": "src_lib_adaptationengine_adaptationrule",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "src_lib_adaptiveworkout",
+      "target": "src_lib_adaptationengine_prescribeditem",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "src_lib_adaptiveworkout",
+      "target": "src_lib_adaptationengine_plannedadaptation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "src_lib_adaptiveworkout",
+      "target": "src_lib_adaptationengine_sessionplan",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L237",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine_plansession",
+      "target": "src_lib_adaptationengine_readinessband"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L236",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine_plansession",
+      "target": "src_lib_adaptationengine_calcreadinessscore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "src_lib_adaptiveworkout",
+      "target": "src_lib_adaptationengine_calcreadinessscore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L479",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine_nochange",
+      "target": "src_lib_adaptationengine_parseloadkg",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "src_lib_adaptiveworkout",
+      "target": "src_lib_adaptationengine_parseloadkg",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L424",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine_adjustnextset",
+      "target": "src_lib_adaptationengine_roundtoplate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L428",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine_adjustnextset",
+      "target": "src_lib_adaptationengine_formatloadkg",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "src_lib_adaptiveworkout",
+      "target": "src_lib_adaptationengine_resolverule",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L77",
+      "weight": 1.0,
+      "source": "src_lib_adaptiveworkout_loadadaptiverule",
+      "target": "src_lib_adaptationengine_resolverule"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L210",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine_loaddeltapctfromreadiness",
+      "target": "src_lib_adaptationengine_round1",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L238",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine_plansession",
+      "target": "src_lib_adaptationengine_loaddeltapctfromreadiness",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L377",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine_plansession",
+      "target": "src_lib_adaptationengine_buildsummary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "src_lib_adaptiveworkout",
+      "target": "src_lib_adaptationengine_plansession",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L123",
+      "weight": 1.0,
+      "source": "src_lib_adaptiveworkout_savereadinesscheckin",
+      "target": "src_lib_adaptationengine_plansession"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L427",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine_adjustnextset",
+      "target": "src_lib_adaptationengine_round1",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptationEngine.ts",
+      "source_location": "L455",
+      "weight": 1.0,
+      "source": "src_lib_adaptationengine_detectprogressionsignal",
+      "target": "src_lib_adaptationengine_round1",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "src_lib_adaptiveworkout",
+      "target": "src_lib_adaptiveworkout_bufferedsetlog",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L168",
+      "weight": 1.0,
+      "source": "src_lib_adaptiveworkout",
+      "target": "src_lib_adaptiveworkout_flushadaptivesession",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L56",
+      "weight": 1.0,
+      "source": "src_lib_adaptiveworkout",
+      "target": "src_lib_adaptiveworkout_loadadaptiverule",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L81",
+      "weight": 1.0,
+      "source": "src_lib_adaptiveworkout",
+      "target": "src_lib_adaptiveworkout_loadprescribeditems",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L102",
+      "weight": 1.0,
+      "source": "src_lib_adaptiveworkout",
+      "target": "src_lib_adaptiveworkout_readinesssubmission",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L117",
+      "weight": 1.0,
+      "source": "src_lib_adaptiveworkout",
+      "target": "src_lib_adaptiveworkout_savereadinesscheckin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "src_lib_adaptiveworkout",
+      "target": "src_lib_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "src_lib_adaptiveworkout",
+      "target": "src_lib_supabase_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/adaptiveWorkout.ts",
+      "source_location": "L121",
+      "weight": 1.0,
+      "source": "src_lib_adaptiveworkout_savereadinesscheckin",
+      "target": "src_lib_adaptiveworkout_loadprescribeditems",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "src/lib/appVersion.ts",
       "source_location": "L2",
       "weight": 1.0,
@@ -39207,6 +41587,325 @@
       "weight": 1.0,
       "source": "src_lib_comboexercises",
       "target": "src_lib_comboexercises_groupbycombo",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport",
+      "target": "src_lib_evolutionreport_assessmentrow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L211",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport",
+      "target": "src_lib_evolutionreport_bestloadbyexercise",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L257",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport",
+      "target": "src_lib_evolutionreport_buildreportmetrics",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L176",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport",
+      "target": "src_lib_evolutionreport_daykey",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport",
+      "target": "src_lib_evolutionreport_exerciseaggrow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L94",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport",
+      "target": "src_lib_evolutionreport_exerciseprogress",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L481",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport",
+      "target": "src_lib_evolutionreport_fallbacknarrative",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L230",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport",
+      "target": "src_lib_evolutionreport_loadtrendbyexercise",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L185",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport",
+      "target": "src_lib_evolutionreport_longeststreak",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L166",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport",
+      "target": "src_lib_evolutionreport_parseloadkg",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L156",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport",
+      "target": "src_lib_evolutionreport_pctdelta",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L471",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport",
+      "target": "src_lib_evolutionreport_periodlabel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L86",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport",
+      "target": "src_lib_evolutionreport_personalrecord",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L448",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport",
+      "target": "src_lib_evolutionreport_previousmonthperiod",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L53",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport",
+      "target": "src_lib_evolutionreport_progressrow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L59",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport",
+      "target": "src_lib_evolutionreport_readinessrow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L64",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport",
+      "target": "src_lib_evolutionreport_reportinput",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L102",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport",
+      "target": "src_lib_evolutionreport_reportmetrics",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L152",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport",
+      "target": "src_lib_evolutionreport_round1",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport",
+      "target": "src_lib_evolutionreport_sessionrow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport",
+      "target": "src_lib_evolutionreport_setrow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L204",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport",
+      "target": "src_lib_evolutionreport_totalvolumekg",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L304",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport_buildreportmetrics",
+      "target": "src_lib_evolutionreport_round1",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L158",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport_pctdelta",
+      "target": "src_lib_evolutionreport_round1",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L351",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport_buildreportmetrics",
+      "target": "src_lib_evolutionreport_pctdelta",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L224",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport_bestloadbyexercise",
+      "target": "src_lib_evolutionreport_parseloadkg",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L244",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport_loadtrendbyexercise",
+      "target": "src_lib_evolutionreport_parseloadkg",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L382",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport_buildreportmetrics",
+      "target": "src_lib_evolutionreport_longeststreak",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L267",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport_buildreportmetrics",
+      "target": "src_lib_evolutionreport_totalvolumekg",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L275",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport_buildreportmetrics",
+      "target": "src_lib_evolutionreport_bestloadbyexercise",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/evolutionReport.ts",
+      "source_location": "L294",
+      "weight": 1.0,
+      "source": "src_lib_evolutionreport_buildreportmetrics",
+      "target": "src_lib_evolutionreport_loadtrendbyexercise",
       "confidence_score": 1.0
     },
     {
@@ -39477,7 +42176,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/modules.ts",
-      "source_location": "L23",
+      "source_location": "L25",
       "weight": 1.0,
       "source": "src_lib_modules",
       "target": "src_lib_modules_moduleslug",
@@ -40179,7 +42878,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/types/database.ts",
-      "source_location": "L4146",
+      "source_location": "L4606",
       "weight": 1.0,
       "source": "src_types_database",
       "target": "src_types_database_compositetypes",
@@ -40189,7 +42888,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/types/database.ts",
-      "source_location": "L4163",
+      "source_location": "L4623",
       "weight": 1.0,
       "source": "src_types_database",
       "target": "src_types_database_constants",
@@ -40209,7 +42908,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/types/database.ts",
-      "source_location": "L4046",
+      "source_location": "L4506",
       "weight": 1.0,
       "source": "src_types_database",
       "target": "src_types_database_databasewithoutinternals",
@@ -40219,7 +42918,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/types/database.ts",
-      "source_location": "L4048",
+      "source_location": "L4508",
       "weight": 1.0,
       "source": "src_types_database",
       "target": "src_types_database_defaultschema",
@@ -40229,7 +42928,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/types/database.ts",
-      "source_location": "L4129",
+      "source_location": "L4589",
       "weight": 1.0,
       "source": "src_types_database",
       "target": "src_types_database_enums",
@@ -40249,7 +42948,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/types/database.ts",
-      "source_location": "L4050",
+      "source_location": "L4510",
       "weight": 1.0,
       "source": "src_types_database",
       "target": "src_types_database_tables",
@@ -40259,7 +42958,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/types/database.ts",
-      "source_location": "L4079",
+      "source_location": "L4539",
       "weight": 1.0,
       "source": "src_types_database",
       "target": "src_types_database_tablesinsert",
@@ -40269,7 +42968,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/types/database.ts",
-      "source_location": "L4104",
+      "source_location": "L4564",
       "weight": 1.0,
       "source": "src_types_database",
       "target": "src_types_database_tablesupdate",
@@ -42462,6 +45161,166 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "docs_analise_modulos_inovadores",
+      "target": "docs_analise_modulos_inovadores_an\u00e1lise_competitiva_e_propostas_de_m\u00f3dulos_inovadores_strivepersonal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "docs_analise_modulos_inovadores_an\u00e1lise_competitiva_e_propostas_de_m\u00f3dulos_inovadores_strivepersonal",
+      "target": "docs_analise_modulos_inovadores_1_o_que_o_strivepersonal_j\u00e1_tem_hoje",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "docs_analise_modulos_inovadores_an\u00e1lise_competitiva_e_propostas_de_m\u00f3dulos_inovadores_strivepersonal",
+      "target": "docs_analise_modulos_inovadores_2_benchmark_do_segmento",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L58",
+      "weight": 1.0,
+      "source": "docs_analise_modulos_inovadores_an\u00e1lise_competitiva_e_propostas_de_m\u00f3dulos_inovadores_strivepersonal",
+      "target": "docs_analise_modulos_inovadores_3_a_tese",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L68",
+      "weight": 1.0,
+      "source": "docs_analise_modulos_inovadores_an\u00e1lise_competitiva_e_propostas_de_m\u00f3dulos_inovadores_strivepersonal",
+      "target": "docs_analise_modulos_inovadores_4_propostas_de_m\u00f3dulos_ranqueadas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L155",
+      "weight": 1.0,
+      "source": "docs_analise_modulos_inovadores_an\u00e1lise_competitiva_e_propostas_de_m\u00f3dulos_inovadores_strivepersonal",
+      "target": "docs_analise_modulos_inovadores_5_recomenda\u00e7\u00e3o_final",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L181",
+      "weight": 1.0,
+      "source": "docs_analise_modulos_inovadores_an\u00e1lise_competitiva_e_propostas_de_m\u00f3dulos_inovadores_strivepersonal",
+      "target": "docs_analise_modulos_inovadores_6_pontos_de_aten\u00e7\u00e3o",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L190",
+      "weight": 1.0,
+      "source": "docs_analise_modulos_inovadores_an\u00e1lise_competitiva_e_propostas_de_m\u00f3dulos_inovadores_strivepersonal",
+      "target": "docs_analise_modulos_inovadores_fontes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "docs_analise_modulos_inovadores_2_benchmark_do_segmento",
+      "target": "docs_analise_modulos_inovadores_brasil",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "docs_analise_modulos_inovadores_2_benchmark_do_segmento",
+      "target": "docs_analise_modulos_inovadores_conclus\u00e3o_do_benchmark",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "docs_analise_modulos_inovadores_2_benchmark_do_segmento",
+      "target": "docs_analise_modulos_inovadores_exterior_refer\u00eancia_de_teto",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L70",
+      "weight": 1.0,
+      "source": "docs_analise_modulos_inovadores_4_propostas_de_m\u00f3dulos_ranqueadas",
+      "target": "docs_analise_modulos_inovadores_1_treino_adaptativo_autorregula\u00e7\u00e3o_inteligente",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L96",
+      "weight": 1.0,
+      "source": "docs_analise_modulos_inovadores_4_propostas_de_m\u00f3dulos_ranqueadas",
+      "target": "docs_analise_modulos_inovadores_2_radar_de_retencao_risco_a\u00e7\u00e3o_n\u00e3o_s\u00f3_alerta",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L117",
+      "weight": 1.0,
+      "source": "docs_analise_modulos_inovadores_4_propostas_de_m\u00f3dulos_ranqueadas",
+      "target": "docs_analise_modulos_inovadores_3_relatorio_de_evolucao_a_prova_do_seu_trabalho",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L136",
+      "weight": 1.0,
+      "source": "docs_analise_modulos_inovadores_4_propostas_de_m\u00f3dulos_ranqueadas",
+      "target": "docs_analise_modulos_inovadores_4_max_vision_an\u00e1lise_de_execu\u00e7\u00e3o_por_v\u00eddeo_a_aposta_de_marketing",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/ANALISE_MODULOS_INOVADORES.md",
+      "source_location": "L147",
+      "weight": 1.0,
+      "source": "docs_analise_modulos_inovadores_4_propostas_de_m\u00f3dulos_ranqueadas",
+      "target": "docs_analise_modulos_inovadores_5_habitos_complemento_barato",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "docs/MODULO_ASSISTENTE_IA.md",
       "source_location": "L1",
       "weight": 1.0,
@@ -43831,5 +46690,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "986541edc421e05902de796e58bd935dc645d35d"
+  "built_at_commit": "79a694721e261f88fa79dff12f4593be2eb1a028"
 }

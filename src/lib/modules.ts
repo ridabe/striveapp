@@ -19,6 +19,7 @@ export const MODULE = {
   ASSISTENTE_IA:      'assistente-ia',
   DESAFIOS:           'desafios',
   RELATORIO_EVOLUCAO: 'relatorio-de-evolucao',
+  RADAR_RETENCAO:     'radar-de-retencao',
   BIBLIOTECA_CONTEUDO: 'biblioteca_conteudo',
 } as const;
 
