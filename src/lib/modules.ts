@@ -3,6 +3,7 @@ export const MODULE = {
   BANCO_EXERCICIOS:   'banco-de-exercicios',
   TREINOS_EXTRAS:     'treinos-extras',
   EXECUCAO_TREINO:    'execucao-do-treino',
+  TREINO_ADAPTATIVO:  'treino-adaptativo',
   FREQUENCIA:         'frequencia',
   AVALIACOES:         'avaliacoes-fisicas',
   ANAMNESE:           'anamnese',

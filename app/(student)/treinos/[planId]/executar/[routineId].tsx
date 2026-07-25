@@ -19,6 +19,16 @@ import { muscleColor } from '@/lib/exerciseConfig';
 import { groupByCombo, comboTypeLabel } from '@/lib/comboExercises';
 import { registerAttendanceToday } from '@/lib/attendance';
 import { MediaViewerModal } from '@/components/MediaViewerModal';
+import { ReadinessCheckIn, type ReadinessAnswers } from '@/components/adaptive/ReadinessCheckIn';
+import { AdaptationSummary } from '@/components/adaptive/AdaptationSummary';
+import { RpeModal } from '@/components/adaptive/RpeModal';
+import {
+  loadAdaptiveRule,
+  saveReadinessCheckin,
+  flushAdaptiveSession,
+  type BufferedSetLog,
+} from '@/lib/adaptiveWorkout';
+import type { AdaptationRule, PlannedAdaptation, SessionPlan } from '@/lib/adaptationEngine';
 import {
   preloadRestBeep,
   playRestEndAlert,
@@ -29,7 +39,10 @@ import {
 } from '@/lib/workoutAudio';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-type Phase = 'ready' | 'active' | 'finishing' | 'saving';
+// 'checkin' entra ANTES de 'ready': com o módulo Treino Adaptativo ligado, o
+// aluno responde a prontidão antes de ver a prescrição. Ver a carga original
+// primeiro e só depois o ajuste faz o app parecer que está tirando algo dele.
+type Phase = 'checkin' | 'ready' | 'active' | 'finishing' | 'saving';
 
 interface ExItem {
   itemId: string;
@@ -207,6 +220,23 @@ export default function RoutineExecutionScreen() {
   const [showLoadModal, setShowLoadModal] = useState(false);
   const [tempLoad, setTempLoad] = useState('');
 
+  // ── Treino Adaptativo ──────────────────────────────────────────────────────
+  // adaptiveRule === null significa módulo desligado: nenhuma tela nova aparece
+  // e o fluxo é exatamente o que era antes do módulo existir.
+  const [adaptiveRule, setAdaptiveRule] = useState<AdaptationRule | null>(null);
+  const [adaptiveChecked, setAdaptiveChecked] = useState(false);
+  const [checkinSaving, setCheckinSaving] = useState(false);
+  const [checkinId, setCheckinId] = useState<string | null>(null);
+  const [sessionPlan, setSessionPlan] = useState<SessionPlan | null>(null);
+
+  // RPE da série que acabou de ser fechada
+  const [rpePrompt, setRpePrompt] = useState<{ itemId: string; seriesIdx: number } | null>(null);
+
+  // A sessão só existe no banco ao salvar (fim do treino) — até lá os registros
+  // de série ficam aqui. Ref e não state: gravação em ref não precisa re-render
+  // e não corre risco de perder escrita entre séries rápidas.
+  const bufferedSetLogs = useRef<BufferedSetLog[]>([]);
+
   // Media
   const [videoUri, setVideoUri] = useState<string | null>(null);
   const [videoTitle, setVideoTitle] = useState('');
@@ -364,6 +394,100 @@ export default function RoutineExecutionScreen() {
     setLoading(false);
   }
 
+  // Descobre se o módulo está ativo para este aluno/plano. Roda uma vez, assim
+  // que o aluno e a rotina estão carregados.
+  useEffect(() => {
+    let alive = true;
+    if (!selectedStudent || loading) return;
+
+    (async () => {
+      const rule = await loadAdaptiveRule(
+        selectedStudent.tenant_id,
+        selectedStudent.id,
+        planId ?? null,
+      ).catch(() => null);
+
+      if (!alive) return;
+      setAdaptiveRule(rule);
+      setAdaptiveChecked(true);
+      if (rule) setPhase('checkin');
+    })();
+
+    return () => { alive = false; };
+  }, [selectedStudent?.id, loading, planId]);
+
+  async function handleCheckinSubmit(answers: ReadinessAnswers) {
+    if (!selectedStudent || !adaptiveRule || !routineId) return;
+    setCheckinSaving(true);
+
+    const result = await saveReadinessCheckin(
+      {
+        tenantId: selectedStudent.tenant_id,
+        studentId: selectedStudent.id,
+        workoutPlanId: planId ?? null,
+        workoutRoutineId: routineId,
+        sleepQuality: answers.sleepQuality,
+        muscleSoreness: answers.muscleSoreness,
+        energyLevel: answers.energyLevel,
+        painAreas: answers.painAreas,
+      },
+      adaptiveRule,
+    );
+
+    setCheckinSaving(false);
+    setCheckinId(result.checkinId);
+    setSessionPlan(result.plan);
+
+    // Cargas ajustadas entram já preenchidas no formulário de execução.
+    // O aluno continua podendo sobrescrever qualquer uma.
+    setLoadValues(prev => {
+      const next = { ...prev };
+      for (const a of result.plan.adaptations) {
+        if (a.adaptationType === 'no_change') continue;
+        if (a.resolved.load) next[a.itemId] = a.resolved.load;
+      }
+      return next;
+    });
+
+    setPhase('ready');
+  }
+
+  /** Adaptação efetiva de um item, ou null quando nada mudou nele. */
+  function adaptationFor(itemId: string): PlannedAdaptation | null {
+    if (!sessionPlan) return null;
+    return (
+      sessionPlan.adaptations.find(
+        a => a.itemId === itemId && a.adaptationType !== 'no_change',
+      ) ?? null
+    );
+  }
+
+  /** Registra a série no buffer local. Persiste só no salvar, com o session_id. */
+  function bufferSetLog(itemId: string, seriesIdx: number, rpe: number | null) {
+    const item = flatItems.find(it => it.itemId === itemId);
+    if (!item) return;
+
+    bufferedSetLogs.current = [
+      ...bufferedSetLogs.current.filter(
+        l => !(l.workoutItemId === itemId && l.setNumber === seriesIdx + 1),
+      ),
+      {
+        workoutItemId: itemId,
+        extraWorkoutItemId: null,
+        exerciseId: item.exerciseId,
+        setNumber: seriesIdx + 1,
+        prescribedLoad: item.currentLoad || null,
+        loadUsed: loadValues[itemId] || item.currentLoad || null,
+        prescribedReps: item.defaultReps,
+        repsDone: item.defaultReps ? Number.parseInt(item.defaultReps, 10) || null : null,
+        rpe,
+        targetRpe: adaptiveRule?.default_target_rpe ?? null,
+        wasAdapted: adaptationFor(itemId) !== null,
+        restTakenSeconds: item.restSeconds ?? null,
+      },
+    ];
+  }
+
   function startWorkout() {
     sessionStart.current = new Date();
     timerRef.current = setInterval(() => {
@@ -424,6 +548,14 @@ export default function RoutineExecutionScreen() {
     const updated = [...currentSeries];
     updated[currentSeriesIdx] = true;
     setSeriesDone(prev => ({ ...prev, [currentItem.itemId]: updated }));
+
+    // Pergunta o RPE por cima da tela. O descanso e a navegação seguem
+    // acontecendo atrás do modal — o cronômetro de descanso não pode ficar
+    // esperando o aluno responder, senão ele perde segundos de recuperação.
+    if (adaptiveRule) {
+      bufferSetLog(currentItem.itemId, currentSeriesIdx, null);
+      setRpePrompt({ itemId: currentItem.itemId, seriesIdx: currentSeriesIdx });
+    }
 
     const allDoneNow = updated.every(Boolean);
     const hasMoreSeries = currentSeriesIdx < currentSeries.length - 1;
@@ -562,6 +694,22 @@ export default function RoutineExecutionScreen() {
           // falha silenciosa — não bloqueia o salvamento do treino
         }
         await registerAttendanceToday(selectedStudent.id, selectedStudent.tenant_id).catch(() => {});
+
+        // Descarrega o que foi acumulado durante o treino, agora que existe
+        // session_id. Best-effort: o treino já está salvo, e falhar aqui custa
+        // a telemetria da autorregulação, não o registro do aluno.
+        if (adaptiveRule) {
+          await flushAdaptiveSession({
+            sessionId: session.id,
+            tenantId: selectedStudent.tenant_id,
+            studentId: selectedStudent.id,
+            checkinId,
+            readinessScore: sessionPlan?.readinessScore ?? null,
+            ruleId: adaptiveRule.id,
+            adaptations: sessionPlan?.adaptations ?? [],
+            setLogs: bufferedSetLogs.current,
+          }).catch(() => ({}));
+        }
       }
 
       if (finishRating > 0) {
@@ -585,7 +733,10 @@ export default function RoutineExecutionScreen() {
   const hasAnyDone = flatItems.some(it => (seriesDone[it.itemId] ?? []).some(Boolean));
 
   // ── Loading ──
-  if (loading) {
+  // Segura a tela também enquanto não sabemos se o módulo adaptativo está on.
+  // Sem isso, o aluno veria a tela "pronto para começar" por um instante antes
+  // de ser jogado no check-in — parece bug.
+  if (loading || !adaptiveChecked) {
     return (
       <View style={s.safe}>
         <SafeAreaView edges={['top']}>
@@ -594,6 +745,31 @@ export default function RoutineExecutionScreen() {
           </TouchableOpacity>
         </SafeAreaView>
         <ActivityIndicator color={primaryColor} style={{ marginTop: 60 }} />
+      </View>
+    );
+  }
+
+  if (phase === 'checkin') {
+    return (
+      <View style={s.safe}>
+        <SafeAreaView edges={['top']} style={{ flex: 1 }}>
+          <View style={s.readyHeader}>
+            <TouchableOpacity onPress={() => router.back()} style={s.iconBtn}>
+              <Ionicons name="arrow-back" size={22} color="rgba(255,255,255,0.7)" />
+            </TouchableOpacity>
+            <View style={{ alignItems: 'center' }}>
+              <Text style={s.readyPlanName} numberOfLines={1}>{planName}</Text>
+              <Text style={s.readyRoutineName} numberOfLines={1}>{routineName}</Text>
+            </View>
+            <View style={{ width: 40 }} />
+          </View>
+
+          <ReadinessCheckIn
+            onSubmit={handleCheckinSubmit}
+            submitting={checkinSaving}
+            primaryColor={primaryColor}
+          />
+        </SafeAreaView>
       </View>
     );
   }
@@ -627,6 +803,18 @@ export default function RoutineExecutionScreen() {
           <ScrollView contentContainerStyle={s.readyScroll} showsVerticalScrollIndicator={false}>
             <Text style={s.readyTitle}>Pronto para{'\n'}começar?</Text>
             <View style={[s.readyDivider, { backgroundColor: primaryColor }]} />
+
+            {sessionPlan && (
+              <View style={{ marginBottom: 18 }}>
+                <AdaptationSummary
+                  readinessScore={sessionPlan.readinessScore}
+                  band={sessionPlan.band}
+                  summary={sessionPlan.summary}
+                  adaptations={sessionPlan.adaptations}
+                  primaryColor={primaryColor}
+                />
+              </View>
+            )}
 
             {(() => {
               const groups = groupByCombo(flatItems);
@@ -1229,6 +1417,21 @@ export default function RoutineExecutionScreen() {
           onClose={() => setVideoUri(null)}
         />
       )}
+
+      {/* ── RPE da série recém-concluída (Treino Adaptativo) ── */}
+      <RpeModal
+        visible={rpePrompt !== null}
+        seriesNumber={(rpePrompt?.seriesIdx ?? 0) + 1}
+        exerciseName={flatItems.find(it => it.itemId === rpePrompt?.itemId)?.name ?? ''}
+        targetRpe={adaptiveRule?.default_target_rpe ?? null}
+        onSelect={(rpe) => {
+          if (rpePrompt) bufferSetLog(rpePrompt.itemId, rpePrompt.seriesIdx, rpe);
+          setRpePrompt(null);
+        }}
+        // Pular mantém a série registrada, só sem RPE. Perder o esforço de uma
+        // série é aceitável; travar o aluno até ele responder, não.
+        onSkip={() => setRpePrompt(null)}
+      />
     </View>
   );
 }

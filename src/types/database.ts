@@ -14,6 +14,88 @@ export type Database = {
   }
   public: {
     Tables: {
+      adaptation_rules: {
+        Row: {
+          allow_exercise_swap: boolean
+          allow_volume_adjust: boolean
+          created_at: string
+          default_target_rpe: number
+          enabled: boolean
+          id: string
+          locked_exercise_ids: string[]
+          max_load_decrease_pct: number
+          max_load_increase_pct: number
+          max_readiness_for_decrease: number
+          max_sets_added: number
+          max_sets_removed: number
+          min_readiness_for_increase: number
+          student_id: string | null
+          tenant_id: string
+          updated_at: string
+          workout_plan_id: string | null
+        }
+        Insert: {
+          allow_exercise_swap?: boolean
+          allow_volume_adjust?: boolean
+          created_at?: string
+          default_target_rpe?: number
+          enabled?: boolean
+          id?: string
+          locked_exercise_ids?: string[]
+          max_load_decrease_pct?: number
+          max_load_increase_pct?: number
+          max_readiness_for_decrease?: number
+          max_sets_added?: number
+          max_sets_removed?: number
+          min_readiness_for_increase?: number
+          student_id?: string | null
+          tenant_id: string
+          updated_at?: string
+          workout_plan_id?: string | null
+        }
+        Update: {
+          allow_exercise_swap?: boolean
+          allow_volume_adjust?: boolean
+          created_at?: string
+          default_target_rpe?: number
+          enabled?: boolean
+          id?: string
+          locked_exercise_ids?: string[]
+          max_load_decrease_pct?: number
+          max_load_increase_pct?: number
+          max_readiness_for_decrease?: number
+          max_sets_added?: number
+          max_sets_removed?: number
+          min_readiness_for_increase?: number
+          student_id?: string | null
+          tenant_id?: string
+          updated_at?: string
+          workout_plan_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "adaptation_rules_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "adaptation_rules_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "adaptation_rules_workout_plan_id_fkey"
+            columns: ["workout_plan_id"]
+            isOneToOne: false
+            referencedRelation: "workout_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       admin_audit_logs: {
         Row: {
           action: string
@@ -2462,6 +2544,194 @@ export type Database = {
           },
         ]
       }
+      readiness_checkins: {
+        Row: {
+          checked_in_at: string
+          created_at: string
+          energy_level: number
+          id: string
+          muscle_soreness: number
+          pain_areas: string[]
+          readiness_score: number | null
+          session_id: string | null
+          sleep_quality: number
+          source: string
+          student_id: string
+          tenant_id: string
+          workout_plan_id: string | null
+          workout_routine_id: string | null
+        }
+        Insert: {
+          checked_in_at?: string
+          created_at?: string
+          energy_level: number
+          id?: string
+          muscle_soreness: number
+          pain_areas?: string[]
+          session_id?: string | null
+          sleep_quality: number
+          source?: string
+          student_id: string
+          tenant_id: string
+          workout_plan_id?: string | null
+          workout_routine_id?: string | null
+        }
+        Update: {
+          checked_in_at?: string
+          created_at?: string
+          energy_level?: number
+          id?: string
+          muscle_soreness?: number
+          pain_areas?: string[]
+          session_id?: string | null
+          sleep_quality?: number
+          source?: string
+          student_id?: string
+          tenant_id?: string
+          workout_plan_id?: string | null
+          workout_routine_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "readiness_checkins_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: true
+            referencedRelation: "workout_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "readiness_checkins_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "readiness_checkins_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "readiness_checkins_workout_plan_id_fkey"
+            columns: ["workout_plan_id"]
+            isOneToOne: false
+            referencedRelation: "workout_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "readiness_checkins_workout_routine_id_fkey"
+            columns: ["workout_routine_id"]
+            isOneToOne: false
+            referencedRelation: "workout_routines"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      session_adaptations: {
+        Row: {
+          adaptation_type: string
+          applied: boolean
+          created_at: string
+          delta_pct: number | null
+          exercise_id: string | null
+          id: string
+          readiness_score: number | null
+          reason: string
+          rule_id: string | null
+          scope: string
+          session_id: string
+          student_id: string
+          tenant_id: string
+          trigger_source: string
+          value_after: string | null
+          value_before: string | null
+          workout_item_id: string | null
+        }
+        Insert: {
+          adaptation_type: string
+          applied?: boolean
+          created_at?: string
+          delta_pct?: number | null
+          exercise_id?: string | null
+          id?: string
+          readiness_score?: number | null
+          reason: string
+          rule_id?: string | null
+          scope?: string
+          session_id: string
+          student_id: string
+          tenant_id: string
+          trigger_source: string
+          value_after?: string | null
+          value_before?: string | null
+          workout_item_id?: string | null
+        }
+        Update: {
+          adaptation_type?: string
+          applied?: boolean
+          created_at?: string
+          delta_pct?: number | null
+          exercise_id?: string | null
+          id?: string
+          readiness_score?: number | null
+          reason?: string
+          rule_id?: string | null
+          scope?: string
+          session_id?: string
+          student_id?: string
+          tenant_id?: string
+          trigger_source?: string
+          value_after?: string | null
+          value_before?: string | null
+          workout_item_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_adaptations_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_adaptations_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "adaptation_rules"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_adaptations_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "workout_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_adaptations_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_adaptations_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_adaptations_workout_item_id_fkey"
+            columns: ["workout_item_id"]
+            isOneToOne: false
+            referencedRelation: "workout_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       session_heart_rate_series: {
         Row: {
           bpm: number
@@ -3879,6 +4149,105 @@ export type Database = {
         ]
       }
     }
+      workout_set_logs: {
+        Row: {
+          created_at: string
+          exercise_id: string
+          extra_workout_item_id: string | null
+          id: string
+          load_used: string | null
+          load_used_kg: number | null
+          prescribed_load: string | null
+          prescribed_load_kg: number | null
+          prescribed_reps: string | null
+          reps_done: number | null
+          rest_taken_seconds: number | null
+          rpe: number | null
+          session_id: string
+          set_number: number
+          target_rpe: number | null
+          tenant_id: string
+          was_adapted: boolean
+          workout_item_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          exercise_id: string
+          extra_workout_item_id?: string | null
+          id?: string
+          load_used?: string | null
+          load_used_kg?: number | null
+          prescribed_load?: string | null
+          prescribed_load_kg?: number | null
+          prescribed_reps?: string | null
+          reps_done?: number | null
+          rest_taken_seconds?: number | null
+          rpe?: number | null
+          session_id: string
+          set_number: number
+          target_rpe?: number | null
+          tenant_id: string
+          was_adapted?: boolean
+          workout_item_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          exercise_id?: string
+          extra_workout_item_id?: string | null
+          id?: string
+          load_used?: string | null
+          load_used_kg?: number | null
+          prescribed_load?: string | null
+          prescribed_load_kg?: number | null
+          prescribed_reps?: string | null
+          reps_done?: number | null
+          rest_taken_seconds?: number | null
+          rpe?: number | null
+          session_id?: string
+          set_number?: number
+          target_rpe?: number | null
+          tenant_id?: string
+          was_adapted?: boolean
+          workout_item_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workout_set_logs_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workout_set_logs_extra_workout_item_id_fkey"
+            columns: ["extra_workout_item_id"]
+            isOneToOne: false
+            referencedRelation: "extra_workout_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workout_set_logs_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "workout_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workout_set_logs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workout_set_logs_workout_item_id_fkey"
+            columns: ["workout_item_id"]
+            isOneToOne: false
+            referencedRelation: "workout_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     Views: {
       current_ranking: {
         Row: {
