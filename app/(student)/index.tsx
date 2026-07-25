@@ -622,6 +622,7 @@ export default function StudentHome() {
                 { icon: 'chatbubble-outline',  label: 'Mensagens',  route: '/(student)/mais/mensagens',    slug: null },
                 { icon: 'trending-up-outline', label: 'Progresso',  route: '/(student)/progresso',         slug: MODULE.MEU_PROGRESSO },
                 { icon: 'calendar-outline',    label: 'Frequência', route: '/(student)/mais/frequencia',   slug: MODULE.FREQUENCIA },
+                { icon: 'bar-chart-outline',   label: 'Relatórios', route: '/(student)/mais/relatorios',   slug: MODULE.RELATORIO_EVOLUCAO },
                 { icon: 'time-outline',        label: 'Histórico',  route: '/(student)/mais/historico',    slug: MODULE.EXECUCAO_TREINO },
                 { icon: 'folder-outline',      label: 'Arquivos',   route: '/(student)/mais/arquivos',     slug: MODULE.ARQUIVOS },
                 { icon: 'star-outline',        label: 'Feedback',   route: '/(student)/mais/feedback',     slug: MODULE.FEEDBACKS },

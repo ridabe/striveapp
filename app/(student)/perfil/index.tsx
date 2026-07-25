@@ -32,6 +32,7 @@ const ALL_MODULES = [
   { label: 'Feedback',        icon: 'star-outline',          route: '/(student)/mais/feedback',    desc: 'Avalie seus treinos',          slug: MODULE.FEEDBACKS },
   { label: 'Arquivos',        icon: 'folder-outline',        route: '/(student)/mais/arquivos',    desc: 'Material compartilhado',       slug: MODULE.ARQUIVOS },
   { label: 'Histórico',       icon: 'time-outline',          route: '/(student)/mais/historico',   desc: 'Sessões anteriores',           slug: MODULE.EXECUCAO_TREINO },
+  { label: 'Relatórios',      icon: 'bar-chart-outline',     route: '/(student)/mais/relatorios',  desc: 'Seu resumo de cada mês',       slug: MODULE.RELATORIO_EVOLUCAO },
   { label: 'Financeiro',      icon: 'card-outline',          route: '/(student)/mais/financeiro',  desc: 'Faturas e pagamentos',         slug: MODULE.FATURAS },
 ];
 

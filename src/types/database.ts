@@ -1220,6 +1220,97 @@ export type Database = {
           },
         ]
       }
+      evolution_reports: {
+        Row: {
+          ai_headline: string | null
+          ai_narrative: string | null
+          created_at: string
+          edited_by_personal: boolean
+          final_headline: string | null
+          final_narrative: string | null
+          generation_error: string | null
+          generation_source: string
+          id: string
+          metrics: Json
+          period_end: string
+          period_start: string
+          published_at: string | null
+          published_by: string | null
+          share_image_path: string | null
+          status: string
+          student_id: string
+          tenant_id: string
+          updated_at: string
+          viewed_by_student_at: string | null
+        }
+        Insert: {
+          ai_headline?: string | null
+          ai_narrative?: string | null
+          created_at?: string
+          edited_by_personal?: boolean
+          final_headline?: string | null
+          final_narrative?: string | null
+          generation_error?: string | null
+          generation_source?: string
+          id?: string
+          metrics?: Json
+          period_end: string
+          period_start: string
+          published_at?: string | null
+          published_by?: string | null
+          share_image_path?: string | null
+          status?: string
+          student_id: string
+          tenant_id: string
+          updated_at?: string
+          viewed_by_student_at?: string | null
+        }
+        Update: {
+          ai_headline?: string | null
+          ai_narrative?: string | null
+          created_at?: string
+          edited_by_personal?: boolean
+          final_headline?: string | null
+          final_narrative?: string | null
+          generation_error?: string | null
+          generation_source?: string
+          id?: string
+          metrics?: Json
+          period_end?: string
+          period_start?: string
+          published_at?: string | null
+          published_by?: string | null
+          share_image_path?: string | null
+          status?: string
+          student_id?: string
+          tenant_id?: string
+          updated_at?: string
+          viewed_by_student_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evolution_reports_published_by_fkey"
+            columns: ["published_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evolution_reports_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evolution_reports_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       exercise_combo_items: {
         Row: {
           combo_id: string
